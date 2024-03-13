@@ -1,0 +1,6246 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      }
+    },
+    " FREE" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " KOSTENLOS aus"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GRATIS"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " GRATUIT"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " GRATIS"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " GRATUITO"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無料"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " 무료"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " GRÁTIS"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " БЕСПЛАТНО"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " ÜCRETSİZ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免费"
+          }
+        }
+      }
+    },
+    "·" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "·"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        }
+      }
+    },
+    "**Q: What is %@?**\nA: %@ is a nutrition app that uses artificial intelligence to analyze images of meals taken by users in order to estimate macronutrients.\n\n**Q: How does %@ estimate macronutrients in my meals?**\nA: The app utilizes advanced AI algorithms to analyze photos of your meals, estimating the macronutrient content based on the visual characteristics of the food.\n\n** Q: Can %@ replace a professional nutritionist?**\nA: No, %@ is designed to provide estimations and does not replace the expertise of a professional nutritionist.\n\n**Q: Why might the app fail to analyze some images correctly?**\nA: Certain images may not be analyzed accurately due to factors like poor lighting, unclear images, or meals that the AI is not trained to recognize.\n\n**Q: How can I import pictures into %@?**\nA: You can import pictures directly from your Photo Library or use your device's Camera to take a new photo.\n\n**Q: Is there a free trial available?**\nA: Yes, %@ offers a free trial that allows a limited number of meal analyses. This lets you experience the app's capabilities before committing to a subscription.\n\n**Q: What does the premium subscription offer?**\nA: The premium subscription grants unlimited meal analyses, enabling you to use the app's AI analysis feature without restrictions.\n\n**Q: Why is there a cost associated with analyzing unlimited meals?**\nA: Analyzing meals with AI requires significant computer power, which incurs costs. The subscription fee helps cover these expenses, allowing us to offer continuous and efficient service.\n\n**Q: Who can I contact for support or feedback?**\nA: For any support requests or feedback, please reach out to us at %@. We're here to help!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**Q: Was ist %1$@?**\nA: %2$@ ist eine Ernährungs-App, die mit Hilfe von künstlicher Intelligenz Bilder von Mahlzeiten analysiert, die von den Nutzern aufgenommen wurden, um Makronährstoffe zu schätzen.\n\n**Q: Wie schätzt %3$@ die Makronährstoffe in meinen Mahlzeiten?**\nA: Die App nutzt fortschrittliche KI-Algorithmen, um Fotos deiner Mahlzeiten zu analysieren und den Makronährstoffgehalt anhand der visuellen Merkmale der Lebensmittel zu schätzen.\n\n**Q: Kann %4$@ einen professionellen Ernährungsberater ersetzen?**\nA: Nein, %5$@ wurde entwickelt, um Schätzungen zu liefern und ersetzt nicht die Expertise eines professionellen Ernährungsberaters.\n\n**Q: Warum kann es sein, dass die App manche Bilder nicht richtig analysiert?**\nA: Bestimmte Bilder können aufgrund von Faktoren wie schlechter Beleuchtung, unscharfen Bildern oder Mahlzeiten, für deren Erkennung die KI nicht trainiert ist, nicht richtig analysiert werden.\n\n**Q: Wie kann ich Bilder in %6$@ importieren?**\nA: Du kannst Bilder direkt aus deiner Fotobibliothek importieren oder mit der Kamera deines Geräts ein neues Foto aufnehmen.\n\n**Q: Gibt es eine kostenlose Testversion?**\nA: Ja, %7$@ bietet eine kostenlose Testversion an, die eine begrenzte Anzahl von Essensanalysen ermöglicht. So kannst du die Funktionen der App kennenlernen, bevor du dich für ein Abonnement entscheidest.\n\n**Q: Was bietet das Premium-Abo?**\nA: Mit dem Premium-Abo kannst du unbegrenzt Mahlzeiten analysieren und die KI-Analysefunktion der App uneingeschränkt nutzen.\n\n**Q: Warum ist die Analyse unbegrenzter Mahlzeiten mit Kosten verbunden?**\nA: Die Analyse von Mahlzeiten mit KI erfordert viel Computerleistung, was Kosten verursacht. Die Abo-Gebühr trägt dazu bei, diese Kosten zu decken und ermöglicht es uns, einen kontinuierlichen und effizienten Service anzubieten.\n\n**Q: An wen kann ich mich für Support oder Feedback wenden?**\nA: Für Supportanfragen oder Feedback wende dich bitte an uns unter %8$@. Wir sind für dich da!"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**Q: What is %1$@?**\nA: %2$@ is a nutrition app that uses artificial intelligence to analyze images of meals taken by users in order to estimate macronutrients.\n\n**Q: How does %3$@ estimate macronutrients in my meals?**\nA: The app utilizes advanced AI algorithms to analyze photos of your meals, estimating the macronutrient content based on the visual characteristics of the food.\n\n**Q: Can %4$@ replace a professional nutritionist?**\nA: No, %5$@ is designed to provide estimations and does not replace the expertise of a professional nutritionist.\n\n**Q: Why might the app fail to analyze some images correctly?**\nA: Certain images may not be analyzed accurately due to factors like poor lighting, unclear images, or meals that the AI is not trained to recognize.\n\n**Q: How can I import pictures into %6$@?**\nA: You can import pictures directly from your Photo Library or use your device's Camera to take a new photo.\n\n**Q: Is there a free trial available?**\nA: Yes, %7$@ offers a free trial that allows a limited number of meal analyses. This lets you experience the app's capabilities before committing to a subscription.\n\n**Q: What does the premium subscription offer?**\nA: The premium subscription grants unlimited meal analyses, enabling you to use the app's AI analysis feature without restrictions.\n\n**Q: Why is there a cost associated with analyzing unlimited meals?**\nA: Analyzing meals with AI requires significant computer power, which incurs costs. The subscription fee helps cover these expenses, allowing us to offer continuous and efficient service.\n\n**Q: Who can I contact for support or feedback?**\nA: For any support requests or feedback, please reach out to us at %8$@. We're here to help!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**P: ¿Qué es %1$@?**\nR: %2$@ es una aplicación de nutrición que utiliza inteligencia artificial para analizar imágenes de comidas tomadas por los usuarios con el fin de estimar los macronutrientes.\n\n**P: ¿Cómo estima %3$@ los macronutrientes en mis comidas?**\nR: La aplicación utiliza algoritmos de IA avanzados para analizar fotos de tus comidas, estimando el contenido de macronutrientes basándose en las características visuales de la comida.\n\n**P: ¿Puede %4$@ reemplazar a un nutricionista profesional?**\nR: No, %5$@ está diseñado para proporcionar estimaciones y no reemplaza la experiencia de un nutricionista profesional.\n\n**P: ¿Por qué la aplicación podría fallar al analizar algunas imágenes correctamente?**\nR: Ciertas imágenes pueden no ser analizadas con precisión debido a factores como mala iluminación, imágenes poco claras o comidas que la IA no está entrenada para reconocer.\n\n**P: ¿Cómo puedo importar imágenes en %6$@?**\nR: Puedes importar imágenes directamente desde tu Biblioteca de Fotos o usar la Cámara de tu dispositivo para tomar una foto nueva.\n\n**P: ¿Hay una prueba gratuita disponible?**\nR: Sí, %7$@ ofrece una prueba gratuita que permite un número limitado de análisis de comidas. Esto te permite experimentar las capacidades de la aplicación antes de comprometerte a una suscripción.\n\n**P: ¿Qué ofrece la suscripción premium?**\nR: La suscripción premium otorga análisis de comidas ilimitados, permitiéndote usar la función de análisis de IA de la aplicación sin restricciones.\n\n**P: ¿Por qué hay un costo asociado con el análisis ilimitado de comidas?**\nR: Analizar comidas con IA requiere una potencia informática significativa, lo que incurre en costos. La tarifa de suscripción ayuda a cubrir estos gastos, permitiéndonos ofrecer un servicio continuo y eficiente.\n\n**P: ¿A quién puedo contactar para soporte o comentarios?**\nR: Para cualquier solicitud de soporte o comentarios, por favor contáctanos en %8$@. ¡Estamos aquí para ayudar!\n"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**Q : Qu'est-ce que %1$@ ?**\nR : %2$@ est une appli de nutrition qui utilise l'intelligence artificielle pour analyser les images des repas prises par les utilisateurs afin d'estimer les macronutriments.\n\n**Q : Comment %3$@ évalue-t-il les macronutriments de mes repas ?**\nR : L'appli utilise des algorithmes d'IA avancés pour analyser les photos de tes repas et estimer la teneur en macronutriments en se basant sur les caractéristiques visuelles des aliments.\n\n**Q : Est-ce que %4$@ peut remplacer un nutritionniste professionnel ?**\nR : Non, %5$@ est conçue pour fournir des estimations et ne remplace pas l'expertise d'un nutritionniste professionnel.\n\n**Q : Pourquoi l'application n'analyse-t-elle pas correctement certaines images ?**\nR : Certaines images peuvent ne pas être analysées correctement en raison de facteurs tels qu'un mauvais éclairage, des images peu claires ou des repas que l'IA n'est pas entraînée à reconnaître.\n\n**Q : Comment puis-je importer des photos dans %6$@?** ?**\nR : Tu peux importer des images directement depuis ta bibliothèque de photos ou utiliser l'appareil photo de ton appareil pour prendre une nouvelle photo.\n\n**Q : Existe-t-il une version d'essai gratuite ?**\nR : Oui, %7$@ offre un essai gratuit qui permet un nombre limité d'analyses de repas. Cela te permet de découvrir les capacités de l'application avant de t'engager dans un abonnement.\n\n**Q : Qu'offre l'abonnement premium ?**\nR : L'abonnement premium offre un nombre illimité d'analyses de repas, ce qui te permet d'utiliser la fonction d'analyse de l'IA de l'application sans aucune restriction.\n\n**Q : Pourquoi l'analyse d'un nombre illimité de repas a-t-elle un coût ?**\nR : L'analyse des repas avec l'IA nécessite une puissance informatique importante, ce qui engendre des coûts. Les frais d'abonnement aident à couvrir ces dépenses, ce qui nous permet d'offrir un service continu et efficace.\n\n**Q : Qui puis-je contacter pour obtenir de l'aide ou des commentaires ?**\nR : Pour toute demande d'assistance ou de commentaires, n'hésite pas à nous contacter à %8$@. Nous sommes là pour t'aider !"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**T: Apa yang dimaksud dengan %1$@?**\nJ: %2$@ adalah aplikasi nutrisi yang menggunakan kecerdasan buatan untuk menganalisis gambar makanan yang diambil oleh pengguna untuk memperkirakan makronutrien.\n\n**T: Bagaimana cara %3$@ memperkirakan makronutrien dalam makanan saya?**\nJ: Aplikasi ini menggunakan algoritme AI yang canggih untuk menganalisis foto makanan Anda, memperkirakan kandungan makronutrien berdasarkan karakteristik visual makanan.\n\n**T: Apakah %4$@ dapat menggantikan ahli gizi profesional?**\nJ: Tidak, %5$@ dirancang untuk memberikan estimasi dan tidak menggantikan keahlian ahli gizi profesional.\n\n**T: Mengapa aplikasi mungkin gagal menganalisis beberapa gambar dengan benar?**\nJ: Gambar tertentu mungkin tidak dapat dianalisis secara akurat karena faktor-faktor seperti pencahayaan yang buruk, gambar yang tidak jelas, atau makanan yang tidak dapat dikenali oleh AI.\n\n**T: Bagaimana cara mengimpor gambar ke dalam %6$@?**\nJ: Anda dapat mengimpor gambar langsung dari Perpustakaan Foto atau menggunakan Kamera perangkat untuk mengambil foto baru.\n\n**T: Apakah tersedia uji coba gratis?**\nJ: Ya, %7$@ menawarkan uji coba gratis yang memungkinkan analisis makanan dalam jumlah terbatas. Dengan demikian, Anda dapat mencoba kemampuan aplikasi sebelum memutuskan untuk berlangganan.\n\n**T: Apa yang ditawarkan oleh langganan premium?**\nJ: Langganan premium memberikan analisis makanan tanpa batas, sehingga Anda dapat menggunakan fitur analisis AI aplikasi tanpa batasan.\n\n**T: Mengapa ada biaya yang terkait dengan analisis makanan tanpa batas?**\nJ: Menganalisis makanan dengan AI membutuhkan daya komputer yang signifikan, yang menimbulkan biaya. Biaya langganan membantu menutupi biaya ini, sehingga kami dapat menawarkan layanan yang berkelanjutan dan efisien.\n\n**T: Siapa yang dapat saya hubungi untuk** mendapatkan dukungan atau umpan balik?\nJ: Untuk permintaan dukungan atau umpan balik, silakan hubungi kami di %8$@. Kami di sini untuk membantu!"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**D: Cos'è la %1$@?**\nR: %2$@ è un'app per la nutrizione che utilizza l'intelligenza artificiale per analizzare le immagini dei pasti degli utenti al fine di stimare i macronutrienti.\n\n**D: Come fa %3$@ a stimare i macronutrienti nei miei pasti?**\nR: L'app utilizza algoritmi avanzati di intelligenza artificiale per analizzare le foto dei tuoi pasti, stimando il contenuto di macronutrienti in base alle caratteristiche visive degli alimenti.\n\n**D: %4$@ può sostituire un nutrizionista professionista?**\nR: No, %5$@ è progettata per fornire stime e non sostituisce l'esperienza di un nutrizionista professionista.\n\n**D: Perché l'applicazione potrebbe non analizzare correttamente alcune immagini?**\nR: Alcune immagini potrebbero non essere analizzate con precisione a causa di fattori quali scarsa illuminazione, immagini poco chiare o pasti che l'intelligenza artificiale non è stata addestrata a riconoscere.\n\n**D: Come posso importare le immagini in %6$@?**\nR: Puoi importare le immagini direttamente dalla tua libreria fotografica o utilizzare la fotocamera del tuo dispositivo per scattare una nuova foto.\n\n**D: È disponibile una versione di prova gratuita?**\nR: Sì, %7$@ offre una prova gratuita che consente un numero limitato di analisi dei pasti. In questo modo puoi sperimentare le funzionalità dell'applicazione prima di sottoscrivere un abbonamento.\n\n**D: Cosa offre l'abbonamento premium?**\nR: L'abbonamento premium garantisce un numero illimitato di analisi dei pasti, consentendoti di utilizzare la funzione di analisi AI dell'app senza restrizioni.\n\n**D: Perché c'è un costo associato all'analisi di pasti illimitati?**\nR: L'analisi dei pasti con l'intelligenza artificiale richiede una notevole potenza informatica, che comporta dei costi. Il costo dell'abbonamento contribuisce a coprire queste spese, permettendoci di offrire un servizio continuo ed efficiente.\n\n**D: Chi posso contattare per assistenza o feedback?**\nR: Per qualsiasi richiesta di assistenza o feedback, contattaci all'indirizzo %8$@. Siamo qui per aiutarti!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**Q：%1$@とは何か？**\nA: %2$@は、人工知能を使ってユーザーが撮影した食事の画像を分析し、大栄養素を推定する栄養アプリである。\n\n**Q: %3$@はどのようにして私の食事のマクロ栄養素を推定するのか？**\nA: このアプリは、高度なAIアルゴリズムを利用して食事の写真を分析し、食べ物の視覚的特徴に基づいてマクロ栄養素の含有量を推定する。\n\n**Q: %4$@はプロの栄養士の代わりになるのか？**\nA: いいえ、%5$@は推定値を提供するように設計されており、プロの栄養士の専門知識に取って代わるものではありません。\n\n**Q: なぜこのアプリは一部の画像を正しく分析できないのか？**\nA: 照明が弱い、画像が不鮮明、AIが認識するように訓練されていない食事などの要因により、特定の画像が正確に分析されないことがある。\n\n**Q: %6$@に画像をインポートするにはどうすればいい？**\nA: フォトライブラリから直接写真をインポートするか、デバイスのカメラを使って新しい写真を撮ることができる。\n\n**Q: 無料トライアルはある？**\nA: はい、%7$@は食事分析の回数に制限のある無料トライアルを提供しています。これは、サブスクリプションにコミットする前に、アプリの機能を体験することができる。\n\n**Q: プレミアム・サブスクリプションには何が含まれるか？**\nA: プレミアムサブスクリプションでは、無制限の食事分析が可能で、アプリのAI分析機能を制限なく使用することができる。\n\n**Q: なぜ無制限の食事分析に費用がかかるのか？**\nA: AIを使った食事分析には膨大なコンピューターパワーが必要で、コストがかかる。サブスクリプション料金は、これらの費用をカバーするのに役立ち、継続的かつ効率的なサービスを提供することができる。\n\n**Q: サポートやフィードバックはどこに問い合わせればいいのか？**\nA: サポートやフィードバックについては、%8$@までご連絡を。私たちがお手伝いする！"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**Q: %1$@이란 무엇인가요?**\nA: %2$@는 인공지능을 사용하여 사용자가 촬영한 식사 이미지를 분석하여 다량 영양소를 추정하는 영양 앱입니다.\n\n**Q: %3$@은 내 식사의 다량 영양소를 어떻게 추정하나요?**\nA: 이 앱은 고급 AI 알고리즘을 사용하여 식사 사진을 분석하고 음식의 시각적 특성을 기반으로 다량 영양소 함량을 추정합니다.\n\n**Q: %4$@가 전문 영양사를 대신할 수 있나요?**\nA: 아니요, %5$@는 추정치를 제공하도록 설계되었으며 전문 영양사의 전문 지식을 대체할 수 없습니다.\n\n**Q: 앱이 일부 이미지를 올바르게 분석하지 못하는 이유는 무엇인가요?**\nA: 조명이 어둡거나 이미지가 불분명하거나 AI가 인식하도록 훈련되지 않은 식단과 같은 요인으로 인해 특정 이미지를 정확하게 분석하지 못할 수 있습니다.\n\n**Q: 사진을 %6$@로 가져오려면 어떻게 해야 하나요?**\nA: 사진 라이브러리에서 직접 사진을 가져오거나 디바이스의 카메라를 사용하여 새 사진을 찍을 수 있습니다.\n\n**Q: 무료 평가판이 있나요?**\nA: 예, %7$@은 제한된 수의 식사 분석을 허용하는 무료 평가판을 제공합니다. 이를 통해 구독을 약정하기 전에 앱의 기능을 체험해볼 수 있습니다.\n\n**Q: 프리미엄 구독은 무엇을 제공하나요?**\nA: 프리미엄 구독은 무제한 식사 분석을 허용하여 앱의 AI 분석 기능을 제한 없이 사용할 수 있습니다.\n\n**Q: 무제한 식사 분석에 비용이 발생하는 이유는 무엇인가요?**\nA: AI로 식단을 분석하려면 상당한 컴퓨터 성능이 필요하므로 비용이 발생합니다. 구독료는 이러한 비용을 충당하여 지속적이고 효율적인 서비스를 제공할 수 있도록 도와줍니다.\n\n**Q: 지원이나 피드백은 누구에게 문의할 수 있나요?**\nA: 지원 요청이나 피드백이 필요한 경우 %8$@로 문의해 주세요. 저희가 도와드리겠습니다!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**P: O que é %1$@?**\nR: %2$@ é um aplicativo de nutrição que usa inteligência artificial para analisar imagens de refeições feitas pelos usuários a fim de estimar os macronutrientes.\n\n**P: Como o %3$@ calcula os macronutrientes em minhas refeições?**\nR: O aplicativo utiliza algoritmos avançados de IA para analisar fotos de suas refeições, estimando o conteúdo de macronutrientes com base nas características visuais do alimento.\n\n**P: O %4$@ pode substituir um nutricionista profissional?**\nR: Não, o %5$@ foi projetado para fornecer estimativas e não substitui a experiência de um nutricionista profissional.\n\n**P: Por que o aplicativo pode não analisar corretamente algumas imagens?**\nR: Algumas imagens podem não ser analisadas com precisão devido a fatores como iluminação ruim, imagens pouco nítidas ou refeições que a IA não foi treinada para reconhecer.\n\n**P: Como posso importar fotos para o %6$@?**\nR: Você pode importar imagens diretamente da sua biblioteca de fotos ou usar a câmera do seu dispositivo para tirar uma nova foto.\n\n**P: Você tem uma versão de avaliação gratuita disponível?**\nR: Sim, o %7$@ oferece uma avaliação gratuita que permite que você faça um número limitado de análises de refeições. Isso permite que você experimente os recursos do aplicativo antes de se comprometer com uma assinatura.\n\n**P: O que a assinatura premium oferece?**\nR: A assinatura premium concede análises ilimitadas de refeições, permitindo que você use o recurso de análise de IA do aplicativo sem restrições.\n\n**P: Por que há um custo associado à análise de refeições ilimitadas?**\nR: A análise de refeições com IA requer um poder computacional significativo, o que acarreta custos. A taxa de assinatura ajuda a cobrir essas despesas, o que nos permite oferecer um serviço contínuo e eficiente.\n\n**P: Com quem posso entrar em contato para obter suporte ou feedback?**\nR: Para qualquer solicitação de suporte ou feedback, entre em contato conosco pelo e-mail %8$@. Estamos aqui para ajudar você!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**В: Что такое %1$@?**\nО: %2$@ - это приложение для питания, которое использует искусственный интеллект для анализа изображений еды, сделанных пользователями, чтобы оценить количество макронутриентов.\n\n**B: Как %3$@ оценивает макронутриенты в моих блюдах?**\nО: Приложение использует продвинутые алгоритмы искусственного интеллекта для анализа фотографий твоих блюд, оценивая содержание макроэлементов на основе визуальных характеристик еды.\n\n**В: Может ли %4$@ заменить профессионального диетолога?**\nО: Нет, %5$@ предназначено для оценок и не заменяет опыт профессионального диетолога.\n\n**В: Почему приложение не может правильно проанализировать некоторые изображения?**\nО: Некоторые изображения могут быть проанализированы неточно из-за таких факторов, как плохое освещение, нечеткие изображения или еда, которую ИИ не обучен распознавать.\n\n**B: Как я могу импортировать картинки в %6$@?**\nО: Ты можешь импортировать изображения прямо из своей Фотобиблиотеки или использовать Камеру устройства, чтобы сделать новый снимок.\n\n**B: Есть ли бесплатная пробная версия?**\nО: Да, %7$@ предлагает бесплатную пробную версию, которая позволяет провести ограниченное количество анализов еды. Это позволит тебе испытать возможности приложения, прежде чем оформлять подписку.\n\n**B: Что предлагает премиум-подписка?**\nО: Премиум-подписка предоставляет неограниченное количество анализов еды, позволяя тебе использовать функцию искусственного интеллекта приложения без ограничений.\n\n**B: Почему анализ неограниченного количества блюд стоит денег?**\nО: Анализ блюд с помощью искусственного интеллекта требует значительных компьютерных мощностей, что влечет за собой расходы. Абонентская плата помогает покрыть эти расходы, позволяя нам предлагать постоянный и эффективный сервис.\n\n**B: К кому я могу обратиться за поддержкой или обратной связью?**\nО: По любым вопросам поддержки или обратной связи обращайся к нам по адресу %8$@. Мы здесь, чтобы помочь!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**S: %1$@ nedir?**\nC: %2$@, makro besin öğelerini tahmin etmek amacıyla kullanıcılar tarafından çekilen yemek görüntülerini analiz etmek için yapay zeka kullanan bir beslenme uygulamasıdır.\n\n**S: %3$@ öğünlerimdeki makro besinleri nasıl tahmin ediyor?**\nC: Uygulama, yemeklerinizin fotoğraflarını analiz etmek için gelişmiş yapay zeka algoritmaları kullanır ve yiyeceklerin görsel özelliklerine göre makro besin içeriğini tahmin eder.\n\n**S: %4$@ profesyonel bir beslenme uzmanının yerini alabilir mi?**\nC: Hayır, %5$@ tahminler sunmak için tasarlanmıştır ve profesyonel bir beslenme uzmanının uzmanlığının yerini almaz.\n\n**S: Uygulama neden bazı görüntüleri doğru analiz edemeyebilir?**\nC: Zayıf aydınlatma, net olmayan görüntüler veya yapay zekanın tanımak için eğitilmediği yemekler gibi faktörler nedeniyle bazı görüntüler doğru bir şekilde analiz edilemeyebilir.\n\n**S: Resimleri %6$@ içine nasıl aktarabilirim?**\nC: Resimleri doğrudan Fotoğraf Kitaplığınızdan içe aktarabilir veya yeni bir fotoğraf çekmek için cihazınızın Kamerasını kullanabilirsiniz.\n\n**S: Ücretsiz deneme sürümü mevcut mu?**\nC: Evet, %7$@ sınırlı sayıda öğün analizine izin veren ücretsiz bir deneme sunuyor. Bu, bir abonelik taahhüt etmeden önce uygulamanın yeteneklerini deneyimlemenizi sağlar.\n\n**S: Premium abonelik ne sunuyor?**\nC: Premium abonelik, uygulamanın AI analiz özelliğini kısıtlama olmaksızın kullanmanıza olanak tanıyan sınırsız yemek analizi sağlar.\n\n**S: Sınırsız öğün analizinin neden bir maliyeti var?**\nC: Yemekleri yapay zeka ile analiz etmek önemli miktarda bilgisayar gücü gerektirir ve bu da maliyetlere neden olur. Abonelik ücreti bu masrafların karşılanmasına yardımcı olarak sürekli ve verimli hizmet sunmamızı sağlar.\n\n**S: Destek veya geri bildirim için kiminle iletişime geçebilirim?**\nC: Her türlü destek talebi veya geri bildirim için lütfen %8$@ adresinden bize ulaşın. Yardım etmek için buradayız!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**问：什么是 %1$@？**\n答：%2$@ 是一款营养应用程序，它利用人工智能分析用户拍摄的膳食图像，从而估算出宏量营养素。\n\n**问：%3$@ 如何估算膳食中的宏量营养素？**\n答：该应用程序利用先进的人工智能算法分析您的膳食照片，并根据食物的视觉特征估算出其中的宏量营养素含量。\n\n**问：%4$@ 能否取代专业营养师？**\n答：不能，%5$@ 的目的是提供估算，不能取代专业营养师的专业知识。\n\n**问：为什么应用程序可能无法正确分析某些图像？**\n答：由于光线不足、图像不清晰或人工智能未受过识别膳食的训练等因素，某些图像可能无法得到准确分析。\n\n**问：如何将图片导入 %6$@?**\n答：您可以直接从照片库导入图片，或使用设备的相机拍摄新照片。\n\n**问：有免费试用版吗？**\n答：是的，%7$@ 提供免费试用，允许进行有限次数的膳食分析。这样您就可以在订购之前体验该应用程序的功能。\n\n**问：高级订阅提供哪些服务？**\n答：高级套餐提供无限量的膳食分析，让您可以不受限制地使用应用程序的人工智能分析功能。\n\n**问：为什么分析无限量膳食需要付费？**\n答：使用人工智能分析膳食需要大量的计算机能力，这就产生了成本。订购费有助于支付这些费用，使我们能够提供持续、高效的服务。\n\n**问：如需支持或反馈，我可以联系谁？**\n答：如有任何支持请求或反馈，请致电 %8$@。我们将竭诚为您服务！"
+          }
+        }
+      }
+    },
+    "%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
+    "%lld kcal" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld kcal"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld kcal"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld kcal"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld kkal"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld kcal"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcalである。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "lld kcal"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld kcal"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ккал"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "lld kcal"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld千卡"
+          }
+        }
+      }
+    },
+    "%lldg" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldg"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldg"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldg"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldg"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldg"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "lldg"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "lldg"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldg"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldg"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "lldg"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldg"
+          }
+        }
+      }
+    },
+    "☁️ Sync Your Foods in the Cloud" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☁️ Synchronisiere deine Lebensmittel in der Cloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☁️ Sincroniza tus comidas en la nube"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☁️ Synchronise tes aliments dans le nuage"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☁️ Sinkronisasi Makanan Anda di Cloud"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☁️ Sincronizza i tuoi alimenti nel Cloud"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☁️ クラウドで食品を同期する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☁️ 클라우드에서 음식 동기화"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☁️ Sincronize seus alimentos na nuvem"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☁️ Синхронизируй свои продукты в облаке."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☁️ Gıdalarınızı Bulutta Senkronize Edin"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☁️ 在云端同步您的食物"
+          }
+        }
+      }
+    },
+    "♥️ Support a Solo Developer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♥️ Unterstützung eines Solo-Entwicklers"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♥️ Apoya a un desarrollador independiente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♥️ Soutenir un développeur solo"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♥️ Mendukung Pengembang Tunggal"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♥️ Supporta uno sviluppatore solitario"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♥️ ソロ開発者をサポートする"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♥️ 1인 개발자 지원"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♥️ Suporte a um desenvolvedor individual"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♥️ Поддержи разработчика-одиночку"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♥️ Tek Başına Geliştirici Desteği"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♥️ 支持个人开发者"
+          }
+        }
+      }
+    },
+    "✉️ Support" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✉️ Unterstützung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✉️ Soporte"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✉️ Support"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✉️ Dukungan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✉️ Supporto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✉️ サポート"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✉️ 지원"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✉️ Suporte"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✉️ Поддержка"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✉️ Destek"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✉️ 支持"
+          }
+        }
+      }
+    },
+    "⭐️ Rate App" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⭐️ Rate App"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⭐️ Déjanos una valoración"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⭐️ Rate App"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⭐️ Beri Nilai Aplikasi"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⭐️ Rate App"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⭐️ 料金アプリ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⭐️ 앱 평가하기"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⭐️ Rate App"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⭐️ Rate App"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⭐️ Rate Uygulaması"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⭐️ 利率应用程序"
+          }
+        }
+      }
+    },
+    "💡 Suggest New Features" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💡 Neue Funktionen vorschlagen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💡 Pídeme nuevas funcionalidades"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💡 Suggère de nouvelles fonctionnalités"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💡 Sarankan Fitur Baru"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💡 Suggerisci nuove funzionalità"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新機能を提案する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💡 새로운 기능 제안"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💡 Sugerir novos recursos"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💡 Предлагайте новые возможности"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💡 Yeni Özellikler Önerin"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💡 建议新功能"
+          }
+        }
+      }
+    },
+    "📋 Paste" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 Einfügen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 Pegar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 Pâte"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 Tempel"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 Incolla"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 ペースト"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 붙여넣기"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 Colar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 Паста"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 Yapıştır"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📋 粘贴"
+          }
+        }
+      }
+    },
+    "📸 Food macros at one shot" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📸 Lebensmittelmakros auf einen Schlag"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📸 Tus macros con solo un disparo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📸 Macros alimentaires en une seule fois"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📸 Makro makanan dalam satu bidikan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📸 Macro alimentari in un colpo solo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📸 食べ物のマクロを一発で"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📸 한 번에 끝내는 음식 매크로"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📸 Macros alimentares de uma só vez"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📸 Пищевые макросы в одном кадре"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📸 Tek seferde gıda makroları"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📸 食物宏量一目了然"
+          }
+        }
+      }
+    },
+    "🥙 Unlimited meal analysis" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🥙 Unbegrenzte Mahlzeitenanalyse"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🥙 Análisis de comidas ilimitados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🥙 Analyse des repas illimités"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🥙 Analisis makanan tak terbatas"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🥙 Analisi dei pasti illimitata"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🥙 無制限の食事分析"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🥙 무제한 식사 분석"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🥙 Análise ilimitada de refeições"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🥙 Анализ неограниченного количества еды"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🥙 Sınırsız yemek analizi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🥙 无限量膳食分析"
+          }
+        }
+      }
+    },
+    "1. RUN the app from Xcode in your test device or Simulator" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Starte die App aus Xcode auf deinem Testgerät oder im Simulator"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. RUN the app from Xcode in your test device or Simulator"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Exécute l'appli depuis Xcode dans ton appareil de test ou ton simulateur."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Jalankan aplikasi dari Xcode di perangkat uji atau Simulator Anda"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Esegui l'applicazione da Xcode nel tuo dispositivo di prova o nel simulatore."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.テスト・デバイスまたはシミュレーターでXcodeからアプリを実行する。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. 테스트 기기 또는 시뮬레이터의 Xcode에서 앱을 실행합니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Execute o aplicativo a partir do Xcode em seu dispositivo de teste ou simulador"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Запусти приложение из Xcode на своем тестовом устройстве или симуляторе."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Uygulamayı test cihazınızda veya Simülatörünüzde Xcode'dan ÇALIŞTIRIN"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.在测试设备或模拟器中通过 Xcode 运行应用程序"
+          }
+        }
+      }
+    },
+    "2. STOP the run" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. STOPP den Lauf"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. STOP the run"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. ARRÊTE la course"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. MENGHENTIKAN LARI"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. Arresta la corsa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2.走行を停止する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. 실행 중지"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. PARAR a corrida"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. Останови бег"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. Çalışmayı durdur"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2.停止运行"
+          }
+        }
+      }
+    },
+    "3. Open the app from the device or Simulator, NOT from Xcode, as the Xcode debugger prevent sending crashes to Crashlytics" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Öffne die App über das Gerät oder den Simulator, NICHT über Xcode, da der Xcode-Debugger das Senden von Abstürzen an Crashlytics verhindert."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Open the app from the device or Simulator, NOT from Xcode, as the Xcode debugger prevent sending crashes to Crashlytics"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Ouvre l'application à partir de l'appareil ou du simulateur, PAS à partir de Xcode, car le débogueur de Xcode empêche d'envoyer les crashs à Crashlytics."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Buka aplikasi dari perangkat atau Simulator, BUKAN dari Xcode, karena debugger Xcode mencegah pengiriman kerusakan ke Crashlytics"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Apri l'applicazione dal dispositivo o dal simulatore, NON da Xcode, poiché il debugger di Xcode impedisce l'invio dei crash a Crashlytics."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3.XcodeのデバッガーはCrashlyticsにクラッシュを送信しないため、Xcodeからではなく、デバイスまたはシミュレーターからアプリを開く。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Xcode 디버거가 크래시리틱스로 충돌을 전송하는 것을 방지하므로 Xcode가 아닌 기기 또는 시뮬레이터에서 앱을 엽니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Abra o aplicativo no dispositivo ou no simulador, NÃO no Xcode, pois o depurador do Xcode impede o envio de falhas para o Crashlytics"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Открой приложение с устройства или симулятора, НЕ из Xcode, так как отладчик Xcode не позволяет отправлять сбои в Crashlytics."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Xcode hata ayıklayıcısı çökmelerin Crashlytics'e gönderilmesini engellediğinden uygulamayı Xcode'dan DEĞİL, cihazdan veya Simülatörden açın"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3.从设备或模拟器打开应用程序，不要从 Xcode 打开，因为 Xcode 调试器会阻止向 Crashlytics 发送崩溃信息。"
+          }
+        }
+      }
+    },
+    "4. Hit the button bellow to force a crash and then comment or delete this view from the project" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. Klicke auf die Schaltfläche unten, um einen Absturz zu erzwingen und dann diese Ansicht zu kommentieren oder aus dem Projekt zu löschen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. Hit the button bellow to force a crash and then comment or delete this view from the project"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. Appuie sur le bouton ci-dessous pour forcer un crash, puis commente ou supprime cette vue du projet."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. Tekan tombol di bawah ini untuk memaksa crash dan kemudian mengomentari atau menghapus tampilan ini dari proyek"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. Premi il pulsante qui sotto per forzare un crash e poi commenta o elimina questa vista dal progetto."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4.以下のボタンを押して強制的にクラッシュさせ、コメントするかプロジェクトからこのビューを削除する。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. 아래 버튼을 눌러 강제 충돌을 일으킨 다음 프로젝트에서 이 보기에 댓글을 달거나 삭제합니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. Pressione o botão abaixo para forçar uma falha e, em seguida, comentar ou excluir essa visualização do projeto"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. Нажми на кнопку ниже, чтобы вызвать краш, а затем прокомментируй или удали это представление из проекта"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. Bir çökmeye zorlamak için aşağıdaki düğmeye basın ve ardından bu görünümü yorumlayın veya projeden silin"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4.点击下面的按钮强制崩溃，然后从项目中注释或删除该视图"
+          }
+        }
+      }
+    },
+    "Accept" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akzeptiere"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aceptar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accepter"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menerima"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accetta"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "受け入れる"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "수락"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aceitar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прими"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kabul et"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接受"
+          }
+        }
+      }
+    },
+    "AI's Language" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Sprache der KI"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma de IA"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le langage de l'IA"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bahasa AI"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il linguaggio dell'intelligenza artificiale"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AIの言語"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI의 언어"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linguagem da IA"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Язык искусственного интеллекта"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yapay Zekanın Dili"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "人工智能的语言"
+          }
+        }
+      }
+    },
+    "Analyze" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analysiere"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analizar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyser"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menganalisis"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analizza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分析する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "분석"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analisar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Анализируй"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analiz"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分析"
+          }
+        }
+      }
+    },
+    "Analyze meals with the power of AI as much as you want." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analysiere die Mahlzeiten mit der Kraft der KI, so viel du willst."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analiza tus comidas con el poder de la IA las veces que quieras."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyse les repas avec la puissance de l'IA autant que tu le souhaites."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menganalisis makanan dengan kekuatan AI sebanyak yang Anda inginkan."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analizza i pasti con la potenza dell'intelligenza artificiale quanto vuoi."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AIの力で食事を思う存分分析する。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI의 강력한 기능으로 원하는 만큼 식단을 분석하세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analise as refeições com o poder da IA o quanto você quiser."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Анализируй блюда с помощью возможностей искусственного интеллекта столько, сколько захочешь."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yemekleri yapay zekanın gücüyle istediğiniz kadar analiz edin."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "借助人工智能的力量，随心所欲地分析饭菜。"
+          }
+        }
+      }
+    },
+    "Analyzing image..." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Analysieren von Bild..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analizando imagen..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyser l'image..."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menganalisis gambar..."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analizzare le immagini..."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像を分析する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이미지 분석..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analisando a imagem..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проанализируй изображение..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüntü analizi..."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分析图像..."
+          }
+        }
+      }
+    },
+    "Are you sure you want to delete the account?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bist du sicher, dass du das Konto löschen willst?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estás seguro de que quieres borrar la cuenta?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es-tu sûr de vouloir supprimer le compte ?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apakah Anda yakin ingin menghapus akun tersebut?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sei sicuro di voler eliminare l'account?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本当にアカウントを削除したいのか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "정말 계정을 삭제하시겠습니까?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você tem certeza de que deseja excluir a conta?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ты уверен, что хочешь удалить аккаунт?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesabı silmek istediğinizden emin misiniz?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您确定要删除账户吗？"
+          }
+        }
+      }
+    },
+    "Camera" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamera"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cámara"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appareil photo"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamera"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macchina fotografica"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カメラ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "카메라"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Câmera"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Камера"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamera"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "照相机"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batal"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annullamento"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャンセル"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отмена"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İptal"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        }
+      }
+    },
+    "ChatGPT" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ChatGPT"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ChatGPT"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ChatGPT"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ChatGPT"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ChatGPT"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "チャットGPT"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ChatGPT"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ChatGPT"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ChatGPT"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ChatGPT"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ChatGPT"
+          }
+        }
+      }
+    },
+    "Choose Image Source" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildquelle wählen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige fuente de la imagen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisir la source de l'image"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilih Sumber Gambar"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scegli la fonte dell'immagine"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像ソースを選択する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이미지 소스 선택"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escolha a fonte da imagem"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите источник изображения"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüntü Kaynağını Seçin"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择图片来源"
+          }
+        }
+      }
+    },
+    "Choose picture" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bild auswählen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige foto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisis une image"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilih gambar"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scegli l'immagine"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真を選ぶ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사진 선택"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escolha a imagem"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выбери картинку"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resim seçin"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择图片"
+          }
+        }
+      }
+    },
+    "Color Scheme" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Farbschema"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esquema de Color"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schéma de couleurs"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skema Warna"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schema di colori"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配色"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "색 구성표"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esquema de cores"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цветовая схема"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renk Şeması"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "色彩方案"
+          }
+        }
+      }
+    },
+    "Continue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weiter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lanjutkan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continua"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "続ける"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계속하기"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Продолжай"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devam et"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "继续"
+          }
+        }
+      }
+    },
+    "Copied to Clipboard" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In die Zwischenablage kopiert"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiado al Portapapeles"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copié dans le presse-papiers"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disalin ke Clipboard"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia negli appunti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クリップボードにコピーする"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "클립보드에 복사"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiado para a área de transferência"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скопировано в буфер обмена"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panoya Kopyalandı"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制到剪贴板"
+          }
+        }
+      }
+    },
+    "Crash" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crash"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crash"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crash"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kecelakaan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crash"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クラッシュ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "크래시"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colisão"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Краш"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çarpışma"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "撞车"
+          }
+        }
+      }
+    },
+    "DALL·E" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL-E"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL·E"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL-E"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL-E"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL-E"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダール・イー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL-E"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL-E"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL-E"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL-E"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL-E"
+          }
+        }
+      }
+    },
+    "Delete" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "löschen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menghapus"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excluir"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалить"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silme"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
+          }
+        }
+      }
+    },
+    "Delete Account" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konto löschen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar Cuenta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer le compte"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menghapus Akun"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina l'account"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アカウントを削除する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계정 삭제"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excluir conta"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалить аккаунт"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesabı Sil"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除账户"
+          }
+        }
+      }
+    },
+    "Description" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beschreibung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descripción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deskripsi"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descrizione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "説明"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설명"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descrição"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Описание"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açıklama"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "说明"
+          }
+        }
+      }
+    },
+    "Email" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-Mail"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Courriel"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "電子メール"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이메일"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mail"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пиши на"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-posta"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电子邮件"
+          }
+        }
+      }
+    },
+    "Error restoring purchases." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fehler beim Wiederherstellen von Einkäufen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error restaurando compras."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur de restauration des achats."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kesalahan memulihkan pembelian."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Errore nel ripristino degli acquisti."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "購入した商品の復元に失敗した。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "구매 복원 중 오류가 발생했습니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erro ao restaurar compras."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ошибка при восстановлении покупок."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satın alımlar geri yüklenirken hata oluştu."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "恢复购买时出错。"
+          }
+        }
+      }
+    },
+    "Frequently Asked Questions for %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Häufig gestellte Fragen für %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preguntas Frecuentes sobre %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Foire aux questions pour %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pertanyaan yang Sering Diajukan untuk %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domande frequenti per %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "よくある質問"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "에 대해 자주 묻는 질문"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perguntas frequentes sobre %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Часто задаваемые вопросы для %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Için Sıkça Sorulan Sorular %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@常见问题"
+          }
+        }
+      }
+    },
+    "Help Us Grow" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilf uns wachsen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayúdanos a Crecer"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aide-nous à grandir"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bantu Kami Berkembang"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aiutaci a crescere"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "成長を支援する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "성장 지원"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajude-nos a crescer"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Помоги нам расти"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Büyümemize Yardım Edin"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "帮助我们成长"
+          }
+        }
+      }
+    },
+    "Hi, I will be your assistant. Please make your requests." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hallo, ich werde dein Assistent sein. Bitte stelle deine Anfragen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hola, seré tu asistente. Por favor, escribe las solicitudes que desees."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bonjour, je serai ton assistante. S'il te plaît, fais-moi part de tes demandes."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hai, saya akan menjadi asisten Anda. Silakan ajukan permintaan Anda."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ciao, sarò la tua assistente. Per favore, fai le tue richieste."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "こんにちは、私はあなたのアシスタントになる。よろしく。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "안녕하세요, 제가 여러분의 조수가 되어 드리겠습니다. 요청을 해 주세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Olá, serei seu assistente. Por favor, faça suas solicitações."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Привет, я буду твоим помощником. Пожалуйста, излагай свои пожелания."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merhaba, asistanınız olacağım. Lütfen isteklerinizi iletin."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您好，我将是您的助手。请提出您的要求。"
+          }
+        }
+      }
+    },
+    "Hi, type your image generation requests." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hallo, gib deine Wünsche zur Bilderzeugung ein."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hola, solicita una imagen que desees."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salut, tape tes demandes de génération d'images."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hai, ketik permintaan pembuatan gambar Anda."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ciao, scrivi le tue richieste di generazione di immagini."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "こんにちは、画像生成のリクエストを入力してね。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "안녕하세요, 이미지 생성 요청을 입력하세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Olá, digite suas solicitações de geração de imagens."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Привет, набери запросы по созданию изображений."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merhaba, görüntü oluşturma taleplerinizi yazın."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您好，请输入您的图像生成请求。"
+          }
+        }
+      }
+    },
+    "ℹ️ FAQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ℹ️ FAQ"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ℹ️ FAQ"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ℹ️ FAQ"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ℹ️ FAQ"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ℹ️ FAQ"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ℹ️ FAQ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ℹ️ FAQ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ℹ️ FAQ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ℹ️ FAQ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      }
+    },
+    "Info" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Info"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Info"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Info"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Info"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Info"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "インフォメーション"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "정보"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informações"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Информация"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilgi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "信息"
+          }
+        }
+      }
+    },
+    "Just take a picture and check your meal's macros and calories" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mach einfach ein Foto und überprüfe die Makros und Kalorien deiner Mahlzeit"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simplemente tomando una foto podrás ver los macros y calorías de tu comida"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prends simplement une photo et vérifie les macros et les calories de ton repas"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cukup ambil gambar dan periksa makro dan kalori makanan Anda"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scatta una foto e controlla i macro e le calorie del tuo pasto."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真を撮るだけで食事のマクロとカロリーをチェックできる"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사진을 찍고 식사의 매크로와 칼로리를 확인하기만 하면 됩니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Basta tirar uma foto e verificar as macros e calorias de sua refeição"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Просто сделай снимок и проверь макросы и калории своего блюда."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sadece bir fotoğraf çekin ve öğününüzün makrolarını ve kalorilerini kontrol edin"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只需拍张照片，就能查看您的膳食的宏量和热量"
+          }
+        }
+      }
+    },
+    "Logout" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abmelden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar sesión"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déconnexion"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keluar"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disconnessione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ログアウト"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로그아웃"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fazer logout"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выход из системы"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oturumu Kapat"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "注销"
+          }
+        }
+      }
+    },
+    "Macros at one shot" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Makros auf einen Schlag"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macros de un vistazo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macros en une seule prise"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Makro dalam satu bidikan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macro in un colpo solo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一発のマクロ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "한 번에 매크로 실행"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macros em uma foto"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Макросы в одном кадре"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tek çekimde makrolar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一次拍摄的宏"
+          }
+        }
+      }
+    },
+    "Made with 🩵 by " : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hergestellt mit 🩵 von "
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hecha con 🩵 por "
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réalisé avec 🩵 par "
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dibuat dengan 🩵 oleh "
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Realizzato con 🩵 da "
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feito com 🩵 por "
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сделано с 🩵 по "
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made with 🩵 by "
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made with 🩵 by "
+          }
+        }
+      }
+    },
+    "Message ChatGPT..." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nachricht ChatGPT..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escribe a ChatGPT..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message ChatGPT..."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pesan ChatGPT..."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Messaggio ChatGPT..."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メッセージ ChatGPT..."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메시지 채팅GPT..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mensagem ChatGPT..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сообщение ChatGPT..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mesaj ChatGPT..."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留言 ChatGPT..."
+          }
+        }
+      }
+    },
+    "Name" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nom"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nama"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nome"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名称"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이름"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nome"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Имя"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İsim"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名称"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BAIKLAH."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확인"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TAMAM."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好的"
+          }
+        }
+      }
+    },
+    "Oops! Something went wrong." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ups! Etwas ist schief gelaufen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ups! Algo salió mal."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oups ! Quelque chose s'est mal passé."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ups! Ada yang tidak beres."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ops! Qualcosa è andato storto."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "おっと！何かが間違っていた。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "죄송합니다! 뭔가 잘못되었습니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ops! Algo deu errado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Упс! Что-то пошло не так."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oops! Bir şeyler yanlış gitti."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "哎呀！出错了"
+          }
+        }
+      }
+    },
+    "P R E M I U M" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "P R E M I U M"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "P R E M I U M"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "P R E M I U M"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "P R E M I U M"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "P R E M I U M"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "P R E M I U M"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "P R E M I U M"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "P R E M I U M"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "П Р И М Е Ч А Н И Е."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "P R E M I U M"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "P R E M I U M"
+          }
+        }
+      }
+    },
+    "Photo Library" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotobibliothek"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Galería de Fotos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photothèque"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perpustakaan Foto"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fototeca"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フォトライブラリー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사진 라이브러리"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biblioteca de fotos"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Библиотека фотографий"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotoğraf Kitaplığı"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "图片库"
+          }
+        }
+      }
+    },
+    "Please try again later. If the issue continues, consider using a different picture. Occasionally, GPT-4 Vision AI might encounter difficulties interpreting certain images or requests." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte versuche es später noch einmal. Wenn das Problem weiterhin besteht, versuche, ein anderes Bild zu verwenden. Gelegentlich kann es vorkommen, dass GPT-4 Vision AI Schwierigkeiten hat, bestimmte Bilder oder Anfragen zu interpretieren."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor, vuelve a intentarlo más tarde. Si el problema continúa, considera usar otra imagen. Algunas veces la inteligencia artificial, con ciertas imágenes, encuentra dificultades que no podemos controlar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essaie à nouveau plus tard. Si le problème persiste, envisage d'utiliser une autre image. Il peut arriver que GPT-4 Vision AI rencontre des difficultés à interpréter certaines images ou demandes."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silakan coba lagi nanti. Jika masalah terus berlanjut, pertimbangkan untuk menggunakan gambar yang berbeda. Terkadang, GPT-4 Vision AI mungkin mengalami kesulitan dalam menafsirkan gambar atau permintaan tertentu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Riprova più tardi. Se il problema persiste, prendi in considerazione la possibilità di utilizzare un'altra immagine. Occasionalmente, GPT-4 Vision AI potrebbe incontrare difficoltà nell'interpretare alcune immagini o richieste."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "後でもう一度試してほしい。問題が続く場合は、別の画像を使用することを検討する。時々、GPT-4 Vision AIは、特定の画像や要求を解釈することが困難な場合がある。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "나중에 다시 시도하세요. 문제가 계속되면 다른 사진을 사용해 보세요. 때때로 GPT-4 Vision AI가 특정 이미지나 요청을 해석하는 데 어려움을 겪을 수 있습니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tente novamente mais tarde. Se o problema persistir, considere a possibilidade de usar uma imagem diferente. Ocasionalmente, o GPT-4 Vision AI pode encontrar dificuldades para interpretar determinadas imagens ou solicitações."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пожалуйста, повтори попытку позже. Если проблема не исчезнет, попробуй использовать другую картинку. Иногда GPT-4 Vision AI может столкнуться с трудностями при интерпретации некоторых изображений или запросов."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lütfen daha sonra tekrar deneyin. Sorun devam ederse, farklı bir resim kullanmayı düşünün. Bazen GPT-4 Vision AI belirli görüntüleri veya istekleri yorumlamada zorluklarla karşılaşabilir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请稍后再试。如果问题仍然存在，请考虑使用不同的图片。GPT-4 Vision AI 在解释某些图像或请求时偶尔会遇到困难。"
+          }
+        }
+      }
+    },
+    "Please type '%@' to confirm." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte gib \"%@\" zur Bestätigung ein."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor escribe '%@' para confirmar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tape '%@' pour confirmer."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silakan ketik '%@' untuk mengonfirmasi."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Digita \"%@\" per confermare."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確認のため、'%@'と入力してほしい。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확인하려면 '%@'을 입력하세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Digite '%@' para confirmar."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пожалуйста, набери '%@', чтобы подтвердить."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Onaylamak için lütfen '%@' yazın."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请输入\"%@\"确认。"
+          }
+        }
+      }
+    },
+    "Please, before continuing with your user deletion we need you to sign in again for security reasons" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bevor du mit der Löschung deines Benutzers fortfährst, musst du dich aus Sicherheitsgründen erneut anmelden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor, antes de continuar con el borrado de tu cuenta, necesitamos que inicies sesión de nuevo por razones de seguridad."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avant de procéder à la suppression de ton utilisateur, nous avons besoin que tu te connectes à nouveau pour des raisons de sécurité."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mohon sebelum melanjutkan penghapusan pengguna, Anda harus masuk lagi untuk alasan keamanan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prima di procedere con la cancellazione dell'utente, è necessario che tu effettui nuovamente l'accesso per motivi di sicurezza."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ユーザー削除を続行する前に、セキュリティ上の理由から再度サインインしていただきたい。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사용자 삭제를 계속 진행하기 전에 보안상의 이유로 다시 로그인해야 합니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antes de continuar com a exclusão do usuário, precisamos que você faça login novamente por motivos de segurança"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пожалуйста, прежде чем продолжить удаление пользователя, нам нужно, чтобы ты снова вошел в систему в целях безопасности."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lütfen, kullanıcı silme işleminize devam etmeden önce güvenlik nedeniyle tekrar oturum açmanız gerekmektedir"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在继续删除用户之前，出于安全考虑，我们需要您重新登录。"
+          }
+        }
+      }
+    },
+    "Premium" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プレミアム"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "프리미엄"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Премиум"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高级"
+          }
+        }
+      }
+    },
+    "Privacy Policy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenschutzrichtlinie"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política Privacidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Politique de confidentialité"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kebijakan Privasi"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informativa sulla privacy"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プライバシーポリシー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인정보 보호정책"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de privacidade"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Политика конфиденциальности"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gizlilik Politikası"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隐私政策"
+          }
+        }
+      }
+    },
+    "Request image to DALL·E..." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bild zu DALL-E anfordern..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solicita imagen a DALL·E..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demande d'image à DALL-E..."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meminta gambar ke DALL-E..."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Richiedi l'immagine di DALL-E..."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL-Eに画像をリクエストする..."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL-E에 이미지 요청..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solicitar imagem para DALL-E..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запроси изображение для DALL-E..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DALL-E için görüntü isteyin..."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "索取 DALL-E 的图像..."
+          }
+        }
+      }
+    },
+    "Save time" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeit sparen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahorra tiempo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gagne du temps"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menghemat waktu"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Risparmia tempo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "時間を節約する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시간 절약"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Economize tempo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Экономь время"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaman kazanın"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "节省时间"
+          }
+        }
+      }
+    },
+    "Save time counting calories. Aim, shot and check the results." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spare Zeit beim Kalorienzählen. Zielen, schießen und die Ergebnisse überprüfen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahorra tiempo contando calorías. Apunta, dispara y comprueba los resultados."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gagne du temps en comptant les calories. Vise, tire et vérifie les résultats."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menghemat waktu menghitung kalori. Bidik, bidik, dan periksa hasilnya."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Risparmia tempo contando le calorie. Mira, spara e controlla i risultati."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カロリー計算の時間を節約。狙いを定めてショットし、結果をチェックする。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "칼로리 계산 시간을 절약하세요. 조준하고 쏘고 결과를 확인하세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você economiza tempo contando calorias. Mire, atire e verifique os resultados."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сэкономь время на подсчете калорий. Прицелься, выстрели и проверь результат."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalori sayarak zaman kazanın. Nişan alın, ateş edin ve sonuçları kontrol edin."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "节省计算卡路里的时间。瞄准、射击并检查结果。"
+          }
+        }
+      }
+    },
+    "Select Meal" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mahlzeit auswählen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige Comida"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisis ton repas"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilih Makanan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleziona il pasto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食事を選ぶ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "식사 선택"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecione a refeição"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите еду"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yemek Seçiniz"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择餐食"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pengaturan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impostazioni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurações"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置"
+          }
+        }
+      }
+    },
+    "Show your love by giving as a review on the App Store" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeige deine Liebe, indem du eine Bewertung im App Store abgibst"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agradecemos eternamente que nos des tu cariño con una valoración en la App Store"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Montre ton amour en donnant un avis sur l'App Store."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tunjukkan kecintaan Anda dengan memberikan ulasan di App Store"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dimostra il tuo affetto dando una recensione sull'App Store"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Storeのレビューで愛を示そう"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱 스토어에서 리뷰로 사랑을 표현하세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostre seu amor dando uma avaliação na App Store"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Покажи свою любовь, оставив отзыв в App Store"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store'da yorum yaparak sevginizi gösterin"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 App Store 上发表评论，表达您的喜爱之情"
+          }
+        }
+      }
+    },
+    "Sign in with Apple" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit Apple anmelden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar sesión con Apple"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connecte-toi avec Apple"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Masuk dengan Apple"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accedi con Apple"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appleでサインインする"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple로 로그인"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faça login com a Apple"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войдите в систему с помощью Apple"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple ile oturum açın"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用 Apple 登录"
+          }
+        }
+      }
+    },
+    "Start scanning your meals!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fang an, deine Mahlzeiten zu scannen!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empieza a escanear tus comidas!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commence à scanner tes repas !"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mulailah memindai makanan Anda!"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inizia a scansionare i tuoi pasti!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食事のスキャンを始める！"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "식사 스캔을 시작하세요!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comece a escanear suas refeições!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Начни сканировать свои блюда!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yemeklerinizi taramaya başlayın!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开始扫描您的膳食！"
+          }
+        }
+      }
+    },
+    "Store your meals" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lagere deine Mahlzeiten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus comidas en la nube"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conserve tes repas"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menyimpan makanan Anda"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conserva i tuoi pasti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食事を保存する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "식사 저장"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Armazene suas refeições"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Храни свои блюда"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yemeklerinizi saklayın"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "储存您的膳食"
+          }
+        }
+      }
+    },
+    "Store your meals and check its macros in the future." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewahre deine Mahlzeiten auf und überprüfe ihre Makros in der Zukunft."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda tus comidas y comprueba sus macros en el futuro."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stocke tes repas et vérifie ses macros à l'avenir."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simpan makanan Anda dan periksa makronya di kemudian hari."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memorizza i tuoi pasti e controlla i macro in futuro."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食事を保存し、将来マクロをチェックする。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "식단을 저장하고 나중에 매크로를 확인하세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Armazene suas refeições e verifique as macros no futuro."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сохраняй свои блюда и проверяй их макросы в будущем."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yemeklerinizi saklayın ve gelecekte makrolarını kontrol edin."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "存储您的饭菜，并在将来查看其宏量。"
+          }
+        }
+      }
+    },
+    "Terms of Service" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allgemeine Geschäftsbedingungen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Términos de Uso"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conditions d'utilisation"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ketentuan Layanan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termini di servizio"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "利用規約"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "서비스 약관"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termos de serviço"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Условия предоставления услуг"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hizmet Koşulları"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务条款"
+          }
+        }
+      }
+    },
+    "The easiest way of counting calories" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die einfachste Art des Kalorienzählens"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La forma mas fácil de contar calorías"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La façon la plus simple de compter les calories"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cara termudah untuk menghitung kalori"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il modo più semplice per contare le calorie"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カロリー計算の最も簡単な方法"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "칼로리를 계산하는 가장 쉬운 방법"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A maneira mais fácil de contar calorias"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Самый простой способ подсчета калорий"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalori saymanın en kolay yolu"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计算卡路里的最简单方法"
+          }
+        }
+      }
+    },
+    "This app was entirely created by 👨🏻‍💻 one person. Your support will directly contribute to my ongoing work and efforts." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese App wurde komplett von 👨🏻‍💻 einer Person erstellt. Deine Unterstützung trägt direkt zu meiner laufenden Arbeit und meinen Bemühungen bei."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta app fue creada únicamente por 👨🏻‍💻 una persona. Con tu apoyo me ayudarás a mejorarla y contribuirás a crear más productos como este :)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette application a été entièrement créée par 👨🏻‍💻 une personne. Ton soutien contribuera directement à mon travail et à mes efforts continus."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikasi ini sepenuhnya dibuat oleh 👨🏻‍💻 satu orang. Dukungan Anda akan secara langsung berkontribusi pada pekerjaan dan upaya saya yang sedang berlangsung."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questa applicazione è stata interamente creata da 👨🏻‍💻 una persona. Il tuo sostegno contribuirà direttamente al mio lavoro e ai miei sforzi."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このアプリはすべて、👨🏻‍💻 一人の人間によって作られた。あなたのサポートは、私の継続的な仕事と努力に直接貢献する。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 앱은 전적으로 👨🏻‍💻 한 사람이 만들었습니다. 여러분의 지원은 저의 지속적인 작업과 노력에 직접적으로 기여합니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este aplicativo foi inteiramente criado por 👨🏻‍💻 uma pessoa. Seu apoio contribuirá diretamente para meu trabalho e esforços contínuos."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Это приложение было полностью создано 👨🏻‍💻 одним человеком. Твоя поддержка будет напрямую способствовать моей постоянной работе и усилиям."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu uygulama tamamen 👨🏻‍💻 bir kişi tarafından oluşturulmuştur. Desteğiniz, devam eden çalışmalarıma ve çabalarıma doğrudan katkıda bulunacaktır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本应用程序完全由 👨🏻‍💻 一人创建。您的支持将直接促进我的工作和努力。"
+          }
+        }
+      }
+    },
+    "This is a debug view to force a crash and send a report to Crashlytics in order to configure it or test crashes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dies ist eine Debug-Ansicht, um einen Absturz zu erzwingen und einen Bericht an Crashlytics zu senden, um es zu konfigurieren oder Abstürze zu testen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is a debug view to force a crash and send a report to Crashlytics in order to configure it or test crashes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il s'agit d'une vue de débogage permettant de forcer un crash et d'envoyer un rapport à Crashlytics afin de le configurer ou de tester les crashs."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ini adalah tampilan debug untuk memaksa terjadinya kerusakan dan mengirim laporan ke Crashlytics untuk mengonfigurasinya atau menguji kerusakan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questa è una vista di debug per forzare un crash e inviare un rapporto a Crashlytics per configurarlo o testare i crash."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "これは、クラッシュを強制的に発生させ、Crashlyticsにレポートを送信し、クラッシュの設定やテストを行うためのデバッグ・ビューである。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "크래시를 강제 발생시키고 크래시라이틱스에 보고서를 보내 구성하거나 크래시를 테스트하기 위한 디버그 뷰입니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essa é uma exibição de depuração para forçar uma falha e enviar um relatório para o Crashlytics a fim de configurá-lo ou testar falhas"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Это отладочный вид, позволяющий принудительно вызвать крах и отправить отчет в Crashlytics, чтобы настроить его или протестировать крахи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu, bir çökmeyi zorlamak ve yapılandırmak veya çökmeleri test etmek için Crashlytics'e bir rapor göndermek için bir hata ayıklama görünümüdür"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这是一个调试视图，用于强制崩溃并向 Crashlytics 发送报告，以便配置或测试崩溃。"
+          }
+        }
+      }
+    },
+    "This process may take up to a couple of minutes. Thank you for your patience!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Vorgang kann ein paar Minuten dauern. Vielen Dank für deine Geduld!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este proceso podría durar un par de minutos. Gracias por tu paciencia!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce processus peut prendre quelques minutes. Nous te remercions de ta patience !"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proses ini mungkin memerlukan waktu hingga beberapa menit. Terima kasih atas kesabaran Anda!"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questo processo potrebbe richiedere fino a un paio di minuti. Grazie per la tua pazienza!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このプロセスには数分かかる場合がある。ご容赦いただきたい！"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 과정은 최대 몇 분 정도 소요될 수 있습니다. 기다려 주셔서 감사합니다!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esse processo pode levar até alguns minutos. Obrigado pela sua paciência!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Этот процесс может занять до пары минут. Спасибо за терпение!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu işlem birkaç dakika kadar sürebilir. Sabrınız için teşekkür ederiz!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此过程可能需要几分钟。感谢您的耐心等待！"
+          }
+        }
+      }
+    },
+    "Title" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titre"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Judul"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titolo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タイトル"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제목"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Название"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başlık"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标题"
+          }
+        }
+      }
+    },
+    "Try it for " : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probieren Sie es"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pruébala "
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essaie-le "
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cobalah untuk "
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provalo "
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "試してみよう "
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음 용도로 사용해 보세요. "
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Experimente "
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Попробуй для "
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şunun için deneyin "
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "试用 "
+          }
+        }
+      }
+    },
+    "Type here" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hier tippen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escribe aquí"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tape ici"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ketik di sini"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scrivi qui"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ここにタイプする"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "여기에 입력"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Digite aqui"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите здесь"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buraya yazın"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在此键入"
+          }
+        }
+      }
+    },
+    "Type user's name" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippe den Namen des Benutzers"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introduce nombre"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tape le nom de l'utilisateur"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ketik nama pengguna"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Digita il nome dell'utente"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ユーザー名を入力する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사용자 이름 입력"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Digite o nome do usuário"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите имя пользователя"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanıcı adını yazın"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "键入用户名"
+          }
+        }
+      }
+    },
+    "Unlock Premium" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium freischalten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquea Premium"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Débloquer Premium"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buka Kunci Premium"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sblocca Premium"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プレミアムをアンロックする"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "프리미엄 잠금 해제"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloqueio Premium"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Разблокировать премиум"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium Kilidini Aç"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解锁高级"
+          }
+        }
+      }
+    },
+    "Unlock Premium Features" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium-Funktionen freischalten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquea Acceso Premium"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Débloque les fonctions Premium"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Membuka Fitur Premium"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sblocca le funzioni premium"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プレミアム機能をアンロックする"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "프리미엄 기능 잠금 해제"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquear recursos premium"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Разблокируй премиум-функции"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium Özelliklerin Kilidini Açın"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解锁高级功能"
+          }
+        }
+      }
+    },
+    "User" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzer"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuario"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisateur"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pengguna"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utente"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ユーザー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사용자"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuário"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пользователь"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanıcı"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户"
+          }
+        }
+      }
+    },
+    "User ID" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzer-ID"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID de usuario"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID de l'utilisateur"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID Pengguna"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID utente"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ユーザーID"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사용자 ID"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID do usuário"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Идентификатор пользователя"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanıcı Kimliği"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户 ID"
+          }
+        }
+      }
+    },
+    "Vision" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vision"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vision"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vision"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visi"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ビジョン"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비전"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visão"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Видение"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vizyon"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "愿景"
+          }
+        }
+      }
+    },
+    "Welcome to\n🌯%@⚡️" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Willkommen bei\n🌯%@⚡️"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido a\n🌯%@⚡️"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenue à\n🌯%@⚡️"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selamat datang di\n🌯%@⚡️"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benvenuti a\n🌯%@⚡️"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ようこそ\n🌯%@⚡️"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "에 오신 것을 환영합니다\n🌯%@⚡️"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bem-vindo a você\n🌯%@⚡️"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добро пожаловать в\n🌯%@⚡️"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoş geldiniz\n🌯%@⚡️"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "欢迎来到\n🌯%@⚡️"
+          }
+        }
+      }
+    },
+    "Welcome to 🌯WrapFast⚡️!" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Willkommen bei 🌯WrapFast⚡️!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido a 🌯WrapFast⚡️!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenue à 🌯WrapFast⚡️!"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selamat datang di 🌯WrapFast⚡️!"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benvenuti a 🌯WrapFast⚡️!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ようこそ 🌯WrapFast⚡️!"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "에 오신 것을 환영합니다 🌯WrapFast⚡️!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bem-vindo a você 🌯WrapFast⚡️!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добро пожаловать в 🌯%@⚡️!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoş geldiniz 🌯%@⚡️!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "欢迎来到 🌯WrapFast⚡️!"
+          }
+        }
+      }
+    },
+    "You have %lld free analysis left" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du hast noch %lld freie Analysen übrig"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tienes %lld análisis gratuitos disponibles."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il te reste %lld analyse gratuite"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anda memiliki %lld analisis gratis yang tersisa"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hai ancora %lld di analisi libera"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無料分析があと %lld 残っている"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "무료 분석이 %lld 남았습니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você tem %lld análise gratuita restante"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "У тебя осталось %lld свободного анализа"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ücretsiz %lld analiziniz kaldı"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您还剩 %lld 次免费分析"
+          }
+        }
+      }
+    },
+    "Your meals securely stored in the cloud" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Mahlzeiten sicher in der Cloud gespeichert"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda tus comidas de forma segura en la nube"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tes repas sont stockés en toute sécurité dans le nuage."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Makanan Anda tersimpan dengan aman di cloud"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I tuoi pasti sono archiviati in modo sicuro nel cloud"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食事はクラウドに安全に保存される"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "클라우드에 안전하게 저장된 식단"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suas refeições são armazenadas com segurança na nuvem"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Твои блюда надежно хранятся в облаке"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yemekleriniz bulutta güvenli bir şekilde saklanır"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将您的餐点安全地存储在云端"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

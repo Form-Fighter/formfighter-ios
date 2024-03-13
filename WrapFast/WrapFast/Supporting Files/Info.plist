@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>ClashDisplay-Bold.otf</string>
+		<string>ClashDisplay-Extralight.otf</string>
+		<string>ClashDisplay-Light.otf</string>
+		<string>ClashDisplay-Medium.otf</string>
+		<string>ClashDisplay-Regular.otf</string>
+		<string>ClashDisplay-SemiBold.otf</string>
+		<string>BricolageGrotesque-Bold.ttf</string>
+		<string>BricolageGrotesque-ExtraBold.ttf</string>
+		<string>BricolageGrotesque-ExtraLight.ttf</string>
+		<string>BricolageGrotesque-Light.ttf</string>
+		<string>BricolageGrotesque-Medium.ttf</string>
+		<string>BricolageGrotesque-Regular.ttf</string>
+		<string>BricolageGrotesque-SemiBold.ttf</string>
+	</array>
+</dict>
+</plist>
