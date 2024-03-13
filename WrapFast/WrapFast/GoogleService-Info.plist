@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>aaa</string>
+	<string>AIzaSyAzlj4APqi5S58nFtE52Da0fYBOHA2MhaY</string>
 	<key>GCM_SENDER_ID</key>
-	<string>666</string>
+	<string>123456789000</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>your.bundle.identifier</string>
+	<string>com.docexample.WrapFast</string>
 	<key>PROJECT_ID</key>
-	<string>wrapfast</string>
+	<string>mockproject-1234</string>
 	<key>STORAGE_BUCKET</key>
-	<string>wrapfast</string>
+	<string>mockproject-1234.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false/>
+	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false/>
+	<true/>
 	<key>IS_APPINVITE_ENABLED</key>
 	<true/>
 	<key>IS_GCM_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:39323443</string>
+	<string>1:123456789000:ios:f1bf012572b04063</string>
 </dict>
 </plist>
