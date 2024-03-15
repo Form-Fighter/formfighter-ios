@@ -66,6 +66,11 @@
 		818D3FE22B715B3D00DF7299 /* MultiplePagesOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818D3FE12B715B3D00DF7299 /* MultiplePagesOnboardingView.swift */; };
 		818D3FE42B715DCC00DF7299 /* MultiplePagesOnboardingFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818D3FE32B715DCC00DF7299 /* MultiplePagesOnboardingFeature.swift */; };
 		818D3FE62B71643600DF7299 /* MultiplePagesOnboardingFeatureModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818D3FE52B71643600DF7299 /* MultiplePagesOnboardingFeatureModel.swift */; };
+		81A02D3A2BA333CC00061567 /* BrutoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A02D392BA333CC00061567 /* BrutoButton.swift */; };
+		81A02D3E2BA38C4800061567 /* BrutoImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A02D3D2BA38C4800061567 /* BrutoImageButton.swift */; };
+		81A02D402BA38E8400061567 /* BrutoCircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A02D3F2BA38E8400061567 /* BrutoCircleButton.swift */; };
+		81A02D422BA4C31200061567 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A02D412BA4C31200061567 /* CircularProgressView.swift */; };
+		81A02D462BA4C67900061567 /* +Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A02D452BA4C67900061567 /* +Double.swift */; };
 		81D531CF2B7E2B660044D990 /* bot-watching.json in Resources */ = {isa = PBXBuildFile; fileRef = 81D531BB2B7E2B660044D990 /* bot-watching.json */; };
 		81D531D02B7E2B660044D990 /* sandwich-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 81D531BC2B7E2B660044D990 /* sandwich-loading.json */; };
 		81D531D12B7E2B660044D990 /* cat-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 81D531BD2B7E2B660044D990 /* cat-loading.json */; };
@@ -199,6 +204,11 @@
 		818D3FE12B715B3D00DF7299 /* MultiplePagesOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplePagesOnboardingView.swift; sourceTree = "<group>"; };
 		818D3FE32B715DCC00DF7299 /* MultiplePagesOnboardingFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplePagesOnboardingFeature.swift; sourceTree = "<group>"; };
 		818D3FE52B71643600DF7299 /* MultiplePagesOnboardingFeatureModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplePagesOnboardingFeatureModel.swift; sourceTree = "<group>"; };
+		81A02D392BA333CC00061567 /* BrutoButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrutoButton.swift; sourceTree = "<group>"; };
+		81A02D3D2BA38C4800061567 /* BrutoImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrutoImageButton.swift; sourceTree = "<group>"; };
+		81A02D3F2BA38E8400061567 /* BrutoCircleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrutoCircleButton.swift; sourceTree = "<group>"; };
+		81A02D412BA4C31200061567 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
+		81A02D452BA4C67900061567 /* +Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+Double.swift"; sourceTree = "<group>"; };
 		81D531BB2B7E2B660044D990 /* bot-watching.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bot-watching.json"; sourceTree = "<group>"; };
 		81D531BC2B7E2B660044D990 /* sandwich-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sandwich-loading.json"; sourceTree = "<group>"; };
 		81D531BD2B7E2B660044D990 /* cat-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "cat-loading.json"; sourceTree = "<group>"; };
@@ -433,6 +443,7 @@
 				818D3FAE2B700E9D00DF7299 /* +URLCache.swift */,
 				818D3FAC2B700E9D00DF7299 /* +View.swift */,
 				818D3FDF2B71413000DF7299 /* +String.swift */,
+				81A02D452BA4C67900061567 /* +Double.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -510,6 +521,10 @@
 			children = (
 				818D3FD72B713CD400DF7299 /* RoundedButton.swift */,
 				818D3FD92B713D0F00DF7299 /* PillButton.swift */,
+				81A02D392BA333CC00061567 /* BrutoButton.swift */,
+				81A02D3D2BA38C4800061567 /* BrutoImageButton.swift */,
+				81A02D3F2BA38E8400061567 /* BrutoCircleButton.swift */,
+				81A02D412BA4C31200061567 /* CircularProgressView.swift */,
 				81E98B102B72B0B6000E8996 /* CustomSignInWithAppleButton.swift */,
 				81DE14E72B75510700C41EA9 /* CopiedToClipboardView.swift */,
 				81D531EA2B8371E60044D990 /* PremiumBannerView.swift */,
@@ -749,12 +764,14 @@
 				81DE14F42B76352200C41EA9 /* AuthBackendService.swift in Sources */,
 				818D3FB82B700E9D00DF7299 /* +Array.swift in Sources */,
 				81DE14F22B76303200C41EA9 /* Meal.swift in Sources */,
+				81A02D3A2BA333CC00061567 /* BrutoButton.swift in Sources */,
 				818D3FCC2B70100F00DF7299 /* RequestMethod.swift in Sources */,
 				81DE14F62B76354100C41EA9 /* AuthBackendModel.swift in Sources */,
 				81DE14FA2B76371200C41EA9 /* MealVisionRequestModel.swift in Sources */,
 				818D3F7C2B6FA14100DF7299 /* VisionView.swift in Sources */,
 				8125D5BC2B77FC81001A846B /* MessageCell.swift in Sources */,
 				81DE14BE2B73F0D300C41EA9 /* PurchasesManager.swift in Sources */,
+				81A02D3E2BA38C4800061567 /* BrutoImageButton.swift in Sources */,
 				818D3FC72B70100F00DF7299 /* APIClient.swift in Sources */,
 				811A37892B6EBA3B00C9E8B6 /* ChatGPTView.swift in Sources */,
 				818D3F832B6FA3F100DF7299 /* GPTLanguage.swift in Sources */,
@@ -773,9 +790,11 @@
 				818D3FE62B71643600DF7299 /* MultiplePagesOnboardingFeatureModel.swift in Sources */,
 				81DE14EC2B762B9F00C41EA9 /* Endpoints.swift in Sources */,
 				81DE14E22B7546E200C41EA9 /* TermsAndPrivacyPolicyView.swift in Sources */,
+				81A02D422BA4C31200061567 /* CircularProgressView.swift in Sources */,
 				818D3FB52B700E9D00DF7299 /* +View.swift in Sources */,
 				814731F42B7D387900E223A7 /* DALLEService.swift in Sources */,
 				81DE14E82B75510700C41EA9 /* CopiedToClipboardView.swift in Sources */,
+				81A02D462BA4C67900061567 /* +Double.swift in Sources */,
 				818D3FB62B700E9D00DF7299 /* +UIScreen.swift in Sources */,
 				81DE14F02B762F2D00C41EA9 /* MealVisionResponse.swift in Sources */,
 				818D3FD82B713CD400DF7299 /* RoundedButton.swift in Sources */,
@@ -815,6 +834,7 @@
 				81D531ED2B8383610044D990 /* PremiumBadgeView.swift in Sources */,
 				81DE14D42B74EA9A00C41EA9 /* TestCrashlyticsView.swift in Sources */,
 				81DE15002B76A87D00C41EA9 /* ImagePicker.swift in Sources */,
+				81A02D402BA38E8400061567 /* BrutoCircleButton.swift in Sources */,
 				81DE15022B7797B600C41EA9 /* ResultsView.swift in Sources */,
 				818D3FC92B70100F00DF7299 /* Endpoint.swift in Sources */,
 				818D3FBA2B700E9D00DF7299 /* +Date.swift in Sources */,
@@ -973,7 +993,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jjvalino.WrapFast;
+				PRODUCT_BUNDLE_IDENTIFIER = com.docexample.WrapFast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1010,7 +1030,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jjvalino.WrapFast;
+				PRODUCT_BUNDLE_IDENTIFIER = com.docexample.WrapFast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
