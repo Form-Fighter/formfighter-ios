@@ -4,9 +4,11 @@ class ChatGPTVM: ObservableObject {
     @Published var messages = [Message]()
     @Published var newMessage: String = ""
     @Published var isRequesting = false
-    let chatgptService: ChatGPTService
+    let chatgptService: ChatGPTProtocol
     
-    init(chatgptService: ChatGPTService = ChatGPTService()) {
+    // By default, we instantiate the backend Service.
+    // If you want to use AI Proxy, override this and inject the ChatGPTAIProxyService (they conform to the same ChatGPTProtocol)
+    init(chatgptService: ChatGPTProtocol = ChatGPTService()) {
         self.chatgptService = chatgptService
         appendWelcomeMessage()
     }

@@ -5,9 +5,12 @@ class DALLEVM: ObservableObject {
     @Published var pictures = [URL]()
     @Published var newMessage: String = ""
     @Published var isRequesting = false
-    let dalleService: DALLEService
+    let dalleService: DALLEProtocol
     
-    init(dalleService: DALLEService = DALLEService()) {
+    
+    // By default, we instantiate the backend Service.
+    // If you want to use AI Proxy, override this and inject the DALLEAIProxyService (they conform to the same DALLEProtocol)
+    init(dalleService: DALLEProtocol = DALLEService()) {
         self.dalleService = dalleService
         appendWelcomeMessage()
     }

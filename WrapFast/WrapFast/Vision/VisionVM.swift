@@ -10,7 +10,7 @@ class VisionVM: ObservableObject {
     @Published var isShowingError = false
     let keychain = KeychainSwift()
     let authBackendService = AuthBackendService()
-    let analyzeService = AnalyzeMealVisionService()
+    let analyzeService: AnalyzeMealProtocol
     let userManager = UserManager.shared
     var mealResponse: MealVisionResponse?
     
@@ -18,13 +18,23 @@ class VisionVM: ObservableObject {
         KeychainManager.shared.getFreeExtraCredits()
     }
     
-    init(selectedImage: UIImage? = nil, isAnalyzing: Bool = false, isPresentingResults: Bool = false, errorMessage: LocalizedStringKey = "", isShowingError: Bool = false, mealResponse: MealVisionResponse? = nil) {
+    init(selectedImage: UIImage? = nil,
+         isAnalyzing: Bool = false,
+         isPresentingResults: Bool = false,
+         errorMessage: LocalizedStringKey = "",
+         isShowingError: Bool = false,
+         mealResponse: MealVisionResponse? = nil,
+         // By default, we instantiate the backend Service.
+         // If you want to use AI Proxy, override this and inject the AnalyzeMealAIProxyService (they conform to the same AnalyzeMealProtocol)
+         analyzeService: AnalyzeMealProtocol = AnalyzeMealVisionService()
+    ) {
         self.selectedImage = selectedImage
         self.isAnalyzing = isAnalyzing
         self.isPresentingResults = isPresentingResults
         self.errorMessage = errorMessage
         self.isShowingError = isShowingError
         self.mealResponse = mealResponse
+        self.analyzeService = analyzeService
         
         Task {
             await fetchBackendAuthIfNecessary()

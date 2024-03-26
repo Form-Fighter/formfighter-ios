@@ -6,7 +6,7 @@ extension UIImage {
             return ""
         }
         
-        let base64String = imageData.base64EncodedString(options: .lineLength64Characters)
+        let base64String = imageData.base64EncodedString()
         
         return base64String
     }

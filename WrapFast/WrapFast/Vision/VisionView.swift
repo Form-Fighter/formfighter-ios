@@ -231,6 +231,6 @@ struct VisionView: View {
 }
 
 #Preview {
-    VisionView(vm: VisionVM(isAnalyzing: false))
+    VisionView(vm: VisionVM(isAnalyzing: false, analyzeService: AnalyzeMealVisionService()))
         .environmentObject(UserManager.shared)
 }
