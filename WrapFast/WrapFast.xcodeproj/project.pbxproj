@@ -141,6 +141,7 @@
 		81E98B0D2B72AC81000E8996 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E98B0C2B72AC81000E8996 /* KeychainManager.swift */; };
 		81E98B0F2B72B058000E8996 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E98B0E2B72B058000E8996 /* LoginView.swift */; };
 		81E98B112B72B0B6000E8996 /* CustomSignInWithAppleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E98B102B72B0B6000E8996 /* CustomSignInWithAppleButton.swift */; };
+		81F5C5112BCED29A001A0F57 /* AnimatedSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -270,6 +271,7 @@
 		81E98B0C2B72AC81000E8996 /* KeychainManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		81E98B0E2B72B058000E8996 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		81E98B102B72B0B6000E8996 /* CustomSignInWithAppleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomSignInWithAppleButton.swift; sourceTree = "<group>"; };
+		81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedSelector.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -547,6 +549,7 @@
 				81DE14FF2B76A87D00C41EA9 /* ImagePicker.swift */,
 				81DE14D32B74EA9A00C41EA9 /* TestCrashlyticsView.swift */,
 				811A37942B6EC2E400C9E8B6 /* Launch Screen.storyboard */,
+				81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */,
 			);
 			path = "UI Components";
 			sourceTree = "<group>";
@@ -786,6 +789,7 @@
 				81DE14C02B73F6FC00C41EA9 /* PaywallView.swift in Sources */,
 				818D3FCB2B70100F00DF7299 /* RequestError.swift in Sources */,
 				814731F22B7D381B00E223A7 /* DALLEVM.swift in Sources */,
+				81F5C5112BCED29A001A0F57 /* AnimatedSelector.swift in Sources */,
 				81E98B062B72A777000E8996 /* HeartView.swift in Sources */,
 				81DE14DC2B75270500C41EA9 /* FirestoreService.swift in Sources */,
 				8125D5BA2B77FC77001A846B /* Message.swift in Sources */,
