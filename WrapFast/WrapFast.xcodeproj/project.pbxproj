@@ -72,6 +72,7 @@
 		81A02D402BA38E8400061567 /* BrutoCircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A02D3F2BA38E8400061567 /* BrutoCircleButton.swift */; };
 		81A02D422BA4C31200061567 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A02D412BA4C31200061567 /* CircularProgressView.swift */; };
 		81A02D462BA4C67900061567 /* +Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A02D452BA4C67900061567 /* +Double.swift */; };
+		81A56C082BD92A9800C7B596 /* WishKit in Frameworks */ = {isa = PBXBuildFile; productRef = 81A56C072BD92A9800C7B596 /* WishKit */; };
 		81D531CF2B7E2B660044D990 /* bot-watching.json in Resources */ = {isa = PBXBuildFile; fileRef = 81D531BB2B7E2B660044D990 /* bot-watching.json */; };
 		81D531D02B7E2B660044D990 /* sandwich-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 81D531BC2B7E2B660044D990 /* sandwich-loading.json */; };
 		81D531D12B7E2B660044D990 /* cat-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 81D531BD2B7E2B660044D990 /* cat-loading.json */; };
@@ -97,7 +98,6 @@
 		81D531E92B836F7C0044D990 /* MacroBarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D531E82B836F7C0044D990 /* MacroBarsView.swift */; };
 		81D531EB2B8371E60044D990 /* PremiumBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D531EA2B8371E60044D990 /* PremiumBannerView.swift */; };
 		81D531ED2B8383610044D990 /* PremiumBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D531EC2B8383610044D990 /* PremiumBadgeView.swift */; };
-		81D531F02B83BF950044D990 /* WishKit in Frameworks */ = {isa = PBXBuildFile; productRef = 81D531EF2B83BF950044D990 /* WishKit */; };
 		81D531F22B83CBC50044D990 /* ColorSchemeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D531F12B83CBC50044D990 /* ColorSchemeType.swift */; };
 		81D531F42B84A9160044D990 /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D531F32B84A9160044D990 /* Tracker.swift */; };
 		81DE14B92B73EFF600C41EA9 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 81DE14B82B73EFF600C41EA9 /* RevenueCat */; };
@@ -285,7 +285,7 @@
 				81DE14CD2B740A2300C41EA9 /* FirebaseCrashlytics in Frameworks */,
 				81DE14C72B740A2300C41EA9 /* FirebaseAnalytics in Frameworks */,
 				81DE14CF2B740A2300C41EA9 /* FirebaseFirestore in Frameworks */,
-				81D531F02B83BF950044D990 /* WishKit in Frameworks */,
+				81A56C082BD92A9800C7B596 /* WishKit in Frameworks */,
 				81D531E52B7E2BBE0044D990 /* Lottie in Frameworks */,
 				81DE14BB2B73EFF600C41EA9 /* RevenueCatUI in Frameworks */,
 				81DE14E02B752C4600C41EA9 /* StoreKit.framework in Frameworks */,
@@ -634,7 +634,7 @@
 				81DE14CE2B740A2300C41EA9 /* FirebaseFirestore */,
 				81DE14D02B740A2300C41EA9 /* FirebaseFirestoreSwift */,
 				81D531E42B7E2BBE0044D990 /* Lottie */,
-				81D531EF2B83BF950044D990 /* WishKit */,
+				81A56C072BD92A9800C7B596 /* WishKit */,
 			);
 			productName = WrapFast;
 			productReference = 811A37832B6EBA3B00C9E8B6 /* WrapFast.app */;
@@ -670,7 +670,7 @@
 				81DE14B72B73EFF600C41EA9 /* XCRemoteSwiftPackageReference "purchases-ios" */,
 				81DE14C52B740A2300C41EA9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				81D531E32B7E2BBE0044D990 /* XCRemoteSwiftPackageReference "lottie-ios" */,
-				81D531EE2B83BF950044D990 /* XCRemoteSwiftPackageReference "wishkit-ios" */,
+				81A56C062BD92A9800C7B596 /* XCRemoteSwiftPackageReference "wishkit-ios" */,
 			);
 			productRefGroup = 811A37842B6EBA3B00C9E8B6 /* Products */;
 			projectDirPath = "";
@@ -1070,20 +1070,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		81A56C062BD92A9800C7B596 /* XCRemoteSwiftPackageReference "wishkit-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/wishkit/wishkit-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.1;
+			};
+		};
 		81D531E32B7E2BBE0044D990 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.4.0;
-			};
-		};
-		81D531EE2B83BF950044D990 /* XCRemoteSwiftPackageReference "wishkit-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:wishkit/wishkit-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.1.0;
 			};
 		};
 		81DE14B72B73EFF600C41EA9 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
@@ -1113,15 +1113,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		81A56C072BD92A9800C7B596 /* WishKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 81A56C062BD92A9800C7B596 /* XCRemoteSwiftPackageReference "wishkit-ios" */;
+			productName = WishKit;
+		};
 		81D531E42B7E2BBE0044D990 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 81D531E32B7E2BBE0044D990 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
-		};
-		81D531EF2B83BF950044D990 /* WishKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 81D531EE2B83BF950044D990 /* XCRemoteSwiftPackageReference "wishkit-ios" */;
-			productName = WishKit;
 		};
 		81DE14B82B73EFF600C41EA9 /* RevenueCat */ = {
 			isa = XCSwiftPackageProductDependency;
