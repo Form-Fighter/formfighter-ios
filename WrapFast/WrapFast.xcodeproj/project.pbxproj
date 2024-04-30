@@ -22,6 +22,7 @@
 		8125D5C02B77FCFA001A846B /* ChatGPTVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8125D5BF2B77FCFA001A846B /* ChatGPTVM.swift */; };
 		8125D5C22B7BF8F7001A846B /* DALLEResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8125D5C12B7BF8F6001A846B /* DALLEResponse.swift */; };
 		8125D5C42B7BFA16001A846B /* DALLERequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8125D5C32B7BFA16001A846B /* DALLERequestModel.swift */; };
+		81378F9D2BE1188000B00CEC /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 81378F9C2BE1188000B00CEC /* PrivacyInfo.xcprivacy */; };
 		814731F22B7D381B00E223A7 /* DALLEVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814731F12B7D381B00E223A7 /* DALLEVM.swift */; };
 		814731F42B7D387900E223A7 /* DALLEService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814731F32B7D387900E223A7 /* DALLEService.swift */; };
 		818D3F7C2B6FA14100DF7299 /* VisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818D3F7B2B6FA14100DF7299 /* VisionView.swift */; };
@@ -161,6 +162,7 @@
 		8125D5BF2B77FCFA001A846B /* ChatGPTVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGPTVM.swift; sourceTree = "<group>"; };
 		8125D5C12B7BF8F6001A846B /* DALLEResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DALLEResponse.swift; sourceTree = "<group>"; };
 		8125D5C32B7BFA16001A846B /* DALLERequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DALLERequestModel.swift; sourceTree = "<group>"; };
+		81378F9C2BE1188000B00CEC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		814731F12B7D381B00E223A7 /* DALLEVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DALLEVM.swift; sourceTree = "<group>"; };
 		814731F32B7D387900E223A7 /* DALLEService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DALLEService.swift; sourceTree = "<group>"; };
 		818D3F7B2B6FA14100DF7299 /* VisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionView.swift; sourceTree = "<group>"; };
@@ -430,6 +432,7 @@
 			children = (
 				81DE14DD2B752C3D00C41EA9 /* WrapFast.entitlements */,
 				818D3FA82B700AEE00DF7299 /* Info.plist */,
+				81378F9C2BE1188000B00CEC /* PrivacyInfo.xcprivacy */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -689,6 +692,7 @@
 				818D3FA02B7009E100DF7299 /* ClashDisplay-Medium.otf in Resources */,
 				81D531DE2B7E2B660044D990 /* bot-working.json in Resources */,
 				81D531E02B7E2B660044D990 /* like.json in Resources */,
+				81378F9D2BE1188000B00CEC /* PrivacyInfo.xcprivacy in Resources */,
 				81D531D52B7E2B660044D990 /* loading-squares.json in Resources */,
 				818D3FDE2B713FD400DF7299 /* Localizable.xcstrings in Resources */,
 				818D3F952B7009B500DF7299 /* BricolageGrotesque-Bold.ttf in Resources */,
@@ -1083,7 +1087,7 @@
 			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 4.4.0;
+				minimumVersion = 4.4.3;
 			};
 		};
 		81DE14B72B73EFF600C41EA9 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
@@ -1091,7 +1095,7 @@
 			repositoryURL = "https://github.com/RevenueCat/purchases-ios.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 4.36.0;
+				minimumVersion = 4.41.1;
 			};
 		};
 		81DE14C52B740A2300C41EA9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
@@ -1099,7 +1103,7 @@
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 10.22.1;
+				minimumVersion = 10.24.0;
 			};
 		};
 		81E98B092B72AC63000E8996 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
@@ -1107,7 +1111,7 @@
 			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 21.0.0;
+				minimumVersion = 24.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
