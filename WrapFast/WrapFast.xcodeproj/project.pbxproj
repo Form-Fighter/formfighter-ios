@@ -74,6 +74,7 @@
 		81A02D422BA4C31200061567 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A02D412BA4C31200061567 /* CircularProgressView.swift */; };
 		81A02D462BA4C67900061567 /* +Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A02D452BA4C67900061567 /* +Double.swift */; };
 		81A56C082BD92A9800C7B596 /* WishKit in Frameworks */ = {isa = PBXBuildFile; productRef = 81A56C072BD92A9800C7B596 /* WishKit */; };
+		81B2C7052BFF4FF900780BBD /* TipShim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B2C7042BFF4FF900780BBD /* TipShim.swift */; };
 		81D531CF2B7E2B660044D990 /* bot-watching.json in Resources */ = {isa = PBXBuildFile; fileRef = 81D531BB2B7E2B660044D990 /* bot-watching.json */; };
 		81D531D02B7E2B660044D990 /* sandwich-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 81D531BC2B7E2B660044D990 /* sandwich-loading.json */; };
 		81D531D12B7E2B660044D990 /* cat-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 81D531BD2B7E2B660044D990 /* cat-loading.json */; };
@@ -214,6 +215,7 @@
 		81A02D3F2BA38E8400061567 /* BrutoCircleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrutoCircleButton.swift; sourceTree = "<group>"; };
 		81A02D412BA4C31200061567 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		81A02D452BA4C67900061567 /* +Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+Double.swift"; sourceTree = "<group>"; };
+		81B2C7042BFF4FF900780BBD /* TipShim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipShim.swift; sourceTree = "<group>"; };
 		81D531BB2B7E2B660044D990 /* bot-watching.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bot-watching.json"; sourceTree = "<group>"; };
 		81D531BC2B7E2B660044D990 /* sandwich-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sandwich-loading.json"; sourceTree = "<group>"; };
 		81D531BD2B7E2B660044D990 /* cat-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "cat-loading.json"; sourceTree = "<group>"; };
@@ -423,6 +425,7 @@
 				81D531F32B84A9160044D990 /* Tracker.swift */,
 				818D3FBD2B700F6200DF7299 /* Haptic.swift */,
 				81DE14ED2B762BC200C41EA9 /* CryptoUtils.swift */,
+				81B2C7042BFF4FF900780BBD /* TipShim.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -821,6 +824,7 @@
 				8125D5C22B7BF8F7001A846B /* DALLEResponse.swift in Sources */,
 				818D3F7E2B6FA14E00DF7299 /* DALLEView.swift in Sources */,
 				8125D5B22B77F0EC001A846B /* ChatGPTRequestModel.swift in Sources */,
+				81B2C7052BFF4FF900780BBD /* TipShim.swift in Sources */,
 				818D3FB92B700E9D00DF7299 /* +JSONDecoder.swift in Sources */,
 				8125D5C02B77FCFA001A846B /* ChatGPTVM.swift in Sources */,
 				818D3FBE2B700F6200DF7299 /* Logger.swift in Sources */,

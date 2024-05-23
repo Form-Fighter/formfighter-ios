@@ -4075,6 +4075,9 @@
         }
       }
     },
+    "Pic a photo of a meal" : {
+
+    },
     "Please try again later. If the issue continues, consider using a different picture. Occasionally, GPT-4 Vision AI might encounter difficulties interpreting certain images or requests." : {
       "localizations" : {
         "de" : {
@@ -4706,6 +4709,9 @@
         }
       }
     },
+    "Send a message to ChatGPT" : {
+
+    },
     "Settings" : {
       "localizations" : {
         "de" : {
@@ -5125,6 +5131,12 @@
           }
         }
       }
+    },
+    "Tap to choose a picture" : {
+
+    },
+    "Tap to insert user name" : {
+
     },
     "Terms of Service" : {
       "localizations" : {
@@ -6386,6 +6398,9 @@
           }
         }
       }
+    },
+    "Your name will be saved in the cloud." : {
+
     }
   },
   "version" : "1.0"

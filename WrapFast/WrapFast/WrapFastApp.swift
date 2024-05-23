@@ -3,6 +3,7 @@ import Firebase
 import FirebaseAnalytics
 import FirebaseCore
 import WishKit
+import TipKit
 
 @main
 struct WrapFastApp: App {
@@ -22,6 +23,7 @@ struct WrapFastApp: App {
     init() {
         setupFirebase()
         setupWishKit()
+        setupTips()
 //        debugActions()
     }
     
@@ -108,10 +110,16 @@ struct WrapFastApp: App {
     // Feel free to add or comment as many as you need.
     private func debugActions() {
         #if DEBUG
-        KeychainManager.shared.deleteFreeExtraCredits()
+//        KeychainManager.shared.deleteFreeExtraCredits()
 //        KeychainManager.shared.setFreeCredits(with: Const.freeCredits)
-        KeychainManager.shared.deleteAuthToken()
-        hasCompletedOnboarding = false
+//        KeychainManager.shared.deleteAuthToken()
+//        hasCompletedOnboarding = false
+        
+        if #available(iOS 17.0, *) {
+            // This forces all Tips to show up in every single execution.
+            Tips.showAllTipsForTesting()
+        }
+        
         #endif
     }
     
@@ -169,6 +177,16 @@ struct WrapFastApp: App {
         // Save Button (Text color)
         WishKit.config.buttons.saveButton.textColor = .set(light: .white, dark: .white)
 
+    }
+    
+    // Check this nice tutorial for more Tip configurations:
+    // https://asynclearn.medium.com/suggesting-features-to-users-with-tipkit-8128178d6114
+    private func setupTips() {
+        if #available(iOS 17, *) {
+            try? Tips.configure([
+                .displayFrequency(.immediate)
+              ])
+        }
     }
     
     private func isTestFlight() -> Bool {

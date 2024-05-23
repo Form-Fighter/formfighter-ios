@@ -5,12 +5,16 @@ class ChatGPTVM: ObservableObject {
     @Published var newMessage: String = ""
     @Published var isRequesting = false
     let chatgptService: ChatGPTProtocol
+    var chatTip: TipShim? = nil
     
     // By default, we instantiate the backend Service.
     // If you want to use AI Proxy, override this and inject the ChatGPTAIProxyService (they conform to the same ChatGPTProtocol)
     init(chatgptService: ChatGPTProtocol = ChatGPTService()) {
         self.chatgptService = chatgptService
         appendWelcomeMessage()
+        if #available(iOS 17, *) {
+            self.chatTip = ChatTip()
+        }
     }
     
     func appendWelcomeMessage() {

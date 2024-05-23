@@ -13,6 +13,7 @@ class VisionVM: ObservableObject {
     let analyzeService: AnalyzeMealProtocol
     let userManager = UserManager.shared
     var mealResponse: MealVisionResponse?
+    var mealTip: TipShim? = nil
     
     var freeCredits: Int {
         KeychainManager.shared.getFreeExtraCredits()
@@ -39,6 +40,10 @@ class VisionVM: ObservableObject {
         Task {
             await fetchBackendAuthIfNecessary()
             try? await userManager.fetchAllData()
+        }
+        
+        if #available(iOS 17, *) {
+            self.mealTip = MealTip()
         }
     }
     

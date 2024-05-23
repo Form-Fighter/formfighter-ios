@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import TipKit
 
 struct ChatGPTView: View {
     @StateObject var vm: ChatGPTVM
@@ -42,10 +43,18 @@ struct ChatGPTView: View {
                     .frame(width: 40)
                     .disabled(vm.isRequesting)
                 }
+                .popupTipShim(vm.chatTip)
                 .padding()
             }
         }
         .background(.customBackground)
+    }
+}
+
+@available(iOS 17, *)
+struct ChatTip: Tip, TipShim {
+    var title: Text {
+        Text("Send a message to ChatGPT")
     }
 }
 

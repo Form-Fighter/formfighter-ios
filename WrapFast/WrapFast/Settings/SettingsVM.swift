@@ -8,11 +8,16 @@ class SettingsVM: ObservableObject {
     @Published var showAlert = false
     @Published var isShowingDeleteUserAlert = false
     @Published var isShowingDeleteSignIn = false
+    var userTip: TipShim? = nil
     
     init(firestoreService: DatabaseServiceProtocol = FirestoreService(),
          authManager: AuthManager = AuthManager()) {
         self.firestoreService = firestoreService
         self.authManager = authManager
+        
+        if #available(iOS 17, *) {
+            self.userTip = UserTip()
+        }
         
         Task {
             try? await userManager.fetchAllData()

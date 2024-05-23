@@ -1,5 +1,6 @@
 import SwiftUI
 import WishKit
+import TipKit
 
 struct SettingsView: View {
     @AppStorage("gptLanguage") var gptLanguage: GPTLanguage = .english
@@ -162,6 +163,7 @@ struct SettingsView: View {
             } label: {
                 Text("Name")
             }
+            .popupTipShim(vm.userTip)
             
             LabeledContent {
                 Text(userManager.userId)
@@ -304,6 +306,20 @@ struct SettingsView: View {
             Tracker.changedName()
             vm.updateUser(with: user)
         }
+    }
+}
+
+@available(iOS 17, *)
+struct UserTip: Tip, TipShim {
+    var title: Text {
+        Text("Tap to insert user name")
+    }
+    
+    var message: Text? {
+        Text("Your name will be saved in the cloud.")
+    }
+    var image: Image? {
+        Image(systemName: "hand.tap.fill")
     }
 }
 

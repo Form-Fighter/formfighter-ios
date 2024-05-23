@@ -1,5 +1,6 @@
 import SwiftUI
 import Lottie
+import TipKit
 
 struct VisionView: View {
     @AppStorage("gptLanguage") var gptLanguage: GPTLanguage = .english
@@ -156,6 +157,7 @@ struct VisionView: View {
                                 .frame(maxWidth: 50)
                         }
                         .offset(x: 10 ,y: 10)
+                        .popupTipShim(vm.mealTip)
                     }
                     .onTapGesture {
                         Haptic.shared.lightImpact()
@@ -227,6 +229,21 @@ struct VisionView: View {
                     .frame(minHeight: 80, maxHeight: 96)
             }
         }
+    }
+}
+
+@available(iOS 17, *)
+struct MealTip: Tip, TipShim {
+    var title: Text {
+        Text("Tap to choose a picture")
+    }
+    
+    var message: Text? {
+        Text("Pic a photo of a meal")
+    }
+    
+    var image: Image? {
+        Image(systemName: "fork.knife")
     }
 }
 
