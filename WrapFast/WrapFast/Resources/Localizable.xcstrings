@@ -357,6 +357,9 @@
         }
       }
     },
+    "%@'s World!" : {
+
+    },
     "%lld kcal" : {
       "localizations" : {
         "de" : {
@@ -426,6 +429,9 @@
           }
         }
       }
+    },
+    "%lld years old" : {
+
     },
     "%lldg" : {
       "localizations" : {
@@ -1827,6 +1833,12 @@
         }
       }
     },
+    "Art, Interpreted" : {
+
+    },
+    "Birthdate" : {
+
+    },
     "Camera" : {
       "localizations" : {
         "de" : {
@@ -2112,6 +2124,9 @@
           }
         }
       }
+    },
+    "Children's World Through Their Art..." : {
+
     },
     "Choose Image Source" : {
       "localizations" : {
@@ -2813,6 +2828,9 @@
         }
       }
     },
+    "Done" : {
+
+    },
     "Email" : {
       "localizations" : {
         "de" : {
@@ -2952,6 +2970,9 @@
           }
         }
       }
+    },
+    "Experience an AI's perspective on what each artwork symbolizes" : {
+
     },
     "Frequently Asked Questions for %@" : {
       "localizations" : {
@@ -3235,6 +3256,9 @@
         }
       }
     },
+    "How old is %@?" : {
+
+    },
     "ℹ️ FAQ" : {
       "localizations" : {
         "de" : {
@@ -3444,6 +3468,12 @@
           }
         }
       }
+    },
+    "Kid's name" : {
+
+    },
+    "Let's go!" : {
+
     },
     "Logout" : {
       "localizations" : {
@@ -4428,6 +4458,9 @@
         }
       }
     },
+    "Ready to dive into" : {
+
+    },
     "Request image to DALL·E..." : {
       "localizations" : {
         "de" : {
@@ -4991,6 +5024,9 @@
           }
         }
       }
+    },
+    "Store and showcase a colorful array of drawings in your personal gallery" : {
+
     },
     "Store your meals" : {
       "localizations" : {
@@ -5908,6 +5944,9 @@
         }
       }
     },
+    "Unveil the hidden meanings in every drawing with the power of the latest Artificial Intelligence" : {
+
+    },
     "User" : {
       "localizations" : {
         "de" : {
@@ -6118,6 +6157,9 @@
         }
       }
     },
+    "Welcome to" : {
+
+    },
     "Welcome to\n🌯%@⚡️" : {
       "localizations" : {
         "de" : {
@@ -6259,6 +6301,9 @@
         }
       }
     },
+    "Who's the Artist?" : {
+
+    },
     "You have %lld free analysis left" : {
       "localizations" : {
         "de" : {
@@ -6328,6 +6373,9 @@
           }
         }
       }
+    },
+    "Your Gallery in the Cloud" : {
+
     },
     "Your meals securely stored in the cloud" : {
       "localizations" : {
