@@ -21,7 +21,7 @@ protocol ChatGPTProtocol {
 class ChatGPTService: ChatGPTProtocol {
     func sendPrompt(with model: ChatGPTRequestModel) async throws -> ChatGPTResponse {
         let result = try await ApiClient.shared.sendRequest(
-            endpoint: Endpoints.chatgpt,
+            endpoint: Endpoints.chatgpt, // Use Endpoints.anthropicMessages for using Anthropic
             body: JSONEncoder().encode(model),
             responseModel: ChatGPTResponse.self
         )

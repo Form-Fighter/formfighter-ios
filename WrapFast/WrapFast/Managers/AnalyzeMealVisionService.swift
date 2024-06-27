@@ -21,7 +21,7 @@ protocol AnalyzeMealProtocol {
 class AnalyzeMealVisionService: AnalyzeMealProtocol {
     func analyzeMeal(with model: MealVisionRequestModel) async throws -> MealVisionResponse {
         let result = try await ApiClient.shared.sendRequest(
-            endpoint: Endpoints.vision,
+            endpoint: Endpoints.vision, // Use Endpoints.anthropicMessages for using Anthropic
             body: JSONEncoder().encode(model),
             responseModel: MealVisionResponse.self
         )

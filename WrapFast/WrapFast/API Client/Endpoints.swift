@@ -9,6 +9,7 @@ enum Endpoints {
     case vision
     case chatgpt
     case dalle
+    case anthropicMessages
 }
 
 extension Endpoints: Endpoint {
@@ -30,6 +31,8 @@ extension Endpoints: Endpoint {
             return "chatgpt"
         case .dalle:
             return "dalle"
+        case .anthropicMessages:
+            return "anthropic-messages"
         }
     }
     
@@ -47,7 +50,7 @@ extension Endpoints: Endpoint {
             // within a X-Signature header.
             // We also send our app identifier to allow handle custom login within the backend depending on which app
             // make the request.
-        case .vision, .chatgpt, .dalle:
+        case .vision, .chatgpt, .dalle, .anthropicMessages:
             let keychain = KeychainSwift()
             let signature = CryptoUtils.shared.createHmac(key: keychain.get(Const.Keychain.tokenKey) ?? "", phrase: "/" + path)
             return [
@@ -65,7 +68,7 @@ extension Endpoints: Endpoint {
     // Specify which http method use each endpoint.
     var method: RequestMethod {
         switch self {
-        case .vision, .chatgpt, .dalle:
+        case .vision, .chatgpt, .dalle, .anthropicMessages:
             return .post
         case .auth:
             return.get
