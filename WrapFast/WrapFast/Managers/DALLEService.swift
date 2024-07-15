@@ -1,4 +1,5 @@
 import Foundation
+import AIProxy
 
 enum DALLEError: Error {
     case sendPromptError
@@ -37,19 +38,22 @@ class DALLEService: DALLEProtocol {
 }
 
 // This is an example of how you can use AI Proxy to make requests to DALLE instead of using the Node AI Backend
+// Check AIProxy's integration guide for more info: https://www.aiproxy.pro/docs/integration-guide.html
 class DALLEAIProxyService: DALLEProtocol {
     func sendPrompt(with model: DALLERequestModel) async throws -> DALLEResponse {
+        let openAIService = AIProxy.openAIService(partialKey: Const.AIProxy.partialKey)
         
         // You can tweak from here parameters like the prompt to use, image size, number of images generated etc...
         // It's the same as we would do in the Node backend.
-        let requestBody = AIProxy.ImageGenerationRequestBody(
+        // Check AIProxy readme: https://github.com/lzell/AIProxySwift?tab=readme-ov-file#how-to-update-the-package
+        let requestBody = OpenAICreateImageRequestBody(
             prompt: model.prompt,
-            size: "1024x1024",
-            numberOfImages: 1
+            n: 1,
+            size: "1024x1024"
         )
         
         do {
-            let response = try await AIProxy.imageGenerationRequest(imageRequestBody: requestBody)
+            let response = try await openAIService.createImageRequest(body: requestBody)
             
             guard let imageUrl = response.data.first?.url else {
                 throw DALLEError.sendPromptError

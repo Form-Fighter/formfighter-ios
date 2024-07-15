@@ -121,6 +121,10 @@ enum Const {
         static let retryDelay: UInt32 = 2
     }
     
+    enum AIProxy {
+        static let partialKey = "<the-partial-key-from-the-dashboard>"
+    }
+    
     enum DeveloperInfo {
         static let name = "Your Name"
         static let contactEmail = "your@email.com"

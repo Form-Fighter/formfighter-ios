@@ -1,4 +1,5 @@
 import Foundation
+import AIProxy
 
 enum AnalyzeMealVisionError: Error {
     case analyzeMealError
@@ -37,6 +38,7 @@ class AnalyzeMealVisionService: AnalyzeMealProtocol {
 }
 
 // This is an example of how you can use AI Proxy to make requests to OpenAI Vision instead of using the Node AI Backend
+// Check AIProxy's integration guide for more info: https://www.aiproxy.pro/docs/integration-guide.html
 class AnalyzeMealAIProxyService: AnalyzeMealProtocol {
     
     func analyzeMeal(with model: MealVisionRequestModel) async throws -> MealVisionResponse {
@@ -45,26 +47,19 @@ class AnalyzeMealAIProxyService: AnalyzeMealProtocol {
             throw AnalyzeMealVisionError.analyzeMealError
         }
         
-        let content: [AIProxy.Message.ContentType.MessageContent] = [
-            .imageUrl(localURL)
-        ]
-        
         let prompt = "Based on the photo of a meal provided, analyze it as if you were a nutritionist and calculate the total calories, calories per 100 grams, carbs, proteins and fats. Name the meal in \(model.language). Please, always return only a JSON object with the following properties: 'name', 'total_calories_estimation': INT, 'calories_100_grams': INT, 'carbs': INT, 'proteins': INT, 'fats': INT."
         
         // You can tweak from here parameters like the model to use, max tokens, how the system should be have etc...
         // It's the same as we would do in the Node backend.
-        let requestBody = AIProxy.ChatRequestBody(
-            model: "gpt-4-vision-preview",
-            messages: [
-                .init(role: "user", content: .contentArray(content)),
-                .init(role: "system", content: .text(prompt))
-            ],
-            maxTokens: 1000
-        )
         
-        let response = try await AIProxy.chatCompletionRequest(
-            chatRequestBody: requestBody
-        )
+        let openAIService = AIProxy.openAIService(partialKey: Const.AIProxy.partialKey)
+        let response = try await openAIService.chatCompletionRequest(body: .init(
+            model: "gpt-4o",
+            messages: [
+                .init(role: "user", content: .parts([.imageURL(localURL)])),
+                .init(role: "system", content: .text(prompt))
+            ]
+        ))
         
         // As we do in in the Node backend, we get the message from the first choice and remove the markdown syntax that wraps the JSON text.
         guard let responseText = response.choices.first?.message.content.removeMarkdownJsonSyntax else {
