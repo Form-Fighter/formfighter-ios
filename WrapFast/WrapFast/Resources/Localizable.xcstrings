@@ -419,7 +419,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "lld kcal"
+            "value" : "%lld kcal"
           }
         },
         "zh-Hans" : {
@@ -2902,6 +2902,7 @@
       }
     },
     "Error restoring purchases." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

@@ -6,7 +6,6 @@ struct PaywallView: View {
     @EnvironmentObject var userManager: UserManager
     @EnvironmentObject var purchasesManager: PurchasesManager
     @Environment(\.dismiss) var dismiss
-    @State var isErrorRestoring = false
     
     var body: some View {
         ZStack {
@@ -70,14 +69,8 @@ struct PaywallView: View {
                 Tracker.restoredPurchase()
                 userManager.isSubscriptionActive = true
                 dismiss()
-            } else {
-                isErrorRestoring.toggle()
             }
-            
         }
-        .alert(isPresented: $isErrorRestoring, content: {
-            Alert(title: Text("Error restoring purchases."))
-        })
     }
 }
 

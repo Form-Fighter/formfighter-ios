@@ -1103,7 +1103,7 @@
 			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 4.4.3;
+				minimumVersion = 4.5.0;
 			};
 		};
 		81DE14B72B73EFF600C41EA9 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
@@ -1111,7 +1111,7 @@
 			repositoryURL = "https://github.com/RevenueCat/purchases-ios.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 4.41.1;
+				minimumVersion = 5.1.0;
 			};
 		};
 		81DE14C52B740A2300C41EA9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
@@ -1119,7 +1119,7 @@
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 10.24.0;
+				minimumVersion = 10.29.0;
 			};
 		};
 		81E98B092B72AC63000E8996 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
