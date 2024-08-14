@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		811A37872B6EBA3B00C9E8B6 /* WrapFastApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811A37862B6EBA3B00C9E8B6 /* WrapFastApp.swift */; };
 		811A37892B6EBA3B00C9E8B6 /* ChatGPTView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811A37882B6EBA3B00C9E8B6 /* ChatGPTView.swift */; };
 		811A378B2B6EBA3C00C9E8B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 811A378A2B6EBA3C00C9E8B6 /* Assets.xcassets */; };
 		811A378E2B6EBA3C00C9E8B6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 811A378D2B6EBA3C00C9E8B6 /* Preview Assets.xcassets */; };
@@ -108,7 +107,6 @@
 		81DE14BE2B73F0D300C41EA9 /* PurchasesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14BD2B73F0D300C41EA9 /* PurchasesManager.swift */; };
 		81DE14C02B73F6FC00C41EA9 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14BF2B73F6FC00C41EA9 /* PaywallView.swift */; };
 		81DE14C22B73FCB700C41EA9 /* PaywallFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14C12B73FCB700C41EA9 /* PaywallFeature.swift */; };
-		81DE14C42B74087800C41EA9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81DE14C32B74087800C41EA9 /* GoogleService-Info.plist */; };
 		81DE14C72B740A2300C41EA9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 81DE14C62B740A2300C41EA9 /* FirebaseAnalytics */; };
 		81DE14C92B740A2300C41EA9 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 81DE14C82B740A2300C41EA9 /* FirebaseAnalyticsSwift */; };
 		81DE14CB2B740A2300C41EA9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 81DE14CA2B740A2300C41EA9 /* FirebaseAuth */; };
@@ -145,11 +143,14 @@
 		81E98B0F2B72B058000E8996 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E98B0E2B72B058000E8996 /* LoginView.swift */; };
 		81E98B112B72B0B6000E8996 /* CustomSignInWithAppleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E98B102B72B0B6000E8996 /* CustomSignInWithAppleButton.swift */; };
 		81F5C5112BCED29A001A0F57 /* AnimatedSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */; };
+		B20242A12C6C5A8500256733 /* FormFighterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811A37862B6EBA3B00C9E8B6 /* FormFighterApp.swift */; };
+		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
+		B2C9DEED2C6AA65500508A59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		811A37832B6EBA3B00C9E8B6 /* WrapFast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WrapFast.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		811A37862B6EBA3B00C9E8B6 /* WrapFastApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrapFastApp.swift; sourceTree = "<group>"; };
+		811A37832B6EBA3B00C9E8B6 /* FormFighter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FormFighter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		811A37862B6EBA3B00C9E8B6 /* FormFighterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormFighterApp.swift; sourceTree = "<group>"; };
 		811A37882B6EBA3B00C9E8B6 /* ChatGPTView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGPTView.swift; sourceTree = "<group>"; };
 		811A378A2B6EBA3C00C9E8B6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		811A378D2B6EBA3C00C9E8B6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -246,13 +247,12 @@
 		81DE14BD2B73F0D300C41EA9 /* PurchasesManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PurchasesManager.swift; sourceTree = "<group>"; };
 		81DE14BF2B73F6FC00C41EA9 /* PaywallView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		81DE14C12B73FCB700C41EA9 /* PaywallFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallFeature.swift; sourceTree = "<group>"; };
-		81DE14C32B74087800C41EA9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		81DE14D32B74EA9A00C41EA9 /* TestCrashlyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCrashlyticsView.swift; sourceTree = "<group>"; };
 		81DE14D52B75266200C41EA9 /* UserManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		81DE14D72B75267E00C41EA9 /* AuthManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		81DE14D92B75269500C41EA9 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		81DE14DB2B75270500C41EA9 /* FirestoreService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
-		81DE14DD2B752C3D00C41EA9 /* WrapFast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WrapFast.entitlements; sourceTree = "<group>"; };
+		81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighter.entitlements; sourceTree = "<group>"; };
 		81DE14DF2B752C4600C41EA9 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		81DE14E12B7546E200C41EA9 /* TermsAndPrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndPrivacyPolicyView.swift; sourceTree = "<group>"; };
 		81DE14E32B754BE900C41EA9 /* SettingsVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVM.swift; sourceTree = "<group>"; };
@@ -277,6 +277,7 @@
 		81E98B0E2B72B058000E8996 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		81E98B102B72B0B6000E8996 /* CustomSignInWithAppleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomSignInWithAppleButton.swift; sourceTree = "<group>"; };
 		81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedSelector.swift; sourceTree = "<group>"; };
+		B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,7 +307,7 @@
 		811A377A2B6EBA3B00C9E8B6 = {
 			isa = PBXGroup;
 			children = (
-				811A37852B6EBA3B00C9E8B6 /* WrapFast */,
+				811A37852B6EBA3B00C9E8B6 /* FormFighter */,
 				811A37842B6EBA3B00C9E8B6 /* Products */,
 				81DE14DE2B752C4600C41EA9 /* Frameworks */,
 			);
@@ -315,16 +316,16 @@
 		811A37842B6EBA3B00C9E8B6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				811A37832B6EBA3B00C9E8B6 /* WrapFast.app */,
+				811A37832B6EBA3B00C9E8B6 /* FormFighter.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		811A37852B6EBA3B00C9E8B6 /* WrapFast */ = {
+		811A37852B6EBA3B00C9E8B6 /* FormFighter */ = {
 			isa = PBXGroup;
 			children = (
-				81DE14C32B74087800C41EA9 /* GoogleService-Info.plist */,
-				811A37862B6EBA3B00C9E8B6 /* WrapFastApp.swift */,
+				B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */,
+				811A37862B6EBA3B00C9E8B6 /* FormFighterApp.swift */,
 				818D3FCD2B7010BA00DF7299 /* Onboarding */,
 				818D3FCE2B70117000DF7299 /* Authentication */,
 				818D3FD02B70118900DF7299 /* ChatGPT */,
@@ -340,7 +341,7 @@
 				818D3FA72B700AB000DF7299 /* Supporting Files */,
 				811A378C2B6EBA3C00C9E8B6 /* Preview Content */,
 			);
-			path = WrapFast;
+			path = FormFighter;
 			sourceTree = "<group>";
 		};
 		811A378C2B6EBA3C00C9E8B6 /* Preview Content */ = {
@@ -435,7 +436,7 @@
 		818D3FA72B700AB000DF7299 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				81DE14DD2B752C3D00C41EA9 /* WrapFast.entitlements */,
+				81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */,
 				818D3FA82B700AEE00DF7299 /* Info.plist */,
 				81378F9C2BE1188000B00CEC /* PrivacyInfo.xcprivacy */,
 			);
@@ -617,9 +618,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		811A37822B6EBA3B00C9E8B6 /* WrapFast */ = {
+		811A37822B6EBA3B00C9E8B6 /* FormFighter */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 811A37912B6EBA3C00C9E8B6 /* Build configuration list for PBXNativeTarget "WrapFast" */;
+			buildConfigurationList = 811A37912B6EBA3C00C9E8B6 /* Build configuration list for PBXNativeTarget "FormFighter" */;
 			buildPhases = (
 				811A377F2B6EBA3B00C9E8B6 /* Sources */,
 				811A37802B6EBA3B00C9E8B6 /* Frameworks */,
@@ -630,7 +631,7 @@
 			);
 			dependencies = (
 			);
-			name = WrapFast;
+			name = FormFighter;
 			packageProductDependencies = (
 				81E98B0A2B72AC63000E8996 /* KeychainSwift */,
 				81DE14B82B73EFF600C41EA9 /* RevenueCat */,
@@ -646,7 +647,7 @@
 				817FD0362C457E060071468A /* AIProxy */,
 			);
 			productName = WrapFast;
-			productReference = 811A37832B6EBA3B00C9E8B6 /* WrapFast.app */;
+			productReference = 811A37832B6EBA3B00C9E8B6 /* FormFighter.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -664,14 +665,13 @@
 					};
 				};
 			};
-			buildConfigurationList = 811A377E2B6EBA3B00C9E8B6 /* Build configuration list for PBXProject "WrapFast" */;
+			buildConfigurationList = 811A377E2B6EBA3B00C9E8B6 /* Build configuration list for PBXProject "FormFighter" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
-				es,
 			);
 			mainGroup = 811A377A2B6EBA3B00C9E8B6;
 			packageReferences = (
@@ -686,7 +686,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				811A37822B6EBA3B00C9E8B6 /* WrapFast */,
+				811A37822B6EBA3B00C9E8B6 /* FormFighter */,
 			);
 		};
 /* End PBXProject section */
@@ -713,6 +713,7 @@
 				818D3FA12B7009E100DF7299 /* ClashDisplay-Regular.otf in Resources */,
 				81D531D92B7E2B660044D990 /* message.json in Resources */,
 				81D531D82B7E2B660044D990 /* bookmark.json in Resources */,
+				B2C9DEED2C6AA65500508A59 /* GoogleService-Info.plist in Resources */,
 				81D531D72B7E2B660044D990 /* success.json in Resources */,
 				81D531D12B7E2B660044D990 /* cat-loading.json in Resources */,
 				818D3FA22B7009E100DF7299 /* ClashDisplay-Bold.otf in Resources */,
@@ -721,7 +722,6 @@
 				81D531DD2B7E2B660044D990 /* error.json in Resources */,
 				818D3F962B7009B500DF7299 /* BricolageGrotesque-Regular.ttf in Resources */,
 				81D531CF2B7E2B660044D990 /* bot-watching.json in Resources */,
-				81DE14C42B74087800C41EA9 /* GoogleService-Info.plist in Resources */,
 				81D531D02B7E2B660044D990 /* sandwich-loading.json in Resources */,
 				81D531DA2B7E2B660044D990 /* ai.json in Resources */,
 				81D531E22B7E2B660044D990 /* palette.json in Resources */,
@@ -772,6 +772,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */,
 				81DE14FC2B76A37B00C41EA9 /* VisionVM.swift in Sources */,
 				818D3F802B6FA15E00DF7299 /* SettingsView.swift in Sources */,
 				81DE14FE2B76A7D800C41EA9 /* UnlockPremiumView.swift in Sources */,
@@ -794,6 +795,7 @@
 				811A37892B6EBA3B00C9E8B6 /* ChatGPTView.swift in Sources */,
 				818D3F832B6FA3F100DF7299 /* GPTLanguage.swift in Sources */,
 				81E98B0D2B72AC81000E8996 /* KeychainManager.swift in Sources */,
+				B20242A12C6C5A8500256733 /* FormFighterApp.swift in Sources */,
 				818D3FE22B715B3D00DF7299 /* MultiplePagesOnboardingView.swift in Sources */,
 				8125D5BE2B77FC8D001A846B /* MessageView.swift in Sources */,
 				818D3FB42B700E9D00DF7299 /* +UIFont.swift in Sources */,
@@ -804,7 +806,6 @@
 				81E98B062B72A777000E8996 /* HeartView.swift in Sources */,
 				81DE14DC2B75270500C41EA9 /* FirestoreService.swift in Sources */,
 				8125D5BA2B77FC77001A846B /* Message.swift in Sources */,
-				811A37872B6EBA3B00C9E8B6 /* WrapFastApp.swift in Sources */,
 				81DE14F82B76356700C41EA9 /* AnalyzeMealVisionService.swift in Sources */,
 				818D3FE62B71643600DF7299 /* MultiplePagesOnboardingFeatureModel.swift in Sources */,
 				81DE14EC2B762B9F00C41EA9 /* Endpoints.swift in Sources */,
@@ -897,6 +898,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_ENTITLEMENTS[sdk=*]" = "FormFighter/Supporting Files/FormFighter.entitlements";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -960,6 +962,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_ENTITLEMENTS[sdk=*]" = "FormFighter/Supporting Files/FormFighter.entitlements";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -988,24 +991,25 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "WrapFast/Supporting Files/WrapFast.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_ASSET_PATHS = "\"WrapFast/Preview Content\"";
-				DEVELOPMENT_TEAM = 52SFG8NL7R;
+				DEVELOPMENT_ASSET_PATHS = "FormFighter/Preview\\ Content";
+				DEVELOPMENT_TEAM = ZLJZ8QH928;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "WrapFast/Supporting Files/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = WrapFast;
-				INFOPLIST_KEY_NSCameraUsageDescription = "$(PRODUCT_NAME) needs access to your camera to capture photos for analyze the meals.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "$(PRODUCT_NAME) needs access to your photo library to save your images taken with the camera.";
+				INFOPLIST_FILE = "FormFighter/Supporting Files/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Form Fighter";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSCameraUsageDescription = "FormFighter needs access to your camera to capture photos for analyze the meals.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FormFighter needs access to your photo library to save your images taken with the camera.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1013,7 +1017,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.docexample.WrapFast;
+				PRODUCT_BUNDLE_IDENTIFIER = com.formfighter.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1026,23 +1030,24 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "WrapFast/Supporting Files/WrapFast.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"WrapFast/Preview Content\"";
-				DEVELOPMENT_TEAM = 52SFG8NL7R;
+				DEVELOPMENT_ASSET_PATHS = "FormFighter/Preview\\ Content";
+				DEVELOPMENT_TEAM = ZLJZ8QH928;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "WrapFast/Supporting Files/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = WrapFast;
-				INFOPLIST_KEY_NSCameraUsageDescription = "$(PRODUCT_NAME) needs access to your camera to capture photos for analyze the meals.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "$(PRODUCT_NAME) needs access to your photo library to save your images taken with the camera.";
+				INFOPLIST_FILE = "FormFighter/Supporting Files/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Form Fighter";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSCameraUsageDescription = "FormFighter needs access to your camera to capture photos for analyze the meals.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FormFighter needs access to your photo library to save your images taken with the camera.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1050,7 +1055,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.docexample.WrapFast;
+				PRODUCT_BUNDLE_IDENTIFIER = com.formfighter.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1061,7 +1066,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		811A377E2B6EBA3B00C9E8B6 /* Build configuration list for PBXProject "WrapFast" */ = {
+		811A377E2B6EBA3B00C9E8B6 /* Build configuration list for PBXProject "FormFighter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				811A378F2B6EBA3C00C9E8B6 /* Debug */,
@@ -1070,7 +1075,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		811A37912B6EBA3C00C9E8B6 /* Build configuration list for PBXNativeTarget "WrapFast" */ = {
+		811A37912B6EBA3C00C9E8B6 /* Build configuration list for PBXNativeTarget "FormFighter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				811A37922B6EBA3C00C9E8B6 /* Debug */,

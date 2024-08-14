@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1520"
+   LastUpgradeVersion = "1540"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      buildArchitectures = "Automatic">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -15,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "811A37822B6EBA3B00C9E8B6"
-               BuildableName = "WrapFast.app"
-               BlueprintName = "WrapFast"
-               ReferencedContainer = "container:WrapFast.xcodeproj">
+               BuildableName = "FormFighter.app"
+               BlueprintName = "FormFighter"
+               ReferencedContainer = "container:FormFighter.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -44,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "811A37822B6EBA3B00C9E8B6"
-            BuildableName = "WrapFast.app"
-            BlueprintName = "WrapFast"
-            ReferencedContainer = "container:WrapFast.xcodeproj">
+            BuildableName = "FormFighter.app"
+            BlueprintName = "FormFighter"
+            ReferencedContainer = "container:FormFighter.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -61,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "811A37822B6EBA3B00C9E8B6"
-            BuildableName = "WrapFast.app"
-            BlueprintName = "WrapFast"
-            ReferencedContainer = "container:WrapFast.xcodeproj">
+            BuildableName = "FormFighter.app"
+            BlueprintName = "FormFighter"
+            ReferencedContainer = "container:FormFighter.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

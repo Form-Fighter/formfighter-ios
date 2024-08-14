@@ -6,7 +6,7 @@ import WishKit
 import TipKit
 
 @main
-struct WrapFastApp: App {
+struct FormFighterApp: App {
     
     // MARK: We store in UserDefaults wether the user completed the onboarding and the chosen GPT language.
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding: Bool = false

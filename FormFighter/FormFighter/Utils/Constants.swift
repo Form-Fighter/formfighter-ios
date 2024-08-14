@@ -47,7 +47,7 @@ enum Const {
     // MARK: - RevenueCat constants
     enum Purchases {
         // RevenueCat API Key
-        static let key = "YOUR_REVENUECAT_API_KEY"
+        static let key = "appl_tbetznaRrHwgNnEqoSLLuilMMoD"
         
         // Replace 'premium' if you created the entitlement with other name
         static let premiumEntitlementIdentifier = "premium"
@@ -69,7 +69,7 @@ enum Const {
 
         // Please write a simple Terms of Service for my app. Add the current date. Do not add or explain your reasoning. Answer:
         
-        static let termsOfServiceLink = URL(string: "YOUR_URL")
+        static let termsOfServiceLink = URL(string: "https://docs.google.com/document/d/1vuu4Y77t1fuRlV9QBdG4aF25SjOK2uB8clHmQllMa5U/edit?usp=sharing")
         
         // You are an excellent lawyer.
 
@@ -86,12 +86,12 @@ enum Const {
 
         // Please write a simple privacy policy for my app. Add the current date.  Do not add or explain your reasoning. Answer:
         
-        static let privacyPolicyLink = URL(string: "YOUR_URL")
+        static let privacyPolicyLink = URL(string: "https://docs.google.com/document/d/14C0h6XD3a0C3_u2a2wZnx15bIsJobYmxezq-iS-eRrs/edit?usp=sharing")
     }
     
     // MARK: - WishKit API Key. Customer Feedback platform.
     enum WishKit {
-        static let key = "YOUR_WISHKIT_KEY"
+        static let key = "8CD6171C-8CFF-49E9-B79B-0875576A3DA8"
     }
     
     enum Api {
@@ -126,9 +126,9 @@ enum Const {
     }
     
     enum DeveloperInfo {
-        static let name = "Your Name"
-        static let contactEmail = "your@email.com"
-        static let twitterUrl = URL(string: "https://x.com/YOUR_TWITTER_USERNAME")
+        static let name = "Julian Parker"
+        static let contactEmail = "Julian@form-fighter.com"
+        static let twitterUrl = URL(string: "https://x.com/JawnyJDevs")
     }
     
     // The amount of free credits you want to offer to try the app
