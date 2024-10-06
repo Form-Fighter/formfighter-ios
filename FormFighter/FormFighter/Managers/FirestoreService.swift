@@ -35,6 +35,7 @@ class FirestoreService: DatabaseServiceProtocol {
     
     func fetchUser(userID: String) async throws -> User? {
         let documentReference = db.collection("users").document(userID)
+        print("userID:", userID)
         let documentSnapshot = try await documentReference.getDocument()
         
         if !documentSnapshot.exists {

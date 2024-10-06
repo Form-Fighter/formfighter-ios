@@ -40,14 +40,14 @@ class UserManager: ObservableObject {
     
     func createNewUserInDatabase() async throws {
         guard let currentUser = Auth.auth().currentUser else { return }
-        let newUser = User(id: currentUser.uid, name: currentUser.displayName ?? "", email: currentUser.email ?? "")
+        let newUser = User(id: currentUser.uid, name: currentUser.displayName ?? "", firstName: "", lastName: "", weight: "", height: "", wingSpan: "", preferredStance: "", email: currentUser.email ?? "")
         
         try await firestoreService.createUser(userID: newUser.id, with: newUser)
     }
     
     func setFirebaseAuthUser() {
         if let currentUser = Auth.auth().currentUser {
-            self.user = User(id: currentUser.uid, name: "", email: "")
+            self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", weight: "", height: "", wingSpan: "", preferredStance: "", email: "")
         } else {
             Logger.log(message: "There is no current Auth user", event: .error)
         }
@@ -132,6 +132,35 @@ extension UserManager {
     var name: String {
         get { user?.name ?? "unknown" }
         set { user?.name = newValue }
+    }
+    
+    var firstName: String {
+        get { user?.firstName ?? "unknown" }
+        set { user?.firstName = newValue }
+    }
+    var lastName: String {
+        get { user?.lastName ?? "unknown" }
+        set { user?.lastName = newValue }
+    }
+    
+    var weight: String {
+        get { user?.weight ?? "0" }
+        set { user?.weight = newValue }
+    }
+    
+    var wingSpan: String  {
+        get { user?.wingSpan ?? "0" }
+        set { user?.wingSpan = newValue }
+    }
+    
+    var height: String {
+        get { user?.height ?? "0" }
+        set { user?.height = newValue }
+    }
+    
+    var prefferedStance: String {
+        get { user?.preferredStance ?? "unknown" }
+        set { user?.preferredStance = newValue }
     }
     
 }

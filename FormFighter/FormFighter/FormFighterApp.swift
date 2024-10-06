@@ -16,7 +16,7 @@ struct FormFighterApp: App {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.colorScheme) var colorScheme
     
-    @StateObject var purchasesManager = PurchasesManager.shared
+   // @StateObject var purchasesManager = PurchasesManager.shared
     @StateObject var authManager = AuthManager()
     @StateObject var userManager = UserManager.shared
     
@@ -44,13 +44,13 @@ struct FormFighterApp: App {
                 }
             }
             .preferredColorScheme(selectedScheme)
-            .environmentObject(purchasesManager)
+           // .environmentObject(purchasesManager)
             .environmentObject(authManager)
             .environmentObject(userManager)
             .onChange(of: scenePhase) { newScenePhase in
                 switch newScenePhase {
                 case .active:
-                    purchasesManager.fetchCustomerInfo()
+                //    purchasesManager.fetchCustomerInfo()
                     userManager.setAuthenticationState()
                 default:
                     break
@@ -62,8 +62,8 @@ struct FormFighterApp: App {
     var onboarding: some View {
         NavigationStack {
             // MARK: - You can change the type of onboarding you want commenting and uncommenting the views.
-             MultiplePagesOnboardingView()
-//            OnePageOnboardingView()
+             //MultiplePagesOnboardingView()
+            OnePageOnboardingView()
         }
     }
     
@@ -73,11 +73,11 @@ struct FormFighterApp: App {
             TabView {
                 VisionView(vm: VisionVM())
                 // MARK: - You can download the official app from Apple 'SF Symbols' to explore the whole catalog of system images.
-                    .tabItem { Label("Vision", systemImage: "eyes") }
-                ChatGPTView(vm: ChatGPTVM())
-                    .tabItem { Label("ChatGPT", systemImage: "text.bubble") }
-                DALLEView(vm: DALLEVM())
-                    .tabItem { Label("DALL·E", systemImage: "paintbrush") }
+                    .tabItem { Label("Analyze", systemImage: "eyes") }
+                   
+                ProfileView(vm: ProfileVM())
+                    .tabItem { Label("Profile", systemImage: "person") }
+            
                 SettingsView(vm: SettingsVM())
                     .tabItem { Label("Settings", systemImage: "gear") }
             }

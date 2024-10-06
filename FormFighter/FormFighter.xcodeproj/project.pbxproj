@@ -145,6 +145,10 @@
 		81F5C5112BCED29A001A0F57 /* AnimatedSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */; };
 		B20242A12C6C5A8500256733 /* FormFighterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811A37862B6EBA3B00C9E8B6 /* FormFighterApp.swift */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
+		B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */; };
+		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
+		B2B9F0BA2CB0A8EF00D7CFC8 /* ProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B92CB0A8EF00D7CFC8 /* ProfileVM.swift */; };
+		B2B9F0BC2CB0BA8000D7CFC8 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0BB2CB0BA8000D7CFC8 /* CameraView.swift */; };
 		B2C9DEED2C6AA65500508A59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -277,6 +281,11 @@
 		81E98B0E2B72B058000E8996 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		81E98B102B72B0B6000E8996 /* CustomSignInWithAppleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomSignInWithAppleButton.swift; sourceTree = "<group>"; };
 		81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedSelector.swift; sourceTree = "<group>"; };
+		B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighterDebug.entitlements; sourceTree = "<group>"; };
+		B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntNumberFieldView.swift; sourceTree = "<group>"; };
+		B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		B2B9F0B92CB0A8EF00D7CFC8 /* ProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVM.swift; sourceTree = "<group>"; };
+		B2B9F0BB2CB0BA8000D7CFC8 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -324,6 +333,8 @@
 		811A37852B6EBA3B00C9E8B6 /* FormFighter */ = {
 			isa = PBXGroup;
 			children = (
+				B2B9F0B62CB0A77F00D7CFC8 /* Profile */,
+				B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */,
 				B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */,
 				811A37862B6EBA3B00C9E8B6 /* FormFighterApp.swift */,
 				818D3FCD2B7010BA00DF7299 /* Onboarding */,
@@ -506,6 +517,7 @@
 				818D3F7B2B6FA14100DF7299 /* VisionView.swift */,
 				81DE14FB2B76A37B00C41EA9 /* VisionVM.swift */,
 				81DE15012B7797B600C41EA9 /* ResultsView.swift */,
+				B2B9F0BB2CB0BA8000D7CFC8 /* CameraView.swift */,
 			);
 			path = Vision;
 			sourceTree = "<group>";
@@ -560,6 +572,7 @@
 				81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */,
 				81CBCEF22C2B348C005DD2E7 /* crAionOnboarding.swift */,
 				811A37942B6EC2E400C9E8B6 /* Launch Screen.storyboard */,
+				B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */,
 			);
 			path = "UI Components";
 			sourceTree = "<group>";
@@ -613,6 +626,15 @@
 				81DE14DF2B752C4600C41EA9 /* StoreKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B2B9F0B62CB0A77F00D7CFC8 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */,
+				B2B9F0B92CB0A8EF00D7CFC8 /* ProfileVM.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -778,6 +800,7 @@
 				81DE14FE2B76A7D800C41EA9 /* UnlockPremiumView.swift in Sources */,
 				81CBCEF32C2B348C005DD2E7 /* crAionOnboarding.swift in Sources */,
 				81D531E72B836EFE0044D990 /* MacroBarView.swift in Sources */,
+				B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */,
 				81E98B082B72A781000E8996 /* RequestReviewView.swift in Sources */,
 				81D531F22B83CBC50044D990 /* ColorSchemeType.swift in Sources */,
 				81DE14F42B76352200C41EA9 /* AuthBackendService.swift in Sources */,
@@ -786,6 +809,7 @@
 				81A02D3A2BA333CC00061567 /* BrutoButton.swift in Sources */,
 				818D3FCC2B70100F00DF7299 /* RequestMethod.swift in Sources */,
 				81DE14F62B76354100C41EA9 /* AuthBackendModel.swift in Sources */,
+				B2B9F0BC2CB0BA8000D7CFC8 /* CameraView.swift in Sources */,
 				81DE14FA2B76371200C41EA9 /* MealVisionRequestModel.swift in Sources */,
 				818D3F7C2B6FA14100DF7299 /* VisionView.swift in Sources */,
 				8125D5BC2B77FC81001A846B /* MessageCell.swift in Sources */,
@@ -793,6 +817,7 @@
 				81A02D3E2BA38C4800061567 /* BrutoImageButton.swift in Sources */,
 				818D3FC72B70100F00DF7299 /* APIClient.swift in Sources */,
 				811A37892B6EBA3B00C9E8B6 /* ChatGPTView.swift in Sources */,
+				B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */,
 				818D3F832B6FA3F100DF7299 /* GPTLanguage.swift in Sources */,
 				81E98B0D2B72AC81000E8996 /* KeychainManager.swift in Sources */,
 				B20242A12C6C5A8500256733 /* FormFighterApp.swift in Sources */,
@@ -810,6 +835,7 @@
 				818D3FE62B71643600DF7299 /* MultiplePagesOnboardingFeatureModel.swift in Sources */,
 				81DE14EC2B762B9F00C41EA9 /* Endpoints.swift in Sources */,
 				81DE14E22B7546E200C41EA9 /* TermsAndPrivacyPolicyView.swift in Sources */,
+				B2B9F0BA2CB0A8EF00D7CFC8 /* ProfileVM.swift in Sources */,
 				81A02D422BA4C31200061567 /* CircularProgressView.swift in Sources */,
 				818D3FB52B700E9D00DF7299 /* +View.swift in Sources */,
 				814731F42B7D387900E223A7 /* DALLEService.swift in Sources */,
@@ -991,7 +1017,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = FormFighter/FormFighterDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1002,14 +1028,13 @@
 				INFOPLIST_FILE = "FormFighter/Supporting Files/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Form Fighter";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_NSCameraUsageDescription = "FormFighter needs access to your camera to capture photos for analyze the meals.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to record your movements for analysis.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FormFighter needs access to your photo library to save your images taken with the camera.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1040,14 +1065,13 @@
 				INFOPLIST_FILE = "FormFighter/Supporting Files/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Form Fighter";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_NSCameraUsageDescription = "FormFighter needs access to your camera to capture photos for analyze the meals.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to record your movements for analysis.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FormFighter needs access to your photo library to save your images taken with the camera.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

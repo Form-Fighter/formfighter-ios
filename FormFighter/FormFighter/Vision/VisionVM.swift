@@ -42,9 +42,7 @@ class VisionVM: ObservableObject {
             try? await userManager.fetchAllData()
         }
         
-        if #available(iOS 17, *) {
-            self.mealTip = MealTip()
-        }
+       
     }
     
     // MARK: - Backend Authentication. It is needed to do this once from our app.

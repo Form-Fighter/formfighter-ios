@@ -45,6 +45,8 @@ struct LoginView: View {
                     
                     CustomSignInWithAppleButton {
                         signIn()
+                       
+                        
                     }
                     
                     TermsAndPrivacyPolicyView()

@@ -8,7 +8,7 @@ struct OnePageOnboardingView: View {
         ZStack {
             VStack {
                 Spacer()
-                Text("Welcome to\n🌯\(Const.appName)⚡️")
+                Text("Welcome to \(Const.appName)⚡️")
                     .font(.special(.largeTitle, weight: .black))
                     .multilineTextAlignment(.center)
                     .padding(.bottom, 24)
@@ -18,16 +18,16 @@ struct OnePageOnboardingView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     OnboardingFeature(image: Image(systemName: "clock"),
                                       imageColor: .brand,
-                                      title: "Save time",
-                                      description: "The easiest way of counting calories")
+                                      title: "Instant Feedback",
+                                      description: "Perfect your jab with instant feedback powered by AI.")
                     OnboardingFeature(image: Image(systemName: "camera"),
                                       imageColor: .ruby,
-                                      title: "Macros at one shot",
-                                      description: "Just take a picture and check your meal's macros and calories")
+                                      title: "Record",
+                                      description: "Record your strikes and we'll help your sharpen your technique with in depth analytics.")
                     OnboardingFeature(image: Image(systemName: "cloud"),
                                       imageColor: .blue,
-                                      title: "Store your meals",
-                                      description: "Your meals securely stored in the cloud")
+                                      title: "Share with Coaches and Friends",
+                                      description: "Share the break down with coaches and other fighters")
                 }
                 .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
                 
@@ -54,7 +54,12 @@ struct OnePageOnboardingView: View {
             // Other strategy is requesting review after a success moment. For example in a to-do list app,
             // after completing one ore several tasks.
             // It's important to know that you only have 3 ATTEMPTS PER YEAR to request a review, so place them wisely.
-            RequestReviewView()
+           // RequestReviewView()
+            
+            //For PROD
+            LoginView(showPaywallInTheOnboarding: false)
+            
+            
         }
     }
 }

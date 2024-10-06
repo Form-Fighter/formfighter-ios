@@ -212,6 +212,7 @@
       }
     },
     "**Q: What is %@?**\nA: %@ is a nutrition app that uses artificial intelligence to analyze images of meals taken by users in order to estimate macronutrients.\n\n**Q: How does %@ estimate macronutrients in my meals?**\nA: The app utilizes advanced AI algorithms to analyze photos of your meals, estimating the macronutrient content based on the visual characteristics of the food.\n\n** Q: Can %@ replace a professional nutritionist?**\nA: No, %@ is designed to provide estimations and does not replace the expertise of a professional nutritionist.\n\n**Q: Why might the app fail to analyze some images correctly?**\nA: Certain images may not be analyzed accurately due to factors like poor lighting, unclear images, or meals that the AI is not trained to recognize.\n\n**Q: How can I import pictures into %@?**\nA: You can import pictures directly from your Photo Library or use your device's Camera to take a new photo.\n\n**Q: Is there a free trial available?**\nA: Yes, %@ offers a free trial that allows a limited number of meal analyses. This lets you experience the app's capabilities before committing to a subscription.\n\n**Q: What does the premium subscription offer?**\nA: The premium subscription grants unlimited meal analyses, enabling you to use the app's AI analysis feature without restrictions.\n\n**Q: Why is there a cost associated with analyzing unlimited meals?**\nA: Analyzing meals with AI requires significant computer power, which incurs costs. The subscription fee helps cover these expenses, allowing us to offer continuous and efficient service.\n\n**Q: Who can I contact for support or feedback?**\nA: For any support requests or feedback, please reach out to us at %@. We're here to help!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -283,6 +284,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "**问：什么是 %1$@？**\n答：%2$@ 是一款营养应用程序，它利用人工智能分析用户拍摄的膳食图像，从而估算出宏量营养素。\n\n**问：%3$@ 如何估算膳食中的宏量营养素？**\n答：该应用程序利用先进的人工智能算法分析您的膳食照片，并根据食物的视觉特征估算出其中的宏量营养素含量。\n\n**问：%4$@ 能否取代专业营养师？**\n答：不能，%5$@ 的目的是提供估算，不能取代专业营养师的专业知识。\n\n**问：为什么应用程序可能无法正确分析某些图像？**\n答：由于光线不足、图像不清晰或人工智能未受过识别膳食的训练等因素，某些图像可能无法得到准确分析。\n\n**问：如何将图片导入 %6$@?**\n答：您可以直接从照片库导入图片，或使用设备的相机拍摄新照片。\n\n**问：有免费试用版吗？**\n答：是的，%7$@ 提供免费试用，允许进行有限次数的膳食分析。这样您就可以在订购之前体验该应用程序的功能。\n\n**问：高级订阅提供哪些服务？**\n答：高级套餐提供无限量的膳食分析，让您可以不受限制地使用应用程序的人工智能分析功能。\n\n**问：为什么分析无限量膳食需要付费？**\n答：使用人工智能分析膳食需要大量的计算机能力，这就产生了成本。订购费有助于支付这些费用，使我们能够提供持续、高效的服务。\n\n**问：如需支持或反馈，我可以联系谁？**\n答：如有任何支持请求或反馈，请致电 %8$@。我们将竭诚为您服务！"
+          }
+        }
+      }
+    },
+    "**Q: What is %@?**\nA: %@ is an AI-powered app that uses computer vision to give fighters real-time feedback on their punches, focusing on techniques like jabs and other strikes.\n\n**Q: How does %@ provide feedback on my form?**\nA: The app utilizes advanced AI algorithms to analyze videos or images of your punches, comparing your technique against professional fighters to offer personalized insights.\n\n**Q: Can %@ replace a professional coach?**\nA: No, %@ is designed to complement your training by offering AI-driven feedback, but it cannot replace the expertise of a professional coach.\n\n**Q: Why might the app fail to analyze some punches correctly?**\nA: Punch analysis may be affected by factors such as poor lighting, unclear footage, or angles that prevent the AI from recognizing key body movements.\n\n**Q: How can I import videos or images into %@?**\nA: You can import videos or images directly from your Photo Library or record new ones using your device's Camera.\n\n\n**Q: Who can I contact for support or feedback?**\nA: For any support requests or feedback, please reach out to us at julian@form-fighter.com. We're here to help!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "**Q: What is %1$@?**\nA: %2$@ is an AI-powered app that uses computer vision to give fighters real-time feedback on their punches, focusing on techniques like jabs and other strikes.\n\n**Q: How does %3$@ provide feedback on my form?**\nA: The app utilizes advanced AI algorithms to analyze videos or images of your punches, comparing your technique against professional fighters to offer personalized insights.\n\n**Q: Can %4$@ replace a professional coach?**\nA: No, %5$@ is designed to complement your training by offering AI-driven feedback, but it cannot replace the expertise of a professional coach.\n\n**Q: Why might the app fail to analyze some punches correctly?**\nA: Punch analysis may be affected by factors such as poor lighting, unclear footage, or angles that prevent the AI from recognizing key body movements.\n\n**Q: How can I import videos or images into %6$@?**\nA: You can import videos or images directly from your Photo Library or record new ones using your device's Camera.\n\n\n**Q: Who can I contact for support or feedback?**\nA: For any support requests or feedback, please reach out to us at julian@form-fighter.com. We're here to help!"
           }
         }
       }
@@ -714,6 +725,7 @@
       }
     },
     "⭐️ Rate App" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -924,6 +936,7 @@
       }
     },
     "📋 Paste" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1694,6 +1707,7 @@
       }
     },
     "Analyzing image..." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1840,6 +1854,7 @@
 
     },
     "Camera" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1908,6 +1923,9 @@
           }
         }
       }
+    },
+    "Camera Access Denied" : {
+
     },
     "Cancel" : {
       "localizations" : {
@@ -2056,6 +2074,7 @@
       }
     },
     "ChatGPT" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2129,6 +2148,7 @@
 
     },
     "Choose Image Source" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2199,6 +2219,7 @@
       }
     },
     "Choose picture" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2267,6 +2288,9 @@
           }
         }
       }
+    },
+    "Choose Your Preferred Stance" : {
+
     },
     "Color Scheme" : {
       "localizations" : {
@@ -2549,6 +2573,7 @@
       }
     },
     "DALL·E" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2828,10 +2853,21 @@
         }
       }
     },
+    "Detected %lld out of %lld keypoints." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Detected %1$lld out of %2$lld keypoints."
+          }
+        }
+      }
+    },
     "Done" : {
 
     },
     "Email" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2975,6 +3011,9 @@
     "Experience an AI's perspective on what each artwork symbolizes" : {
 
     },
+    "First Name" : {
+
+    },
     "Frequently Asked Questions for %@" : {
       "localizations" : {
         "de" : {
@@ -3044,6 +3083,15 @@
           }
         }
       }
+    },
+    "Height in CM" : {
+
+    },
+    "Height in Feet and Inches" : {
+
+    },
+    "Hello, World!" : {
+
     },
     "Help Us Grow" : {
       "localizations" : {
@@ -3400,7 +3448,11 @@
         }
       }
     },
+    "Instant Feedback" : {
+
+    },
     "Just take a picture and check your meal's macros and calories" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3471,6 +3523,9 @@
       }
     },
     "Kid's name" : {
+
+    },
+    "Last Name" : {
 
     },
     "Let's go!" : {
@@ -3547,6 +3602,7 @@
       }
     },
     "Macros at one shot" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3757,6 +3813,7 @@
       }
     },
     "Name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3966,6 +4023,12 @@
         }
       }
     },
+    "Open Settings" : {
+
+    },
+    "Orthodox" : {
+
+    },
     "P R E M I U M" : {
       "localizations" : {
         "de" : {
@@ -4036,7 +4099,11 @@
         }
       }
     },
+    "Perfect your jab with instant feedback powered by AI." : {
+
+    },
     "Photo Library" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4106,7 +4173,10 @@
         }
       }
     },
-    "Pic a photo of a meal" : {
+    "Please enable camera access in Settings." : {
+
+    },
+    "Please make sure your entire body is visible in the frame." : {
 
     },
     "Please try again later. If the issue continues, consider using a different picture. Occasionally, GPT-4 Vision AI might encounter difficulties interpreting certain images or requests." : {
@@ -4319,6 +4389,9 @@
         }
       }
     },
+    "Preferred Stance" : {
+
+    },
     "Premium" : {
       "localizations" : {
         "de" : {
@@ -4459,7 +4532,22 @@
         }
       }
     },
+    "Profile" : {
+
+    },
+    "Profile View" : {
+
+    },
     "Ready to dive into" : {
+
+    },
+    "Record" : {
+
+    },
+    "Record your strikes and we'll help your sharpen your technique with in depth analytics." : {
+
+    },
+    "Request Camera Access" : {
 
     },
     "Request image to DALL·E..." : {
@@ -4674,6 +4762,7 @@
       }
     },
     "Select Meal" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4746,6 +4835,9 @@
     "Send a message to ChatGPT" : {
 
     },
+    "Setting up camera..." : {
+
+    },
     "Settings" : {
       "localizations" : {
         "de" : {
@@ -4815,6 +4907,12 @@
           }
         }
       }
+    },
+    "Share the break down with coaches and other fighters" : {
+
+    },
+    "Share with Coaches and Friends" : {
+
     },
     "Show your love by giving as a review on the App Store" : {
       "localizations" : {
@@ -4956,6 +5054,9 @@
         }
       }
     },
+    "Southpaw" : {
+
+    },
     "Start scanning your meals!" : {
       "localizations" : {
         "de" : {
@@ -5030,6 +5131,7 @@
 
     },
     "Store your meals" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5169,9 +5271,6 @@
         }
       }
     },
-    "Tap to choose a picture" : {
-
-    },
     "Tap to insert user name" : {
 
     },
@@ -5246,6 +5345,7 @@
       }
     },
     "The easiest way of counting calories" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5456,6 +5556,7 @@
       }
     },
     "This process may take up to a couple of minutes. Thank you for your patience!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5736,6 +5837,7 @@
       }
     },
     "Type user's name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5804,6 +5906,21 @@
           }
         }
       }
+    },
+    "Type your first name" : {
+
+    },
+    "Type your height in CM" : {
+
+    },
+    "Type your last name" : {
+
+    },
+    "Type your weight in lbs" : {
+
+    },
+    "Type your wingspan in CM" : {
+
     },
     "Unlock Premium" : {
       "localizations" : {
@@ -6019,6 +6136,7 @@
       }
     },
     "User ID" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6089,6 +6207,7 @@
       }
     },
     "Vision" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6158,10 +6277,14 @@
         }
       }
     },
+    "Weight" : {
+
+    },
     "Welcome to" : {
 
     },
     "Welcome to\n🌯%@⚡️" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6230,6 +6353,9 @@
           }
         }
       }
+    },
+    "Welcome to %@⚡️" : {
+
     },
     "Welcome to 🌯WrapFast⚡️!" : {
       "extractionState" : "manual",
@@ -6305,7 +6431,14 @@
     "Who's the Artist?" : {
 
     },
+    "Wing Span in Feet" : {
+
+    },
+    "WingSpan in CM" : {
+
+    },
     "You have %lld free analysis left" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6379,6 +6512,7 @@
 
     },
     "Your meals securely stored in the cloud" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

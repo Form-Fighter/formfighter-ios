@@ -126,7 +126,7 @@ enum Const {
     }
     
     enum DeveloperInfo {
-        static let name = "Julian Parker"
+        static let name = "Form Fighter"
         static let contactEmail = "Julian@form-fighter.com"
         static let twitterUrl = URL(string: "https://x.com/JawnyJDevs")
     }
@@ -169,31 +169,24 @@ enum Const {
     //    Please write a simple FAQ for my app. Do not add or explain your reasoning. Answer:
     
     static let faqMarkdown: LocalizedStringKey = """
-                    **Q: What is \(Const.appName)?**
-                    A: \(Const.appName) is a nutrition app that uses artificial intelligence to analyze images of meals taken by users in order to estimate macronutrients.
-                    
-                    **Q: How does \(Const.appName) estimate macronutrients in my meals?**
-                    A: The app utilizes advanced AI algorithms to analyze photos of your meals, estimating the macronutrient content based on the visual characteristics of the food.
-                    
-                    ** Q: Can \(Const.appName) replace a professional nutritionist?**
-                    A: No, \(Const.appName) is designed to provide estimations and does not replace the expertise of a professional nutritionist.
-                    
-                    **Q: Why might the app fail to analyze some images correctly?**
-                    A: Certain images may not be analyzed accurately due to factors like poor lighting, unclear images, or meals that the AI is not trained to recognize.
-                    
-                    **Q: How can I import pictures into \(Const.appName)?**
-                    A: You can import pictures directly from your Photo Library or use your device's Camera to take a new photo.
-                    
-                    **Q: Is there a free trial available?**
-                    A: Yes, \(Const.appName) offers a free trial that allows a limited number of meal analyses. This lets you experience the app's capabilities before committing to a subscription.
-                    
-                    **Q: What does the premium subscription offer?**
-                    A: The premium subscription grants unlimited meal analyses, enabling you to use the app's AI analysis feature without restrictions.
-                    
-                    **Q: Why is there a cost associated with analyzing unlimited meals?**
-                    A: Analyzing meals with AI requires significant computer power, which incurs costs. The subscription fee helps cover these expenses, allowing us to offer continuous and efficient service.
-                    
-                    **Q: Who can I contact for support or feedback?**
-                    A: For any support requests or feedback, please reach out to us at \(Const.DeveloperInfo.contactEmail). We're here to help!
-                    """
+**Q: What is \(Const.appName)?**
+A: \(Const.appName) is an AI-powered app that uses computer vision to give fighters real-time feedback on their punches, focusing on techniques like jabs and other strikes.
+
+**Q: How does \(Const.appName) provide feedback on my form?**
+A: The app utilizes advanced AI algorithms to analyze videos or images of your punches, comparing your technique against professional fighters to offer personalized insights.
+
+**Q: Can \(Const.appName) replace a professional coach?**
+A: No, \(Const.appName) is designed to complement your training by offering AI-driven feedback, but it cannot replace the expertise of a professional coach.
+
+**Q: Why might the app fail to analyze some punches correctly?**
+A: Punch analysis may be affected by factors such as poor lighting, unclear footage, or angles that prevent the AI from recognizing key body movements.
+
+**Q: How can I import videos or images into \(Const.appName)?**
+A: You can import videos or images directly from your Photo Library or record new ones using your device's Camera.
+
+
+**Q: Who can I contact for support or feedback?**
+A: For any support requests or feedback, please reach out to us at julian@form-fighter.com. We're here to help!
+"""
+
 }
