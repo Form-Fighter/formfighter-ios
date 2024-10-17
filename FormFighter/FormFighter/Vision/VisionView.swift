@@ -97,29 +97,24 @@
 
 import SwiftUI
 import AVFoundation
-import Photos
-
 
 struct VisionView: View {
     @State private var hasCameraPermission = false
-    @State private var hasMicrophonePermission = false
-    @State private var hasPhotoLibraryPermission = false
     @State private var showCameraView = false
     @State private var missingPermissionsMessage = ""
     
-    let cameraManager = CameraManager() // Crear instancia de CameraManager
+    let cameraManager = CameraManager() // Create an instance of CameraManager
     
     var body: some View {
         if showCameraView {
             CameraVisionView(cameraManager: cameraManager)
-            
         } else {
             VStack {
                 Text(missingPermissionsMessage)
                     .foregroundColor(.red)
                     .padding()
                 Button(action: openSettings) {
-                    Text("Ir a configuraciones")
+                    Text("Go to settings")
                         .foregroundColor(.blue)
                 }
             }
@@ -129,29 +124,27 @@ struct VisionView: View {
         }
     }
     
-    // Función para abrir la configuración del dispositivo
+    // Function to open the device settings
     func openSettings() {
         if let url = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(url)
         }
     }
     
-    // Verificar todos los permisos
+    // Check all permissions
     func checkPermissions() {
         checkCameraPermission()
-        checkMicrophonePermission()
-        checkPhotoLibraryPermission()
         
-        // Si todos los permisos son otorgados, mostrar la vista de la cámara
-        if hasCameraPermission && hasMicrophonePermission && hasPhotoLibraryPermission {
+        // If all permissions are granted, show the camera view
+        if hasCameraPermission {
             showCameraView = true
         } else {
-            // Mostrar un mensaje con los permisos faltantes
+            // Display a message with the missing permissions
             updateMissingPermissionsMessage()
         }
     }
     
-    // Solicitar permiso para la cámara
+    // Request permission for the camera
     func checkCameraPermission() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
@@ -168,53 +161,12 @@ struct VisionView: View {
         }
     }
     
-    // Solicitar permiso para el micrófono
-    func checkMicrophonePermission() {
-        switch AVCaptureDevice.authorizationStatus(for: .audio) {
-        case .authorized:
-            hasMicrophonePermission = true
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .audio) { granted in
-                DispatchQueue.main.async {
-                    self.hasMicrophonePermission = granted
-                    self.checkPermissions()
-                }
-            }
-        default:
-            hasMicrophonePermission = false
-        }
-    }
-    
-    // Solicitar permiso para la librería de fotos
-    func checkPhotoLibraryPermission() {
-        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
-        switch photoAuthorizationStatus {
-        case .authorized, .limited:
-            hasPhotoLibraryPermission = true
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization { status in
-                DispatchQueue.main.async {
-                    self.hasPhotoLibraryPermission = (status == .authorized || status == .limited)
-                    self.checkPermissions()
-                }
-            }
-        default:
-            hasPhotoLibraryPermission = false
-        }
-    }
-    
-    // Actualizar mensaje de permisos faltantes
+    // Update the missing permissions message
     func updateMissingPermissionsMessage() {
-        missingPermissionsMessage = "Faltan los siguientes permisos:\n"
+        missingPermissionsMessage = "The following permissions are missing:\n"
         if !hasCameraPermission {
-            missingPermissionsMessage += "- Acceso a la cámara\n"
+            missingPermissionsMessage += "- Camera access\n"
         }
-        if !hasMicrophonePermission {
-            missingPermissionsMessage += "- Acceso al micrófono\n"
-        }
-        if !hasPhotoLibraryPermission {
-            missingPermissionsMessage += "- Acceso a la librería de fotos\n"
-        }
-        missingPermissionsMessage += "Por favor, habilítalos en las configuraciones."
+        missingPermissionsMessage += "Please enable them in the settings."
     }
 }

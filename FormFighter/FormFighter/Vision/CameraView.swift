@@ -349,7 +349,7 @@ struct CameraVisionView: View {
     @State private var videoURL: URL?
     @State private var navigateToPreview = false
 
-    // Temporizadores opcionales
+    // Optional timers
     @State private var firstTimer: Timer?
     @State private var secondTimer: Timer?
 
@@ -358,11 +358,11 @@ struct CameraVisionView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Vista de la cámara
+                // Camera view
                 CameraPreviewView(detectedBodyPoints: $detectedBodyPoints, isBodyDetected: $isBodyDetected, cameraManager: cameraManager)
                     .edgesIgnoringSafeArea(.all)
 
-                // Mostrar puntos clave
+                // Show key points
                 ForEach(detectedBodyPoints.indices, id: \.self) { index in
                     let point = detectedBodyPoints[index]
                     Circle()
@@ -372,14 +372,14 @@ struct CameraVisionView: View {
                 }
                 .ignoresSafeArea()
 
-                // Mostrar progreso e icono mientras se analiza
+                // Show progress and icon while analyzing
                 if isCounting && timer1 < 3 {
                     VStack {
                         HStack {
                             Image(systemName: "magnifyingglass")
                                 .foregroundColor(.white)
                                 .font(.largeTitle)
-                            Text("Analizando, mantén el objeto enfocado")
+                            Text("Analyzing, keep the object in focus")
                                 .font(.headline)
                                 .foregroundColor(.white)
                         }
@@ -395,7 +395,7 @@ struct CameraVisionView: View {
                     .padding(.top, 50)
                 }
 
-                // Mostrar cuenta regresiva
+                // Show countdown
                 if timer2 > 0 && timer2 <= 4 && !isRecording {
                     Text("\(4 - timer2)")
                         .font(.system(size: 100))
@@ -406,7 +406,7 @@ struct CameraVisionView: View {
                         .animation(.easeInOut, value: timer2)
                 }
 
-                // Mostrar mensaje de grabación
+                // Show recording message
                 if isRecording {
                     VStack {
                         Image(systemName: "video.fill")
@@ -440,15 +440,15 @@ struct CameraVisionView: View {
             if bodyDetected {
                 startFirstTimer()
             } else {
-                resetTimers() // Detener y resetear los temporizadores cuando el cuerpo sale del cuadro
+                resetTimers() // Stop and reset timers when the body leaves the frame
             }
         }
         .ignoresSafeArea()
     }
 
-    // Iniciar el primer temporizador
+    // Start the first timer
     func startFirstTimer() {
-        guard firstTimer == nil else { return } // Evitar múltiples temporizadores
+        guard firstTimer == nil else { return } // Avoid multiple timers
 
         isCounting = true
         timer1 = 0
@@ -470,9 +470,9 @@ struct CameraVisionView: View {
         }
     }
 
-    // Iniciar el segundo temporizador
+    // Start the second timer
     func startSecondTimer() {
-        guard secondTimer == nil else { return } // Evitar múltiples temporizadores
+        guard secondTimer == nil else { return } // Avoid multiple timers
 
         timer2 = 0
 
@@ -491,7 +491,7 @@ struct CameraVisionView: View {
         }
     }
 
-    // Simular la grabación
+    // Simulate recording
     func simulateRecording() {
         isRecording = true
         recordingMessage = "Recording..."
@@ -505,7 +505,7 @@ struct CameraVisionView: View {
         }
     }
 
-    // Resetear todos los temporizadores y estados
+    // Reset all timers and states
     func resetTimers() {
         firstTimer?.invalidate()
         firstTimer = nil
@@ -525,8 +525,8 @@ struct CameraVisionView: View {
 }
 
 struct CameraPreviewView: UIViewControllerRepresentable {
-    @Binding var detectedBodyPoints: [CGPoint] // Ajuste a puntos del cuerpo
-    @Binding var isBodyDetected: Bool // Cambiar a cuerpo detectado
+    @Binding var detectedBodyPoints: [CGPoint] // Adjusted to body points
+    @Binding var isBodyDetected: Bool // Changed to body detected
     
     var cameraManager: CameraManager
     
@@ -540,11 +540,11 @@ struct CameraPreviewView: UIViewControllerRepresentable {
         func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
             guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
             
-            // Cambiar el tipo de request para detectar puntos del cuerpo
+            // Change the type of request to detect body points
             let request = VNDetectHumanBodyPoseRequest { request, error in
                 guard let results = request.results as? [VNHumanBodyPoseObservation], error == nil else {
                     DispatchQueue.main.async {
-                        self.parent.isBodyDetected = false // Ajustado a cuerpo detectado
+                        self.parent.isBodyDetected = false // Adjusted to body detected
                     }
                     return
                 }
@@ -564,8 +564,8 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                 }
                 
                 DispatchQueue.main.async {
-                    self.parent.detectedBodyPoints = newBodyPoints // Ajustado
-                    self.parent.isBodyDetected = bodyDetected // Ajustado
+                    self.parent.detectedBodyPoints = newBodyPoints // Adjusted
+                    self.parent.isBodyDetected = bodyDetected // Adjusted
                 }
             }
             
@@ -597,15 +597,15 @@ struct CameraPreviewView: UIViewControllerRepresentable {
 class CameraManager: NSObject, ObservableObject {
     var captureSession: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
-    var movieOutput = AVCaptureMovieFileOutput() // Salida para grabación de video
+    var movieOutput = AVCaptureMovieFileOutput() // Output for video recording
     
     func setupCamera(in view: UIView, delegate: AVCaptureVideoDataOutputSampleBufferDelegate) {
         let captureSession = AVCaptureSession()
         captureSession.sessionPreset = .high
         
-        // Configuración del input de cámara
+        // Camera input configuration
         guard let backCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) else {
-            print("No se encontró la cámara trasera")
+            print("Rear camera not found")
             return
         }
         
@@ -614,126 +614,126 @@ class CameraManager: NSObject, ObservableObject {
             if captureSession.canAddInput(input) {
                 captureSession.addInput(input)
             } else {
-                print("No se pudo agregar la entrada de la cámara.")
+                print("Could not add camera input.")
                 return
             }
         } catch {
-            print("Error al agregar la entrada de la cámara: \(error)")
+            print("Error adding camera input: \(error)")
             return
         }
         
-        // Configurar y agregar la salida de video
+        // Configure and add video output
         let videoOutput = AVCaptureVideoDataOutput()
         videoOutput.setSampleBufferDelegate(delegate, queue: DispatchQueue(label: "cameraQueue"))
         if captureSession.canAddOutput(videoOutput) {
             captureSession.addOutput(videoOutput)
         } else {
-            print("No se pudo agregar videoOutput a la sesión.")
+            print("Could not add videoOutput to session.")
             return
         }
         
-        // Configurar y agregar la salida para la grabación de video
+        // Configure and add output for video recording
         if captureSession.canAddOutput(movieOutput) {
             captureSession.addOutput(movieOutput)
         } else {
-            print("No se pudo agregar movieOutput a la sesión.")
+            print("Could not add movieOutput to session.")
             return
         }
         
-        // Configuración de la vista previa
+        // Configure preview layer
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer?.videoGravity = .resizeAspectFill
         previewLayer?.frame = view.layer.bounds
         view.layer.addSublayer(previewLayer!)
         
-        // Iniciar la sesión de captura
+        // Start capture session
         DispatchQueue.global(qos: .background).async {
             captureSession.startRunning()
             DispatchQueue.main.async {
-                print("Sesión de captura activa: \(captureSession.isRunning)")
+                print("Capture session active: \(captureSession.isRunning)")
             }
         }
         
         self.captureSession = captureSession
     }
     
-    // Iniciar grabación
+    // Start recording
     func startRecording() {
-        // Asegurarse de que la sesión de captura está corriendo
+        // Ensure that the capture session is running
         guard let captureSession = captureSession, captureSession.isRunning else {
-            print("La sesión de captura no está activa.")
+            print("Capture session is not active.")
             return
         }
         
-        // Verificar si movieOutput tiene conexiones activas justo antes de grabar
+        // Verify if movieOutput has active connections just before recording
         if movieOutput.connections.isEmpty {
-            print("No hay conexiones activas para la salida de grabación.")
+            print("There are no active connections for recording output.")
             return
         }
         
-        // Si hay conexiones activas, iniciar la grabación
+        // If there are active connections, start recording
         let fileName = "output_\(UUID().uuidString).mov"
         let outputURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(fileName)
         
-        // Verificar si el archivo ya existe y eliminarlo
+        // Check if the file already exists and delete it
         if FileManager.default.fileExists(atPath: outputURL.path) {
             do {
                 try FileManager.default.removeItem(at: outputURL)
-                print("Archivo existente eliminado.")
+                print("Existing file deleted.")
             } catch {
-                print("Error al eliminar el archivo existente: \(error)")
+                print("Error deleting existing file: \(error)")
             }
         }
         
         
         movieOutput.startRecording(to: outputURL, recordingDelegate: self)
-        print("Grabación iniciada, guardando en: \(outputURL.absoluteString)")
+        print("Recording started, saving to: \(outputURL.absoluteString)")
     }
     
-    // Detener grabación
+    // Stop recording
     func stopRecording() {
         if movieOutput.isRecording {
             movieOutput.stopRecording()
         } else {
-            print("No hay grabación en curso para detener.")
+            print("No recording in progress to stop.")
         }
     }
 }
 
-// Extensión para manejar la grabación y guardar el video en la librería de fotos
+// Extension to handle recording and save video to photo library
 extension CameraManager: AVCaptureFileOutputRecordingDelegate {
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let error = error {
-            print("Error en la grabación: \(error.localizedDescription)")
+            print("Error in recording: \(error.localizedDescription)")
         } else {
-            // Verificar si el archivo se creó correctamente
+            // Verify if the file was created correctly
             if FileManager.default.fileExists(atPath: outputFileURL.path) {
-                print("El archivo existe, listo para ser guardado.")
+                print("The file exists, ready to be saved.")
                 
-                // Enviar una notificación con la URL del video grabado
+                // Send a notification with the recorded video's URL
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: NSNotification.Name("VideoRecorded"), object: outputFileURL)
                 }
                 
-                // Solicitar permiso para acceder a la librería de fotos
-                PHPhotoLibrary.requestAuthorization { status in
-                    if status == .authorized || status == .limited {
-                        // Guardar el video en la librería de fotos
-                        PHPhotoLibrary.shared().performChanges({
-                            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)
-                        }) { success, error in
-                            if success {
-                                print("Video guardado en la librería de fotos.")
-                            } else if let error = error {
-                                print("Error al guardar el video: \(error.localizedDescription)")
-                            }
-                        }
-                    } else {
-                        print("Permiso para acceder a la librería de fotos denegado.")
-                    }
-                }
+                // Request permission to access the photo library
+//                PHPhotoLibrary.requestAuthorization { status in
+//                    if status == .authorized || status == .limited {
+//                        // Save the video to the photo library
+//                        PHPhotoLibrary.shared().performChanges({
+//                            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)
+//                        }) { success, error in
+//                            if success {
+//                                print("Video saved to photo library.")
+//                            } else if let error = error {
+//                                print("Error saving video: \(error.localizedDescription)")
+//                            }
+//                        }
+//                    } else {
+//                        print("Permission to access the photo library denied.")
+//                    }
+//                }
             } else {
-                print("El archivo de video no existe o no se creó correctamente.")
+                print("The video file does not exist or was not created correctly.")
             }
         }
     }

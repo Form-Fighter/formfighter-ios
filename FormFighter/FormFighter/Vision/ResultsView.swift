@@ -77,34 +77,38 @@ import AVKit
 
 struct ResultsView: View {
     var videoURL: URL
-    @Environment(\.dismiss) var dismiss // Para hacer dismiss al presionar los botones
+    @Environment(\.dismiss) var dismiss // To dismiss the view when buttons are pressed
     
     @State private var player: AVPlayer
     
     init(videoURL: URL) {
         self.videoURL = videoURL
-        self._player = State(initialValue: AVPlayer(url: videoURL)) // Inicializar el player con el video
+        self._player = State(initialValue: AVPlayer(url: videoURL)) // Initialize the player with the video
     }
     
     var body: some View {
         ZStack {
-            // Video en pantalla completa
+            // Full screen video
             VideoPlayer(player: player)
                 .edgesIgnoringSafeArea(.all)
                 .onAppear {
-                    player.play() // Reproducir automáticamente al aparecer
+                    player.play() // Automatically play when the view appears
                     NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player.currentItem, queue: .main) { _ in
-                        player.seek(to: .zero) // Volver al inicio
-                        player.play() // Reproducir en bucle
+                        player.seek(to: .zero) // Rewind to the beginning
+                        player.play() // Play in a loop
                     }
                 }
+                .onDisappear {
+                    // Delete the temporary video file when the view disappears
+                    deleteTemporaryVideo()
+                }
             
-            // Botones para descartar y guardar
+            // Buttons for discard and save
             VStack {
                 Spacer()
                 HStack {
                     Button("Discard") {
-                        dismiss() // Hacer dismiss de la vista
+                        dismiss() // Dismiss the view
                     }
                     .foregroundColor(.white)
                     .padding()
@@ -112,17 +116,25 @@ struct ResultsView: View {
                     .cornerRadius(10)
                     
                     Button("Save") {
-                        dismiss() // También se usa dismiss, solo para ejemplo
+                        dismiss() // Dismiss is used here as an example
                     }
                     .foregroundColor(.white)
                     .padding()
                     .background(Color.blue)
                     .cornerRadius(10)
                 }
-                .padding(.bottom, 30) // Espacio inferior para los botones
+                .padding(.bottom, 30) // Bottom padding for the buttons
             }
         }
-        .navigationBarBackButtonHidden(true) // Ocultar el botón de atrás
+        .navigationBarBackButtonHidden(true) // Hide the back button
     }
     
+    func deleteTemporaryVideo() {
+        do {
+            try FileManager.default.removeItem(at: videoURL)
+            print("Temporary video file deleted.")
+        } catch {
+            print("Error deleting video file: \(error)")
+        }
+    }
 }
