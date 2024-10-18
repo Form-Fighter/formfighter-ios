@@ -344,24 +344,25 @@ struct CameraVisionView: View {
     @State private var timer2: Int = 0
     @State private var isCounting = false
     @State private var isBodyDetected = false
+    @State private var isBodyComplete = false
     @State private var isRecording = false
     @State private var recordingMessage = ""
     @State private var videoURL: URL?
     @State private var navigateToPreview = false
-
+    
     // Optional timers
     @State private var firstTimer: Timer?
     @State private var secondTimer: Timer?
-
+    
     var cameraManager: CameraManager
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 // Camera view
-                CameraPreviewView(detectedBodyPoints: $detectedBodyPoints, isBodyDetected: $isBodyDetected, cameraManager: cameraManager)
+                CameraPreviewView(detectedBodyPoints: $detectedBodyPoints, isBodyDetected: $isBodyDetected, isBodyComplete: $isBodyComplete, cameraManager: cameraManager)
                     .edgesIgnoringSafeArea(.all)
-
+                
                 // Show key points
                 ForEach(detectedBodyPoints.indices, id: \.self) { index in
                     let point = detectedBodyPoints[index]
@@ -371,7 +372,7 @@ struct CameraVisionView: View {
                         .position(point)
                 }
                 .ignoresSafeArea()
-
+                
                 // Show progress and icon while analyzing
                 if isCounting && timer1 < 3 {
                     VStack {
@@ -386,7 +387,7 @@ struct CameraVisionView: View {
                         .padding()
                         .background(Color.black.opacity(0.6))
                         .cornerRadius(10)
-
+                        
                         ProgressView(value: Double(timer1), total: 3.0)
                             .progressViewStyle(LinearProgressViewStyle(tint: .white))
                             .padding(.top, 10)
@@ -394,7 +395,20 @@ struct CameraVisionView: View {
                     }
                     .padding(.top, 50)
                 }
-
+                
+                // Show message if the body is not fully detected
+                if isBodyDetected && !isBodyComplete {
+                    VStack {
+                        Text("Please ensure your full body is in the frame.")
+                            .font(.headline)
+                            .foregroundColor(.red)
+                            .padding()
+                            .background(Color.black.opacity(0.6))
+                            .cornerRadius(10)
+                    }
+                    .padding(.top, 50)
+                }
+                
                 // Show countdown
                 if timer2 > 0 && timer2 <= 4 && !isRecording {
                     Text("\(4 - timer2)")
@@ -405,7 +419,7 @@ struct CameraVisionView: View {
                         .transition(.scale)
                         .animation(.easeInOut, value: timer2)
                 }
-
+                
                 // Show recording message
                 if isRecording {
                     VStack {
@@ -436,25 +450,32 @@ struct CameraVisionView: View {
                 }
             }
         }
-        .onChange(of: isBodyDetected) { bodyDetected in
-            if bodyDetected {
-                startFirstTimer()
-            } else {
-                resetTimers() // Stop and reset timers when the body leaves the frame
-            }
+        .onChange(of: isBodyDetected) { _ in
+            checkBodyAndStartTimers()
+        }
+        .onChange(of: isBodyComplete) { _ in
+            checkBodyAndStartTimers()
         }
         .ignoresSafeArea()
     }
-
+    
+    func checkBodyAndStartTimers() {
+        if isBodyDetected && isBodyComplete {
+            startFirstTimer()
+        } else {
+            resetTimers()
+        }
+    }
+    
     // Start the first timer
     func startFirstTimer() {
         guard firstTimer == nil else { return } // Avoid multiple timers
-
+        
         isCounting = true
         timer1 = 0
         timer2 = 0
         recordingMessage = ""
-
+        
         firstTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
             if timer1 < 3 {
                 timer1 += 1
@@ -463,19 +484,19 @@ struct CameraVisionView: View {
                 firstTimer = nil
                 startSecondTimer()
             }
-
+            
             if !isBodyDetected {
                 resetTimers()
             }
         }
     }
-
+    
     // Start the second timer
     func startSecondTimer() {
         guard secondTimer == nil else { return } // Avoid multiple timers
-
+        
         timer2 = 0
-
+        
         secondTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
             if timer2 < 4 {
                 timer2 += 1
@@ -484,40 +505,40 @@ struct CameraVisionView: View {
                 secondTimer = nil
                 simulateRecording()
             }
-
+            
             if !isBodyDetected {
                 resetTimers()
             }
         }
     }
-
+    
     // Simulate recording
     func simulateRecording() {
         isRecording = true
         recordingMessage = "Recording..."
-
+        
         cameraManager.startRecording()
-
+        
         Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
             recordingMessage = "Recording finished"
             cameraManager.stopRecording()
             resetTimers()
         }
     }
-
+    
     // Reset all timers and states
     func resetTimers() {
         firstTimer?.invalidate()
         firstTimer = nil
         secondTimer?.invalidate()
         secondTimer = nil
-
+        
         isCounting = false
         isRecording = false
         timer1 = 0
         timer2 = 0
         recordingMessage = ""
-
+        
         if isRecording {
             cameraManager.stopRecording()
         }
@@ -527,6 +548,7 @@ struct CameraVisionView: View {
 struct CameraPreviewView: UIViewControllerRepresentable {
     @Binding var detectedBodyPoints: [CGPoint] // Adjusted to body points
     @Binding var isBodyDetected: Bool // Changed to body detected
+    @Binding var isBodyComplete: Bool // Added to track if the full body is detected
     
     var cameraManager: CameraManager
     
@@ -540,25 +562,34 @@ struct CameraPreviewView: UIViewControllerRepresentable {
         func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
             guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
             
-            // Change the type of request to detect body points
+            // Request to detect body points
             let request = VNDetectHumanBodyPoseRequest { request, error in
                 guard let results = request.results as? [VNHumanBodyPoseObservation], error == nil else {
                     DispatchQueue.main.async {
                         self.parent.isBodyDetected = false // Adjusted to body detected
+                        self.parent.isBodyComplete = false // Mark body as incomplete if error occurs
                     }
                     return
                 }
                 
                 var newBodyPoints: [CGPoint] = []
                 var bodyDetected = false
+                var bodyComplete = true // Variable to track if the full body is detected
+                
+                // Define the key points required for full body detection
+                let requiredPoints: [VNHumanBodyPoseObservation.JointName] = [.nose, .leftAnkle, .rightAnkle, .leftWrist, .rightWrist]
                 
                 for bodyObservation in results {
                     bodyDetected = true
                     if let recognizedPoints = try? bodyObservation.recognizedPoints(.all) {
-                        for (_, point) in recognizedPoints {
-                            let normalizedPoint = point.location
-                            let convertedPoint = self.convertVisionPoint(normalizedPoint, to: self.parent.cameraManager.previewLayer)
-                            newBodyPoints.append(convertedPoint)
+                        for pointName in requiredPoints {
+                            if let point = recognizedPoints[pointName], point.confidence > 0.5 {
+                                let normalizedPoint = point.location
+                                let convertedPoint = self.convertVisionPoint(normalizedPoint, to: self.parent.cameraManager.previewLayer)
+                                newBodyPoints.append(convertedPoint)
+                            } else {
+                                bodyComplete = false // If any key point is missing, mark as incomplete
+                            }
                         }
                     }
                 }
@@ -566,6 +597,11 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                 DispatchQueue.main.async {
                     self.parent.detectedBodyPoints = newBodyPoints // Adjusted
                     self.parent.isBodyDetected = bodyDetected // Adjusted
+                    self.parent.isBodyComplete = bodyComplete // Only true if the full body is detected
+                    
+                    if !bodyComplete {
+                        print("Please ensure the full body is in the frame.") // You can replace this with a visual message
+                    }
                 }
             }
             
@@ -716,22 +752,22 @@ extension CameraManager: AVCaptureFileOutputRecordingDelegate {
                 }
                 
                 // Request permission to access the photo library
-//                PHPhotoLibrary.requestAuthorization { status in
-//                    if status == .authorized || status == .limited {
-//                        // Save the video to the photo library
-//                        PHPhotoLibrary.shared().performChanges({
-//                            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)
-//                        }) { success, error in
-//                            if success {
-//                                print("Video saved to photo library.")
-//                            } else if let error = error {
-//                                print("Error saving video: \(error.localizedDescription)")
-//                            }
-//                        }
-//                    } else {
-//                        print("Permission to access the photo library denied.")
-//                    }
-//                }
+                //                PHPhotoLibrary.requestAuthorization { status in
+                //                    if status == .authorized || status == .limited {
+                //                        // Save the video to the photo library
+                //                        PHPhotoLibrary.shared().performChanges({
+                //                            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)
+                //                        }) { success, error in
+                //                            if success {
+                //                                print("Video saved to photo library.")
+                //                            } else if let error = error {
+                //                                print("Error saving video: \(error.localizedDescription)")
+                //                            }
+                //                        }
+                //                    } else {
+                //                        print("Permission to access the photo library denied.")
+                //                    }
+                //                }
             } else {
                 print("The video file does not exist or was not created correctly.")
             }
