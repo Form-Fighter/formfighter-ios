@@ -397,7 +397,7 @@ struct CameraVisionView: View {
                 }
                 
                 // Show message if the body is not fully detected
-                if isBodyDetected && !isBodyComplete {
+                if !isBodyDetected || !isBodyComplete {
                     VStack {
                         Text("Please ensure your full body is in the frame.")
                             .font(.headline)
@@ -583,7 +583,7 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                     bodyDetected = true
                     if let recognizedPoints = try? bodyObservation.recognizedPoints(.all) {
                         for pointName in requiredPoints {
-                            if let point = recognizedPoints[pointName], point.confidence > 0.5 {
+                            if let point = recognizedPoints[pointName], point.confidence > 0.05 {
                                 let normalizedPoint = point.location
                                 let convertedPoint = self.convertVisionPoint(normalizedPoint, to: self.parent.cameraManager.previewLayer)
                                 newBodyPoints.append(convertedPoint)
