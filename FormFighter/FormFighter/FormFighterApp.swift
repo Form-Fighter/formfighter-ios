@@ -20,6 +20,8 @@ struct FormFighterApp: App {
     @StateObject var authManager = AuthManager()
     @StateObject var userManager = UserManager.shared
     
+    let cameraManager = CameraManager() // Create an instance of CameraManager
+    
     init() {
         setupFirebase()
         setupWishKit()
@@ -71,7 +73,7 @@ struct FormFighterApp: App {
         // MARK: - Add or remove here as many views as tabs you need. It is recommended maximum 5 tabs.
         NavigationStack {
             TabView {
-                VisionView()
+                VisionView(cameraManager: cameraManager)
                 // MARK: - You can download the official app from Apple 'SF Symbols' to explore the whole catalog of system images.
                     .tabItem { Label("Analyze", systemImage: "eyes") }
                    

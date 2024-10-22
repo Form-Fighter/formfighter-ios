@@ -103,7 +103,7 @@ struct VisionView: View {
     @State private var showCameraView = false
     @State private var missingPermissionsMessage = ""
     
-    let cameraManager = CameraManager() // Create an instance of CameraManager
+    let cameraManager: CameraManager
     
     var body: some View {
         if showCameraView {
