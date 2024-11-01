@@ -349,10 +349,15 @@ struct CameraVisionView: View {
     @State private var recordingMessage = ""
     @State private var videoURL: URL?
     @State private var navigateToPreview = false
+    @State private var isFacingCamera: Bool = true
     
     // Optional timers
     @State private var firstTimer: Timer?
     @State private var secondTimer: Timer?
+    
+    // Almacena los puntos previos
+    @State private var previousBodyPoints: [CGPoint] = []
+    @State private var smoothedBodyPoints: [CGPoint] = []
     
     var cameraManager: CameraManager
     
@@ -360,18 +365,25 @@ struct CameraVisionView: View {
         NavigationStack {
             ZStack {
                 // Camera view
-                CameraPreviewView(detectedBodyPoints: $detectedBodyPoints, isBodyDetected: $isBodyDetected, isBodyComplete: $isBodyComplete, cameraManager: cameraManager)
-                    .edgesIgnoringSafeArea(.all)
+                CameraPreviewView(detectedBodyPoints: $detectedBodyPoints,
+                                  smoothedBodyPoints: $smoothedBodyPoints,
+                                  isBodyDetected: $isBodyDetected,
+                                  isBodyComplete: $isBodyComplete,
+                                  isFacingCamera: $isFacingCamera,
+                                  cameraManager: cameraManager)
+                .edgesIgnoringSafeArea(.all)
+                
                 
                 // Show key points
-                ForEach(detectedBodyPoints.indices, id: \.self) { index in
-                    let point = detectedBodyPoints[index]
+                ForEach(smoothedBodyPoints.indices, id: \.self) { index in
+                    let point = smoothedBodyPoints[index]
                     Circle()
                         .fill(Color.green)
                         .frame(width: 10, height: 10)
                         .position(point)
                 }
                 .ignoresSafeArea()
+                
                 
                 // Show progress and icon while analyzing
                 if isCounting && timer1 < 3 {
@@ -400,6 +412,18 @@ struct CameraVisionView: View {
                 if !isBodyDetected || !isBodyComplete {
                     VStack {
                         Text("Please ensure your full body is in the frame.")
+                            .font(.headline)
+                            .foregroundColor(.red)
+                            .padding()
+                            .background(Color.black.opacity(0.6))
+                            .cornerRadius(10)
+                    }
+                    .padding(.top, 50)
+                }
+                
+                if !isFacingCamera && isBodyDetected && isBodyComplete {
+                    VStack {
+                        Text("Please face the camera directly.")
                             .font(.headline)
                             .foregroundColor(.red)
                             .padding()
@@ -456,11 +480,32 @@ struct CameraVisionView: View {
         .onChange(of: isBodyComplete) { _ in
             checkBodyAndStartTimers()
         }
+        .onChange(of: isFacingCamera) { _ in
+            checkBodyAndStartTimers()
+        }
         .ignoresSafeArea()
     }
     
+    // Función que actualiza y suaviza los puntos detectados
+    func updateDetectedBodyPoints(newPoints: [CGPoint]) {
+        guard newPoints.count == detectedBodyPoints.count else {
+            smoothedBodyPoints = newPoints
+            previousBodyPoints = newPoints
+            return
+        }
+        
+        // Suaviza cada punto con interpolación
+        smoothedBodyPoints = zip(previousBodyPoints, newPoints).map { previous, current in
+            CGPoint(x: previous.x * 0.7 + current.x * 0.3, y: previous.y * 0.7 + current.y * 0.3)
+        }
+        
+        // Actualiza los puntos previos
+        previousBodyPoints = newPoints
+    }
+    
     func checkBodyAndStartTimers() {
-        if isBodyDetected && isBodyComplete {
+        print("isBodyDetected: \(isBodyDetected), isBodyComplete: \(isBodyComplete), isFacingCamera: \(isFacingCamera)")
+        if isBodyDetected && isBodyComplete && isFacingCamera {
             startFirstTimer()
         } else {
             resetTimers()
@@ -546,14 +591,19 @@ struct CameraVisionView: View {
 }
 
 struct CameraPreviewView: UIViewControllerRepresentable {
-    @Binding var detectedBodyPoints: [CGPoint] // Adjusted to body points
-    @Binding var isBodyDetected: Bool // Changed to body detected
-    @Binding var isBodyComplete: Bool // Added to track if the full body is detected
+    @Binding var detectedBodyPoints: [CGPoint]
+    @Binding var smoothedBodyPoints: [CGPoint]
+    @Binding var isBodyDetected: Bool
+    @Binding var isBodyComplete: Bool
+    @Binding var isFacingCamera: Bool
     
     var cameraManager: CameraManager
     
     class Coordinator: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         var parent: CameraPreviewView
+        
+        // Umbral de confianza ajustable
+        let confidenceThreshold: VNConfidence = 0.005
         
         init(parent: CameraPreviewView) {
             self.parent = parent
@@ -562,51 +612,80 @@ struct CameraPreviewView: UIViewControllerRepresentable {
         func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
             guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
             
-            // Request to detect body points
             let request = VNDetectHumanBodyPoseRequest { request, error in
                 guard let results = request.results as? [VNHumanBodyPoseObservation], error == nil else {
                     DispatchQueue.main.async {
-                        self.parent.isBodyDetected = false // Adjusted to body detected
-                        self.parent.isBodyComplete = false // Mark body as incomplete if error occurs
+                        self.parent.isBodyDetected = false
+                        self.parent.isBodyComplete = false
+                        self.parent.isFacingCamera = false
                     }
                     return
                 }
                 
                 var newBodyPoints: [CGPoint] = []
                 var bodyDetected = false
-                var bodyComplete = true // Variable to track if the full body is detected
+                var bodyComplete = true
+                var facingCamera = false // Variable local para determinar si está de frente
                 
-                // Define the key points required for full body detection
                 let requiredPoints: [VNHumanBodyPoseObservation.JointName] = [.nose, .leftAnkle, .rightAnkle, .leftWrist, .rightWrist]
                 
                 for bodyObservation in results {
-                    bodyDetected = true
                     if let recognizedPoints = try? bodyObservation.recognizedPoints(.all) {
+                        if !recognizedPoints.isEmpty {
+                            bodyDetected = true
+                        }
+                        
+                        // Detección del ángulo entre los hombros
+                        if let leftShoulder = recognizedPoints[.leftShoulder],
+                           let rightShoulder = recognizedPoints[.rightShoulder],
+                           leftShoulder.confidence > self.confidenceThreshold,
+                           rightShoulder.confidence > self.confidenceThreshold {
+                            
+                            let shoulderAngle = self.calculateAngleBetweenPoints(left: leftShoulder.location, right: rightShoulder.location)
+                            let adjustedAngle = abs(shoulderAngle - 90)
+                            print("Shoulder Angle: \(shoulderAngle) degrees")
+                            print("Adjusted Shoulder Angle: \(adjustedAngle) degrees")
+                            
+                            facingCamera = adjustedAngle <= 5 // Ajusta el umbral según sea necesario
+                        } else {
+                            facingCamera = false
+                        }
+                        
+                        // Verificar si todos los puntos requeridos están presentes
                         for pointName in requiredPoints {
-                            if let point = recognizedPoints[pointName], point.confidence > 0.05 {
+                            if let point = recognizedPoints[pointName], point.confidence > self.confidenceThreshold {
                                 let normalizedPoint = point.location
                                 let convertedPoint = self.convertVisionPoint(normalizedPoint, to: self.parent.cameraManager.previewLayer)
                                 newBodyPoints.append(convertedPoint)
                             } else {
-                                bodyComplete = false // If any key point is missing, mark as incomplete
+                                bodyComplete = false
                             }
                         }
                     }
                 }
                 
+                // Actualización de estados en el hilo principal
                 DispatchQueue.main.async {
-                    self.parent.detectedBodyPoints = newBodyPoints // Adjusted
-                    self.parent.isBodyDetected = bodyDetected // Adjusted
-                    self.parent.isBodyComplete = bodyComplete // Only true if the full body is detected
+                    self.parent.detectedBodyPoints = newBodyPoints
+                    self.parent.isBodyDetected = bodyDetected
+                    self.parent.isBodyComplete = bodyComplete
+                    self.parent.isFacingCamera = facingCamera
                     
-                    if !bodyComplete {
-                        print("Please ensure the full body is in the frame.") // You can replace this with a visual message
-                    }
+                    // Llama a la función de suavizado
+                    self.parent.smoothedBodyPoints = self.parent.applySmoothing(to: newBodyPoints)
                 }
             }
             
             let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:])
             try? handler.perform([request])
+        }
+        
+        func calculateAngleBetweenPoints(left: CGPoint, right: CGPoint) -> CGFloat {
+            let deltaY = left.y - right.y
+            let deltaX = left.x - right.x
+            let radians = atan2(deltaY, deltaX)
+            let degrees = radians * 180 / .pi
+            return degrees
         }
         
         func convertVisionPoint(_ point: CGPoint, to layer: AVCaptureVideoPreviewLayer?) -> CGPoint {
@@ -628,6 +707,15 @@ struct CameraPreviewView: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+    
+    func applySmoothing(to points: [CGPoint]) -> [CGPoint] {
+        guard points.count == smoothedBodyPoints.count else {
+            return points
+        }
+        return zip(smoothedBodyPoints, points).map { previous, current in
+            CGPoint(x: previous.x * 0.7 + current.x * 0.3, y: previous.y * 0.7 + current.y * 0.3)
+        }
+    }
 }
 
 class CameraManager: NSObject, ObservableObject {
