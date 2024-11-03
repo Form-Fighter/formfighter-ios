@@ -643,10 +643,10 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                             
                             let shoulderAngle = self.calculateAngleBetweenPoints(left: leftShoulder.location, right: rightShoulder.location)
                             let adjustedAngle = abs(shoulderAngle - 90)
-                            print("Shoulder Angle: \(shoulderAngle) degrees")
-                            print("Adjusted Shoulder Angle: \(adjustedAngle) degrees")
+//                            print("Shoulder Angle: \(shoulderAngle) degrees")
+//                            print("Adjusted Shoulder Angle: \(adjustedAngle) degrees")
                             
-                            facingCamera = adjustedAngle <= 5 // Ajusta el umbral según sea necesario
+                            facingCamera = adjustedAngle <= 10
                         } else {
                             facingCamera = false
                         }
