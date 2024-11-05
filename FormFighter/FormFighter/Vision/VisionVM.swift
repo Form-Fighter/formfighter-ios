@@ -10,7 +10,7 @@ class VisionVM: ObservableObject {
     @Published var isShowingError = false
     let keychain = KeychainSwift()
     let authBackendService = AuthBackendService()
-    let analyzeService: AnalyzeMealProtocol
+  //  let analyzeService: AnalyzeMealProtocol
     let userManager = UserManager.shared
     var mealResponse: MealVisionResponse?
     var mealTip: TipShim? = nil
@@ -24,10 +24,10 @@ class VisionVM: ObservableObject {
          isPresentingResults: Bool = false,
          errorMessage: LocalizedStringKey = "",
          isShowingError: Bool = false,
-         mealResponse: MealVisionResponse? = nil,
+         mealResponse: MealVisionResponse? = nil
          // By default, we instantiate the backend Service.
          // If you want to use AI Proxy, override this and inject the AnalyzeMealAIProxyService (they conform to the same AnalyzeMealProtocol)
-         analyzeService: AnalyzeMealProtocol = AnalyzeMealVisionService()
+        // analyzeService: AnalyzeMealProtocol = AnalyzeMealVisionService()
     ) {
         self.selectedImage = selectedImage
         self.isAnalyzing = isAnalyzing
@@ -35,7 +35,7 @@ class VisionVM: ObservableObject {
         self.errorMessage = errorMessage
         self.isShowingError = isShowingError
         self.mealResponse = mealResponse
-        self.analyzeService = analyzeService
+       // self.analyzeService = analyzeService
         
         Task {
             await fetchBackendAuthIfNecessary()
@@ -60,54 +60,54 @@ class VisionVM: ObservableObject {
         }
     }
     
-    func analyzeMeal() async {
-        Logger.log(message: "Analyzing image...", event: .debug)
-        DispatchQueue.main.async {
-            self.isAnalyzing = true
-        }
-        
-        guard let imageString = selectedImage?.resized().toBase64String() else {
-            Logger.log(message: "Error converting image or image is nil", event: .error)
-            DispatchQueue.main.async {
-                self.isAnalyzing = false
-            }
-            return
-        }
-        
-        var gptLanguage: GPTLanguage = .english
-        
-        if let storedLanguage = UserDefaults.standard.string(forKey: "gptLanguage") {
-            gptLanguage = GPTLanguage(rawValue: storedLanguage) ?? .english
-        }
-        
-        let analysisRequest = MealVisionRequestModel(image: imageString, language: gptLanguage.rawValue)
-        
-        do {
-            let analyzeResponse = try await analyzeService.analyzeMeal(with: analysisRequest)
-            DispatchQueue.main.async {
-                if !self.userManager.isSubscriptionActive {
-                    self.useFreeCredit()
-                }
-                self.mealResponse = analyzeResponse
-                self.isPresentingResults = true
-                Logger.log(message: "Analyzed meal completed", event: .debug)
-            }
-            
-            dump(analyzeResponse)
-            
-            DispatchQueue.main.async {
-                self.isAnalyzing = false
-            }
-        } catch {
-            Logger.log(message: error.localizedDescription, event: .error)
-            DispatchQueue.main.async {
-                self.errorMessage = "Please try again later. If the issue continues, consider using a different picture. Occasionally, GPT-4 Vision AI might encounter difficulties interpreting certain images or requests."
-                self.isShowingError.toggle()
-                self.isAnalyzing = false
-            }
-        }
-        
-    }
+//    func analyzeMeal() async {
+//        Logger.log(message: "Analyzing image...", event: .debug)
+//        DispatchQueue.main.async {
+//            self.isAnalyzing = true
+//        }
+//        
+//        guard let imageString = selectedImage?.resized().toBase64String() else {
+//            Logger.log(message: "Error converting image or image is nil", event: .error)
+//            DispatchQueue.main.async {
+//                self.isAnalyzing = false
+//            }
+//            return
+//        }
+//        
+//        var gptLanguage: GPTLanguage = .english
+//        
+//        if let storedLanguage = UserDefaults.standard.string(forKey: "gptLanguage") {
+//            gptLanguage = GPTLanguage(rawValue: storedLanguage) ?? .english
+//        }
+//        
+//        let analysisRequest = MealVisionRequestModel(image: imageString, language: gptLanguage.rawValue)
+//        
+//        do {
+//            let analyzeResponse = try await analyzeService.analyzeMeal(with: analysisRequest)
+//            DispatchQueue.main.async {
+//                if !self.userManager.isSubscriptionActive {
+//                    self.useFreeCredit()
+//                }
+//                self.mealResponse = analyzeResponse
+//                self.isPresentingResults = true
+//                Logger.log(message: "Analyzed meal completed", event: .debug)
+//            }
+//            
+//            dump(analyzeResponse)
+//            
+//            DispatchQueue.main.async {
+//                self.isAnalyzing = false
+//            }
+//        } catch {
+//            Logger.log(message: error.localizedDescription, event: .error)
+//            DispatchQueue.main.async {
+//                self.errorMessage = "Please try again later. If the issue continues, consider using a different picture. Occasionally, GPT-4 Vision AI might encounter difficulties interpreting certain images or requests."
+//                self.isShowingError.toggle()
+//                self.isAnalyzing = false
+//            }
+//        }
+//        
+//    }
     
     func useFreeCredit() {
         if freeCredits > 0 {

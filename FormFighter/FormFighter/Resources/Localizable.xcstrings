@@ -288,12 +288,12 @@
         }
       }
     },
-    "**Q: What is %@?**\nA: %@ is an AI-powered app that uses computer vision to give fighters real-time feedback on their punches, focusing on techniques like jabs and other strikes.\n\n**Q: How does %@ provide feedback on my form?**\nA: The app utilizes advanced AI algorithms to analyze videos or images of your punches, comparing your technique against professional fighters to offer personalized insights.\n\n**Q: Can %@ replace a professional coach?**\nA: No, %@ is designed to complement your training by offering AI-driven feedback, but it cannot replace the expertise of a professional coach.\n\n**Q: Why might the app fail to analyze some punches correctly?**\nA: Punch analysis may be affected by factors such as poor lighting, unclear footage, or angles that prevent the AI from recognizing key body movements.\n\n**Q: How can I import videos or images into %@?**\nA: You can import videos or images directly from your Photo Library or record new ones using your device's Camera.\n\n\n**Q: Who can I contact for support or feedback?**\nA: For any support requests or feedback, please reach out to us at julian@form-fighter.com. We're here to help!" : {
+    "**Q: What is %@?**\nA: %@ is an AI-powered app designed to help fighters improve their muay thai jab technique by providing real-time feedback.\n\n**Q: How should I position myself for the best results in %@?**\nA: For optimal feedback, ensure your full body is visible in the camera, ideally no more than 8 feet away. Position the camera at chest level, and angle your body 30 degrees toward the camera in a well-lit indoor space with minimal background clutter.\n\n**Q: Why does the app recommend facing the camera at 30 degrees?**\nA: A slight 30-degree turn allows the app’s computer vision model to capture your form in a way that emphasizes key aspects of technique, like hip rotation, arm extension, and foot positioning.\n\n**Q: How important is lighting and background for accurate analysis?**\nA: Proper lighting is essential for the AI to recognize your movements accurately. Record in a well-lit room, and avoid cluttered backgrounds, as this can interfere with the app’s ability to detect your body position.\n\n**Q: Why might the app fail to analyze my punches correctly?**\nA: The app’s analysis can be affected by poor lighting, excessive background distractions, being too far from the camera, or positioning that obscures body parts like your wrists, hips, or feet.\n\n**Q: Can I do other strikes than the jab?**\nA: This app only gives feedback on the muay thai jab today. Request which strike you want us to add next in the feedback section.\n\n**Q: Can %@ replace a professional coach?**\nA: While %@ provides AI-driven feedback to enhance your training, it’s not a replacement for a professional coach, who can offer in-depth guidance and hands-on adjustments.\n\n**Q: How do I upload videos or images to %@?**\nA: That feature is coming soon. For now you have to record a new jab in real time.\n\n**Q: Who can I contact for support or feedback?**\nA: For support requests or feedback, feel free to reach out to us at julian@form-fighter.com. We're here to assist you with any questions or concerns.\n" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "**Q: What is %1$@?**\nA: %2$@ is an AI-powered app that uses computer vision to give fighters real-time feedback on their punches, focusing on techniques like jabs and other strikes.\n\n**Q: How does %3$@ provide feedback on my form?**\nA: The app utilizes advanced AI algorithms to analyze videos or images of your punches, comparing your technique against professional fighters to offer personalized insights.\n\n**Q: Can %4$@ replace a professional coach?**\nA: No, %5$@ is designed to complement your training by offering AI-driven feedback, but it cannot replace the expertise of a professional coach.\n\n**Q: Why might the app fail to analyze some punches correctly?**\nA: Punch analysis may be affected by factors such as poor lighting, unclear footage, or angles that prevent the AI from recognizing key body movements.\n\n**Q: How can I import videos or images into %6$@?**\nA: You can import videos or images directly from your Photo Library or record new ones using your device's Camera.\n\n\n**Q: Who can I contact for support or feedback?**\nA: For any support requests or feedback, please reach out to us at julian@form-fighter.com. We're here to help!"
+            "value" : "**Q: What is %1$@?**\nA: %2$@ is an AI-powered app designed to help fighters improve their muay thai jab technique by providing real-time feedback.\n\n**Q: How should I position myself for the best results in %3$@?**\nA: For optimal feedback, ensure your full body is visible in the camera, ideally no more than 8 feet away. Position the camera at chest level, and angle your body 30 degrees toward the camera in a well-lit indoor space with minimal background clutter.\n\n**Q: Why does the app recommend facing the camera at 30 degrees?**\nA: A slight 30-degree turn allows the app’s computer vision model to capture your form in a way that emphasizes key aspects of technique, like hip rotation, arm extension, and foot positioning.\n\n**Q: How important is lighting and background for accurate analysis?**\nA: Proper lighting is essential for the AI to recognize your movements accurately. Record in a well-lit room, and avoid cluttered backgrounds, as this can interfere with the app’s ability to detect your body position.\n\n**Q: Why might the app fail to analyze my punches correctly?**\nA: The app’s analysis can be affected by poor lighting, excessive background distractions, being too far from the camera, or positioning that obscures body parts like your wrists, hips, or feet.\n\n**Q: Can I do other strikes than the jab?**\nA: This app only gives feedback on the muay thai jab today. Request which strike you want us to add next in the feedback section.\n\n**Q: Can %4$@ replace a professional coach?**\nA: While %5$@ provides AI-driven feedback to enhance your training, it’s not a replacement for a professional coach, who can offer in-depth guidance and hands-on adjustments.\n\n**Q: How do I upload videos or images to %6$@?**\nA: That feature is coming soon. For now you have to record a new jab in real time.\n\n**Q: Who can I contact for support or feedback?**\nA: For support requests or feedback, feel free to reach out to us at julian@form-fighter.com. We're here to assist you with any questions or concerns.\n"
           }
         }
       }
@@ -368,10 +368,20 @@
         }
       }
     },
+    "%@ Stats" : {
+
+    },
+    "%@:" : {
+
+    },
     "%@'s World!" : {
 
     },
+    "%lld" : {
+
+    },
     "%lld kcal" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1076,6 +1086,9 @@
         }
       }
     },
+    "🤩" : {
+
+    },
     "🥙 Unlimited meal analysis" : {
       "localizations" : {
         "de" : {
@@ -1145,6 +1158,12 @@
           }
         }
       }
+    },
+    "🙁" : {
+
+    },
+    "🙂" : {
+
     },
     "1. RUN the app from Xcode in your test device or Simulator" : {
       "localizations" : {
@@ -1426,7 +1445,14 @@
         }
       }
     },
+    "7 Days" : {
+
+    },
+    "24 Hours" : {
+
+    },
     "Accept" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1565,6 +1591,9 @@
           }
         }
       }
+    },
+    "Amazing" : {
+
     },
     "Analyze" : {
       "localizations" : {
@@ -1777,6 +1806,9 @@
         }
       }
     },
+    "Analyzing, keep the object in focus" : {
+
+    },
     "Are you sure you want to delete the account?" : {
       "localizations" : {
         "de" : {
@@ -1848,6 +1880,9 @@
       }
     },
     "Art, Interpreted" : {
+
+    },
+    "Average Score: %lld" : {
 
     },
     "Birthdate" : {
@@ -1923,9 +1958,6 @@
           }
         }
       }
-    },
-    "Camera Access Denied" : {
-
     },
     "Cancel" : {
       "localizations" : {
@@ -2289,7 +2321,7 @@
         }
       }
     },
-    "Choose Your Preferred Stance" : {
+    "Coach ID" : {
 
     },
     "Color Scheme" : {
@@ -2502,6 +2534,9 @@
         }
       }
     },
+    "Copy URL" : {
+
+    },
     "Crash" : {
       "localizations" : {
         "de" : {
@@ -2642,6 +2677,9 @@
           }
         }
       }
+    },
+    "Date" : {
+
     },
     "Delete" : {
       "localizations" : {
@@ -2853,15 +2891,8 @@
         }
       }
     },
-    "Detected %lld out of %lld keypoints." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Detected %1$lld out of %2$lld keypoints."
-          }
-        }
-      }
+    "Discard" : {
+
     },
     "Done" : {
 
@@ -3011,6 +3042,12 @@
     "Experience an AI's perspective on what each artwork symbolizes" : {
 
     },
+    "Fighter Info" : {
+
+    },
+    "Film in a well lit indoor room with minimal background noise for the best results" : {
+
+    },
     "First Name" : {
 
     },
@@ -3084,10 +3121,7 @@
         }
       }
     },
-    "Height in CM" : {
-
-    },
-    "Height in Feet and Inches" : {
+    "Go to settings" : {
 
     },
     "Hello, World!" : {
@@ -3308,6 +3342,12 @@
     "How old is %@?" : {
 
     },
+    "How to get the best results with %@⚡️" : {
+
+    },
+    "How was your experience?" : {
+
+    },
     "ℹ️ FAQ" : {
       "localizations" : {
         "de" : {
@@ -3448,7 +3488,7 @@
         }
       }
     },
-    "Instant Feedback" : {
+    "Is this the feedback you expected?" : {
 
     },
     "Just take a picture and check your meal's macros and calories" : {
@@ -3529,6 +3569,9 @@
 
     },
     "Let's go!" : {
+
+    },
+    "Loading..." : {
 
     },
     "Logout" : {
@@ -3743,6 +3786,7 @@
       }
     },
     "Message ChatGPT..." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3811,6 +3855,9 @@
           }
         }
       }
+    },
+    "Month" : {
+
     },
     "Name" : {
       "extractionState" : "stale",
@@ -3883,6 +3930,12 @@
         }
       }
     },
+    "Next" : {
+
+    },
+    "Not Okay" : {
+
+    },
     "OK" : {
       "localizations" : {
         "de" : {
@@ -3952,6 +4005,9 @@
           }
         }
       }
+    },
+    "Okay" : {
+
     },
     "Oops! Something went wrong." : {
       "localizations" : {
@@ -4023,10 +4079,7 @@
         }
       }
     },
-    "Open Settings" : {
-
-    },
-    "Orthodox" : {
+    "Overall Score: %lld" : {
 
     },
     "P R E M I U M" : {
@@ -4099,9 +4152,6 @@
         }
       }
     },
-    "Perfect your jab with instant feedback powered by AI." : {
-
-    },
     "Photo Library" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4173,13 +4223,11 @@
         }
       }
     },
-    "Please enable camera access in Settings." : {
-
-    },
-    "Please make sure your entire body is visible in the frame." : {
+    "Please ensure your full body is in the frame." : {
 
     },
     "Please try again later. If the issue continues, consider using a different picture. Occasionally, GPT-4 Vision AI might encounter difficulties interpreting certain images or requests." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4319,6 +4367,9 @@
         }
       }
     },
+    "Please type at least 15 characters" : {
+
+    },
     "Please, before continuing with your user deletion we need you to sign in again for security reasons" : {
       "localizations" : {
         "de" : {
@@ -4389,9 +4440,6 @@
         }
       }
     },
-    "Preferred Stance" : {
-
-    },
     "Premium" : {
       "localizations" : {
         "de" : {
@@ -4461,6 +4509,9 @@
           }
         }
       }
+    },
+    "Previous" : {
+
     },
     "Privacy Policy" : {
       "localizations" : {
@@ -4535,19 +4586,10 @@
     "Profile" : {
 
     },
-    "Profile View" : {
+    "Punches: %lld" : {
 
     },
     "Ready to dive into" : {
-
-    },
-    "Record" : {
-
-    },
-    "Record your strikes and we'll help your sharpen your technique with in depth analytics." : {
-
-    },
-    "Request Camera Access" : {
 
     },
     "Request image to DALL·E..." : {
@@ -4619,6 +4661,9 @@
           }
         }
       }
+    },
+    "Save" : {
+
     },
     "Save time" : {
       "extractionState" : "manual",
@@ -4761,6 +4806,12 @@
         }
       }
     },
+    "Score" : {
+
+    },
+    "Score: %lld" : {
+
+    },
     "Select Meal" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4832,12 +4883,6 @@
         }
       }
     },
-    "Send a message to ChatGPT" : {
-
-    },
-    "Setting up camera..." : {
-
-    },
     "Settings" : {
       "localizations" : {
         "de" : {
@@ -4908,7 +4953,10 @@
         }
       }
     },
-    "Share the break down with coaches and other fighters" : {
+    "Share Feedback" : {
+
+    },
+    "Share film with coaches and other fighters" : {
 
     },
     "Share with Coaches and Friends" : {
@@ -5054,7 +5102,7 @@
         }
       }
     },
-    "Southpaw" : {
+    "Sort by" : {
 
     },
     "Start scanning your meals!" : {
@@ -5126,6 +5174,9 @@
           }
         }
       }
+    },
+    "Statistics" : {
+
     },
     "Store and showcase a colorful array of drawings in your personal gallery" : {
 
@@ -5272,6 +5323,9 @@
       }
     },
     "Tap to insert user name" : {
+
+    },
+    "Tell us more" : {
 
     },
     "Terms of Service" : {
@@ -5626,6 +5680,9 @@
         }
       }
     },
+    "Tidy & Bright" : {
+
+    },
     "Title" : {
       "localizations" : {
         "de" : {
@@ -5765,6 +5822,12 @@
           }
         }
       }
+    },
+    "Turn 30 degrees" : {
+
+    },
+    "Turn 30 degrees from the camera for the best results" : {
+
     },
     "Type here" : {
       "localizations" : {
@@ -5907,19 +5970,13 @@
         }
       }
     },
+    "Type your CoachID" : {
+
+    },
     "Type your first name" : {
 
     },
-    "Type your height in CM" : {
-
-    },
     "Type your last name" : {
-
-    },
-    "Type your weight in lbs" : {
-
-    },
-    "Type your wingspan in CM" : {
 
     },
     "Unlock Premium" : {
@@ -6066,6 +6123,7 @@
 
     },
     "User" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6277,9 +6335,6 @@
         }
       }
     },
-    "Weight" : {
-
-    },
     "Welcome to" : {
 
     },
@@ -6353,9 +6408,6 @@
           }
         }
       }
-    },
-    "Welcome to %@⚡️" : {
-
     },
     "Welcome to 🌯WrapFast⚡️!" : {
       "extractionState" : "manual",
@@ -6431,10 +6483,7 @@
     "Who's the Artist?" : {
 
     },
-    "Wing Span in Feet" : {
-
-    },
-    "WingSpan in CM" : {
+    "Year" : {
 
     },
     "You have %lld free analysis left" : {
