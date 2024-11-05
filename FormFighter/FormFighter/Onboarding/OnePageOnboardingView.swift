@@ -8,7 +8,7 @@ struct OnePageOnboardingView: View {
         ZStack {
             VStack {
                 Spacer()
-                Text("Welcome to \(Const.appName)⚡️")
+                Text("How to get the best results with \(Const.appName)⚡️")
                     .font(.special(.largeTitle, weight: .black))
                     .multilineTextAlignment(.center)
                     .padding(.bottom, 24)
@@ -16,18 +16,18 @@ struct OnePageOnboardingView: View {
                 //MARK: - List your features. Be simple, don't overwhelm the user.
                 //Use systemImages or pass your custom Image as parameter.
                 VStack(alignment: .leading, spacing: 16) {
-                    OnboardingFeature(image: Image(systemName: "clock"),
+                    OnboardingFeature(image: Image(systemName: "1.circle"),
                                       imageColor: .brand,
-                                      title: "Instant Feedback",
-                                      description: "Perfect your jab with instant feedback powered by AI.")
-                    OnboardingFeature(image: Image(systemName: "camera"),
+                                      title: "Turn 30 degrees",
+                                      description: "Turn 30 degrees from the camera for the best results")
+                    OnboardingFeature(image: Image(systemName: "2.circle"),
                                       imageColor: .ruby,
-                                      title: "Record",
-                                      description: "Record your strikes and we'll help your sharpen your technique with in depth analytics.")
-                    OnboardingFeature(image: Image(systemName: "cloud"),
+                                      title: "Tidy & Bright",
+                                      description: "Film in a well lit indoor room with minimal background noise for the best results")
+                    OnboardingFeature(image: Image(systemName: "3.circle"),
                                       imageColor: .blue,
                                       title: "Share with Coaches and Friends",
-                                      description: "Share the break down with coaches and other fighters")
+                                      description: "Share film with coaches and other fighters")
                 }
                 .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
                 

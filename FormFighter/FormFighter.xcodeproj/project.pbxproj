@@ -144,6 +144,8 @@
 		81E98B112B72B0B6000E8996 /* CustomSignInWithAppleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E98B102B72B0B6000E8996 /* CustomSignInWithAppleButton.swift */; };
 		81F5C5112BCED29A001A0F57 /* AnimatedSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */; };
 		B20242A12C6C5A8500256733 /* FormFighterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811A37862B6EBA3B00C9E8B6 /* FormFighterApp.swift */; };
+		B214115C2CCF151B00699B15 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214115B2CCF151B00699B15 /* FeedbackView.swift */; };
+		B214115F2CCF1A4500699B15 /* UserFeedbackPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214115E2CCF1A4500699B15 /* UserFeedbackPage.swift */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
 		B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */; };
 		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
@@ -281,6 +283,8 @@
 		81E98B0E2B72B058000E8996 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		81E98B102B72B0B6000E8996 /* CustomSignInWithAppleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomSignInWithAppleButton.swift; sourceTree = "<group>"; };
 		81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedSelector.swift; sourceTree = "<group>"; };
+		B214115B2CCF151B00699B15 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
+		B214115E2CCF1A4500699B15 /* UserFeedbackPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFeedbackPage.swift; sourceTree = "<group>"; };
 		B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighterDebug.entitlements; sourceTree = "<group>"; };
 		B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntNumberFieldView.swift; sourceTree = "<group>"; };
 		B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -333,6 +337,8 @@
 		811A37852B6EBA3B00C9E8B6 /* FormFighter */ = {
 			isa = PBXGroup;
 			children = (
+				B214115D2CCF1A1C00699B15 /* User Feedback Page */,
+				B214115A2CCF128600699B15 /* FeedbackPage */,
 				B2B9F0B62CB0A77F00D7CFC8 /* Profile */,
 				B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */,
 				B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */,
@@ -628,6 +634,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		B214115A2CCF128600699B15 /* FeedbackPage */ = {
+			isa = PBXGroup;
+			children = (
+				B214115B2CCF151B00699B15 /* FeedbackView.swift */,
+			);
+			path = FeedbackPage;
+			sourceTree = "<group>";
+		};
+		B214115D2CCF1A1C00699B15 /* User Feedback Page */ = {
+			isa = PBXGroup;
+			children = (
+				B214115E2CCF1A4500699B15 /* UserFeedbackPage.swift */,
+			);
+			path = "User Feedback Page";
+			sourceTree = "<group>";
+		};
 		B2B9F0B62CB0A77F00D7CFC8 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -819,6 +841,7 @@
 				811A37892B6EBA3B00C9E8B6 /* ChatGPTView.swift in Sources */,
 				B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */,
 				818D3F832B6FA3F100DF7299 /* GPTLanguage.swift in Sources */,
+				B214115C2CCF151B00699B15 /* FeedbackView.swift in Sources */,
 				81E98B0D2B72AC81000E8996 /* KeychainManager.swift in Sources */,
 				B20242A12C6C5A8500256733 /* FormFighterApp.swift in Sources */,
 				818D3FE22B715B3D00DF7299 /* MultiplePagesOnboardingView.swift in Sources */,
@@ -850,6 +873,7 @@
 				81D531EB2B8371E60044D990 /* PremiumBannerView.swift in Sources */,
 				818D3FBB2B700E9D00DF7299 /* +UIImage.swift in Sources */,
 				81DE14E42B754BE900C41EA9 /* SettingsVM.swift in Sources */,
+				B214115F2CCF1A4500699B15 /* UserFeedbackPage.swift in Sources */,
 				818D3FB72B700E9D00DF7299 /* +URLCache.swift in Sources */,
 				81DE14E62B754C6A00C41EA9 /* DeleteConfirmationAlert.swift in Sources */,
 				8125D5C22B7BF8F7001A846B /* DALLEResponse.swift in Sources */,

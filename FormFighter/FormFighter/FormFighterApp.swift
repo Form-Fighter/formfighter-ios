@@ -77,7 +77,8 @@ struct FormFighterApp: App {
                 // MARK: - You can download the official app from Apple 'SF Symbols' to explore the whole catalog of system images.
                     .tabItem { Label("Analyze", systemImage: "eyes") }
                    
-                ProfileView(vm: ProfileVM())
+               // ProfileView(vm: ProfileVM())
+                ProfileView()
                     .tabItem { Label("Profile", systemImage: "person") }
             
                 SettingsView(vm: SettingsVM())

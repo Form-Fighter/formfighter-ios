@@ -170,23 +170,32 @@ enum Const {
     
     static let faqMarkdown: LocalizedStringKey = """
 **Q: What is \(Const.appName)?**
-A: \(Const.appName) is an AI-powered app that uses computer vision to give fighters real-time feedback on their punches, focusing on techniques like jabs and other strikes.
+A: \(Const.appName) is an AI-powered app designed to help fighters improve their muay thai jab technique by providing real-time feedback.
 
-**Q: How does \(Const.appName) provide feedback on my form?**
-A: The app utilizes advanced AI algorithms to analyze videos or images of your punches, comparing your technique against professional fighters to offer personalized insights.
+**Q: How should I position myself for the best results in \(Const.appName)?**
+A: For optimal feedback, ensure your full body is visible in the camera, ideally no more than 8 feet away. Position the camera at chest level, and angle your body 30 degrees toward the camera in a well-lit indoor space with minimal background clutter.
+
+**Q: Why does the app recommend facing the camera at 30 degrees?**
+A: A slight 30-degree turn allows the app’s computer vision model to capture your form in a way that emphasizes key aspects of technique, like hip rotation, arm extension, and foot positioning.
+
+**Q: How important is lighting and background for accurate analysis?**
+A: Proper lighting is essential for the AI to recognize your movements accurately. Record in a well-lit room, and avoid cluttered backgrounds, as this can interfere with the app’s ability to detect your body position.
+
+**Q: Why might the app fail to analyze my punches correctly?**
+A: The app’s analysis can be affected by poor lighting, excessive background distractions, being too far from the camera, or positioning that obscures body parts like your wrists, hips, or feet.
+
+**Q: Can I do other strikes than the jab?**
+A: This app only gives feedback on the muay thai jab today. Request which strike you want us to add next in the feedback section.
 
 **Q: Can \(Const.appName) replace a professional coach?**
-A: No, \(Const.appName) is designed to complement your training by offering AI-driven feedback, but it cannot replace the expertise of a professional coach.
+A: While \(Const.appName) provides AI-driven feedback to enhance your training, it’s not a replacement for a professional coach, who can offer in-depth guidance and hands-on adjustments.
 
-**Q: Why might the app fail to analyze some punches correctly?**
-A: Punch analysis may be affected by factors such as poor lighting, unclear footage, or angles that prevent the AI from recognizing key body movements.
-
-**Q: How can I import videos or images into \(Const.appName)?**
-A: You can import videos or images directly from your Photo Library or record new ones using your device's Camera.
-
+**Q: How do I upload videos or images to \(Const.appName)?**
+A: That feature is coming soon. For now you have to record a new jab in real time.
 
 **Q: Who can I contact for support or feedback?**
-A: For any support requests or feedback, please reach out to us at julian@form-fighter.com. We're here to help!
+A: For support requests or feedback, feel free to reach out to us at julian@form-fighter.com. We're here to assist you with any questions or concerns.
+
 """
 
 }
