@@ -606,7 +606,7 @@ struct CameraPreviewView: UIViewControllerRepresentable {
         var hasTurnedBodyCompleted = false  // Nueva variable para controlar el estado del giro
         
         // Umbral de confianza ajustable
-        let confidenceThreshold: VNConfidence = 0.0005
+        let confidenceThreshold: VNConfidence = 0.0001
         
         init(parent: CameraPreviewView) {
             self.parent = parent
@@ -632,7 +632,8 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                 var bodyComplete = true
                 
                 // Puntos necesarios para considerar el cuerpo como "completo"
-                let requiredPoints: [VNHumanBodyPoseObservation.JointName] = [.nose, .leftAnkle, .rightAnkle, .leftWrist, .rightWrist]
+//                let requiredPoints: [VNHumanBodyPoseObservation.JointName] = [.nose, .leftAnkle, .rightAnkle, .leftWrist, .rightWrist]
+                let requiredPoints: [VNHumanBodyPoseObservation.JointName] = [.nose, .leftWrist, .rightWrist, .leftAnkle, .rightAnkle]
                 
                 for bodyObservation in results {
                     if let recognizedPoints = try? bodyObservation.recognizedPoints(.all) {
@@ -650,8 +651,8 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                             let shoulderAngle = self.calculateAngleBetweenPoints(left: leftShoulder.location, right: rightShoulder.location)
                             let adjustedAngle = abs(shoulderAngle - 90)
                             
-                            // Si el giro es mayor a 20 grados, activar hasTurnedBody
-                            if adjustedAngle > 10 {
+                            // Si el giro es mayor a 30 grados, activar hasTurnedBody
+                            if adjustedAngle > 7 {
                                 DispatchQueue.main.async {
                                     self.parent.hasTurnedBody = true
                                     self.hasTurnedBodyCompleted = true  // Marcar el giro como completo
