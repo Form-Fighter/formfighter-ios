@@ -349,7 +349,7 @@ struct CameraVisionView: View {
     @State private var recordingMessage = ""
     @State private var videoURL: URL?
     @State private var navigateToPreview = false
-    @State private var isFacingCamera: Bool = true
+    @State private var hasTurnedBody: Bool = false
     
     // Optional timers
     @State private var firstTimer: Timer?
@@ -369,8 +369,9 @@ struct CameraVisionView: View {
                                   smoothedBodyPoints: $smoothedBodyPoints,
                                   isBodyDetected: $isBodyDetected,
                                   isBodyComplete: $isBodyComplete,
-                                  isFacingCamera: $isFacingCamera,
-                                  cameraManager: cameraManager)
+                                  hasTurnedBody: $hasTurnedBody,
+                                  cameraManager: cameraManager
+                )
                 .edgesIgnoringSafeArea(.all)
                 
                 
@@ -412,18 +413,6 @@ struct CameraVisionView: View {
                 if !isBodyDetected || !isBodyComplete {
                     VStack {
                         Text("Please ensure your full body is in the frame.")
-                            .font(.headline)
-                            .foregroundColor(.red)
-                            .padding()
-                            .background(Color.black.opacity(0.6))
-                            .cornerRadius(10)
-                    }
-                    .padding(.top, 50)
-                }
-                
-                if !isFacingCamera && isBodyDetected && isBodyComplete {
-                    VStack {
-                        Text("Please face the camera directly.")
                             .font(.headline)
                             .foregroundColor(.red)
                             .padding()
@@ -480,7 +469,7 @@ struct CameraVisionView: View {
         .onChange(of: isBodyComplete) { _ in
             checkBodyAndStartTimers()
         }
-        .onChange(of: isFacingCamera) { _ in
+        .onChange(of: hasTurnedBody) { _ in
             checkBodyAndStartTimers()
         }
         .ignoresSafeArea()
@@ -504,8 +493,8 @@ struct CameraVisionView: View {
     }
     
     func checkBodyAndStartTimers() {
-        print("isBodyDetected: \(isBodyDetected), isBodyComplete: \(isBodyComplete), isFacingCamera: \(isFacingCamera)")
-        if isBodyDetected && isBodyComplete && isFacingCamera {
+        print("isBodyDetected: \(isBodyDetected), isBodyComplete: \(isBodyComplete), hasTurnedBody: \(hasTurnedBody)")
+        if isBodyDetected && isBodyComplete && hasTurnedBody {
             startFirstTimer()
         } else {
             resetTimers()
@@ -583,6 +572,7 @@ struct CameraVisionView: View {
         timer1 = 0
         timer2 = 0
         recordingMessage = ""
+        hasTurnedBody = false  // Restablecer aquí
         
         if isRecording {
             cameraManager.stopRecording()
@@ -595,12 +585,13 @@ struct CameraPreviewView: UIViewControllerRepresentable {
     @Binding var smoothedBodyPoints: [CGPoint]
     @Binding var isBodyDetected: Bool
     @Binding var isBodyComplete: Bool
-    @Binding var isFacingCamera: Bool
+    @Binding var hasTurnedBody: Bool
     
     var cameraManager: CameraManager
     
     class Coordinator: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         var parent: CameraPreviewView
+        var hasTurnedBodyCompleted = false  // Nueva variable para controlar el estado del giro
         
         // Umbral de confianza ajustable
         let confidenceThreshold: VNConfidence = 0.005
@@ -615,9 +606,11 @@ struct CameraPreviewView: UIViewControllerRepresentable {
             let request = VNDetectHumanBodyPoseRequest { request, error in
                 guard let results = request.results as? [VNHumanBodyPoseObservation], error == nil else {
                     DispatchQueue.main.async {
+                        // Restablecer estados si no se detecta el cuerpo
                         self.parent.isBodyDetected = false
                         self.parent.isBodyComplete = false
-                        self.parent.isFacingCamera = false
+                        self.parent.hasTurnedBody = false
+                        self.hasTurnedBodyCompleted = false
                     }
                     return
                 }
@@ -625,17 +618,18 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                 var newBodyPoints: [CGPoint] = []
                 var bodyDetected = false
                 var bodyComplete = true
-                var facingCamera = false // Variable local para determinar si está de frente
                 
+                // Puntos necesarios para considerar el cuerpo como "completo"
                 let requiredPoints: [VNHumanBodyPoseObservation.JointName] = [.nose, .leftAnkle, .rightAnkle, .leftWrist, .rightWrist]
                 
                 for bodyObservation in results {
                     if let recognizedPoints = try? bodyObservation.recognizedPoints(.all) {
+                        // Detectar si hay puntos reconocidos, lo que implica un cuerpo detectado
                         if !recognizedPoints.isEmpty {
                             bodyDetected = true
                         }
                         
-                        // Detección del ángulo entre los hombros
+                        // Detección del ángulo de los hombros
                         if let leftShoulder = recognizedPoints[.leftShoulder],
                            let rightShoulder = recognizedPoints[.rightShoulder],
                            leftShoulder.confidence > self.confidenceThreshold,
@@ -643,12 +637,14 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                             
                             let shoulderAngle = self.calculateAngleBetweenPoints(left: leftShoulder.location, right: rightShoulder.location)
                             let adjustedAngle = abs(shoulderAngle - 90)
-//                            print("Shoulder Angle: \(shoulderAngle) degrees")
-//                            print("Adjusted Shoulder Angle: \(adjustedAngle) degrees")
                             
-                            facingCamera = adjustedAngle <= 10
-                        } else {
-                            facingCamera = false
+                            // Si el giro es mayor a 20 grados, activar hasTurnedBody
+                            if adjustedAngle > 15 {
+                                DispatchQueue.main.async {
+                                    self.parent.hasTurnedBody = true
+                                    self.hasTurnedBodyCompleted = true  // Marcar el giro como completo
+                                }
+                            }
                         }
                         
                         // Verificar si todos los puntos requeridos están presentes
@@ -664,14 +660,22 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                     }
                 }
                 
-                // Actualización de estados en el hilo principal
+                // Actualización de los estados en el hilo principal
                 DispatchQueue.main.async {
                     self.parent.detectedBodyPoints = newBodyPoints
                     self.parent.isBodyDetected = bodyDetected
                     self.parent.isBodyComplete = bodyComplete
-                    self.parent.isFacingCamera = facingCamera
                     
-                    // Llama a la función de suavizado
+                    // Si el cuerpo está completo y el giro se ha marcado como completo, mantener `hasTurnedBody` activado
+                    if bodyDetected && bodyComplete && self.hasTurnedBodyCompleted {
+                        self.parent.hasTurnedBody = true
+                    } else if !bodyDetected || !bodyComplete {
+                        // Desactivar `hasTurnedBody` si el cuerpo ya no está en el cuadro
+                        self.parent.hasTurnedBody = false
+                        self.hasTurnedBodyCompleted = false
+                    }
+                    
+                    // Aplicar suavizado a los puntos detectados
                     self.parent.smoothedBodyPoints = self.parent.applySmoothing(to: newBodyPoints)
                 }
             }
@@ -717,6 +721,7 @@ struct CameraPreviewView: UIViewControllerRepresentable {
         }
     }
 }
+
 
 class CameraManager: NSObject, ObservableObject {
     var captureSession: AVCaptureSession?
