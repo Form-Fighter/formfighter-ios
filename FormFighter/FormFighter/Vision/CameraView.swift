@@ -422,6 +422,18 @@ struct CameraVisionView: View {
                     .padding(.top, 50)
                 }
                 
+                if isBodyDetected && isBodyComplete && !hasTurnedBody {
+                    VStack {
+                        Text("Please turn the body to the left and right.")
+                            .font(.headline)
+                            .foregroundColor(.green)
+                            .padding()
+                            .background(Color.black.opacity(0.6))
+                            .cornerRadius(10)
+                    }
+                    .padding(.top, 50)
+                }
+                
                 // Show countdown
                 if timer2 > 0 && timer2 <= 4 && !isRecording {
                     Text("\(4 - timer2)")
@@ -594,7 +606,7 @@ struct CameraPreviewView: UIViewControllerRepresentable {
         var hasTurnedBodyCompleted = false  // Nueva variable para controlar el estado del giro
         
         // Umbral de confianza ajustable
-        let confidenceThreshold: VNConfidence = 0.005
+        let confidenceThreshold: VNConfidence = 0.0005
         
         init(parent: CameraPreviewView) {
             self.parent = parent
@@ -639,7 +651,7 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                             let adjustedAngle = abs(shoulderAngle - 90)
                             
                             // Si el giro es mayor a 20 grados, activar hasTurnedBody
-                            if adjustedAngle > 15 {
+                            if adjustedAngle > 10 {
                                 DispatchQueue.main.async {
                                     self.parent.hasTurnedBody = true
                                     self.hasTurnedBodyCompleted = true  // Marcar el giro como completo
