@@ -80,7 +80,7 @@ struct ResultsView: View {
     @Environment(\.dismiss) var dismiss // To dismiss the view when buttons are pressed
     
     @State private var player: AVPlayer
-    
+    @State private var navigateToFeedback = false
     init(videoURL: URL) {
         self.videoURL = videoURL
         self._player = State(initialValue: AVPlayer(url: videoURL)) // Initialize the player with the video
@@ -116,12 +116,19 @@ struct ResultsView: View {
                     .cornerRadius(10)
                     
                     Button("Save") {
+                        navigateToFeedback = true
+                        
+                        
                         dismiss() // Dismiss is used here as an example
                     }
                     .foregroundColor(.white)
                     .padding()
                     .background(Color.blue)
                     .cornerRadius(10)
+                    .navigationDestination(isPresented: $navigateToFeedback) {
+                                       FeedbackView()
+                                   }
+                    
                 }
                 .padding(.bottom, 30) // Bottom padding for the buttons
             }
