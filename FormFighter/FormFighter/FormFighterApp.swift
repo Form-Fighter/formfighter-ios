@@ -4,6 +4,7 @@ import FirebaseAnalytics
 import FirebaseCore
 import WishKit
 import TipKit
+import FirebaseFirestore
 
 @main
 struct FormFighterApp: App {
@@ -19,11 +20,16 @@ struct FormFighterApp: App {
    // @StateObject var purchasesManager = PurchasesManager.shared
     @StateObject var authManager = AuthManager()
     @StateObject var userManager = UserManager.shared
+    @State private var pendingCoachId: String?
+    @State private var showCoachConfirmation = false
     
     let cameraManager = CameraManager() // Create an instance of CameraManager
     
+    private var db: Firestore!
+    
     init() {
         setupFirebase()
+        db = Firestore.firestore()
         setupWishKit()
         setupTips()
 //        debugActions()
@@ -49,6 +55,21 @@ struct FormFighterApp: App {
            // .environmentObject(purchasesManager)
             .environmentObject(authManager)
             .environmentObject(userManager)
+            .onOpenURL { url in
+                handleDeepLink(url)
+            }
+            .alert("Join Team", isPresented: $showCoachConfirmation) {
+                Button("Cancel", role: .cancel) {
+                    pendingCoachId = nil
+                }
+                Button("Join") {
+                    assignCoach()
+                }
+            } message: {
+                if let coachId = pendingCoachId {
+                    Text("Would you like to join Coach \(coachId)'s team?")
+                }
+            }
             .onChange(of: scenePhase) { newScenePhase in
                 switch newScenePhase {
                 case .active:
@@ -198,5 +219,70 @@ struct FormFighterApp: App {
         }
         
         return appStoreReceiptURL.lastPathComponent == "sandboxReceipt"
+    }
+    
+    private func handleDeepLink(_ url: URL) {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+              let queryItems = components.queryItems,
+              let coachId = queryItems.first(where: { $0.name == "coach" })?.value else { 
+            return 
+        }
+        
+        checkAndPromptForCoach(coachId: coachId)
+    }
+    
+    private func checkAndPromptForCoach(coachId: String) {
+        var userId = ""
+        if userManager.userId.isEmpty { return } else {
+            userId = userManager.userId
+        }
+        
+        db.collection("users").document(userId).getDocument { document, error in
+            guard let document = document,
+                  document.exists,
+                  let data = document.data(),
+                  let existingCoach = data["myCoach"] as? String? else {
+                return
+            }
+            
+            if let existingCoach = existingCoach {
+                print("User already has a coach: \(existingCoach)")
+                return
+            }
+            
+            db.collection("users").document(coachId).getDocument { coachDoc, error in
+                guard let coachDoc = coachDoc,
+                      coachDoc.exists,
+                      let _ = coachDoc.data() else {
+                    print("Coach not found or error: \(error?.localizedDescription ?? "unknown error")")
+                    return
+                }
+                
+                pendingCoachId = coachId
+                showCoachConfirmation = true
+            }
+        }
+    }
+    
+    private func assignCoach() {
+        guard let coachId = pendingCoachId else {return}
+            
+    var userId = ""
+    if userManager.userId.isEmpty { return } else {
+                    userId = userManager.userId
+                }
+                
+            
+        
+        db.collection("users").document(userId).setData([
+            "myCoach": coachId
+        ], merge: true) { error in
+            if let error = error {
+                print("Error assigning coach: \(error.localizedDescription)")
+            } else {
+                print("Coach assigned successfully")
+                pendingCoachId = nil
+            }
+        }
     }
 }

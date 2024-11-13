@@ -1,114 +1,71 @@
-//import SwiftUI
-//
-//struct ResultsView: View {
-//    @EnvironmentObject var userManager: UserManager
-//    @Environment(\.dismiss) var dismiss
-//    @State var meal: Meal
-//    @State var startAnimations = false
-//    
-//    var body: some View {
-//        VStack {
-//            HStack {
-//                Spacer()
-//                
-//                Button {
-//                    dismiss()
-//                } label: {
-//                    Image(systemName: "xmark")
-//                        .font(.system(.title2, weight: .semibold))
-//                }
-//            }
-//            .padding([.horizontal, .top])
-//            
-//            VStack(spacing: 24) {
-//                Text(meal.name)
-//                    .font(.special(.title, weight: .bold))
-//                    .lineLimit(2)
-//                
-//                meal.image
-//                    .resizable()
-//                    .scaledToFill()
-//                    .frame(width: 200, height: 200)
-//                    .clipped()
-//                    .clipShape(Circle())
-//                    
-//                    
-//                    .shadow(radius: 10)
-//            }
-//            .padding([.horizontal, .top])
-//            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-//            
-//            Text("\(meal.totalCaloriesEstimation) kcal")
-//                .font(.special(.largeTitle, weight: .black))
-//                .foregroundStyle(.ruby.gradient)
-//                .scaleEffect(startAnimations ? 1.2 : 0.4)
-//            
-//            MacroBarsView(meal: meal)
-//                .padding()
-//        }
-//        .frame(maxWidth: .infinity, maxHeight: .infinity)
-//        .background(.customBackground)
-//        .onAppear {
-//            DispatchQueue.main.async {
-//                withAnimation(.snappy(duration: 1).delay(0.4)) {
-//                    startAnimations = true
-//                }
-//            }
-//        }
-//        .safeAreaInset(edge: .bottom, content: {
-//            RoundedButton(title: "Accept") {
-//                dismiss()
-//            }
-//            .padding(.horizontal)
-//        })
-//    }
-//}
-//
-//#Preview {
-//    ResultsView(meal: Meal.mockMeal)
-//        .environmentObject(UserManager.shared)
-//}
-
 import SwiftUI
 import AVFoundation
 import Vision
 import Photos
 import AVKit
+import FirebaseFirestore
+
+// Create a dedicated error type
+enum ResultsViewError: LocalizedError {
+    case userNotLoggedIn
+    case failedToCreateFeedback(Error)
+    case uploadError(Error)
+    
+    var errorDescription: String? {
+        switch self {
+        case .userNotLoggedIn:
+            return "User not logged in"
+        case .failedToCreateFeedback(let error):
+            return "Failed to create feedback: \(error.localizedDescription)"
+        case .uploadError(let error):
+            return "Upload error: \(error.localizedDescription)"
+        }
+    }
+}
 
 struct ResultsView: View {
     var videoURL: URL
-    @Environment(\.dismiss) var dismiss // To dismiss the view when buttons are pressed
+    @Environment(\.dismiss) var dismiss
     
     @State private var player: AVPlayer
     @State private var navigateToFeedback = false
+    @EnvironmentObject var userManager: UserManager
+    @State private var isUploading = false
+    @State private var activeError: ResultsViewError?
+    @State private var feedbackId: String?
+    let db = Firestore.firestore()
+    
     init(videoURL: URL) {
         self.videoURL = videoURL
-        self._player = State(initialValue: AVPlayer(url: videoURL)) // Initialize the player with the video
+        self._player = State(initialValue: AVPlayer(url: videoURL))
     }
     
     var body: some View {
         ZStack {
-            // Full screen video
             VideoPlayer(player: player)
                 .edgesIgnoringSafeArea(.all)
                 .onAppear {
-                    player.play() // Automatically play when the view appears
+                    player.play()
                     NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player.currentItem, queue: .main) { _ in
-                        player.seek(to: .zero) // Rewind to the beginning
-                        player.play() // Play in a loop
+                        player.seek(to: .zero)
+                        player.play()
                     }
                 }
                 .onDisappear {
-                    // Delete the temporary video file when the view disappears
                     deleteTemporaryVideo()
                 }
             
-            // Buttons for discard and save
+            if isUploading {
+                Color.black.opacity(0.5)
+                ProgressView("Uploading...")
+                    .foregroundColor(.white)
+            }
+            
             VStack {
                 Spacer()
                 HStack {
                     Button("Discard") {
-                        dismiss() // Dismiss the view
+                        dismiss()
                     }
                     .foregroundColor(.white)
                     .padding()
@@ -116,24 +73,42 @@ struct ResultsView: View {
                     .cornerRadius(10)
                     
                     Button("Save") {
-                        navigateToFeedback = true
-                        
-                        
-                        dismiss() // Dismiss is used here as an example
+                        Task {
+                            await initiateFeedback()
+                        }
                     }
                     .foregroundColor(.white)
                     .padding()
                     .background(Color.blue)
                     .cornerRadius(10)
-                    .navigationDestination(isPresented: $navigateToFeedback) {
-                                       FeedbackView()
-                                   }
-                    
+                    .disabled(isUploading)
                 }
-                .padding(.bottom, 30) // Bottom padding for the buttons
+                .padding(.bottom, 30)
             }
         }
-        .navigationBarBackButtonHidden(true) // Hide the back button
+        .navigationBarBackButtonHidden(true)
+        .alert(
+            "Error",
+            isPresented: Binding(
+                get: { activeError != nil },
+                set: { if !$0 { activeError = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) {
+                    activeError = nil
+                }
+            },
+            message: {
+                if let error = activeError {
+                    Text(error.localizedDescription)
+                }
+            }
+        )
+        .navigationDestination(isPresented: $navigateToFeedback) {
+            if let feedbackId = feedbackId {
+                FeedbackView(feedbackId: feedbackId, videoURL: videoURL)
+            }
+        }
     }
     
     func deleteTemporaryVideo() {
@@ -142,6 +117,91 @@ struct ResultsView: View {
             print("Temporary video file deleted.")
         } catch {
             print("Error deleting video file: \(error)")
+        }
+    }
+    
+    private func initiateFeedback() async {
+        if userManager.userId.isEmpty {
+            activeError = .userNotLoggedIn
+            return
+        }
+        
+        do {
+            let userDoc = try await db.collection("users").document(userManager.userId).getDocument()
+            let coachId = userDoc.data()?["myCoach"] as? String
+            
+            let feedbackRef = try await db.collection("feedback").addDocument(data: [
+                "userId": userManager.userId,
+                "coachId": coachId as Any,
+                "createdAt": Timestamp(date: Date()),
+                "status": "pending",
+                "fileName": videoURL.lastPathComponent
+            ])
+            
+            Task {
+                await uploadToServer(feedbackId: feedbackRef.documentID, coachId: coachId)
+            }
+            
+            self.feedbackId = feedbackRef.documentID
+            self.navigateToFeedback = true
+            
+        } catch {
+            activeError = .failedToCreateFeedback(error)
+        }
+    }
+    
+    private func uploadToServer(feedbackId: String, coachId: String?) async {
+        do {
+            let boundary = "Boundary-\(UUID().uuidString)"
+            var request = URLRequest(url: URL(string: "https://your-server.com/api/upload")!)
+            request.httpMethod = "POST"
+            
+            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+            request.setValue(userManager.userId, forHTTPHeaderField: "userID")
+            
+            var body = Data()
+            
+            let videoData = try Data(contentsOf: videoURL)
+            body.append("--\(boundary)\r\n")
+            body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(videoURL.lastPathComponent)\"\r\n")
+            body.append("Content-Type: video/quicktime\r\n\r\n")
+            body.append(videoData)
+            body.append("\r\n")
+            
+            body.append("--\(boundary)\r\n")
+            body.append("Content-Disposition: form-data; name=\"feedbackId\"\r\n\r\n")
+            body.append(feedbackId)
+            body.append("\r\n")
+            
+            if let coachId = coachId {
+                body.append("--\(boundary)\r\n")
+                body.append("Content-Disposition: form-data; name=\"coachId\"\r\n\r\n")
+                body.append(coachId)
+                body.append("\r\n")
+            }
+            
+            body.append("--\(boundary)--\r\n")
+            request.httpBody = body
+            
+            let (_, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Server error"])
+            }
+            
+            print("Upload initiated successfully")
+            
+        } catch {
+            activeError = .uploadError(error)
+        }
+    }
+}
+
+extension Data {
+    mutating func append(_ string: String) {
+        if let data = string.data(using: .utf8) {
+            append(data)
         }
     }
 }

@@ -7,34 +7,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @State private var punches: [Punch] = [
-        Punch(date: Date().addingTimeInterval(-86400), score: 75),
-        Punch(date: Date().addingTimeInterval(-172800), score: 80),
-        Punch(date: Date().addingTimeInterval(-259200), score: 90),
-        Punch(date: Date().addingTimeInterval(-345600), score: 85),
-        Punch(date: Date().addingTimeInterval(-432000), score: 70),
-        Punch(date: Date().addingTimeInterval(-518400), score: 95),
-        Punch(date: Date().addingTimeInterval(-604800), score: 88),
-        Punch(date: Date().addingTimeInterval(-691200), score: 92),
-        Punch(date: Date().addingTimeInterval(-777600), score: 78),
-        Punch(date: Date().addingTimeInterval(-864000), score: 82),
-        Punch(date: Date().addingTimeInterval(-950400), score: 85),
-        Punch(date: Date().addingTimeInterval(-1036800), score: 89),
-        Punch(date: Date().addingTimeInterval(-1123200), score: 93),
-        Punch(date: Date().addingTimeInterval(-1209600), score: 74),
-        Punch(date: Date().addingTimeInterval(-1296000), score: 79),
-        Punch(date: Date().addingTimeInterval(-1382400), score: 91),
-        Punch(date: Date().addingTimeInterval(-1468800), score: 87),
-        Punch(date: Date().addingTimeInterval(-1555200), score: 77),
-        Punch(date: Date().addingTimeInterval(-1641600), score: 81),
-        Punch(date: Date().addingTimeInterval(-1728000), score: 86),
-        Punch(date: Date().addingTimeInterval(-1814400), score: 83),
-        Punch(date: Date().addingTimeInterval(-1900800), score: 94),
-        Punch(date: Date().addingTimeInterval(-1987200), score: 72),
-        Punch(date: Date().addingTimeInterval(-2073600), score: 76),
-        Punch(date: Date().addingTimeInterval(-2160000), score: 84)
-    ]
-    @State private var isLoading = true
+    @StateObject private var viewModel = ProfileVM()
     @State private var selectedTab: TimePeriod = .week
     @State private var sortOption: SortOption = .date
     
@@ -46,39 +19,27 @@ struct ProfileView: View {
                 .padding(.horizontal)
                 
             TabView(selection: $selectedTab) {
-                StatsView(timeInterval: .day, punches: punches)
+                StatsView(timeInterval: .day, feedbacks: viewModel.feedbacks)
                     .tag(TimePeriod.week)
                     .tabItem { Text("24 Hours").font(.headline) }
-                StatsView(timeInterval: .week, punches: punches)
+                StatsView(timeInterval: .week, feedbacks: viewModel.feedbacks)
                     .tag(TimePeriod.week)
                     .tabItem { Text("7 Days").font(.headline) }
-                StatsView(timeInterval: .month, punches: punches)
+                StatsView(timeInterval: .month, feedbacks: viewModel.feedbacks)
                     .tag(TimePeriod.month)
                     .tabItem { Text("Month").font(.headline) }
-                StatsView(timeInterval: .year, punches: punches)
+                StatsView(timeInterval: .year, feedbacks: viewModel.feedbacks)
                     .tag(TimePeriod.year)
                     .tabItem { Text("Year").font(.headline) }
             }
             .padding(.horizontal)
             
-            if isLoading {
+            if viewModel.isLoading {
                 LoadingView()
             } else {
-                PunchListView(punches: punches, sortOption: $sortOption)
+                PunchListView(viewModel: viewModel, sortOption: $sortOption)
                     .padding(.horizontal)
             }
-        }
-        .onAppear {
-            fetchPunchData()
-        }
-    }
-    
-    private func fetchPunchData() {
-        // Placeholder logic for fetching punch data
-        isLoading = false
-        // Fake delay to simulate loading
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            isLoading = false
         }
     }
 }
@@ -93,7 +54,7 @@ enum SortOption: String {
 
 struct StatsView: View {
     var timeInterval: TimePeriod
-    var punches: [Punch]
+    var feedbacks: [ProfileVM.FeedbackListItem]
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -101,30 +62,34 @@ struct StatsView: View {
                 .font(.title2)
                 .padding(.vertical)
             
-            let punchesInInterval = filterPunches(for: timeInterval, from: punches)
-            let averageScore = calculateAverageScore(for: punchesInInterval)
+            let feedbacksInInterval = filterFeedbacks(for: timeInterval, from: feedbacks)
+            let averageScore = calculateAverageScore(for: feedbacksInInterval)
             
-            Text("Punches: \(punchesInInterval.count)")
+            Text("Feedbacks: \(feedbacksInInterval.count)")
             Text("Average Score: \(averageScore)")
         }
     }
     
-    private func filterPunches(for timeInterval: TimePeriod, from punches: [Punch]) -> [Punch] {
+    private func filterFeedbacks(for timeInterval: TimePeriod, from feedbacks: [ProfileVM.FeedbackListItem]) -> [ProfileVM.FeedbackListItem] {
         let currentDate = Date()
         switch timeInterval {
         case .day:
-            return punches.filter { $0.date >= Calendar.current.startOfDay(for: currentDate) }
+            return feedbacks.filter { $0.date >= Calendar.current.startOfDay(for: currentDate) }
         case .week:
-            return punches.filter { $0.date >= Calendar.current.date(byAdding: .day, value: -7, to: currentDate)! }
+            let weekAgo = Calendar.current.date(byAdding: .day, value: -7, to: currentDate)!
+            return feedbacks.filter { $0.date >= weekAgo }
         case .month:
-            return punches.filter { $0.date >= Calendar.current.date(byAdding: .month, value: -1, to: currentDate)! }
+            let monthAgo = Calendar.current.date(byAdding: .month, value: -1, to: currentDate)!
+            return feedbacks.filter { $0.date >= monthAgo }
         case .year:
-            return punches.filter { $0.date >= Calendar.current.date(byAdding: .year, value: -1, to: currentDate)! }
+            let yearAgo = Calendar.current.date(byAdding: .year, value: -1, to: currentDate)!
+            return feedbacks.filter { $0.date >= yearAgo }
         }
     }
     
-    private func calculateAverageScore(for punches: [Punch]) -> Int {
-        return punches.isEmpty ? 0 : punches.map { $0.score }.reduce(0, +) / punches.count
+    private func calculateAverageScore(for feedbacks: [ProfileVM.FeedbackListItem]) -> Int {
+        let completedFeedbacks = feedbacks.filter { $0.isCompleted }
+        return completedFeedbacks.isEmpty ? 0 : Int(completedFeedbacks.map { $0.score }.reduce(0, +) / Double(completedFeedbacks.count))
     }
 }
 
@@ -145,28 +110,29 @@ struct LoadingView: View {
 
 
 struct PunchListView: View {
-    var punches: [Punch]
+    @EnvironmentObject var userManager: UserManager
+    @ObservedObject var viewModel: ProfileVM
     @Binding var sortOption: SortOption
     @State private var currentPage: Int = 1
     private let itemsPerPage = 5
     
-    var sortedPunches: [Punch] {
+    // Add computed properties for pagination
+    private var sortedFeedbacks: [ProfileVM.FeedbackListItem] {
         switch sortOption {
         case .date:
-            return punches.sorted { $0.date > $1.date }
+            return viewModel.feedbacks.sorted { $0.date > $1.date }
         case .score:
-            return punches.sorted { $0.score > $1.score }
+            return viewModel.feedbacks.sorted { $0.score > $1.score }
         }
     }
     
-    var paginatedPunches: [Punch] {
+    private var paginatedFeedbacks: [ProfileVM.FeedbackListItem] {
         let startIndex = (currentPage - 1) * itemsPerPage
-        let endIndex = min(startIndex + itemsPerPage, sortedPunches.count)
-        return Array(sortedPunches[startIndex..<endIndex])
+        return Array(sortedFeedbacks.dropFirst(startIndex).prefix(itemsPerPage))
     }
     
-    var totalPages: Int {
-        (sortedPunches.count + itemsPerPage - 1) / itemsPerPage
+    private var totalPages: Int {
+        Int(ceil(Double(sortedFeedbacks.count) / Double(itemsPerPage)))
     }
     
     var body: some View {
@@ -177,46 +143,68 @@ struct PunchListView: View {
             }
             .pickerStyle(SegmentedPickerStyle())
             
-            List(paginatedPunches) { punch in
-                NavigationLink(destination: FeedbackView()) {
-                    HStack {
-                        Text(punch.dateFormatted)
-                        Spacer()
-                        Text("Score: \(punch.score)")
+            ScrollView {
+                LazyVStack(spacing: 10) {
+                    ForEach(paginatedFeedbacks, id: \.id) { feedback in
+                        NavigationLink(destination: FeedbackView(feedbackId: feedback.id, videoURL: nil)) {
+                            FeedbackRowView(feedback: feedback)
+                        }
                     }
-                    .contentShape(Rectangle())
                 }
             }
             
-            HStack {
-                if currentPage > 1 {
-                    Button("Previous") {
-                        currentPage -= 1
-                    }
-                    .padding()
-                }
-                Spacer()
-                if currentPage < totalPages {
-                    Button("Next") {
-                        currentPage += 1
-                    }
-                    .padding()
-                }
-            }
+            PaginationControls(currentPage: $currentPage, totalPages: totalPages)
+        }
+        .onAppear {
+            viewModel.fetchUserFeedback(userId: userManager.userId)
         }
     }
 }
 
-
-struct Punch: Identifiable {
-    var id = UUID().uuidString
-    var date: Date = Date()
-    var score: Int = 0
+// New helper views
+struct FeedbackRowView: View {
+    let feedback: ProfileVM.FeedbackListItem
     
-    var dateFormatted: String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter.string(from: date)
+    var body: some View {
+        HStack {
+            if !feedback.isCompleted {
+                ProgressView()
+                    .scaleEffect(0.7)
+            }
+            Text(feedback.date.formatted(date: .abbreviated, time: .shortened))
+            Spacer()
+            if feedback.isCompleted {
+                Text("Score: \(Int(feedback.score))")
+            } else {
+                Text(feedback.status.capitalized)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .padding()
+        .contentShape(Rectangle())
+    }
+}
+
+struct PaginationControls: View {
+    @Binding var currentPage: Int
+    let totalPages: Int
+    
+    var body: some View {
+        HStack {
+            if currentPage > 1 {
+                Button("Previous") {
+                    currentPage -= 1
+                }
+                .padding()
+            }
+            Spacer()
+            if currentPage < totalPages {
+                Button("Next") {
+                    currentPage += 1
+                }
+                .padding()
+            }
+        }
     }
 }
 

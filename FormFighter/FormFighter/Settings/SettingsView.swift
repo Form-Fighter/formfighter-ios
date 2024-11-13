@@ -22,6 +22,8 @@ struct SettingsView: View {
     
     @State private var deleteUserTextConfirmation = ""
     
+    @ObservedObject private var notificationManager = NotificationManager.shared
+    
     var body: some View {
         List {
             Group {
@@ -117,6 +119,35 @@ struct SettingsView: View {
                     
                     Text(ColorSchemeType(rawValue: systemTheme)?.title ?? "unknown")
                         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .trailing)
+                }
+            }
+            
+            Toggle(isOn: .init(
+                get: { notificationManager.authorizationStatus == .authorized },
+                set: { newValue in
+                    if newValue {
+                        notificationManager.requestAuthorization()
+                    } else {
+                        // Open system settings since we can't programmatically disable notifications
+                        if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(settingsUrl)
+                        }
+                    }
+                }
+            )) {
+                HStack {
+                    Text("Notifications")
+                        .foregroundStyle(colorScheme == .light ? .black : .white)
+                    
+                    if notificationManager.authorizationStatus == .authorized {
+                        Text("On")
+                            .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                    } else {
+                        Text("Off")
+                            .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                    }
                 }
             }
         }

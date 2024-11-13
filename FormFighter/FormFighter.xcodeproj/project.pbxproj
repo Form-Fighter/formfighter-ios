@@ -146,6 +146,15 @@
 		B20242A12C6C5A8500256733 /* FormFighterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811A37862B6EBA3B00C9E8B6 /* FormFighterApp.swift */; };
 		B214115C2CCF151B00699B15 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214115B2CCF151B00699B15 /* FeedbackView.swift */; };
 		B214115F2CCF1A4500699B15 /* UserFeedbackPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214115E2CCF1A4500699B15 /* UserFeedbackPage.swift */; };
+		B21411612CE530A100699B15 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411602CE530A100699B15 /* NotificationManager.swift */; };
+		B21411662CE530F200699B15 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411642CE530F200699B15 /* AppDelegate.swift */; };
+		B21411682CE5311000699B15 /* FeedbackData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411672CE5311000699B15 /* FeedbackData.swift */; };
+		B214116D2CE5324500699B15 /* NotificationPermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214116B2CE5324500699B15 /* NotificationPermissionView.swift */; };
+		B214116F2CE5339600699B15 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = B214116E2CE5339600699B15 /* FirebaseMessaging */; };
+		B21411732CE537BB00699B15 /* FeedbackSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411702CE537BB00699B15 /* FeedbackSection.swift */; };
+		B21411742CE537BB00699B15 /* ScoreCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411712CE537BB00699B15 /* ScoreCardView.swift */; };
+		B21411762CE5380700699B15 /* UserFeedbackSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411752CE5380700699B15 /* UserFeedbackSheet.swift */; };
+		B214117A2CE54D1700699B15 /* FeedbackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411792CE54D1700699B15 /* FeedbackViewModel.swift */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
 		B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */; };
 		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
@@ -285,6 +294,14 @@
 		81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedSelector.swift; sourceTree = "<group>"; };
 		B214115B2CCF151B00699B15 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		B214115E2CCF1A4500699B15 /* UserFeedbackPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFeedbackPage.swift; sourceTree = "<group>"; };
+		B21411602CE530A100699B15 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		B21411642CE530F200699B15 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B21411672CE5311000699B15 /* FeedbackData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackData.swift; sourceTree = "<group>"; };
+		B214116B2CE5324500699B15 /* NotificationPermissionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationPermissionView.swift; sourceTree = "<group>"; };
+		B21411702CE537BB00699B15 /* FeedbackSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackSection.swift; sourceTree = "<group>"; };
+		B21411712CE537BB00699B15 /* ScoreCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreCardView.swift; sourceTree = "<group>"; };
+		B21411752CE5380700699B15 /* UserFeedbackSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserFeedbackSheet.swift; sourceTree = "<group>"; };
+		B21411792CE54D1700699B15 /* FeedbackViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackViewModel.swift; sourceTree = "<group>"; };
 		B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighterDebug.entitlements; sourceTree = "<group>"; };
 		B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntNumberFieldView.swift; sourceTree = "<group>"; };
 		B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -300,6 +317,7 @@
 			files = (
 				81DE14B92B73EFF600C41EA9 /* RevenueCat in Frameworks */,
 				81DE14CB2B740A2300C41EA9 /* FirebaseAuth in Frameworks */,
+				B214116F2CE5339600699B15 /* FirebaseMessaging in Frameworks */,
 				817FD0372C457E060071468A /* AIProxy in Frameworks */,
 				81E98B0B2B72AC63000E8996 /* KeychainSwift in Frameworks */,
 				81DE14CD2B740A2300C41EA9 /* FirebaseCrashlytics in Frameworks */,
@@ -320,6 +338,8 @@
 		811A377A2B6EBA3B00C9E8B6 = {
 			isa = PBXGroup;
 			children = (
+				B214116C2CE5324500699B15 /* Views */,
+				B21411652CE530F200699B15 /* App */,
 				811A37852B6EBA3B00C9E8B6 /* FormFighter */,
 				811A37842B6EBA3B00C9E8B6 /* Products */,
 				81DE14DE2B752C4600C41EA9 /* Frameworks */,
@@ -337,6 +357,7 @@
 		811A37852B6EBA3B00C9E8B6 /* FormFighter */ = {
 			isa = PBXGroup;
 			children = (
+				B21411722CE537BB00699B15 /* Components */,
 				B214115D2CCF1A1C00699B15 /* User Feedback Page */,
 				B214115A2CCF128600699B15 /* FeedbackPage */,
 				B2B9F0B62CB0A77F00D7CFC8 /* Profile */,
@@ -372,6 +393,7 @@
 		818D3F812B6FA3CA00DF7299 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B21411672CE5311000699B15 /* FeedbackData.swift */,
 				818D3FE52B71643600DF7299 /* MultiplePagesOnboardingFeatureModel.swift */,
 				81DE14D92B75269500C41EA9 /* User.swift */,
 				81DE14F52B76354100C41EA9 /* AuthBackendModel.swift */,
@@ -613,6 +635,7 @@
 		81DE14BC2B73F04000C41EA9 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				B21411602CE530A100699B15 /* NotificationManager.swift */,
 				81DE14D72B75267E00C41EA9 /* AuthManager.swift */,
 				81DE14DB2B75270500C41EA9 /* FirestoreService.swift */,
 				81DE14D52B75266200C41EA9 /* UserManager.swift */,
@@ -637,6 +660,7 @@
 		B214115A2CCF128600699B15 /* FeedbackPage */ = {
 			isa = PBXGroup;
 			children = (
+				B21411792CE54D1700699B15 /* FeedbackViewModel.swift */,
 				B214115B2CCF151B00699B15 /* FeedbackView.swift */,
 			);
 			path = FeedbackPage;
@@ -648,6 +672,34 @@
 				B214115E2CCF1A4500699B15 /* UserFeedbackPage.swift */,
 			);
 			path = "User Feedback Page";
+			sourceTree = "<group>";
+		};
+		B21411652CE530F200699B15 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B21411642CE530F200699B15 /* AppDelegate.swift */,
+			);
+			name = App;
+			path = FormFighter/App;
+			sourceTree = "<group>";
+		};
+		B214116C2CE5324500699B15 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B214116B2CE5324500699B15 /* NotificationPermissionView.swift */,
+			);
+			name = Views;
+			path = FormFighter/Views;
+			sourceTree = "<group>";
+		};
+		B21411722CE537BB00699B15 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B21411752CE5380700699B15 /* UserFeedbackSheet.swift */,
+				B21411702CE537BB00699B15 /* FeedbackSection.swift */,
+				B21411712CE537BB00699B15 /* ScoreCardView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		B2B9F0B62CB0A77F00D7CFC8 /* Profile */ = {
@@ -689,6 +741,7 @@
 				81D531E42B7E2BBE0044D990 /* Lottie */,
 				81A56C072BD92A9800C7B596 /* WishKit */,
 				817FD0362C457E060071468A /* AIProxy */,
+				B214116E2CE5339600699B15 /* FirebaseMessaging */,
 			);
 			productName = WrapFast;
 			productReference = 811A37832B6EBA3B00C9E8B6 /* FormFighter.app */;
@@ -823,9 +876,12 @@
 				81CBCEF32C2B348C005DD2E7 /* crAionOnboarding.swift in Sources */,
 				81D531E72B836EFE0044D990 /* MacroBarView.swift in Sources */,
 				B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */,
+				B21411762CE5380700699B15 /* UserFeedbackSheet.swift in Sources */,
 				81E98B082B72A781000E8996 /* RequestReviewView.swift in Sources */,
+				B21411732CE537BB00699B15 /* FeedbackSection.swift in Sources */,
 				81D531F22B83CBC50044D990 /* ColorSchemeType.swift in Sources */,
 				81DE14F42B76352200C41EA9 /* AuthBackendService.swift in Sources */,
+				B214116D2CE5324500699B15 /* NotificationPermissionView.swift in Sources */,
 				818D3FB82B700E9D00DF7299 /* +Array.swift in Sources */,
 				81DE14F22B76303200C41EA9 /* Meal.swift in Sources */,
 				81A02D3A2BA333CC00061567 /* BrutoButton.swift in Sources */,
@@ -845,6 +901,7 @@
 				81E98B0D2B72AC81000E8996 /* KeychainManager.swift in Sources */,
 				B20242A12C6C5A8500256733 /* FormFighterApp.swift in Sources */,
 				818D3FE22B715B3D00DF7299 /* MultiplePagesOnboardingView.swift in Sources */,
+				B21411682CE5311000699B15 /* FeedbackData.swift in Sources */,
 				8125D5BE2B77FC8D001A846B /* MessageView.swift in Sources */,
 				818D3FB42B700E9D00DF7299 /* +UIFont.swift in Sources */,
 				81DE14C02B73F6FC00C41EA9 /* PaywallView.swift in Sources */,
@@ -854,10 +911,12 @@
 				81E98B062B72A777000E8996 /* HeartView.swift in Sources */,
 				81DE14DC2B75270500C41EA9 /* FirestoreService.swift in Sources */,
 				8125D5BA2B77FC77001A846B /* Message.swift in Sources */,
+				B214117A2CE54D1700699B15 /* FeedbackViewModel.swift in Sources */,
 				81DE14F82B76356700C41EA9 /* AnalyzeMealVisionService.swift in Sources */,
 				818D3FE62B71643600DF7299 /* MultiplePagesOnboardingFeatureModel.swift in Sources */,
 				81DE14EC2B762B9F00C41EA9 /* Endpoints.swift in Sources */,
 				81DE14E22B7546E200C41EA9 /* TermsAndPrivacyPolicyView.swift in Sources */,
+				B21411612CE530A100699B15 /* NotificationManager.swift in Sources */,
 				B2B9F0BA2CB0A8EF00D7CFC8 /* ProfileVM.swift in Sources */,
 				81A02D422BA4C31200061567 /* CircularProgressView.swift in Sources */,
 				818D3FB52B700E9D00DF7299 /* +View.swift in Sources */,
@@ -887,6 +946,7 @@
 				81DE14EE2B762BC200C41EA9 /* CryptoUtils.swift in Sources */,
 				81DE14EA2B75563600C41EA9 /* FAQView.swift in Sources */,
 				818D3FC82B70100F00DF7299 /* EmptyResponse.swift in Sources */,
+				B21411662CE530F200699B15 /* AppDelegate.swift in Sources */,
 				818D3FDA2B713D0F00DF7299 /* PillButton.swift in Sources */,
 				8125D5B42B77F167001A846B /* ChatGPTService.swift in Sources */,
 				818D3FE42B715DCC00DF7299 /* MultiplePagesOnboardingFeature.swift in Sources */,
@@ -894,6 +954,7 @@
 				81DE14DA2B75269600C41EA9 /* User.swift in Sources */,
 				818D3FD62B713B1D00DF7299 /* OnboardingFeature.swift in Sources */,
 				818D3FB32B700E9D00DF7299 /* +Font.swift in Sources */,
+				B21411742CE537BB00699B15 /* ScoreCardView.swift in Sources */,
 				818D3FBF2B700F6200DF7299 /* Haptic.swift in Sources */,
 				81E98B0F2B72B058000E8996 /* LoginView.swift in Sources */,
 				81D531F42B84A9160044D990 /* Tracker.swift in Sources */,
@@ -1245,6 +1306,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 81E98B092B72AC63000E8996 /* XCRemoteSwiftPackageReference "keychain-swift" */;
 			productName = KeychainSwift;
+		};
+		B214116E2CE5339600699B15 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 81DE14C52B740A2300C41EA9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

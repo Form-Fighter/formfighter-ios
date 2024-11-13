@@ -371,9 +371,6 @@
     "%@ Stats" : {
 
     },
-    "%@:" : {
-
-    },
     "%@'s World!" : {
 
     },
@@ -452,6 +449,9 @@
       }
     },
     "%lld years old" : {
+
+    },
+    "%lld/500 characters" : {
 
     },
     "%lldg" : {
@@ -2534,9 +2534,6 @@
         }
       }
     },
-    "Copy URL" : {
-
-    },
     "Crash" : {
       "localizations" : {
         "de" : {
@@ -2968,6 +2965,15 @@
         }
       }
     },
+    "Enable Notifications" : {
+
+    },
+    "Enable notifications to get updates about your form analysis and feedback from your coach." : {
+
+    },
+    "Error" : {
+
+    },
     "Error restoring purchases." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3040,6 +3046,9 @@
       }
     },
     "Experience an AI's perspective on what each artwork symbolizes" : {
+
+    },
+    "Feedbacks: %lld" : {
 
     },
     "Fighter Info" : {
@@ -3345,7 +3354,13 @@
     "How to get the best results with %@⚡️" : {
 
     },
+    "How was this feedback?" : {
+
+    },
     "How was your experience?" : {
+
+    },
+    "How was your feedback?" : {
 
     },
     "ℹ️ FAQ" : {
@@ -3489,6 +3504,15 @@
       }
     },
     "Is this the feedback you expected?" : {
+
+    },
+    "Jab Score" : {
+
+    },
+    "Join" : {
+
+    },
+    "Join Team" : {
 
     },
     "Just take a picture and check your meal's macros and calories" : {
@@ -3859,6 +3883,9 @@
     "Month" : {
 
     },
+    "Muay Thai Tip:" : {
+
+    },
     "Name" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3936,6 +3963,12 @@
     "Not Okay" : {
 
     },
+    "Notifications" : {
+
+    },
+    "Off" : {
+
+    },
     "OK" : {
       "localizations" : {
         "de" : {
@@ -4009,6 +4042,9 @@
     "Okay" : {
 
     },
+    "On" : {
+
+    },
     "Oops! Something went wrong." : {
       "localizations" : {
         "de" : {
@@ -4078,9 +4114,6 @@
           }
         }
       }
-    },
-    "Overall Score: %lld" : {
-
     },
     "P R E M I U M" : {
       "localizations" : {
@@ -4296,6 +4329,9 @@
           }
         }
       }
+    },
+    "Please turn the body to the left and right." : {
+
     },
     "Please type '%@' to confirm." : {
       "localizations" : {
@@ -4586,9 +4622,6 @@
     "Profile" : {
 
     },
-    "Punches: %lld" : {
-
-    },
     "Ready to dive into" : {
 
     },
@@ -4809,6 +4842,9 @@
     "Score" : {
 
     },
+    "Score: %@" : {
+
+    },
     "Score: %lld" : {
 
     },
@@ -4952,9 +4988,6 @@
           }
         }
       }
-    },
-    "Share Feedback" : {
-
     },
     "Share film with coaches and other fighters" : {
 
@@ -5178,6 +5211,9 @@
     "Statistics" : {
 
     },
+    "Stay Updated" : {
+
+    },
     "Store and showcase a colorful array of drawings in your personal gallery" : {
 
     },
@@ -5322,10 +5358,16 @@
         }
       }
     },
+    "Submit" : {
+
+    },
     "Tap to insert user name" : {
 
     },
     "Tell us more" : {
+
+    },
+    "Tell us what you think (minimum 15 characters)" : {
 
     },
     "Terms of Service" : {
@@ -5753,6 +5795,9 @@
         }
       }
     },
+    "Try Again" : {
+
+    },
     "Try it for " : {
       "localizations" : {
         "de" : {
@@ -5979,6 +6024,9 @@
     "Type your last name" : {
 
     },
+    "Unexpected Error" : {
+
+    },
     "Unlock Premium" : {
       "localizations" : {
         "de" : {
@@ -6120,6 +6168,9 @@
       }
     },
     "Unveil the hidden meanings in every drawing with the power of the latest Artificial Intelligence" : {
+
+    },
+    "Uploading..." : {
 
     },
     "User" : {
@@ -6483,6 +6534,9 @@
     "Who's the Artist?" : {
 
     },
+    "Would you like to join Coach %@'s team?" : {
+
+    },
     "Year" : {
 
     },
@@ -6556,6 +6610,9 @@
           }
         }
       }
+    },
+    "Your Feedback" : {
+
     },
     "Your Gallery in the Cloud" : {
 

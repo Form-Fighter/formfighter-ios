@@ -20,5 +20,22 @@
 		<string>BricolageGrotesque-Regular.ttf</string>
 		<string>BricolageGrotesque-SemiBold.ttf</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>formfighter</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>com.yourcompany.formfighter</string>
+		</dict>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 </dict>
 </plist>
