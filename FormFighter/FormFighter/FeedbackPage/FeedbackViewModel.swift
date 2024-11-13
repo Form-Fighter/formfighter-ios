@@ -15,27 +15,29 @@ class FeedbackViewModel: ObservableObject {
             .addSnapshotListener { [weak self] documentSnapshot, error in
                 guard let self = self else { return }
                 
-                guard let document = documentSnapshot else {
-                    self.error = error?.localizedDescription ?? "Unknown error occurred"
+                if let error = error {
+                    self.error = error.localizedDescription
                     return
                 }
                 
-                guard let data = document.data() else {
-                    self.error = "Document data was empty"
+                guard let document = documentSnapshot, document.exists,
+                      let data = document.data() else {
+                    self.error = "Document not found"
                     return
                 }
                 
-                if let newStatus = data["status"] as? String,
-                   let feedbackStatus = FeedbackStatus(rawValue: newStatus) {
+                if let statusString = data["status"] as? String,
+                   let feedbackStatus = FeedbackStatus(rawValue: statusString) {
                     self.status = feedbackStatus
                 }
                 
                 if self.status == .completed {
-                    self.feedback = try? Firestore.Decoder().decode(FeedbackModels.FeedbackData.self, from: data)
-                }
-                
-                if let errorMessage = data["error"] as? String {
-                    self.error = errorMessage
+                    do {
+                        self.feedback = try Firestore.Decoder().decode(FeedbackModels.FeedbackData.self, from: data)
+                    } catch {
+                        print("Decoding error: \(error)")
+                        self.error = "Failed to decode feedback data"
+                    }
                 }
             }
     }

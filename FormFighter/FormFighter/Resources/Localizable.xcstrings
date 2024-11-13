@@ -2749,6 +2749,7 @@
       }
     },
     "Delete Account" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3599,6 +3600,7 @@
 
     },
     "Logout" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3958,6 +3960,9 @@
       }
     },
     "Next" : {
+
+    },
+    "No feedback history yet" : {
 
     },
     "Not Okay" : {
@@ -6014,9 +6019,6 @@
           }
         }
       }
-    },
-    "Type your CoachID" : {
-
     },
     "Type your first name" : {
 

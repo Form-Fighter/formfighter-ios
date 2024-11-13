@@ -16,12 +16,15 @@ class ProfileVM: ObservableObject {
     @Published var error: String?
     
     private let db = Firestore.firestore()
+    private var listener: ListenerRegistration?
+    private var hasInitialized = false
     
     struct FeedbackListItem: Identifiable {
         let id: String
         let date: Date
-        let score: Double
         let status: String
+        let videoUrl: String?
+        let score: Double
         
         var isCompleted: Bool {
             return status == "completed"
@@ -29,44 +32,55 @@ class ProfileVM: ObservableObject {
     }
     
     func fetchUserFeedback(userId: String) {
-        db.collection("feedback")
+        guard !hasInitialized else { return }
+        hasInitialized = true
+        
+        isLoading = true
+        
+        let feedbackRef = db.collection("feedback")
             .whereField("userId", isEqualTo: userId)
-            .addSnapshotListener { [weak self] querySnapshot, error in
-                guard let self = self else { return }
-                
-                if let error = error {
-                    self.error = error.localizedDescription
-                    self.isLoading = false
-                    return
-                }
-                
-                guard let documents = querySnapshot?.documents else {
-                    self.isLoading = false
-                    return
-                }
-                
-                self.feedbacks = documents.compactMap { document in
-                    guard let status = document.data()["status"] as? String,
-                          let createdAt = document.data()["createdAt"] as? Timestamp,
-                          let modelFeedback = document.data()["modelFeedback"] as? [String: Any],
-                          let jabScore = modelFeedback["jab_score"] as? Double else {
-                        return nil
-                    }
-                    
-                    // Skip if there's an error
-                    if document.data()["error"] != nil {
-                        return nil
-                    }
-                    
-                    return FeedbackListItem(
-                        id: document.documentID,
-                        date: createdAt.dateValue(),
-                        score: jabScore,
-                        status: status
-                    )
-                }
-                
+            .whereField("status", isEqualTo: "completed")
+        
+        listener = feedbackRef.addSnapshotListener { [weak self] snapshot, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error fetching feedback: \(error.localizedDescription)")
                 self.isLoading = false
+                return
             }
+            
+            guard let documents = snapshot?.documents else {
+                self.isLoading = false
+                return
+            }
+            
+            self.feedbacks = documents.compactMap { document in
+                let data = document.data()
+                
+                let jabScore: Double
+                if let modelFeedback = data["modelFeedback"] as? [String: Any],
+                   let body = modelFeedback["body"] as? [String: Any],
+                   let score = body["jab_score"] as? Double {
+                    jabScore = score
+                } else {
+                    jabScore = 0.0
+                }
+                
+                return FeedbackListItem(
+                    id: document.documentID,
+                    date: Date(),
+                    status: data["status"] as? String ?? "",
+                    videoUrl: data["videoUrl"] as? String,
+                    score: jabScore
+                )
+            }
+            
+            self.isLoading = false
+        }
+    }
+    
+    deinit {
+        listener?.remove()
     }
 }

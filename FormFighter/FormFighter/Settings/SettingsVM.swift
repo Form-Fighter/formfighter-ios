@@ -70,4 +70,40 @@ class SettingsVM: ObservableObject {
             }
         }
     }
+    
+    func updateUserInfo(firstName: String, lastName: String) {
+        guard let currentUser = userManager.user else { return }
+        
+        let userId = currentUser.id
+        let email = currentUser.email
+        let coachID = currentUser.coachID
+        let fullName = "\(firstName) \(lastName)"
+        
+        let updatedUser = User(
+            id: userId,
+            name: fullName,
+            firstName: firstName,
+            lastName: lastName,
+            coachID: coachID,
+            email: email
+        )
+        
+        Task {
+            do {
+                try await firestoreService.updateUser(userID: userId, with: updatedUser)
+                
+                await MainActor.run {
+                    userManager.user = updatedUser
+                }
+                
+                Logger.log(message: "User name updated successfully", event: .debug)
+            } catch {
+                await MainActor.run {
+                    self.alertMessage = "Failed to update user info: \(error.localizedDescription)"
+                    self.showAlert = true
+                }
+                Logger.log(message: error.localizedDescription, event: .error)
+            }
+        }
+    }
 }

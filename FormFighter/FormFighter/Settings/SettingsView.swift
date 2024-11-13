@@ -204,179 +204,63 @@ struct SettingsView: View {
     
     var userInfo: some View {
         Section("Fighter Info") {
-//            LabeledContent {
-//                TextField("Type your name", text: $userManager.name, onCommit: handleSubmit)
-//                    .multilineTextAlignment(.trailing)
-//                    .fontWeight(.medium)
-//                    .submitLabel(.done)
-//                    .focused($nameTextFieldFocused)
-//            } label: {
-//                Text("Name")
-//            }
-//            .popupTipShim(vm.userTip)
-            
+            // First Name
             LabeledContent {
-             TextField("Type your first name", text: $userManager.firstName, onCommit: handleSubmit)
-                           .multilineTextAlignment(.trailing)
-                           .fontWeight(.medium)
-                           .submitLabel(.done)
-                           .focused($firstNameTextFieldFocused)
-                       } label: {
-                           Text("First Name")
-                       }
-                       .popupTipShim(vm.userTip)
+                TextField("Type your first name", 
+                         text: Binding(
+                            get: { userManager.user?.firstName ?? "" },
+                            set: { newValue in
+                                if var user = userManager.user {
+                                    user.firstName = newValue
+                                    user.name = "\(newValue) \(user.lastName)"  // Update full name
+                                    userManager.user = user
+                                }
+                            }
+                         ))
+                    .multilineTextAlignment(.trailing)
+                    .fontWeight(.medium)
+                    .submitLabel(.done)
+                    .focused($firstNameTextFieldFocused)
+                    .onSubmit {
+                        handleSubmit()
+                    }
+            } label: {
+                Text("First Name")
+            }
             
+            // Last Name
             LabeledContent {
-                TextField("Type your last name", text: $userManager.lastName, onCommit: handleSubmit)
+                TextField("Type your last name", 
+                         text: Binding(
+                            get: { userManager.user?.lastName ?? "" },
+                            set: { newValue in
+                                if var user = userManager.user {
+                                    user.lastName = newValue
+                                    user.name = "\(user.firstName) \(newValue)"  // Update full name
+                                    userManager.user = user
+                                }
+                            }
+                         ))
                     .multilineTextAlignment(.trailing)
                     .fontWeight(.medium)
                     .submitLabel(.done)
                     .focused($lastNameTextFieldFocused)
+                    .onSubmit {
+                        handleSubmit()
+                    }
             } label: {
                 Text("Last Name")
             }
             
+            // Coach ID (read-only)
             LabeledContent {
-                TextField("Type your CoachID", text: $userManager.coachID, onCommit: handleSubmit)
+                Text(userManager.user?.coachID ?? "No Coach")
                     .multilineTextAlignment(.trailing)
                     .fontWeight(.medium)
-                    .submitLabel(.done)
-                    .focused($lastNameTextFieldFocused)
+                    .foregroundColor(.secondary)
             } label: {
                 Text("Coach ID")
             }
-            
-            
-            
-//            VStack {
-//                       Text("Choose Your Preferred Stance")
-//                           .font(.headline)
-//                           .padding(.leading)
-//                
-//
-//                Picker("Preferred Stance", selection: $userManager.prefferedStance) {
-//                           Text("Orthodox").tag("Orthodox")
-//                           Text("Southpaw").tag("Southpaw")
-//                       }
-//                       .pickerStyle(SegmentedPickerStyle())  // Use segmented style for
-//
-//                   }
-            
-           
-            
-            
-//            LabeledContent {
-//                TextField("Type your weight in lbs", text: $userManager.weight, onCommit: handleSubmit)
-//                    .keyboardType(.numberPad)
-//                    .multilineTextAlignment(.trailing)
-//                    .fontWeight(.medium)
-//                    .submitLabel(.done)
-//                    .focused($weightTextFieldFocused)
-//            } label: {
-//                Text("Weight")
-//            }
-//            .popupTipShim(vm.userTip)
-//            
-//            LabeledContent {
-//                           TextField("Type your height in CM", text: $userManager.height, onCommit: handleSubmit)
-//                               .keyboardType(.numberPad)
-//                               .multilineTextAlignment(.trailing)
-//                               .fontWeight(.medium)
-//                               .submitLabel(.done)
-//                               .focused($heightTextFieldFocused)
-//                               .onChange(of: userManager.height) { newValue in
-//                                   // Allow only valid numeric input during typing
-//                                   let filtered = newValue.filter { "0123456789".contains($0) }
-//                                   userManager.height = filtered
-//                               }
-//                       } label: {
-//                           Text("Height in CM")
-//                       }
-//                       
-//                       // Display the converted height in feet
-//                    LabeledContent("Height in Feet and Inches", value: "\(heightInFeetAndInches.feet) ft \(heightInFeetAndInches.inches) in")
-
-            
-            
-            
-//            LabeledContent {
-//                           TextField("Type your wingspan in CM", text: $userManager.wingSpan, onCommit: handleSubmit)
-//                               .keyboardType(.numberPad)
-//                               .multilineTextAlignment(.trailing)
-//                               .fontWeight(.medium)
-//                               .submitLabel(.done)
-//                               .focused($wingSpanTextFieldFocused)
-//                               .onChange(of: userManager.wingSpan) { newValue in
-//                                                      // Allow only valid numeric input during typing
-//                                                      let filtered = newValue.filter { "0123456789".contains($0) }
-//                                                      userManager.wingSpan = filtered
-//                                                  }
-//                               }
-//                        label: {
-//                           Text("WingSpan in CM")
-//                       }
-//                       .popupTipShim(userManager.userTip)  // Assuming you have a popup tip or similar
-                       
-                       // Show the conversion to feet
-//                       LabeledContent("Wing Span in Feet", value: String(format: "%.2f ft", wingspanfeet))
-  
-            
-        
-            
-            
-//            LabeledContent {
-//                Text(userManager.userId)
-//                    .multilineTextAlignment(.trailing)
-//                    .fontWeight(.regular)
-//                    .minimumScaleFactor(0.7)
-//                    .lineLimit(1)
-//            } label: {
-//                Text("User ID")
-//            }
-//            .onTapGesture {
-//                showClipboardFeedback()
-//            }
-            
-//            LabeledContent {
-//                Text(userManager.email)
-//                    .multilineTextAlignment(.trailing)
-//                    .fontWeight(.regular)
-//                    .minimumScaleFactor(0.7)
-//                    .lineLimit(1)
-//            } label: {
-//                Text("Email")
-//            }
-//            .onTapGesture {
-//                Haptic.shared.mediumImpact()
-//                UIPasteboard.general.string = userManager.email
-//                withAnimation(.snappy) {
-//                    copiedToClipboard = true
-//                }
-//                
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-//                    withAnimation(.snappy) {
-//                        copiedToClipboard = false
-//                    }
-//                }
-//            }
-            
-            Button("Delete Account") {
-                Tracker.tapDeletedAccount()
-                vm.isShowingDeleteSignIn.toggle()
-            }
-            .fontWeight(.regular)
-            .foregroundStyle(colorScheme == .light ? .black : .white)
-            
-            Button("Logout") {
-                authManager.signOut(completion: { error in
-                    if error == nil {
-                        Tracker.loggedOut()
-                        userManager.isAuthenticated = false
-                    }
-                })
-            }
-            .fontWeight(.regular)
-            .foregroundStyle(.ruby)
         }
     }
     
@@ -461,19 +345,10 @@ struct SettingsView: View {
     }
     
     func handleSubmit() {
-        if let user = userManager.user {
-            Tracker.changedName()
-            vm.updateUser(with: user)
-            
-//            if let cmValue = Int(userManager.wingSpan), cmValue >= 100 && cmValue <= 250 {
-//                       // Valid range, do nothing
-//                   } else {
-//                       // If the input is out of range or invalid, reset it
-//                       userManager.wingSpan = "100"  // Reset to 100 if out of range
-//                   }
-//                   wingSpanTextFieldFocused = false  // Dismiss the keyboard
-            
-        }
+        guard let user = userManager.user else { return }
+        vm.updateUserInfo(firstName: user.firstName, lastName: user.lastName)
+        firstNameTextFieldFocused = false
+        lastNameTextFieldFocused = false
     }
 }
 

@@ -59,10 +59,8 @@ struct FeedbackView: View {
             }
         }
         .onAppear {
-            if videoURL != nil {
-                viewModel.setupFirestoreListener(feedbackId: feedbackId)
-            } else {
-                viewModel.setupFirestoreListener(feedbackId: feedbackId)
+            viewModel.setupFirestoreListener(feedbackId: feedbackId)
+            if videoURL == nil {
                 checkExistingUserFeedback()
             }
         }
@@ -82,7 +80,7 @@ struct FeedbackView: View {
         ScrollView {
             VStack(spacing: 24) {
                 if let feedback = viewModel.feedback {
-                    ScoreCardView(jabScore: feedback.modelFeedback.jab_score)
+                    ScoreCardView(jabScore: feedback.modelFeedback.body.jab_score)
                     
                     if let usdzUrl = URL(string: feedback.animation_usdz_url) {
                         SceneView(
@@ -93,12 +91,9 @@ struct FeedbackView: View {
                         .cornerRadius(12)
                     }
                     
-                    FeedbackSection(title: "Extension", 
-                                  feedback: feedback.modelFeedback.body.feedback.extensionFeedback)
-                    FeedbackSection(title: "Guard", 
-                                  feedback: feedback.modelFeedback.body.feedback.guardPosition)
-                    FeedbackSection(title: "Retraction", 
-                                  feedback: feedback.modelFeedback.body.feedback.retraction)
+                    FeedbackSection(title: "Extension", feedback: feedback.modelFeedback.body.feedback.extensionFeedback)
+                    FeedbackSection(title: "Guard", feedback: feedback.modelFeedback.body.feedback.guardPosition)
+                    FeedbackSection(title: "Retraction", feedback: feedback.modelFeedback.body.feedback.retraction)
                     
                     if !hasSubmittedFeedback {
                         FeedbackPromptButton(action: { showFeedbackPrompt = true })
