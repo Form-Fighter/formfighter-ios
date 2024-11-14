@@ -15,6 +15,28 @@ enum FeedbackModels {
         let videoUrl: String
         let status: String
         let modelFeedback: ModelFeedback
+        let fileName: String
+        let runpodRequestId: String
+        let userId: String
+        let analysisRequestedAt: Date
+        let createdAt: Date
+        let updatedAt: Date
+        
+        enum CodingKeys: String, CodingKey {
+            case animation_usdz_url
+            case animation_fbx_url
+            case feedback_json_url
+            case overlay_video_url
+            case videoUrl
+            case status
+            case modelFeedback
+            case fileName
+            case runpodRequestId
+            case userId
+            case analysisRequestedAt
+            case createdAt
+            case updatedAt
+        }
     }
     
     struct ModelFeedback: Codable {

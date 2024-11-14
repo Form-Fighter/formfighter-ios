@@ -2,6 +2,8 @@ import SwiftUI
 import Firebase
 import FirebaseFirestore
 import SceneKit
+import QuickLook
+import AVKit
 
 // Create a dedicated type for feedback status
 enum FeedbackStatus: String {
@@ -46,6 +48,15 @@ struct FeedbackView: View {
         "Keep your elbows close to protect your body"
     ]
     
+    // Add these properties for video sync
+    @State private var originalPlayer: AVPlayer?
+    @State private var overlayPlayer: AVPlayer?
+    
+    // Add these state variables
+    @State private var isLoadingModel = false
+    @State private var sceneModel: SCNScene?
+    @State private var modelURL: URL?
+    
     var body: some View {
         Group {
             if let feedback = viewModel.feedback {
@@ -82,15 +93,114 @@ struct FeedbackView: View {
                 if let feedback = viewModel.feedback {
                     ScoreCardView(jabScore: feedback.modelFeedback.body.jab_score)
                     
-                    if let usdzUrl = URL(string: feedback.animation_usdz_url) {
-                        SceneView(
-                            scene: try? SCNScene(url: usdzUrl),
-                            options: [.allowsCameraControl, .autoenablesDefaultLighting]
-                        )
-                        .frame(height: 300)
-                        .cornerRadius(12)
+                    // 3D Model Viewer
+                    if !feedback.animation_usdz_url.isEmpty,
+                       let usdzUrl = URL(string: feedback.animation_usdz_url) {
+                        VStack {
+                            if isLoadingModel {
+                                ProgressView("Loading 3D Model...")
+                                    .frame(height: 300)
+                            } else if let scene = sceneModel {
+                                SceneView(
+                                    scene: scene,
+                                    options: [
+                                        .allowsCameraControl,
+                                        .autoenablesDefaultLighting,
+                                        .temporalAntialiasingEnabled
+                                    ]
+                                )
+                                .frame(height: 300)
+                                .cornerRadius(12)
+                                .onAppear {
+                                    // Find and play all animations
+                                    scene.rootNode.enumerateChildNodes { (node, _) in
+                                        // Get all animation keys
+                                        for key in node.animationKeys {
+                                            if let animation = node.animation(forKey: key) {
+                                                // Remove existing animation
+                                                node.removeAnimation(forKey: key)
+                                                
+                                                // Create a new animation that loops
+                                                let loopingAnimation = animation.copy() as! CAAnimation
+                                                loopingAnimation.repeatCount = .infinity
+                                                loopingAnimation.isRemovedOnCompletion = false
+                                                
+                                                // Add the looping animation
+                                                node.addAnimation(loopingAnimation, forKey: "loop")
+                                            }
+                                        }
+                                    }
+                                    
+                                    // Ensure scene is playing
+                                    scene.isPaused = false
+                                }
+                            } else {
+                                Text("Failed to load 3D model")
+                                    .frame(height: 300)
+                            }
+                            
+                            // AR Quick Look Button
+                            if let modelURL = modelURL {
+                                Button(action: {
+                                    let quickLook = QLPreviewController()
+                                    let coordinator = makeCoordinator()
+                                    quickLook.delegate = coordinator
+                                    let dataSource = ARQuickLookDataSource(url: modelURL)
+                                    quickLook.dataSource = dataSource
+                                    
+                                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                       let rootVC = windowScene.windows.first?.rootViewController {
+                                        DispatchQueue.main.async {
+                                            rootVC.present(quickLook, animated: true)
+                                        }
+                                    }
+                                }) {
+                                    Label("View in AR", systemImage: "arkit")
+                                        .padding()
+                                        .background(Color.blue)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(8)
+                                }
+                                .disabled(isLoadingModel)
+                            }
+                        }
+                        .onAppear {
+                            loadUSDZModel(from: usdzUrl)
+                        }
                     }
                     
+                    // Video Comparison
+                    if !feedback.videoUrl.isEmpty,
+                       !feedback.overlay_video_url.isEmpty,
+                       let originalURL = URL(string: feedback.videoUrl),
+                       let overlayURL = URL(string: feedback.overlay_video_url) {
+                        
+                        HStack {
+                            if let player1 = originalPlayer {
+                                VideoPlayer(player: player1)
+                                    .frame(height: 200)
+                                    .cornerRadius(12)
+                            }
+                            
+                            if let player2 = overlayPlayer {
+                                VideoPlayer(player: player2)
+                                    .frame(height: 200)
+                                    .cornerRadius(12)
+                            }
+                        }
+                        .padding(.horizontal)
+                        .onAppear {
+                            setupSyncedVideos(originalURL: originalURL, overlayURL: overlayURL)
+                        }
+                        .onDisappear {
+                            originalPlayer?.pause()
+                            overlayPlayer?.pause()
+                            originalPlayer = nil
+                            overlayPlayer = nil
+                        }
+                    }
+                    
+                    // Existing feedback sections
                     FeedbackSection(title: "Extension", feedback: feedback.modelFeedback.body.feedback.extensionFeedback)
                     FeedbackSection(title: "Guard", feedback: feedback.modelFeedback.body.feedback.guardPosition)
                     FeedbackSection(title: "Retraction", feedback: feedback.modelFeedback.body.feedback.retraction)
@@ -163,6 +273,88 @@ struct FeedbackView: View {
                 showFeedbackPrompt = false
             }
         }
+    }
+    
+    private func setupSyncedVideos(originalURL: URL, overlayURL: URL) {
+        // Create players
+        originalPlayer = AVPlayer(url: originalURL)
+        overlayPlayer = AVPlayer(url: overlayURL)
+        
+        // Setup looping
+        NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: originalPlayer?.currentItem,
+            queue: .main
+        ) { _ in
+            originalPlayer?.seek(to: .zero)
+            originalPlayer?.play()
+        }
+        
+        NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: overlayPlayer?.currentItem,
+            queue: .main
+        ) { _ in
+            overlayPlayer?.seek(to: .zero)
+            overlayPlayer?.play()
+        }
+        
+        // Start playback
+        originalPlayer?.play()
+        overlayPlayer?.play()
+    }
+    
+    private func loadUSDZModel(from url: URL) {
+        isLoadingModel = true
+        modelURL = url
+        
+        // First download the file to local storage
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let localURL = documentsDirectory.appendingPathComponent("model.usdz")
+        
+        URLSession.shared.downloadTask(with: url) { tempURL, response, error in
+            guard let tempURL = tempURL, error == nil else {
+                DispatchQueue.main.async {
+                    self.isLoadingModel = false
+                    print("Download error: \(error?.localizedDescription ?? "unknown error")")
+                }
+                return
+            }
+            
+            do {
+                // Remove any existing file
+                try? FileManager.default.removeItem(at: localURL)
+                // Move downloaded file to documents
+                try FileManager.default.moveItem(at: tempURL, to: localURL)
+                
+                // Load the scene from local file
+                DispatchQueue.global(qos: .userInitiated).async {
+                    if let scene = try? SCNScene(url: localURL, options: [
+                        .checkConsistency: true,
+                        .convertToYUp: true,
+                        .flattenScene: true,
+                        .preserveOriginalTopology: true,
+                        .createNormalsIfAbsent: true
+                    ]) {
+                        DispatchQueue.main.async {
+                            self.modelURL = localURL
+                            self.sceneModel = scene
+                            self.isLoadingModel = false
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.isLoadingModel = false
+                            print("Failed to load scene from local file")
+                        }
+                    }
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.isLoadingModel = false
+                    print("File handling error: \(error.localizedDescription)")
+                }
+            }
+        }.resume()
     }
 }
 
@@ -269,5 +461,41 @@ struct FeedbackPromptButton: View {
             .background(Color.blue.opacity(0.1))
             .cornerRadius(10)
         }
+    }
+}
+
+// Add this class to handle AR Quick Look
+class ARQuickLookDataSource: NSObject, QLPreviewControllerDataSource {
+    let url: URL
+    
+    init(url: URL) {
+        self.url = url
+        super.init()
+    }
+    
+    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+        return 1
+    }
+    
+    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+        return url as QLPreviewItem
+    }
+}
+
+class Coordinator: NSObject, QLPreviewControllerDelegate {
+    var parent: FeedbackView
+    
+    init(_ parent: FeedbackView) {
+        self.parent = parent
+    }
+    
+    func previewControllerDidDismiss(_ controller: QLPreviewController) {
+        // Handle dismissal if needed
+    }
+}
+
+extension FeedbackView {
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
     }
 }
