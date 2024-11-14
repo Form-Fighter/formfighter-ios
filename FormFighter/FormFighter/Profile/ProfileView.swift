@@ -31,39 +31,43 @@ struct ProfileView: View {
                         .padding(.top, 40)
                 } else {
                     // Analytics Section
-                    VStack(alignment: .leading, spacing: 15) {
+                    VStack(alignment: .leading, spacing: 24) {
                         Text("Analytics")
                             .font(.system(.title2, design: .rounded, weight: .semibold))
                             .foregroundColor(ThemeColors.accent)
                             .padding(.horizontal)
                         
                         TabView(selection: $selectedTab) {
-                            StatsView(timeInterval: .day, feedbacks: viewModel.feedbacks)
-                                .tag(TimePeriod.week)
+                            StatsView(timeInterval: .day, feedbacks: viewModel.feedbacks, viewModel: viewModel)
+                                .tag(TimePeriod.day)
                                 .tabItem { 
                                     Label("24h", systemImage: "clock")
                                         .font(.headline) 
                                 }
-                            StatsView(timeInterval: .week, feedbacks: viewModel.feedbacks)
+                            StatsView(timeInterval: .week, feedbacks: viewModel.feedbacks, viewModel: viewModel)
                                 .tag(TimePeriod.week)
                                 .tabItem { 
                                     Label("Week", systemImage: "calendar")
                                         .font(.headline) 
                                 }
-                            StatsView(timeInterval: .month, feedbacks: viewModel.feedbacks)
+                            StatsView(timeInterval: .month, feedbacks: viewModel.feedbacks, viewModel: viewModel)
                                 .tag(TimePeriod.month)
                                 .tabItem { 
                                     Label("Month", systemImage: "calendar.badge.clock")
                                         .font(.headline) 
                                 }
                         }
-                        .frame(height: 200)
+                        .frame(height: 500)
                         .padding(.horizontal)
                     }
-                    .padding(.vertical, 20)
+                    .padding(.vertical, 24)
                     .background(ThemeColors.background.opacity(0.5))
                     .cornerRadius(12)
                     .padding(.horizontal)
+                    
+                    // Add more spacing before Training History
+                    Spacer()
+                        .frame(height: 24)
                     
                     // Training History Section
                     VStack(alignment: .leading, spacing: 15) {
@@ -117,19 +121,61 @@ enum SortOption: String {
 struct StatsView: View {
     var timeInterval: TimePeriod
     var feedbacks: [ProfileVM.FeedbackListItem]
+    @ObservedObject var viewModel: ProfileVM
+    
+    var chartData: [PunchStats] {
+        switch timeInterval {
+        case .day:
+            return viewModel.hourlyStats
+        case .week:
+            return viewModel.dailyStats
+        case .month:
+            return viewModel.weeklyStats
+        case .year:
+            return []
+        }
+    }
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 24) {
+            // Header
             Text("\(timeInterval.rawValue.capitalized) Stats")
-                .font(.title2)
-                .padding(.vertical)
+                .font(.system(.title2, design: .rounded, weight: .semibold))
+                .foregroundColor(ThemeColors.accent)
             
             let feedbacksInInterval = filterFeedbacks(for: timeInterval, from: feedbacks)
             let averageScore = calculateAverageScore(for: feedbacksInInterval)
             
-            Text("Feedbacks: \(feedbacksInInterval.count)")
-            Text("Average Score: \(averageScore)")
+            // Stats Grid
+            HStack(spacing: 16) {
+                StatBox(
+                    title: "Training Sessions",
+                    value: "\(feedbacksInInterval.count)",
+                    icon: "figure.boxing"
+                )
+                
+                StatBox(
+                    title: "Average Score",
+                    value: "\(averageScore)",
+                    icon: "star.fill"
+                )
+            }
+            .padding(.bottom, 16)
+            
+            // Line Chart
+            if !chartData.isEmpty {
+                LineChartView(data: chartData, timeInterval: timeInterval)
+                    .transition(.opacity)
+            } else {
+                Text("No data available for this time period")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding()
+            }
         }
+        .padding()
+        .background(ThemeColors.background.opacity(0.5))
+        .cornerRadius(12)
     }
     
     private func filterFeedbacks(for timeInterval: TimePeriod, from feedbacks: [ProfileVM.FeedbackListItem]) -> [ProfileVM.FeedbackListItem] {
@@ -161,6 +207,35 @@ struct StatsView: View {
     }
 }
 
+struct StatBox: View {
+    let title: String
+    let value: String
+    let icon: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .foregroundColor(ThemeColors.primary)
+                Text(title)
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundColor(.secondary)
+            }
+            
+            Text(value)
+                .font(.system(.title2, design: .rounded, weight: .bold))
+                .foregroundColor(ThemeColors.primary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(ThemeColors.background)
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(ThemeColors.primary.opacity(0.1), lineWidth: 1)
+        )
+    }
+}
     
 
 

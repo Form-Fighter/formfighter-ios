@@ -159,6 +159,8 @@
 		B214117E2CE62E2300699B15 /* FeedbackStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214117D2CE62E2300699B15 /* FeedbackStatus.swift */; };
 		B21411802CE63BE400699B15 /* EmojiButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214117F2CE63BE400699B15 /* EmojiButton.swift */; };
 		B21411832CE63BED00699B15 /* ImprovementsGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411812CE63BED00699B15 /* ImprovementsGridView.swift */; };
+		B21411862CE6478000699B15 /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411842CE6477F00699B15 /* LineChartView.swift */; };
+		B21411892CE6491F00699B15 /* PunchStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411872CE6491F00699B15 /* PunchStats.swift */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
 		B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */; };
 		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
@@ -310,6 +312,8 @@
 		B214117D2CE62E2300699B15 /* FeedbackStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackStatus.swift; sourceTree = "<group>"; };
 		B214117F2CE63BE400699B15 /* EmojiButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmojiButton.swift; sourceTree = "<group>"; };
 		B21411812CE63BED00699B15 /* ImprovementsGridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImprovementsGridView.swift; sourceTree = "<group>"; };
+		B21411842CE6477F00699B15 /* LineChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChartView.swift; sourceTree = "<group>"; };
+		B21411872CE6491F00699B15 /* PunchStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PunchStats.swift; sourceTree = "<group>"; };
 		B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighterDebug.entitlements; sourceTree = "<group>"; };
 		B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntNumberFieldView.swift; sourceTree = "<group>"; };
 		B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -722,9 +726,27 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		B21411852CE6477F00699B15 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B21411842CE6477F00699B15 /* LineChartView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		B21411882CE6491F00699B15 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B21411872CE6491F00699B15 /* PunchStats.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		B2B9F0B62CB0A77F00D7CFC8 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				B21411882CE6491F00699B15 /* Models */,
+				B21411852CE6477F00699B15 /* Components */,
 				B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */,
 				B2B9F0B92CB0A8EF00D7CFC8 /* ProfileVM.swift */,
 			);
@@ -910,6 +932,7 @@
 				818D3FCC2B70100F00DF7299 /* RequestMethod.swift in Sources */,
 				81DE14F62B76354100C41EA9 /* AuthBackendModel.swift in Sources */,
 				B2B9F0BC2CB0BA8000D7CFC8 /* CameraView.swift in Sources */,
+				B21411892CE6491F00699B15 /* PunchStats.swift in Sources */,
 				81DE14FA2B76371200C41EA9 /* MealVisionRequestModel.swift in Sources */,
 				818D3F7C2B6FA14100DF7299 /* VisionView.swift in Sources */,
 				8125D5BC2B77FC81001A846B /* MessageCell.swift in Sources */,
@@ -984,6 +1007,7 @@
 				81D531F42B84A9160044D990 /* Tracker.swift in Sources */,
 				8125D5C42B7BFA16001A846B /* DALLERequestModel.swift in Sources */,
 				818D3F852B6FA53C00DF7299 /* OnePageOnboardingView.swift in Sources */,
+				B21411862CE6478000699B15 /* LineChartView.swift in Sources */,
 				818D3FE02B71413000DF7299 /* +String.swift in Sources */,
 				818D3FA62B700A3500DF7299 /* Constants.swift in Sources */,
 				81DE14C22B73FCB700C41EA9 /* PaywallFeature.swift in Sources */,

@@ -1901,7 +1901,7 @@
     "Art, Interpreted" : {
 
     },
-    "Average Score: %lld" : {
+    "at %@" : {
 
     },
     "Back" : {
@@ -3075,9 +3075,6 @@
     "Failed to load 3D model" : {
 
     },
-    "Feedbacks: %lld" : {
-
-    },
     "Fighter" : {
 
     },
@@ -3999,6 +3996,9 @@
       }
     },
     "Next" : {
+
+    },
+    "No data available for this time period" : {
 
     },
     "No training sessions yet" : {
@@ -5770,6 +5770,9 @@
       }
     },
     "Tidy & Bright" : {
+
+    },
+    "Time" : {
 
     },
     "Title" : {
