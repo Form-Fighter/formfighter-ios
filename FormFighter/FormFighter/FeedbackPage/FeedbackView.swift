@@ -5,24 +5,6 @@ import SceneKit
 import QuickLook
 import AVKit
 
-// Create a dedicated type for feedback status
-enum FeedbackStatus: String {
-    case pending = "pending"
-    case uploading = "uploading"
-    case processing = "processing"
-    case analyzing = "analyzing"
-    case completed = "completed"
-    
-    var message: String {
-        switch self {
-        case .pending: return "Preparing your video..."
-        case .uploading: return "Uploading your form..."
-        case .processing: return "AI is analyzing your technique..."
-        case .analyzing: return "Breaking down your movements..."
-        case .completed: return "Analysis complete!"
-        }
-    }
-}
 
 struct FeedbackView: View {
     let feedbackId: String
@@ -36,6 +18,12 @@ struct FeedbackView: View {
     @State private var userComment = ""
     @State private var selectedEmoji: UserFeedbackType?
     @State private var hasSubmittedFeedback = false
+    @State private var isLoadingModel = false
+    @State private var sceneModel: SCNScene?
+    @State private var modelURL: URL?
+    @State private var feedbackRating: Double = 3
+    @State private var selectedImprovements: [String] = []
+    @State private var wouldRecommend: Bool = false
     
     private let timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
     
@@ -52,11 +40,6 @@ struct FeedbackView: View {
     @State private var originalPlayer: AVPlayer?
     @State private var overlayPlayer: AVPlayer?
     
-    // Add these state variables
-    @State private var isLoadingModel = false
-    @State private var sceneModel: SCNScene?
-    @State private var modelURL: URL?
-    
     var body: some View {
         Group {
             if let feedback = viewModel.feedback {
@@ -66,7 +49,7 @@ struct FeedbackView: View {
             } else if videoURL != nil {
                 uploadingView
             } else {
-                ProgressView()
+                processingView
             }
         }
         .onAppear {
@@ -82,15 +65,57 @@ struct FeedbackView: View {
             UserFeedbackPrompt(
                 userComment: $userComment,
                 selectedEmoji: $selectedEmoji,
+                feedbackRating: $feedbackRating,
+                selectedImprovements: $selectedImprovements,
+                wouldRecommend: $wouldRecommend,
                 onSubmit: submitUserFeedback
             )
         }
+    }
+    
+    private var processingView: some View {
+        VStack(spacing: 20) {
+            ProgressView()
+                .scaleEffect(1.5)
+            
+            Text(viewModel.status.message)
+                .font(.headline)
+                .multilineTextAlignment(.center)
+                .foregroundColor(.secondary)
+                .padding()
+                .animation(.easeInOut, value: viewModel.status)
+            
+            // Display random Muay Thai tips while processing
+            if viewModel.status.isProcessing {
+                Text(muayThaiTips[currentTipIndex])
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding()
+                    .onAppear {
+                        // Rotate through tips every few seconds
+                        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+                            withAnimation {
+                                currentTipIndex = (currentTipIndex + 1) % muayThaiTips.count
+                            }
+                        }
+                    }
+            }
+        }
+        .padding()
     }
     
     private var completedFeedbackView: some View {
         ScrollView {
             VStack(spacing: 24) {
                 if let feedback = viewModel.feedback {
+                    if !hasSubmittedFeedback {
+                        FeedbackPromptButton(action: { showFeedbackPrompt = true })
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                            .animation(.spring(response: 0.5, dampingFraction: 0.6), value: hasSubmittedFeedback)
+                            .padding(.top)
+                    }
+                    
                     ScoreCardView(jabScore: feedback.modelFeedback.body.jab_score)
                     
                     // 3D Model Viewer
@@ -111,6 +136,10 @@ struct FeedbackView: View {
                                 )
                                 .frame(height: 300)
                                 .cornerRadius(12)
+.overlay(
+    RoundedRectangle(cornerRadius: 12)
+        .stroke(ThemeColors.primary, lineWidth: 2)
+)
                                 .onAppear {
                                     // Find and play all animations
                                     scene.rootNode.enumerateChildNodes { (node, _) in
@@ -141,26 +170,54 @@ struct FeedbackView: View {
                             
                             // AR Quick Look Button
                             if let modelURL = modelURL {
-                                Button(action: {
-                                    let quickLook = QLPreviewController()
-                                    let coordinator = makeCoordinator()
-                                    quickLook.delegate = coordinator
-                                    let dataSource = ARQuickLookDataSource(url: modelURL)
-                                    quickLook.dataSource = dataSource
-                                    
-                                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                                       let rootVC = windowScene.windows.first?.rootViewController {
-                                        DispatchQueue.main.async {
-                                            rootVC.present(quickLook, animated: true)
+                                HStack(spacing: 16) {
+                                    Button(action: {
+                                        let quickLook = QLPreviewController()
+                                        let coordinator = makeCoordinator()
+                                        quickLook.delegate = coordinator
+                                        let dataSource = ARQuickLookDataSource(url: modelURL)
+                                        quickLook.dataSource = dataSource
+                                        
+                                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                           let rootVC = windowScene.windows.first?.rootViewController {
+                                            DispatchQueue.main.async {
+                                                rootVC.present(quickLook, animated: true)
+                                            }
                                         }
+                                    }) {
+                                        Label("AR", systemImage: "arkit")
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                            .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .background(ThemeColors.primary)
+                                            .cornerRadius(12)
+                                            .lineLimit(1)
                                     }
-                                }) {
-                                    Label("View in AR", systemImage: "arkit")
-                                        .padding()
-                                        .background(Color.blue)
-                                        .foregroundColor(.white)
-                                        .cornerRadius(8)
+                                    
+                                    Button(action: {
+                                        let url = "https://www.form-fighter.com/feedback/\(feedbackId)"
+                                        let activityVC = UIActivityViewController(
+                                            activityItems: [url],
+                                            applicationActivities: nil
+                                        )
+                                        
+                                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                           let rootVC = windowScene.windows.first?.rootViewController {
+                                            activityVC.popoverPresentationController?.sourceView = rootVC.view
+                                            rootVC.present(activityVC, animated: true)
+                                        }
+                                    }) {
+                                        Label("Share", systemImage: "square.and.arrow.up")
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                            .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .background(ThemeColors.primary)
+                                            .cornerRadius(12)
+                                    }
                                 }
+                                .padding(.horizontal)
                                 .disabled(isLoadingModel)
                             }
                         }
@@ -205,9 +262,7 @@ struct FeedbackView: View {
                     FeedbackSection(title: "Guard", feedback: feedback.modelFeedback.body.feedback.guardPosition)
                     FeedbackSection(title: "Retraction", feedback: feedback.modelFeedback.body.feedback.retraction)
                     
-                    if !hasSubmittedFeedback {
-                        FeedbackPromptButton(action: { showFeedbackPrompt = true })
-                    }
+                   
                 }
             }
             .padding()
@@ -260,13 +315,20 @@ struct FeedbackView: View {
     }
     
     private func submitUserFeedback() {
-        guard let emoji = selectedEmoji,
-              userComment.count >= 15 else { return }
+        guard let emoji = selectedEmoji else { return }
+        
+        print("Submitting feedback:")
+        print("- Rating: \(feedbackRating)")
+        print("- Improvements: \(selectedImprovements)")
+        print("- Would Recommend: \(wouldRecommend)")
         
         viewModel.submitUserFeedback(
             feedbackId: feedbackId,
             emoji: emoji,
-            comment: userComment
+            comment: userComment,
+            rating: feedbackRating,
+            improvements: selectedImprovements,
+            wouldRecommend: wouldRecommend
         ) { success in
             if success {
                 hasSubmittedFeedback = true
@@ -402,45 +464,77 @@ struct FeedbackView_Previews: PreviewProvider {
 struct UserFeedbackPrompt: View {
     @Binding var userComment: String
     @Binding var selectedEmoji: UserFeedbackType?
+    @Binding var feedbackRating: Double
+    @Binding var selectedImprovements: [String]
+    @Binding var wouldRecommend: Bool
+    @Environment(\.dismiss) private var dismiss
     let onSubmit: () -> Void
+    
+    @State private var currentStep = 1
+    
+    private let improvements = [
+        "More detailed feedback",
+        "Faster analysis",
+        "Additional tips",
+        "Clearer instructions",
+        "Better visuals"
+    ]
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
-                Text("How was your feedback?")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                
-                // Emoji Selection
-                HStack(spacing: 30) {
-                    ForEach(UserFeedbackType.allCases, id: \.self) { emoji in
-                        Button(action: { selectedEmoji = emoji }) {
-                            Text(emoji.rawValue)
-                                .font(.system(size: 40))
-                                .opacity(selectedEmoji == emoji ? 1.0 : 0.5)
-                                .scaleEffect(selectedEmoji == emoji ? 1.2 : 1.0)
-                        }
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Progress indicator
+                    ProgressView("Step \(currentStep) of 3", value: Double(currentStep), total: 3.0)
+                        .padding(.horizontal)
+                    
+                    // Step 1: Emoji Selection
+                    if currentStep == 1 {
+                        FeedbackStepOne(selectedEmoji: $selectedEmoji)
                     }
-                }
-                .padding()
-                
-                // Comment TextField
-                TextField("Tell us what you think (minimum 15 characters)", text: $userComment, axis: .vertical)
-                    .textFieldStyle(.roundedBorder)
-                    .lineLimit(4...6)
+                    
+                    // Step 2: Rating and Improvements
+                    if currentStep == 2 {
+                        FeedbackStepTwo(feedbackRating: $feedbackRating, selectedImprovements: $selectedImprovements, improvements: improvements)
+                    }
+                    
+                    // Step 3: Final Comments
+                    if currentStep == 3 {
+                        FeedbackStepThree(userComment: $userComment, wouldRecommend: $wouldRecommend)
+                    }
+                    
+                    // Navigation buttons
+                    HStack(spacing: 20) {
+                        if currentStep > 1 {
+                            Button("Back") {
+                                withAnimation {
+                                    currentStep -= 1
+                                }
+                            }
+                            .buttonStyle(MuayThaiSecondaryButtonStyle())
+                        }
+                        
+                        Button(currentStep == 3 ? "Submit" : "Next") {
+                            if currentStep == 3 {
+                                onSubmit()
+                                dismiss()
+                            } else {
+                                withAnimation {
+                                    currentStep += 1
+                                }
+                            }
+                        }
+                        .buttonStyle(MuayThaiButtonStyle())
+                        .disabled(currentStep == 1 && selectedEmoji == nil)
+                    }
                     .padding()
-                
-                Spacer()
+                }
+                .padding(.vertical)
             }
-            .padding()
             .navigationBarItems(
                 leading: Button("Cancel") {
-                    // You'll need to add a dismiss binding or use @Environment
-                },
-                trailing: Button("Submit") {
-                    onSubmit()
+                    dismiss()
                 }
-                .disabled(userComment.count < 15 || selectedEmoji == nil)
             )
         }
     }
@@ -448,18 +542,43 @@ struct UserFeedbackPrompt: View {
 
 struct FeedbackPromptButton: View {
     let action: () -> Void
+    @State private var isAnimating = false
+    @State private var gloveRotation = 0.0
     
     var body: some View {
         Button(action: action) {
             HStack {
-                Image(systemName: "message")
+                Text("🥊")
+                    .font(.title2)
+                    .rotationEffect(.degrees(gloveRotation))
                 Text("How was this feedback?")
+                    .foregroundColor(ThemeColors.primary)
                 Spacer()
                 Image(systemName: "chevron.right")
+                    .foregroundColor(ThemeColors.primary)
+                    .rotationEffect(.degrees(isAnimating ? 10 : 0))
             }
             .padding()
-            .background(Color.blue.opacity(0.1))
+            .background(Color.red.opacity(0.1))
             .cornerRadius(10)
+            .scaleEffect(isAnimating ? 1.02 : 1.0)
+        }
+        .onAppear {
+            // Slower pulse animation
+            withAnimation(
+                .easeInOut(duration: 2.0)
+                .repeatForever(autoreverses: true)
+            ) {
+                isAnimating = true
+            }
+            
+            // Slower glove rotation
+            withAnimation(
+                .linear(duration: 4.0)
+                .repeatForever(autoreverses: false)
+            ) {
+                gloveRotation = 360.0
+            }
         }
     }
 }
@@ -499,3 +618,81 @@ extension FeedbackView {
         Coordinator(self)
     }
 }
+
+struct FeedbackStepOne: View {
+    @Binding var selectedEmoji: UserFeedbackType?
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("How was your boxing feedback?")
+                .font(.title2)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+            
+            HStack(spacing: 30) {
+                ForEach(UserFeedbackType.allCases, id: \.self) { emoji in
+                    EmojiButton(
+                        emoji: emoji,
+                        isSelected: selectedEmoji == emoji,
+                        action: {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                                selectedEmoji = emoji
+                            }
+                        }
+                    )
+                }
+            }
+            .padding()
+        }
+    }
+}
+
+struct FeedbackStepTwo: View {
+    @Binding var feedbackRating: Double
+    @Binding var selectedImprovements: [String]
+    let improvements: [String]
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("How helpful was the feedback?")
+                .font(.headline)
+            
+            HStack {
+                Text("1")
+                Slider(value: $feedbackRating, in: 1...5, step: 0.5)
+                    .accentColor(.red)
+                Text("5")
+            }
+            .padding(.horizontal)
+            
+            Text("What could we improve?")
+                .font(.headline)
+                .padding(.top)
+            
+            ImprovementsGridView(selectedImprovements: $selectedImprovements, improvements: improvements)
+        }
+    }
+}
+
+struct FeedbackStepThree: View {
+    @Binding var userComment: String
+    @Binding var wouldRecommend: Bool
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("Any additional thoughts?")
+                .font(.headline)
+            
+            TextField("Share your experience (optional)", text: $userComment, axis: .vertical)
+                .textFieldStyle(.roundedBorder)
+                .lineLimit(4...6)
+            
+            Toggle("I would recommend this app", isOn: $wouldRecommend)
+                .tint(.red)
+                .padding(.vertical)
+        }
+        .padding(.horizontal)
+    }
+}
+
+

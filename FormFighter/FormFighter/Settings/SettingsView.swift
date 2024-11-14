@@ -27,25 +27,20 @@ struct SettingsView: View {
     var body: some View {
         List {
             Group {
-                // MARK: Customize the Settings View with as many sections as you want
-                // premium
-              //  settings
                 info
                 userInfo
                 madeBy
             }
-            .listRowBackground(colorScheme == .dark ? Color.brand.opacity(0.03) : Color.brand.opacity(0.05))
+            .listRowBackground(Color.thaiGray.opacity(0.1))
         }
         .scrollDismissesKeyboard(.interactively)
-        .font(.special(.body, weight: .regular))
+        .font(.system(.body, design: .rounded, weight: .medium))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .scrollContentBackground(.hidden)
         .scrollBounceBehavior(.basedOnSize)
-        .background(.customBackground)
+        .background(ThemeColors.background)
         .navigationTitle("Settings")
-        .overlay(
-            deleteAccount
-        )
+        .overlay(deleteAccount)
         .overlay {
             if copiedToClipboard {
                 CopiedToClipboardView()
@@ -109,18 +104,26 @@ struct SettingsView: View {
                         Tracker.changedColorScheme(scheme: colorScheme)
                         systemTheme = colorScheme.rawValue
                     }) {
-                        Text(colorScheme.title)
+                        HStack {
+                            Text(colorScheme.title)
+                                .foregroundStyle(ThemeColors.accent)
+                        }
+                        .padding(.vertical, 8)
                     }
                 }
             } label: {
                 HStack {
-                    Text("Color Scheme")
-                        .foregroundStyle(colorScheme == .light ? .black : .white)
+                    Text("Theme")
+                        .foregroundStyle(ThemeColors.accent)
+                    
+                    Spacer()
                     
                     Text(ColorSchemeType(rawValue: systemTheme)?.title ?? "unknown")
-                        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .trailing)
+                        .foregroundStyle(ThemeColors.primary)
                 }
+                .padding(.vertical, 8)
             }
+            .buttonStyle(MuayThaiButtonStyle())
             
             Toggle(isOn: .init(
                 get: { notificationManager.authorizationStatus == .authorized },
@@ -154,10 +157,15 @@ struct SettingsView: View {
     }
     
     var info: some View {
-        Section("Info") {
+        Section {
+            Text("Form Fighter Settings")
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(ThemeColors.primary)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, 20)
             
-            // MARK: WishKit, this is completely optional but nice to have to
-            // grow your product in the feature regarding users demands.
+            // MARK: WishKit
             NavigationLink {
                 WishKit.view
                     .onAppear {
@@ -166,13 +174,6 @@ struct SettingsView: View {
             } label: {
                 Text("💡 Suggest New Features")
             }
-            
-//            Text("⭐️ Rate App")
-//                .onTapGesture {
-//                    Haptic.shared.lightImpact()
-//                    userManager.requestReviewManually()
-//                    Tracker.tappedRateApp()
-//                }
             
             NavigationLink {
                 FAQView()
@@ -203,7 +204,7 @@ struct SettingsView: View {
 //        }
     
     var userInfo: some View {
-        Section("Fighter Info") {
+        Section("🥊 Fighter Profile") {
             // First Name
             LabeledContent {
                 TextField("Type your first name", 
@@ -252,14 +253,14 @@ struct SettingsView: View {
                 Text("Last Name")
             }
             
-            // Coach ID (read-only)
+            // Updated Coach ID label
             LabeledContent {
                 Text(userManager.user?.coachID ?? "No Coach")
                     .multilineTextAlignment(.trailing)
                     .fontWeight(.medium)
                     .foregroundColor(.secondary)
             } label: {
-                Text("Coach ID")
+                Text("Your Coach")
             }
         }
     }

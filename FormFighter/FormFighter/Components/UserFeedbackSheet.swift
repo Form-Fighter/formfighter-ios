@@ -5,6 +5,18 @@ enum UserFeedbackType: String, CaseIterable, Hashable {
     case happy = "😊"
     case okay = "😐"
     case sad = "☹️"
+    
+var description: String {
+        switch self {
+        case .happy:
+            return "Amazing!"
+        case .okay:
+            return "It's Okay"
+        case .sad:
+            return "Needs Work"
+        }
+    }
+    
 }
 
 struct UserFeedbackSheet: View {

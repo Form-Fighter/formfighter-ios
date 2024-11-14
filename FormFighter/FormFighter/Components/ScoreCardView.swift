@@ -9,10 +9,10 @@ struct ScoreCardView: View {
                 .font(.headline)
             Text(String(format: "%.1f", jabScore))
                 .font(.largeTitle)
-                .foregroundColor(.blue)
+                .foregroundColor(ThemeColors.primary)
         }
         .padding()
-        .background(Color.blue.opacity(0.1))
+        .background(ThemeColors.primary.opacity(0.1))
         .cornerRadius(12)
     }
 }

@@ -23,7 +23,7 @@ struct OnePageOnboardingView: View {
                     OnboardingFeature(image: Image(systemName: "2.circle"),
                                       imageColor: .ruby,
                                       title: "Tidy & Bright",
-                                      description: "Film in a well lit indoor room with minimal background noise for the best results")
+                                      description: "Train in a tidy and well lit indoor room  for the best results")
                     OnboardingFeature(image: Image(systemName: "3.circle"),
                                       imageColor: .blue,
                                       title: "Share with Coaches and Friends",

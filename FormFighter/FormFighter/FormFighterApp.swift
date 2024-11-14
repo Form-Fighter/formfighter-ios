@@ -28,6 +28,18 @@ struct FormFighterApp: App {
     private var db: Firestore!
     
     init() {
+        // Navigation Bar Appearance
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor(ThemeColors.background)
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor(ThemeColors.accent),
+            .font: UIFont.systemFont(ofSize: 20, weight: .bold)
+        ]
+        
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+
         setupFirebase()
         db = Firestore.firestore()
         setupWishKit()
@@ -91,21 +103,28 @@ struct FormFighterApp: App {
     }
     
     var tabs: some View {
-        // MARK: - Add or remove here as many views as tabs you need. It is recommended maximum 5 tabs.
         NavigationStack {
             TabView {
                 VisionView(cameraManager: cameraManager)
-                // MARK: - You can download the official app from Apple 'SF Symbols' to explore the whole catalog of system images.
-                    .tabItem { Label("Analyze", systemImage: "eyes") }
+                    .tabItem { 
+                        Label("Train", systemImage: "figure.boxing")  // This exists in SF Symbols
+                            .foregroundStyle(ThemeColors.primary)
+                    }
                    
-               // ProfileView(vm: ProfileVM())
                 ProfileView()
-                    .tabItem { Label("Profile", systemImage: "person") }
+                    .tabItem { 
+                        Label("Fighter", systemImage: "person.crop.circle.fill")
+                            .foregroundStyle(ThemeColors.primary)
+                    }
             
                 SettingsView(vm: SettingsVM())
-                    .tabItem { Label("Settings", systemImage: "gear") }
+                    .tabItem { 
+                        Label("Settings", systemImage: "gearshape.fill")
+                            .foregroundStyle(ThemeColors.primary)
+                    }
             }
-            .tint(.brand)
+            .tint(ThemeColors.primary)
+            .background(ThemeColors.background)
         }
     }
     

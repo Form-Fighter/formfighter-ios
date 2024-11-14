@@ -155,6 +155,10 @@
 		B21411742CE537BB00699B15 /* ScoreCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411712CE537BB00699B15 /* ScoreCardView.swift */; };
 		B21411762CE5380700699B15 /* UserFeedbackSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411752CE5380700699B15 /* UserFeedbackSheet.swift */; };
 		B214117A2CE54D1700699B15 /* FeedbackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411792CE54D1700699B15 /* FeedbackViewModel.swift */; };
+		B214117C2CE6247300699B15 /* MuayThaiButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214117B2CE6247300699B15 /* MuayThaiButtonStyle.swift */; };
+		B214117E2CE62E2300699B15 /* FeedbackStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214117D2CE62E2300699B15 /* FeedbackStatus.swift */; };
+		B21411802CE63BE400699B15 /* EmojiButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214117F2CE63BE400699B15 /* EmojiButton.swift */; };
+		B21411832CE63BED00699B15 /* ImprovementsGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411812CE63BED00699B15 /* ImprovementsGridView.swift */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
 		B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */; };
 		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
@@ -302,6 +306,10 @@
 		B21411712CE537BB00699B15 /* ScoreCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreCardView.swift; sourceTree = "<group>"; };
 		B21411752CE5380700699B15 /* UserFeedbackSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserFeedbackSheet.swift; sourceTree = "<group>"; };
 		B21411792CE54D1700699B15 /* FeedbackViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackViewModel.swift; sourceTree = "<group>"; };
+		B214117B2CE6247300699B15 /* MuayThaiButtonStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MuayThaiButtonStyle.swift; sourceTree = "<group>"; };
+		B214117D2CE62E2300699B15 /* FeedbackStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackStatus.swift; sourceTree = "<group>"; };
+		B214117F2CE63BE400699B15 /* EmojiButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmojiButton.swift; sourceTree = "<group>"; };
+		B21411812CE63BED00699B15 /* ImprovementsGridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImprovementsGridView.swift; sourceTree = "<group>"; };
 		B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighterDebug.entitlements; sourceTree = "<group>"; };
 		B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntNumberFieldView.swift; sourceTree = "<group>"; };
 		B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -393,6 +401,7 @@
 		818D3F812B6FA3CA00DF7299 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B214117D2CE62E2300699B15 /* FeedbackStatus.swift */,
 				B21411672CE5311000699B15 /* FeedbackData.swift */,
 				818D3FE52B71643600DF7299 /* MultiplePagesOnboardingFeatureModel.swift */,
 				81DE14D92B75269500C41EA9 /* User.swift */,
@@ -572,6 +581,8 @@
 		818D3FD42B713AEE00DF7299 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
+				B214117F2CE63BE400699B15 /* EmojiButton.swift */,
+				B214117B2CE6247300699B15 /* MuayThaiButtonStyle.swift */,
 				818D3FD72B713CD400DF7299 /* RoundedButton.swift */,
 				818D3FD92B713D0F00DF7299 /* PillButton.swift */,
 				81A02D392BA333CC00061567 /* BrutoButton.swift */,
@@ -660,6 +671,7 @@
 		B214115A2CCF128600699B15 /* FeedbackPage */ = {
 			isa = PBXGroup;
 			children = (
+				B21411822CE63BED00699B15 /* Components */,
 				B21411792CE54D1700699B15 /* FeedbackViewModel.swift */,
 				B214115B2CCF151B00699B15 /* FeedbackView.swift */,
 			);
@@ -698,6 +710,14 @@
 				B21411752CE5380700699B15 /* UserFeedbackSheet.swift */,
 				B21411702CE537BB00699B15 /* FeedbackSection.swift */,
 				B21411712CE537BB00699B15 /* ScoreCardView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		B21411822CE63BED00699B15 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B21411812CE63BED00699B15 /* ImprovementsGridView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -873,12 +893,14 @@
 				81DE14FC2B76A37B00C41EA9 /* VisionVM.swift in Sources */,
 				818D3F802B6FA15E00DF7299 /* SettingsView.swift in Sources */,
 				81DE14FE2B76A7D800C41EA9 /* UnlockPremiumView.swift in Sources */,
+				B21411802CE63BE400699B15 /* EmojiButton.swift in Sources */,
 				81CBCEF32C2B348C005DD2E7 /* crAionOnboarding.swift in Sources */,
 				81D531E72B836EFE0044D990 /* MacroBarView.swift in Sources */,
 				B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */,
 				B21411762CE5380700699B15 /* UserFeedbackSheet.swift in Sources */,
 				81E98B082B72A781000E8996 /* RequestReviewView.swift in Sources */,
 				B21411732CE537BB00699B15 /* FeedbackSection.swift in Sources */,
+				B21411832CE63BED00699B15 /* ImprovementsGridView.swift in Sources */,
 				81D531F22B83CBC50044D990 /* ColorSchemeType.swift in Sources */,
 				81DE14F42B76352200C41EA9 /* AuthBackendService.swift in Sources */,
 				B214116D2CE5324500699B15 /* NotificationPermissionView.swift in Sources */,
@@ -898,6 +920,7 @@
 				B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */,
 				818D3F832B6FA3F100DF7299 /* GPTLanguage.swift in Sources */,
 				B214115C2CCF151B00699B15 /* FeedbackView.swift in Sources */,
+				B214117C2CE6247300699B15 /* MuayThaiButtonStyle.swift in Sources */,
 				81E98B0D2B72AC81000E8996 /* KeychainManager.swift in Sources */,
 				B20242A12C6C5A8500256733 /* FormFighterApp.swift in Sources */,
 				818D3FE22B715B3D00DF7299 /* MultiplePagesOnboardingView.swift in Sources */,
@@ -926,6 +949,7 @@
 				818D3FB62B700E9D00DF7299 /* +UIScreen.swift in Sources */,
 				81DE14F02B762F2D00C41EA9 /* MealVisionResponse.swift in Sources */,
 				818D3FD82B713CD400DF7299 /* RoundedButton.swift in Sources */,
+				B214117E2CE62E2300699B15 /* FeedbackStatus.swift in Sources */,
 				81DE14D82B75267E00C41EA9 /* AuthManager.swift in Sources */,
 				81D531E92B836F7C0044D990 /* MacroBarsView.swift in Sources */,
 				81E98B112B72B0B6000E8996 /* CustomSignInWithAppleButton.swift in Sources */,

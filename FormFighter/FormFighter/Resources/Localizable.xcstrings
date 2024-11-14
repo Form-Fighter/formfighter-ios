@@ -1089,6 +1089,12 @@
     "🤩" : {
 
     },
+    "🥊" : {
+
+    },
+    "🥊 Fighter Profile" : {
+
+    },
     "🥙 Unlimited meal analysis" : {
       "localizations" : {
         "de" : {
@@ -1163,6 +1169,9 @@
 
     },
     "🙂" : {
+
+    },
+    "1" : {
 
     },
     "1. RUN the app from Xcode in your test device or Simulator" : {
@@ -1445,10 +1454,10 @@
         }
       }
     },
-    "7 Days" : {
+    "5" : {
 
     },
-    "24 Hours" : {
+    "24h" : {
 
     },
     "Accept" : {
@@ -1595,7 +1604,11 @@
     "Amazing" : {
 
     },
+    "Analytics" : {
+
+    },
     "Analyze" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1809,6 +1822,12 @@
     "Analyzing, keep the object in focus" : {
 
     },
+    "Any additional thoughts?" : {
+
+    },
+    "AR" : {
+
+    },
     "Are you sure you want to delete the account?" : {
       "localizations" : {
         "de" : {
@@ -1883,6 +1902,9 @@
 
     },
     "Average Score: %lld" : {
+
+    },
+    "Back" : {
 
     },
     "Birthdate" : {
@@ -2321,10 +2343,8 @@
         }
       }
     },
-    "Coach ID" : {
-
-    },
     "Color Scheme" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2393,6 +2413,9 @@
           }
         }
       }
+    },
+    "Complete your first session to see your stats" : {
+
     },
     "Continue" : {
       "localizations" : {
@@ -3055,13 +3078,16 @@
     "Feedbacks: %lld" : {
 
     },
-    "Fighter Info" : {
+    "Fighter" : {
 
     },
-    "Film in a well lit indoor room with minimal background noise for the best results" : {
+    "Fighter Profile" : {
 
     },
     "First Name" : {
+
+    },
+    "Form Fighter Settings" : {
 
     },
     "Frequently Asked Questions for %@" : {
@@ -3352,6 +3378,9 @@
         }
       }
     },
+    "How helpful was the feedback?" : {
+
+    },
     "How old is %@?" : {
 
     },
@@ -3361,10 +3390,10 @@
     "How was this feedback?" : {
 
     },
-    "How was your experience?" : {
+    "How was your boxing feedback?" : {
 
     },
-    "How was your feedback?" : {
+    "How was your experience?" : {
 
     },
     "ℹ️ FAQ" : {
@@ -3437,7 +3466,11 @@
         }
       }
     },
+    "I would recommend this app" : {
+
+    },
     "Info" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3968,7 +4001,7 @@
     "Next" : {
 
     },
-    "No feedback history yet" : {
+    "No training sessions yet" : {
 
     },
     "Not Okay" : {
@@ -4630,9 +4663,6 @@
         }
       }
     },
-    "Profile" : {
-
-    },
     "Ready to dive into" : {
 
     },
@@ -5000,10 +5030,16 @@
         }
       }
     },
+    "Share" : {
+
+    },
     "Share film with coaches and other fighters" : {
 
     },
     "Share with Coaches and Friends" : {
+
+    },
+    "Share your experience (optional)" : {
 
     },
     "Show your love by giving as a review on the App Store" : {
@@ -5219,10 +5255,10 @@
         }
       }
     },
-    "Statistics" : {
+    "Stay Updated" : {
 
     },
-    "Stay Updated" : {
+    "Step %lld of 3" : {
 
     },
     "Store and showcase a colorful array of drawings in your personal gallery" : {
@@ -5378,9 +5414,6 @@
     "Tell us more" : {
 
     },
-    "Tell us what you think (minimum 15 characters)" : {
-
-    },
     "Terms of Service" : {
       "localizations" : {
         "de" : {
@@ -5521,6 +5554,9 @@
           }
         }
       }
+    },
+    "Theme" : {
+
     },
     "This app was entirely created by 👨🏻‍💻 one person. Your support will directly contribute to my ongoing work and efforts." : {
       "localizations" : {
@@ -5805,6 +5841,18 @@
           }
         }
       }
+    },
+    "Train" : {
+
+    },
+    "Train in a tidy and well lit indoor room  for the best results" : {
+
+    },
+    "Training History" : {
+
+    },
+    "Training Session" : {
+
     },
     "Try Again" : {
 
@@ -6323,9 +6371,6 @@
         }
       }
     },
-    "View in AR" : {
-
-    },
     "Vision" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -6396,6 +6441,9 @@
           }
         }
       }
+    },
+    "Week" : {
+
     },
     "Welcome to" : {
 
@@ -6542,13 +6590,13 @@
         }
       }
     },
+    "What could we improve?" : {
+
+    },
     "Who's the Artist?" : {
 
     },
     "Would you like to join Coach %@'s team?" : {
-
-    },
-    "Year" : {
 
     },
     "You have %lld free analysis left" : {
@@ -6621,6 +6669,9 @@
           }
         }
       }
+    },
+    "Your Coach" : {
+
     },
     "Your Feedback" : {
 
