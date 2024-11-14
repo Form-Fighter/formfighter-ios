@@ -28,23 +28,20 @@ struct FormFighterApp: App {
     private var db: Firestore!
     
     init() {
-        // Navigation Bar Appearance
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(ThemeColors.background)
-        appearance.titleTextAttributes = [
-            .foregroundColor: UIColor(ThemeColors.accent),
-            .font: UIFont.systemFont(ofSize: 20, weight: .bold)
-        ]
-        
-        UINavigationBar.appearance().standardAppearance = appearance
-        UINavigationBar.appearance().scrollEdgeAppearance = appearance
-
         setupFirebase()
         db = Firestore.firestore()
         setupWishKit()
         setupTips()
 //        debugActions()
+        
+        // Force solid navigation bar appearance
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor(ThemeColors.background)
+        
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().compactAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
     }
     
     var body: some Scene {
@@ -105,18 +102,28 @@ struct FormFighterApp: App {
     var tabs: some View {
         NavigationStack {
             TabView {
-                VisionView(cameraManager: cameraManager)
+                VisionView( cameraManager: cameraManager)
                     .tabItem { 
-                        Label("Train", systemImage: "figure.boxing")  // This exists in SF Symbols
+                        Label("Train", systemImage: "figure.boxing")
                             .foregroundStyle(ThemeColors.primary)
                     }
-                   
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarBackground(ThemeColors.background.opacity(1), for: .navigationBar)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            Text("Train")
+                                .font(.headline)
+                                .foregroundColor(ThemeColors.primary)
+                        }
+                    }
+               
                 ProfileView()
                     .tabItem { 
-                        Label("Fighter", systemImage: "person.crop.circle.fill")
+                        Label("Progress", systemImage: "chart.line.uptrend.xyaxis")
                             .foregroundStyle(ThemeColors.primary)
                     }
-            
+
                 SettingsView(vm: SettingsVM())
                     .tabItem { 
                         Label("Settings", systemImage: "gearshape.fill")

@@ -368,9 +368,6 @@
         }
       }
     },
-    "%@ Stats" : {
-
-    },
     "%@'s World!" : {
 
     },
@@ -450,6 +447,16 @@
     },
     "%lld years old" : {
 
+    },
+    "%lld. %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld. %2$@"
+          }
+        }
+      }
     },
     "%lld/500 characters" : {
 
@@ -1093,6 +1100,9 @@
 
     },
     "🥊 Fighter Profile" : {
+
+    },
+    "🥊 Muay Thai Vision Access 🥊" : {
 
     },
     "🥙 Unlimited meal analysis" : {
@@ -1818,9 +1828,6 @@
           }
         }
       }
-    },
-    "Analyzing, keep the object in focus" : {
-
     },
     "Any additional thoughts?" : {
 
@@ -2989,6 +2996,9 @@
         }
       }
     },
+    "Enable Camera Access" : {
+
+    },
     "Enable Notifications" : {
 
     },
@@ -3075,9 +3085,6 @@
     "Failed to load 3D model" : {
 
     },
-    "Fighter" : {
-
-    },
     "Fighter Profile" : {
 
     },
@@ -3157,7 +3164,13 @@
         }
       }
     },
-    "Go to settings" : {
+    "Get Ready Fighter! Stay in the camera." : {
+
+    },
+    "Get Ready!" : {
+
+    },
+    "Got it! 👊" : {
 
     },
     "Hello, World!" : {
@@ -3382,6 +3395,9 @@
 
     },
     "How to get the best results with %@⚡️" : {
+
+    },
+    "How to Record Your Form" : {
 
     },
     "How was this feedback?" : {
@@ -4300,9 +4316,6 @@
         }
       }
     },
-    "Please ensure your full body is in the frame." : {
-
-    },
     "Please try again later. If the issue continues, consider using a different picture. Occasionally, GPT-4 Vision AI might encounter difficulties interpreting certain images or requests." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4373,9 +4386,6 @@
           }
         }
       }
-    },
-    "Please turn the body to the left and right." : {
-
     },
     "Please type '%@' to confirm." : {
       "localizations" : {
@@ -4662,6 +4672,9 @@
           }
         }
       }
+    },
+    "Progress" : {
+
     },
     "Ready to dive into" : {
 
@@ -5259,6 +5272,9 @@
 
     },
     "Step %lld of 3" : {
+
+    },
+    "Step your full body into the frame, fighter! 🥊" : {
 
     },
     "Store and showcase a colorful array of drawings in your personal gallery" : {
@@ -5934,6 +5950,9 @@
 
     },
     "Turn 30 degrees from the camera for the best results" : {
+
+    },
+    "Turn your body left or right slightly so we can see your stance! 🥋" : {
 
     },
     "Type here" : {

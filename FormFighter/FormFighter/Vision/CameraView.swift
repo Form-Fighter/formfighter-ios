@@ -1,337 +1,3 @@
-//import SwiftUI
-//import AVFoundation
-//import Vision
-//import AVKit
-//
-//
-//
-//class RecordingDelegate: NSObject, AVCaptureFileOutputRecordingDelegate {
-//    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-//        if let error = error {
-//            print("Recording error: \(error.localizedDescription)")
-//        } else {
-//            print("Video successfully recorded at: \(outputFileURL)")
-//        }
-//    }
-//}
-//
-//
-//struct CameraPreviewTestView: View {
-//    @State private var captureSession: AVCaptureSession?
-//    @State private var previewLayer: AVCaptureVideoPreviewLayer?
-//    @State private var keypointsDetected = false // Track if body is in frame
-//    @State private var bodyInFrame = false // Track if entire body is in frame
-//    @State private var recognizedPoints: [VNHumanBodyPoseObservation.JointName: VNRecognizedPoint] = [:]
-//    @State private var detectedKeypoints: Int = 0
-//    @State private var keypointsList: [VNHumanBodyPoseObservation.JointName] = [
-//        .nose, .leftAnkle, .rightAnkle, .leftHip, .rightHip, .leftShoulder, .rightShoulder, .leftWrist, .rightWrist
-//    ]
-//
-//    var body: some View {
-//        ZStack {
-//            if let previewLayer = previewLayer {
-//                CameraPreview(captureSession: $captureSession, previewLayer: $previewLayer)
-//                    .aspectRatio(contentMode: .fit)
-//                    .frame(height: UIScreen.main.bounds.height * 0.8)
-//                    .edgesIgnoringSafeArea(.all)
-//                
-//                if !bodyInFrame {
-//                    // Prompt user to adjust to get body in frame
-//                    Text("Please make sure your entire body is visible in the frame.")
-//                        .foregroundColor(.white)
-//                        .background(Color.red.opacity(0.7))
-//                        .cornerRadius(10)
-//                        .padding()
-//                        .zIndex(1)
-//                    
-//                    // Show detected keypoints on top of the preview
-//                                   VStack {
-//                                       Spacer()
-//                                       Text("Detected \(detectedKeypoints) out of \(keypointsList.count) keypoints.")
-//                                           .foregroundColor(.white)
-//                                           .padding()
-//                                           .background(Color.black.opacity(0.6))
-//                                           .cornerRadius(8)
-//                                   }
-//                                   .padding(.bottom, 50)
-//                }
-//            } else {
-//                Text("Setting up camera...")
-//            }
-//        }
-//        .onAppear {
-//            setupCamera()
-//            addObservers()
-//            
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-//                    Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-//                        detectKeypoints()
-//                        
-//                       // print("Starting Pose Detection!!!!!!")
-//                        //testPoseDetectionWithImage()
-//                    }
-//                }
-//        }
-//        .onChange(of: keypointsDetected, perform: { _ in
-//            if keypointsDetected {
-//                // If keypoints detected, check if body is in the frame
-//                checkBodyInFrame()
-//            }
-//        })
-//    }
-//    
-//    
-//  
-//    
-//    // Setup Camera Function (same as before)
-//       func setupCamera() {
-//           if captureSession == nil {
-//               captureSession = AVCaptureSession()
-//               guard let captureSession = captureSession else { return }
-//
-//               captureSession.beginConfiguration()
-//               captureSession.sessionPreset = .photo
-//
-//               if let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
-//                   do {
-//                       let videoInput = try AVCaptureDeviceInput(device: videoDevice)
-//                       if captureSession.canAddInput(videoInput) {
-//                           captureSession.addInput(videoInput)
-//                           print("Added input")
-//                       }
-//                   } catch {
-//                       print("Error: Cannot initialize video input: \(error.localizedDescription)")
-//                       return
-//                   }
-//               }
-//
-//               previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-//               previewLayer?.videoGravity = .resizeAspect // Keep aspect ratio
-//               previewLayer?.frame = UIScreen.main.bounds
-//               print("Preview layer set up.")
-//               print("Preview Layer frame size: \(previewLayer?.bounds.size)")
-//
-//               captureSession.commitConfiguration()
-//
-//               DispatchQueue.global(qos: .userInitiated).async {
-//                   captureSession.startRunning()
-//                   print("Capture session started.")
-//               }
-//           }
-//       }
-//
-//    
-//    // Add observers for session start/stop
-//    func addObservers() {
-//        NotificationCenter.default.addObserver(forName: NSNotification.Name("StartCaptureSession"), object: nil, queue: .main) { _ in
-//            DispatchQueue.global(qos: .userInitiated).async {
-//                self.captureSession?.startRunning()
-//                print("Capture session resumed.")
-//            }
-//        }
-//
-//        NotificationCenter.default.addObserver(forName: NSNotification.Name("StopCaptureSession"), object: nil, queue: .main) { _ in
-//            DispatchQueue.global(qos: .userInitiated).async {
-//                self.captureSession?.stopRunning()
-//                print("Capture session paused.")
-//            }
-//        }
-//    }
-//    
-//    // Detect keypoints using Vision framework
-//       func detectKeypoints() {
-//           guard let previewLayer = previewLayer else {
-//               print("Preview layer is not ready.")
-//               return
-//           }
-//
-//           if previewLayer.bounds.isEmpty {
-//               print("Preview layer bounds are empty.")
-//               return
-//           }
-//
-//           print("Preview Layer frame size: \(previewLayer.bounds.size)")
-//
-//           let request = VNDetectHumanBodyPoseRequest { request, error in
-//               if let error = error {
-//                   print("Error in pose detection request: \(error.localizedDescription)")
-//                   return
-//               }
-//
-//               if let results = request.results as? [VNHumanBodyPoseObservation] {
-//                   print("Received \(results.count) pose observations.")
-//                   for observation in results {
-//                       processKeypoints(observation: observation)
-//                   }
-//               } else {
-//                   print("No pose observations detected.")
-//               }
-//           }
-//
-//           if let capturedImage = capturePreviewImageFromLayer(previewLayer: previewLayer) {
-//               let handler = VNImageRequestHandler(cgImage: capturedImage, orientation: .upMirrored, options: [:])
-//
-//               do {
-//                   try handler.perform([request])
-//               } catch {
-//                   print("Error performing Vision request: \(error.localizedDescription)")
-//               }
-//           } else {
-//               print("Error: Failed to capture image from the preview layer.")
-//           }
-//       }
-//
-//    
-//    // Capture a frame for Vision processing
-//       func capturePreviewImageFromLayer(previewLayer: AVCaptureVideoPreviewLayer) -> CGImage? {
-//           guard !previewLayer.bounds.isEmpty else {
-//               print("Error: Preview layer bounds are empty.")
-//               return nil
-//           }
-//
-//           let layerBounds = previewLayer.bounds
-//
-//           // Calculate scaling to maintain aspect ratio
-//           let scaleFactor: CGFloat = max(layerBounds.width / 960.0, layerBounds.height / 2079.0)
-//           let scaledWidth = 960.0 * scaleFactor
-//           let scaledHeight = 2079.0 * scaleFactor
-//
-//           // Adjust the image render size accordingly
-//           let renderer = UIGraphicsImageRenderer(size: CGSize(width: scaledWidth, height: scaledHeight))
-//           let resizedImage = renderer.image { context in
-//               previewLayer.render(in: context.cgContext)
-//           }
-//
-//           if let cgImage = resizedImage.cgImage {
-//               print("Captured resized image successfully. Size: \(cgImage.width)x\(cgImage.height)")
-//               return cgImage
-//           } else {
-//               print("Error: Failed to capture CGImage from preview layer.")
-//               return nil
-//           }
-//       }
-//
-//
-//
-//    // Process the detected keypoints (same as before)
-//       func processKeypoints(observation: VNHumanBodyPoseObservation) {
-//           let points = try? observation.recognizedPoints(.all)
-//           guard let points = points else {
-//               print("No points recognized.")
-//               return
-//           }
-//
-//           print("Processing keypoints...")
-//
-//           detectedKeypoints = keypointsList.reduce(0) { count, jointName in
-//               if let point = points[jointName], point.confidence > 0.2 {
-//                   return count + 1
-//               } else {
-//                   return count
-//               }
-//           }
-//
-//           print("Detected \(detectedKeypoints) out of \(keypointsList.count) keypoints.")
-//       }
-//    
-//    
-//    
-//
-//    func checkBodyInFrame() {
-//        guard let previewLayer = previewLayer else { return }
-//        
-//        print("Preview Layer frame size Check Body in Frame: \(previewLayer.bounds.size)")
-//
-//        
-//        // Use the stored `recognizedPoints` which now uses `VNHumanBodyPoseObservation.JointName`
-//        if let leftAnkle = recognizedPoints[.leftAnkle], let rightAnkle = recognizedPoints[.rightAnkle] {
-//            let frameSize = previewLayer.bounds.size
-//
-//            // Convert the normalized point (0 to 1 range) to the actual coordinates in the camera frame
-//            let leftAnklePosition = CGPoint(x: leftAnkle.location.x * frameSize.width,
-//                                            y: (1 - leftAnkle.location.y) * frameSize.height) // y is inverted
-//            let rightAnklePosition = CGPoint(x: rightAnkle.location.x * frameSize.width,
-//                                             y: (1 - rightAnkle.location.y) * frameSize.height)
-//            
-//            // Check if the keypoints are within the preview bounds
-//            if previewLayer.bounds.contains(leftAnklePosition) && previewLayer.bounds.contains(rightAnklePosition) {
-//                bodyInFrame = true
-//                countdown() // Call countdown when entire body is in frame
-//            } else {
-//                bodyInFrame = false
-//            }
-//        }
-//    }
-//    
-//    
-//    
-//    func testPoseDetectionWithImage() {
-//        if let image = UIImage(named: "testImage.jpg")?.cgImage {
-//            let handler = VNImageRequestHandler(cgImage: image, orientation: .up, options: [:])
-//            let request = VNDetectHumanBodyPoseRequest { request, error in
-//                if let error = error {
-//                    print("Error in pose detection request: \(error.localizedDescription)")
-//                    return
-//                }
-//                
-//                if let results = request.results as? [VNHumanBodyPoseObservation] {
-//                    do{
-//                        print("Received \(results.count) pose observations.")
-//                        
-//                        print("Received: \(try results[0].recognizedPoints(.face))")
-//                    }
-//                    catch{
-//                        print(error)
-//                    }
-//                } else {
-//                    print("No pose observations detected.")
-//                }
-//            }
-//            try? handler.perform([request])
-//        }
-//    }
-//    
-//
-//
-//    
-//    // Placeholder countdown function
-//    func countdown() {
-//        print("Countdown starting...") // Implement countdown logic here
-//    }
-//}
-//
-//
-//struct CameraPreview: UIViewRepresentable {
-//    @Binding var captureSession: AVCaptureSession?
-//    @Binding var previewLayer: AVCaptureVideoPreviewLayer?
-//
-//    func makeUIView(context: Context) -> UIView {
-//        let view = UIView()
-//
-//        DispatchQueue.main.async {
-//            if let previewLayer = previewLayer {
-//                print("Preview Layer frame size MakeUIView: \(previewLayer.bounds.size)")
-//
-//                previewLayer.frame = UIScreen.main.bounds  // Make sure the frame is set to the view's bounds
-//                view.layer.addSublayer(previewLayer)
-//            }
-//        }
-//
-//        return view
-//    }
-//
-//    func updateUIView(_ uiView: UIView, context: Context) {
-//        DispatchQueue.main.async {
-//            if let previewLayer = previewLayer {
-//                print("Preview Layer frame size UpdateUIVIEW: \(previewLayer.bounds.size)")
-//
-//                previewLayer.frame = UIScreen.main.bounds // Update the frame whenever the view is updated
-//            }
-//        }
-//    }
-//}
-//
-
 import SwiftUI
 import AVFoundation
 import Vision
@@ -350,6 +16,9 @@ struct CameraVisionView: View {
     @State private var videoURL: URL?
     @State private var navigateToPreview = false
     @State private var hasTurnedBody: Bool = false
+    @State private var showInstructions = true
+    @State private var countdownPlayer: AVAudioPlayer?
+    @State private var startPlayer: AVAudioPlayer?
     
     // Optional timers
     @State private var firstTimer: Timer?
@@ -358,6 +27,12 @@ struct CameraVisionView: View {
     // Almacena los puntos previos
     @State private var previousBodyPoints: [CGPoint] = []
     @State private var smoothedBodyPoints: [CGPoint] = []
+    
+    // Add new state variable
+    @State private var recordingProgress: Double = 0
+    @State private var canDismissInstructions = false
+    @State private var buttonOpacity = 0.5
+    @State private var isCountingDown: Bool = false
     
     var cameraManager: CameraManager
     
@@ -370,94 +45,185 @@ struct CameraVisionView: View {
                                   isBodyDetected: $isBodyDetected,
                                   isBodyComplete: $isBodyComplete,
                                   hasTurnedBody: $hasTurnedBody,
+                                  isCountingDown: $isCountingDown,
                                   cameraManager: cameraManager
                 )
                 .edgesIgnoringSafeArea(.all)
                 
                 
-                // Show key points
+                // Updated keypoints visualization
                 ForEach(smoothedBodyPoints.indices, id: \.self) { index in
                     let point = smoothedBodyPoints[index]
                     Circle()
-                        .fill(Color.green)
-                        .frame(width: 10, height: 10)
+                        .fill(Color.red)
+                        .frame(width: 12, height: 12)
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white, lineWidth: 2)
+                        )
                         .position(point)
                 }
                 .ignoresSafeArea()
                 
                 
-                // Show progress and icon while analyzing
+                // Updated analyzing message with progress bar
                 if isCounting && timer1 < 3 {
                     VStack {
                         HStack {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(.white)
-                                .font(.largeTitle)
-                            Text("Analyzing, keep the object in focus")
-                                .font(.headline)
+                            Image(systemName: "figure.kickboxing")
+                                .foregroundColor(.red)
+                                .font(.system(size: 40))
+                            Text("Get Ready Fighter! Stay in the camera.")
+                                .font(.title3.bold())
                                 .foregroundColor(.white)
                         }
                         .padding()
-                        .background(Color.black.opacity(0.6))
-                        .cornerRadius(10)
+                        .background(Color.black.opacity(0.7))
+                        .cornerRadius(15)
                         
                         ProgressView(value: Double(timer1), total: 3.0)
-                            .progressViewStyle(LinearProgressViewStyle(tint: .white))
+                            .progressViewStyle(LinearProgressViewStyle(tint: .red))
                             .padding(.top, 10)
                             .frame(width: 200)
                     }
                     .padding(.top, 50)
                 }
                 
-                // Show message if the body is not fully detected
+                // Updated body detection message
                 if !isBodyDetected || !isBodyComplete {
                     VStack {
-                        Text("Please ensure your full body is in the frame.")
-                            .font(.headline)
-                            .foregroundColor(.red)
-                            .padding()
-                            .background(Color.black.opacity(0.6))
-                            .cornerRadius(10)
-                    }
-                    .padding(.top, 50)
-                }
-                
-                if isBodyDetected && isBodyComplete && !hasTurnedBody {
-                    VStack {
-                        Text("Please turn the body to the left and right.")
-                            .font(.headline)
-                            .foregroundColor(.green)
-                            .padding()
-                            .background(Color.black.opacity(0.6))
-                            .cornerRadius(10)
-                    }
-                    .padding(.top, 50)
-                }
-                
-                // Show countdown
-                if timer2 > 0 && timer2 <= 4 && !isRecording {
-                    Text("\(4 - timer2)")
-                        .font(.system(size: 100))
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .shadow(radius: 10)
-                        .transition(.scale)
-                        .animation(.easeInOut, value: timer2)
-                }
-                
-                // Show recording message
-                if isRecording {
-                    VStack {
-                        Image(systemName: "video.fill")
-                            .foregroundColor(.red)
-                            .font(.largeTitle)
-                        Text(recordingMessage)
+                        Text("Step your full body into the frame, fighter! 🥊")
                             .font(.headline)
                             .foregroundColor(.white)
                             .padding()
-                            .background(Color.black.opacity(0.6))
-                            .cornerRadius(10)
+                            .background(Color.red.opacity(0.8))
+                            .cornerRadius(15)
                     }
+                    .padding(.top, 50)
+                }
+                
+                // Updated turn body message
+                if isBodyDetected && isBodyComplete && !hasTurnedBody {
+                    VStack {
+                        Text("Turn your body left or right slightly so we can see your stance! 🥋")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.green.opacity(0.8))
+                            .cornerRadius(15)
+                    }
+                    .padding(.top, 50)
+                }
+                
+                // New overlay instructions (shows only first time)
+                if showInstructions {
+                    VStack(spacing: 20) {
+                        Text("How to Record Your Form")
+                            .font(.title2.bold())
+                            .foregroundColor(.white)
+                        
+                        VStack(alignment: .leading, spacing: 15) {
+                            InstructionRow(number: 1, text: "Record in a well lit indoor room", icon: "light.min")
+                            InstructionRow(number: 2, text: "Stand 6-8 feet from camera", icon: "person.and.arrow.left.and.arrow.right")
+                            InstructionRow(number: 3, text: "Show your full body in frame", icon: "figure.stand")
+                            InstructionRow(number: 4, text: "Turn your body 30 degrees left or right to show your stance", icon: "arrow.triangle.2.circlepath")
+                            InstructionRow(number: 5, text: "Hold still for recording", icon: "video.fill")
+                            InstructionRow(number: 6, text: "Perform ONE jab in 2 seconds", icon: "figure.boxing")
+                        }
+                        
+                        Button("Got it! 👊") {
+                            withAnimation {
+                                showInstructions = false
+                            }
+                        }
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(canDismissInstructions ? Color.red : Color.gray)
+                        .cornerRadius(10)
+                        .opacity(buttonOpacity)
+                        .scaleEffect(canDismissInstructions ? 1.0 : 0.95)
+                        .animation(
+                            Animation
+                                .easeInOut(duration: 1.0)
+                                .repeatForever(autoreverses: true),
+                            value: buttonOpacity
+                        )
+                        .disabled(!canDismissInstructions)
+                        .onAppear {
+                            // Start button animation
+                            withAnimation(
+                                Animation
+                                    .easeInOut(duration: 1.0)
+                                    .repeatForever(autoreverses: true)
+                            ) {
+                                buttonOpacity = 1.0
+                            }
+                            
+                            // Enable button after delay
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                withAnimation {
+                                    canDismissInstructions = true
+                                    buttonOpacity = 1.0
+                                }
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(Color.black.opacity(0.85))
+                    .cornerRadius(20)
+                    .padding()
+                }
+                
+                // Visual Guide Overlay when body not detected
+                if !isBodyDetected || !isBodyComplete {
+                    Rectangle()
+                        .stroke(style: StrokeStyle(lineWidth: 3, dash: [10]))
+                        .foregroundColor(.red.opacity(0.6))
+                        .padding(40)
+                        .overlay(
+                            Image(systemName: "figure.boxing")
+                                .font(.system(size: 100))
+                                .foregroundColor(.black.opacity(0.3))
+                        )
+                }
+                
+                // Updated countdown with visual feedback
+                if timer2 > 0 && timer2 <= 4 && !isRecording {
+                    VStack {
+                        Text("\(4 - timer2)")
+                            .font(.system(size: 120, weight: .heavy))
+                            .foregroundColor(.red)
+                            .shadow(color: .black, radius: 2, x: 0, y: 0)
+                            .transition(.scale)
+                            .animation(.easeInOut, value: timer2)
+                        
+                        Text("Get Ready!")
+                            .font(.title2.bold())
+                            .foregroundColor(.white)
+                            .shadow(color: .black, radius: 2)
+                    }
+                }
+                
+                // Updated recording message overlay
+                if isRecording {
+                    VStack(spacing: 15) {
+                        Image(systemName: "record.circle")
+                            .foregroundColor(.red)
+                            .font(.system(size: 50))
+                        Text(recordingMessage)
+                            .font(.headline.bold())
+                            .foregroundColor(.white)
+                        
+                        // Timer bar
+                        ProgressView(value: recordingProgress, total: 1.0)
+                            .progressViewStyle(LinearProgressViewStyle(tint: .red))
+                            .frame(width: 200)
+                            .animation(.linear(duration: 2.0), value: recordingProgress)
+                    }
+                    .padding()
+                    .background(Color.black.opacity(0.7))
+                    .cornerRadius(15)
                     .padding(.top, 100)
                 }
             }
@@ -467,6 +233,8 @@ struct CameraVisionView: View {
                 }
             }
         }
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
         .onAppear {
             NotificationCenter.default.addObserver(forName: NSNotification.Name("VideoRecorded"), object: nil, queue: .main) { notification in
                 if let url = notification.object as? URL {
@@ -474,6 +242,7 @@ struct CameraVisionView: View {
                     self.navigateToPreview = true
                 }
             }
+            setupAudioPlayers()
         }
         .onChange(of: isBodyDetected) { _ in
             checkBodyAndStartTimers()
@@ -515,7 +284,7 @@ struct CameraVisionView: View {
     
     // Start the first timer
     func startFirstTimer() {
-        guard firstTimer == nil else { return } // Avoid multiple timers
+        guard firstTimer == nil else { return }
         
         isCounting = true
         timer1 = 0
@@ -528,6 +297,7 @@ struct CameraVisionView: View {
             } else {
                 firstTimer?.invalidate()
                 firstTimer = nil
+                timer2 = 1  // Start at 1 to show "3"
                 startSecondTimer()
             }
             
@@ -539,21 +309,23 @@ struct CameraVisionView: View {
     
     // Start the second timer
     func startSecondTimer() {
-        guard secondTimer == nil else { return } // Avoid multiple timers
+        guard secondTimer == nil else { return }
         
-        timer2 = 0
+        timer2 = 1  // Start at 1 to show "3"
+        isCountingDown = true  // Set flag when countdown starts
         
         secondTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
             if timer2 < 4 {
                 timer2 += 1
+                if timer2 < 4 {
+                    countdownPlayer?.play()
+                } else {
+                    startPlayer?.play()
+                    simulateRecording()
+                }
             } else {
                 secondTimer?.invalidate()
                 secondTimer = nil
-                simulateRecording()
-            }
-            
-            if !isBodyDetected {
-                resetTimers()
             }
         }
     }
@@ -562,8 +334,14 @@ struct CameraVisionView: View {
     func simulateRecording() {
         isRecording = true
         recordingMessage = "Recording..."
+        recordingProgress = 1.0  // Start at full
         
         cameraManager.startRecording()
+        
+        // Animate from full to empty
+        withAnimation(.linear(duration: 2.0)) {
+            recordingProgress = 0.0
+        }
         
         Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
             recordingMessage = "Recording finished"
@@ -585,9 +363,42 @@ struct CameraVisionView: View {
         timer2 = 0
         recordingMessage = ""
         hasTurnedBody = false  // Restablecer aquí
+        isCountingDown = false  // Reset flag when timers are reset
         
         if isRecording {
             cameraManager.stopRecording()
+        }
+    }
+    
+    // Add these new helper views and functions
+    private struct InstructionRow: View {
+        let number: Int
+        let text: String
+        let icon: String
+        
+        var body: some View {
+            HStack(spacing: 12) {
+                Image(systemName: icon)
+                    .font(.title2)
+                    .foregroundColor(.red)
+                    .frame(width: 40)
+                Text("\(number). \(text)")
+                    .foregroundColor(.white)
+            }
+        }
+    }
+    
+    private func setupAudioPlayers() {
+        // Setup countdown sound
+        if let countdownURL = Bundle.main.url(forResource: "countdown", withExtension: "wav") {
+            countdownPlayer = try? AVAudioPlayer(contentsOf: countdownURL)
+            countdownPlayer?.prepareToPlay()
+        }
+        
+        // Setup start sound
+        if let startURL = Bundle.main.url(forResource: "start", withExtension: "wav") {
+            startPlayer = try? AVAudioPlayer(contentsOf: startURL)
+            startPlayer?.prepareToPlay()
         }
     }
 }
@@ -598,32 +409,40 @@ struct CameraPreviewView: UIViewControllerRepresentable {
     @Binding var isBodyDetected: Bool
     @Binding var isBodyComplete: Bool
     @Binding var hasTurnedBody: Bool
+    @Binding var isCountingDown: Bool
     
     var cameraManager: CameraManager
     
     class Coordinator: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         var parent: CameraPreviewView
-        var hasTurnedBodyCompleted = false  // Nueva variable para controlar el estado del giro
+        var hasTurnedBodyCompleted = false
+        let confidenceThreshold: VNConfidence = 0.07
         
-        // Umbral de confianza ajustable
-        let confidenceThreshold: VNConfidence = 0.0001
-        
+        // Add initializer
         init(parent: CameraPreviewView) {
             self.parent = parent
+            super.init()
         }
         
+        // Keep the existing required points for body completion check
+        let requiredPoints: [VNHumanBodyPoseObservation.JointName] = [
+            .nose,
+            .leftWrist,
+            .rightWrist,
+            .leftAnkle,
+            .rightAnkle
+        ]
+        
         func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+            // Skip vision processing if counting down
+            if parent.isCountingDown {
+                return
+            }
+            
             guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
             
-            let request = VNDetectHumanBodyPoseRequest { request, error in
+            let request = VNDetectHumanBodyPoseRequest { [self] request, error in
                 guard let results = request.results as? [VNHumanBodyPoseObservation], error == nil else {
-                    DispatchQueue.main.async {
-                        // Restablecer estados si no se detecta el cuerpo
-                        self.parent.isBodyDetected = false
-                        self.parent.isBodyComplete = false
-                        self.parent.hasTurnedBody = false
-                        self.hasTurnedBodyCompleted = false
-                    }
                     return
                 }
                 
@@ -631,16 +450,27 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                 var bodyDetected = false
                 var bodyComplete = true
                 
-                // Puntos necesarios para considerar el cuerpo como "completo"
-//                let requiredPoints: [VNHumanBodyPoseObservation.JointName] = [.nose, .leftAnkle, .rightAnkle, .leftWrist, .rightWrist]
-                let requiredPoints: [VNHumanBodyPoseObservation.JointName] = [.nose, .leftWrist, .rightWrist, .leftAnkle, .rightAnkle]
-                
                 for bodyObservation in results {
                     if let recognizedPoints = try? bodyObservation.recognizedPoints(.all) {
-                        // Detectar si hay puntos reconocidos, lo que implica un cuerpo detectado
-                        if !recognizedPoints.isEmpty {
-                            bodyDetected = true
+                        bodyDetected = !recognizedPoints.isEmpty
+                        
+                        // Debug print each required point's confidence
+                        print("Confidence values:")
+                        for pointName in self.requiredPoints {
+                            if let point = recognizedPoints[pointName] {
+                                print("\(pointName): \(point.confidence)")
+                                
+                                if point.confidence > self.confidenceThreshold {
+                                    let normalizedPoint = point.location
+                                    let convertedPoint = self.convertVisionPoint(normalizedPoint, to: self.parent.cameraManager.previewLayer)
+                                    newBodyPoints.append(convertedPoint)
+                                }
+                            } else {
+                                print("\(pointName): not detected")
+                                bodyComplete = false
+                            }
                         }
+                        print("--------------------")
                         
                         // Detección del ángulo de los hombros
                         if let leftShoulder = recognizedPoints[.leftShoulder],
@@ -659,36 +489,13 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                                 }
                             }
                         }
-                        
-                        // Verificar si todos los puntos requeridos están presentes
-                        for pointName in requiredPoints {
-                            if let point = recognizedPoints[pointName], point.confidence > self.confidenceThreshold {
-                                let normalizedPoint = point.location
-                                let convertedPoint = self.convertVisionPoint(normalizedPoint, to: self.parent.cameraManager.previewLayer)
-                                newBodyPoints.append(convertedPoint)
-                            } else {
-                                bodyComplete = false
-                            }
-                        }
                     }
                 }
                 
-                // Actualización de los estados en el hilo principal
                 DispatchQueue.main.async {
                     self.parent.detectedBodyPoints = newBodyPoints
                     self.parent.isBodyDetected = bodyDetected
                     self.parent.isBodyComplete = bodyComplete
-                    
-                    // Si el cuerpo está completo y el giro se ha marcado como completo, mantener `hasTurnedBody` activado
-                    if bodyDetected && bodyComplete && self.hasTurnedBodyCompleted {
-                        self.parent.hasTurnedBody = true
-                    } else if !bodyDetected || !bodyComplete {
-                        // Desactivar `hasTurnedBody` si el cuerpo ya no está en el cuadro
-                        self.parent.hasTurnedBody = false
-                        self.hasTurnedBodyCompleted = false
-                    }
-                    
-                    // Aplicar suavizado a los puntos detectados
                     self.parent.smoothedBodyPoints = self.parent.applySmoothing(to: newBodyPoints)
                 }
             }
@@ -726,11 +533,32 @@ struct CameraPreviewView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
     
     func applySmoothing(to points: [CGPoint]) -> [CGPoint] {
-        guard points.count == smoothedBodyPoints.count else {
+        guard !points.isEmpty else { return points }
+        
+        // If this is the first set of points, initialize smoothed points
+        if smoothedBodyPoints.isEmpty {
             return points
         }
+        
+        // Stronger smoothing factor (increased from 0.7)
+        let smoothingFactor: CGFloat = 0.85
+        
         return zip(smoothedBodyPoints, points).map { previous, current in
-            CGPoint(x: previous.x * 0.7 + current.x * 0.3, y: previous.y * 0.7 + current.y * 0.3)
+            // Only apply smoothing if points are within a reasonable distance
+            let distance = hypot(current.x - previous.x, current.y - previous.y)
+            
+            // If movement is very small, keep previous point to reduce jitter
+            if distance < 3.0 {
+                return previous
+            }
+            
+            // If movement is large, reduce smoothing to allow faster response
+            let dynamicSmoothingFactor = distance > 20.0 ? 0.5 : smoothingFactor
+            
+            return CGPoint(
+                x: previous.x * dynamicSmoothingFactor + current.x * (1 - dynamicSmoothingFactor),
+                y: previous.y * dynamicSmoothingFactor + current.y * (1 - dynamicSmoothingFactor)
+            )
         }
     }
 }

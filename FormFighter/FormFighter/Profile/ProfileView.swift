@@ -13,7 +13,7 @@ struct ProfileView: View {
     @State private var sortOption: SortOption = .date
     
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
+        ScrollView(.vertical, showsIndicators: true) {
             VStack(alignment: .leading, spacing: 30) {
                 // Fighter Profile Header
                 Text("Fighter Profile")
@@ -57,7 +57,7 @@ struct ProfileView: View {
                                         .font(.headline) 
                                 }
                         }
-                        .frame(height: 500)
+                        .frame(height: 600)
                         .padding(.horizontal)
                     }
                     .padding(.vertical, 24)
@@ -85,6 +85,26 @@ struct ProfileView: View {
             }
         }
         .background(ThemeColors.background.opacity(0.3))
+        .overlay(
+            // Add subtle bounce arrow indicator at the bottom
+            VStack {
+                Spacer()
+                Image(systemName: "chevron.compact.down")
+                    .font(.system(size: 40))
+                    .foregroundColor(ThemeColors.primary.opacity(0.6))
+                    .padding(.bottom, 10)
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                ThemeColors.background.opacity(0),
+                                ThemeColors.background.opacity(0.3)
+                            ]),
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+            }
+        )
         .onAppear {
             viewModel.fetchUserFeedback(userId: userManager.userId)
         }
@@ -139,9 +159,7 @@ struct StatsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             // Header
-            Text("\(timeInterval.rawValue.capitalized) Stats")
-                .font(.system(.title2, design: .rounded, weight: .semibold))
-                .foregroundColor(ThemeColors.accent)
+           
             
             let feedbacksInInterval = filterFeedbacks(for: timeInterval, from: feedbacks)
             let averageScore = calculateAverageScore(for: feedbacksInInterval)

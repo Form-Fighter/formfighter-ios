@@ -1,100 +1,3 @@
-//import SwiftUI
-//import AVFoundation
-//
-//
-//struct VisionView: View {
-//    @AppStorage("gptLanguage") var gptLanguage: GPTLanguage = .english
-//    @StateObject var vm: VisionVM
-//    @EnvironmentObject var userManager: UserManager
-//    @Environment(\.scenePhase) var scenePhase  // To handle foreground/background transitions
-//
-//    var body: some View {
-//        VStack {
-//            CameraPermissionView()  // This will hold the camera preview
-//        }
-//        .onChange(of: scenePhase) { newPhase in
-//            if newPhase == .active {
-//                // Restart the capture session when the app comes to the foreground
-//                NotificationCenter.default.post(name: NSNotification.Name("StartCaptureSession"), object: nil)
-//            } else if newPhase == .background {
-//                // Stop the capture session when the app goes to the background
-//                NotificationCenter.default.post(name: NSNotification.Name("StopCaptureSession"), object: nil)
-//            }
-//        }
-//    }
-//}
-//
-//
-//struct CameraPermissionView: View {
-//    @State private var cameraAuthorized = false
-//    @State private var showPermissionDeniedAlert = false
-//
-//    var body: some View {
-//        VStack {
-//            if cameraAuthorized {
-//                CameraPreviewTestView()
-//                    .onAppear {
-//                        NotificationCenter.default.post(name: NSNotification.Name("StartCaptureSession"), object: nil)
-//                    }
-//                    .onDisappear {
-//                        NotificationCenter.default.post(name: NSNotification.Name("StopCaptureSession"), object: nil)
-//                    }
-//            } else {
-//                Button("Request Camera Access") {
-//                    requestCameraPermission()
-//                }
-//                .padding()
-//                .alert(isPresented: $showPermissionDeniedAlert) {
-//                    Alert(
-//                        title: Text("Camera Access Denied"),
-//                        message: Text("Please enable camera access in Settings."),
-//                        primaryButton: .default(Text("Open Settings"), action: openSettings),
-//                        secondaryButton: .cancel()
-//                    )
-//                }
-//            }
-//        }
-//        .onAppear {
-//            checkCameraPermission()
-//        }
-//    }
-//
-//    func checkCameraPermission() {
-//        let status = AVCaptureDevice.authorizationStatus(for: .video)
-//        switch status {
-//        case .authorized:
-//            cameraAuthorized = true
-//        case .notDetermined:
-//            requestCameraPermission()
-//        case .denied, .restricted:
-//            showPermissionDeniedAlert = true
-//        @unknown default:
-//            break
-//        }
-//    }
-//
-//    func requestCameraPermission() {
-//        AVCaptureDevice.requestAccess(for: .video) { granted in
-//            DispatchQueue.main.async {
-//                if granted {
-//                    cameraAuthorized = true
-//                } else {
-//                    showPermissionDeniedAlert = true
-//                }
-//            }
-//        }
-//    }
-//
-//    func openSettings() {
-//        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
-//            return
-//        }
-//        if UIApplication.shared.canOpenURL(settingsURL) {
-//            UIApplication.shared.open(settingsURL)
-//        }
-//    }
-//}
-
 import SwiftUI
 import AVFoundation
 
@@ -110,14 +13,31 @@ struct VisionView: View {
             CameraVisionView(cameraManager: cameraManager)
         } else {
             VStack {
+                Text("🥊 Muay Thai Vision Access 🥊")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .padding(.bottom, 5)
+                
                 Text(missingPermissionsMessage)
                     .foregroundColor(.red)
                     .padding()
+                    .multilineTextAlignment(.center)
+                
                 Button(action: openSettings) {
-                    Text("Go to settings")
-                        .foregroundColor(.blue)
+                    Text("Enable Camera Access")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.red)
+                        .cornerRadius(10)
+                        .shadow(radius: 3)
                 }
             }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color.white)
+                    .shadow(radius: 5)
+            )
             .onAppear {
                 checkPermissions()
             }
@@ -163,10 +83,10 @@ struct VisionView: View {
     
     // Update the missing permissions message
     func updateMissingPermissionsMessage() {
-        missingPermissionsMessage = "The following permissions are missing:\n"
+        missingPermissionsMessage = "To analyze your Muay Thai technique, we need:\n"
         if !hasCameraPermission {
-            missingPermissionsMessage += "- Camera access\n"
+            missingPermissionsMessage += "📸 Camera Access\n"
         }
-        missingPermissionsMessage += "Please enable them in the settings."
+        missingPermissionsMessage += "\nThis helps us provide real-time feedback on your form."
     }
 }

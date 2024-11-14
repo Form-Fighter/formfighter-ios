@@ -161,6 +161,8 @@
 		B21411832CE63BED00699B15 /* ImprovementsGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411812CE63BED00699B15 /* ImprovementsGridView.swift */; };
 		B21411862CE6478000699B15 /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411842CE6477F00699B15 /* LineChartView.swift */; };
 		B21411892CE6491F00699B15 /* PunchStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411872CE6491F00699B15 /* PunchStats.swift */; };
+		B214118E2CE672C600699B15 /* countdown.wav in Resources */ = {isa = PBXBuildFile; fileRef = B214118C2CE672C500699B15 /* countdown.wav */; };
+		B214118F2CE672C600699B15 /* start.wav in Resources */ = {isa = PBXBuildFile; fileRef = B214118D2CE672C600699B15 /* start.wav */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
 		B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */; };
 		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
@@ -314,6 +316,8 @@
 		B21411812CE63BED00699B15 /* ImprovementsGridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImprovementsGridView.swift; sourceTree = "<group>"; };
 		B21411842CE6477F00699B15 /* LineChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChartView.swift; sourceTree = "<group>"; };
 		B21411872CE6491F00699B15 /* PunchStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PunchStats.swift; sourceTree = "<group>"; };
+		B214118C2CE672C500699B15 /* countdown.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = countdown.wav; sourceTree = "<group>"; };
+		B214118D2CE672C600699B15 /* start.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = start.wav; sourceTree = "<group>"; };
 		B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighterDebug.entitlements; sourceTree = "<group>"; };
 		B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntNumberFieldView.swift; sourceTree = "<group>"; };
 		B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -427,6 +431,8 @@
 		818D3F862B70096100DF7299 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B214118C2CE672C500699B15 /* countdown.wav */,
+				B214118D2CE672C600699B15 /* start.wav */,
 				81D531BA2B7E2B4A0044D990 /* Animations */,
 				818D3F872B70096B00DF7299 /* Fonts */,
 				811A378A2B6EBA3C00C9E8B6 /* Assets.xcassets */,
@@ -869,6 +875,8 @@
 				81D531D62B7E2B660044D990 /* plane.json in Resources */,
 				81D531DF2B7E2B660044D990 /* food-camera.json in Resources */,
 				81D531DB2B7E2B660044D990 /* loading-circles.json in Resources */,
+				B214118F2CE672C600699B15 /* start.wav in Resources */,
+				B214118E2CE672C600699B15 /* countdown.wav in Resources */,
 				81D531D42B7E2B660044D990 /* cart.json in Resources */,
 				818D3F922B7009B500DF7299 /* BricolageGrotesque-Light.ttf in Resources */,
 				818D3FA32B7009E100DF7299 /* ClashDisplay-SemiBold.otf in Resources */,
