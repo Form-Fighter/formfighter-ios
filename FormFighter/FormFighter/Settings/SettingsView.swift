@@ -29,6 +29,7 @@ struct SettingsView: View {
             Group {
                 info
                 userInfo
+                settings
                 madeBy
             }
             .listRowBackground(Color.thaiGray.opacity(0.1))
@@ -94,9 +95,22 @@ struct SettingsView: View {
                         .foregroundStyle(colorScheme == .light ? .black : .white)
                     
                     Text(gptLanguage.displayName)
-                        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .trailing)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
                 }
             }
+            
+          
+            Button(action: {
+                notificationManager.scheduleLocalNotification(type: .system, message: "Test notification from settings!")
+            }) {
+                HStack {
+                    Text("Test Notification")
+                        .foregroundStyle(colorScheme == .light ? .black : .white)
+                    Image(systemName: "bell.badge")
+                        .foregroundColor(.blue)
+                }
+            }
+         
             
             Menu {
                 ForEach(ColorSchemeType.allCases, id: \.self) { colorScheme in
@@ -129,7 +143,7 @@ struct SettingsView: View {
                 get: { notificationManager.authorizationStatus == .authorized },
                 set: { newValue in
                     if newValue {
-                        notificationManager.requestAuthorization()
+                        notificationManager.requestNotificationPermission()
                     } else {
                         // Open system settings since we can't programmatically disable notifications
                         if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {

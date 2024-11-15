@@ -1,7 +1,9 @@
 import Foundation
 import FirebaseAuth
-import UIKit
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 import Combine
+import OSLog
 
 enum UserManagerError: LocalizedError {
     case notExists
@@ -36,6 +38,13 @@ class UserManager: ObservableObject {
     
     func fetchAllData() async throws {
         try await fetchUserInfo()
+        
+        // Only request notification permissions if user is authenticated
+        if Auth.auth().currentUser != nil {
+            DispatchQueue.main.async {
+                NotificationManager.shared.requestNotificationPermission()
+            }
+        }
     }
     
     func createNewUserInDatabase() async throws {
@@ -93,6 +102,18 @@ class UserManager: ObservableObject {
     func resetUserProperties() {
         user = nil
         UserDefaults.standard.set(false, forKey: "hasCompletedOnboarding")
+        
+        // Clear FCM token from Firestore when user logs out
+        if let userId = Auth.auth().currentUser?.uid {
+            let db = Firestore.firestore()
+            db.collection("users").document(userId).updateData([
+                "fcmToken": FieldValue.delete()
+            ]) { error in
+                if let error = error {
+                    print("Error removing FCM token: \(error.localizedDescription)")
+                }
+            }
+        }
     }
     
     func requestReviewManually() {

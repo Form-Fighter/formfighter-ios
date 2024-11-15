@@ -18,7 +18,7 @@ struct NotificationPermissionView: View {
                 .foregroundColor(.secondary)
             
             Button {
-                notificationManager.requestAuthorization()
+                notificationManager.requestNotificationPermission()
             } label: {
                 Text("Enable Notifications")
                     .foregroundColor(.white)

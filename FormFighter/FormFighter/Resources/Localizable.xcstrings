@@ -5500,6 +5500,9 @@
         }
       }
     },
+    "Test Notification" : {
+
+    },
     "The easiest way of counting calories" : {
       "extractionState" : "stale",
       "localizations" : {

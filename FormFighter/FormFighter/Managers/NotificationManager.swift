@@ -5,79 +5,137 @@ import FirebaseMessaging
 import FirebaseAuth
 import UserNotifications
 
+// Add enum for notification types
+enum NotificationType {
+    case feedback
+    case system
+    
+    var title: String {
+        switch self {
+        case .feedback:
+            return "New Feedback"
+        case .system:
+            return "System Update"
+        }
+    }
+}
+
+// Make NotificationManager inherit from NSObject
 class NotificationManager: NSObject, ObservableObject {
     static let shared = NotificationManager()
+    @Published var authorizationStatus: UNAuthorizationStatus = .notDetermined
     
-    @Published var authorizationStatus: UNAuthorizationStatus?
+    override init() {
+        super.init()
+        getNotificationSettings()
+    }
     
-    enum NotificationType: String {
-        case feedbackProgress = "feedback_progress"
-        case feedbackComplete = "feedback_complete"
-        case feedbackError = "feedback_error"
-        
-        var title: String {
-            switch self {
-            case .feedbackProgress: return "Analysis in Progress"
-            case .feedbackComplete: return "Analysis Complete!"
-            case .feedbackError: return "Analysis Error"
+    func requestNotificationPermission() {
+        Task {
+            let granted = await requestAuthorization()
+            if granted {
+                await MainActor.run {
+                    self.authorizationStatus = .authorized
+                }
+                // Register for remote notifications after authorization
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
             }
         }
     }
     
-    override init() {
-        super.init()
-        UNUserNotificationCenter.current().delegate = self
-        Messaging.messaging().delegate = self
-    }
-    
-    func requestAuthorization() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { [weak self] granted, error in
-            if granted {
-                DispatchQueue.main.async {
-                    self?.authorizationStatus = .authorized
-                    self?.getNotificationSettings()
-                    UIApplication.shared.registerForRemoteNotifications()
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self?.authorizationStatus = .denied
-                }
-            }
+    private func requestAuthorization() async -> Bool {
+        do {
+            let granted = try await UNUserNotificationCenter.current()
+                .requestAuthorization(options: [.alert, .badge, .sound])
+            print("Notification authorization granted: \(granted)")
+            return granted
+        } catch {
+            print("Error requesting authorization: \(error)")
+            return false
         }
     }
     
     private func getNotificationSettings() {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
             DispatchQueue.main.async {
-                self.authorizationStatus = settings.authorizationStatus
+                self?.authorizationStatus = settings.authorizationStatus
             }
         }
     }
     
     func updateFCMToken() {
+        print("Requesting FCM token...")
         Messaging.messaging().token { [weak self] token, error in
             if let error = error {
                 print("Error fetching FCM token: \(error)")
                 return
             }
             if let token = token {
+                print("FCM Token received: \(token)")
                 self?.saveFCMToken(token)
             }
         }
     }
     
-    private func saveFCMToken(_ token: String) {
-        guard let userId = Auth.auth().currentUser?.uid else { return }
+    func saveFCMToken(_ token: String) {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("No authenticated user found when saving FCM token")
+            return
+        }
         
+        print("Saving FCM token for user: \(userId)")
         let db = Firestore.firestore()
         db.collection("users").document(userId).setData([
             "fcmToken": token,
-            "lastTokenUpdate": Timestamp(date: Date())
+            "lastTokenUpdate": FieldValue.serverTimestamp()
         ], merge: true) { error in
             if let error = error {
-                print("Error saving FCM token: \(error)")
+                print("Error saving FCM token: \(error.localizedDescription)")
             } else {
-                print("FCM token saved successfully")
+                print("FCM token successfully saved to Firestore")
+            }
+        }
+    }
+    
+    // MARK: - Local Notifications
+    func scheduleLocalNotification(type: NotificationType, message: String) {
+        guard authorizationStatus == .authorized else { return }
+        
+        let content = UNMutableNotificationContent()
+        content.title = type.title
+        content.body = message
+        content.sound = .default
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: trigger
+        )
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error scheduling notification: \(error)")
+            }
+        }
+    }
+    
+    func testNotification() {
+        // Test local notification
+        scheduleLocalNotification(type: .system, message: "Test notification")
+        
+        print("Current authorization status: \(authorizationStatus)")
+        
+        // Print current FCM token
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                print("Error getting FCM token: \(error)")
+            }
+            if let token = token {
+                print("Current FCM token: \(token)")
             }
         }
     }
@@ -102,6 +160,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
     private func handleNotification(_ userInfo: [AnyHashable: Any]) {
         if let feedbackId = userInfo["feedbackId"] as? String {
             print("Should navigate to feedback: \(feedbackId)")
+            // Handle feedback navigation here
         }
     }
 }
@@ -110,33 +169,8 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
 extension NotificationManager: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         if let token = fcmToken {
+            print("Firebase registration token: \(token)")
             saveFCMToken(token)
-        }
-    }
-}
-
-// MARK: - Local Notifications
-extension NotificationManager {
-    func scheduleLocalNotification(type: NotificationType, message: String) {
-        guard authorizationStatus == .authorized else { return }
-        
-        let content = UNMutableNotificationContent()
-        content.title = type.title
-        content.body = message
-        content.sound = .default
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-        
-        let request = UNNotificationRequest(
-            identifier: UUID().uuidString,
-            content: content,
-            trigger: trigger
-        )
-        
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Error scheduling notification: \(error)")
-            }
         }
     }
 } 

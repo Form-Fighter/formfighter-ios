@@ -5,6 +5,7 @@ import FirebaseCore
 import WishKit
 import TipKit
 import FirebaseFirestore
+import FirebaseMessaging
 
 @main
 struct FormFighterApp: App {
@@ -26,6 +27,9 @@ struct FormFighterApp: App {
     let cameraManager = CameraManager() // Create an instance of CameraManager
     
     private var db: Firestore!
+    
+    // Add class-level delegate
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     
     init() {
         setupFirebase()
@@ -174,14 +178,19 @@ struct FormFighterApp: App {
     }
     
     private func setupFirebase() {
-        FirebaseApp.configure()
-        Analytics.setAnalyticsCollectionEnabled(true)
-        // MARK: - This code bellow to prevent sending analytics events while debugging or in TestFlight builds
-        // to prevent fake data. You can comment it if you wish.
-        // Also comment them (or set to true) to test if Analytics is working for the first time.
-#if DEBUG
+        // Only configure Firebase once
+        if FirebaseApp.app() == nil {
+            FirebaseApp.configure()
+            Analytics.setAnalyticsCollectionEnabled(true)
+            
+            // Add Messaging configuration
+            Messaging.messaging().isAutoInitEnabled = true
+        }
+        
+        // MARK: - This code below to prevent sending analytics events while debugging or in TestFlight builds
+        #if DEBUG
         Analytics.setAnalyticsCollectionEnabled(false)
-#endif
+        #endif
         if isTestFlight() {
             Analytics.setAnalyticsCollectionEnabled(false)
         }
