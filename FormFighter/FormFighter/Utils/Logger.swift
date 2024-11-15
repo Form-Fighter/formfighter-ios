@@ -1,4 +1,5 @@
 import Foundation
+import FirebaseCrashlytics
 
 //MARK: - Example of use:
 //Logger.log(message: "An error message", event: .error)
@@ -28,12 +29,36 @@ class Logger {
         return components.isEmpty ? "" : components.last!
     }
     
-    class func log(message: String, event: LogEvent, fileName: String = #file, line: Int = #line, column: Int = #column, funcName: String = #function)  {
+    // Add a static property to control logging
+    static var isLoggingEnabled: Bool = {
+        #if DEBUG
+        return true
+        #else
+        return false
+        #endif
+    }()
+    
+    class func log(message: String, event: LogEvent, fileName: String = #file, line: Int = #line, column: Int = #column, funcName: String = #function) {
+        if isLoggingEnabled {
+            print("\(event.rawValue)[\(sourceFileName(filePath: fileName))]:\(line) -> \(message)")
+            
+            // Also log to Crashlytics if it's an error
+            if event == .error {
+                Crashlytics.crashlytics().log("\(event.rawValue) \(message)")
+            }
+        }
+    }
+    
+    // Add new method to log non-fatal errors to Crashlytics
+    static func recordError(_ error: Error, context: [String: Any]? = nil) {
+        Crashlytics.crashlytics().record(error: error, userInfo: context)
         
-#if DEBUG
-        print("\(event.rawValue)[\(sourceFileName(filePath: fileName))]:\(line) -> \(message)")
-#endif
-        
+        // Also log to Analytics
+        Tracker.errorOccurred(
+            domain: (error as NSError).domain,
+            code: (error as NSError).code,
+            description: error.localizedDescription
+        )
     }
 }
 

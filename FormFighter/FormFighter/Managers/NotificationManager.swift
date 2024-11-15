@@ -146,6 +146,10 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                               willPresent notification: UNNotification,
                               withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let userInfo = notification.request.content.userInfo
+        if let feedbackId = userInfo["feedbackId"] as? String {
+            print("Received notification with feedbackId: \(feedbackId)")
+        }
         completionHandler([.banner, .sound, .badge])
     }
     

@@ -46,6 +46,8 @@ struct FormFighterApp: App {
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        
+        setupCrashlytics()
     }
     
     var body: some Scene {
@@ -181,18 +183,21 @@ struct FormFighterApp: App {
         // Only configure Firebase once
         if FirebaseApp.app() == nil {
             FirebaseApp.configure()
-            Analytics.setAnalyticsCollectionEnabled(true)
             
-            // Add Messaging configuration
+            // Configure analytics and crashlytics
+            #if DEBUG
+                Analytics.setAnalyticsCollectionEnabled(false)
+                Logger.log(message: "Analytics disabled in DEBUG mode", event: .debug)
+            #else
+                Analytics.setAnalyticsCollectionEnabled(!isTestFlight())
+                Logger.log(message: "Analytics enabled in RELEASE mode", event: .debug)
+            #endif
+            
+            // Configure Crashlytics
+            Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(true)
+            
+            // Configure Messaging
             Messaging.messaging().isAutoInitEnabled = true
-        }
-        
-        // MARK: - This code below to prevent sending analytics events while debugging or in TestFlight builds
-        #if DEBUG
-        Analytics.setAnalyticsCollectionEnabled(false)
-        #endif
-        if isTestFlight() {
-            Analytics.setAnalyticsCollectionEnabled(false)
         }
     }
     
@@ -319,5 +324,17 @@ struct FormFighterApp: App {
                 pendingCoachId = nil
             }
         }
+    }
+    
+    private func logScreenView(_ screenName: String) {
+        Analytics.logEvent(AnalyticsEventScreenView, parameters: [
+            AnalyticsParameterScreenName: screenName,
+            AnalyticsParameterScreenClass: "FormFighterApp"
+        ])
+    }
+    
+    func setupCrashlytics() {
+        Crashlytics.crashlytics().setCustomValue(UIDevice.current.systemVersion, forKey: "ios_version")
+        Crashlytics.crashlytics().setCustomValue(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "", forKey: "app_version")
     }
 }

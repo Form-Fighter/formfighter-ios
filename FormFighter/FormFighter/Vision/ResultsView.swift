@@ -5,6 +5,7 @@ import Photos
 import AVKit
 import FirebaseFirestore
 import Alamofire
+import os
 
 // Create a dedicated error type
 enum ResultsViewError: LocalizedError {

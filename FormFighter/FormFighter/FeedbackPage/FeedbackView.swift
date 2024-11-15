@@ -333,6 +333,7 @@ struct FeedbackView: View {
             if success {
                 hasSubmittedFeedback = true
                 showFeedbackPrompt = false
+                Tracker.feedbackSubmitted(type: emoji, rating: feedbackRating)
             }
         }
     }

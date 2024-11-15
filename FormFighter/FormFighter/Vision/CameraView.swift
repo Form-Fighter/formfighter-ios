@@ -674,36 +674,14 @@ class CameraManager: NSObject, ObservableObject {
 extension CameraManager: AVCaptureFileOutputRecordingDelegate {
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let error = error {
-            print("Error in recording: \(error.localizedDescription)")
+            Logger.log(message: "Recording error: \(error.localizedDescription)", event: .error)
+            Logger.recordError(error, context: ["recording_url": outputFileURL.absoluteString])
         } else {
-            // Verify if the file was created correctly
             if FileManager.default.fileExists(atPath: outputFileURL.path) {
-                print("The file exists, ready to be saved.")
-                
-                // Send a notification with the recorded video's URL
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: NSNotification.Name("VideoRecorded"), object: outputFileURL)
-                }
-                
-                // Request permission to access the photo library
-                //                PHPhotoLibrary.requestAuthorization { status in
-                //                    if status == .authorized || status == .limited {
-                //                        // Save the video to the photo library
-                //                        PHPhotoLibrary.shared().performChanges({
-                //                            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)
-                //                        }) { success, error in
-                //                            if success {
-                //                                print("Video saved to photo library.")
-                //                            } else if let error = error {
-                //                                print("Error saving video: \(error.localizedDescription)")
-                //                            }
-                //                        }
-                //                    } else {
-                //                        print("Permission to access the photo library denied.")
-                //                    }
-                //                }
+                Logger.log(message: "Video recording completed successfully", event: .debug)
+                // Rest of the code...
             } else {
-                print("The video file does not exist or was not created correctly.")
+                Logger.log(message: "Video file not created correctly", event: .error)
             }
         }
     }
