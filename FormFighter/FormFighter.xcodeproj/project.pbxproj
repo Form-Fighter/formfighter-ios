@@ -163,6 +163,7 @@
 		B21411892CE6491F00699B15 /* PunchStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411872CE6491F00699B15 /* PunchStats.swift */; };
 		B214118E2CE672C600699B15 /* countdown.wav in Resources */ = {isa = PBXBuildFile; fileRef = B214118C2CE672C500699B15 /* countdown.wav */; };
 		B214118F2CE672C600699B15 /* start.wav in Resources */ = {isa = PBXBuildFile; fileRef = B214118D2CE672C600699B15 /* start.wav */; };
+		B21411E62CE69F1D00699B15 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = B21411E52CE69F1D00699B15 /* Alamofire */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
 		B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */; };
 		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
@@ -331,6 +332,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B21411E62CE69F1D00699B15 /* Alamofire in Frameworks */,
 				81DE14B92B73EFF600C41EA9 /* RevenueCat in Frameworks */,
 				81DE14CB2B740A2300C41EA9 /* FirebaseAuth in Frameworks */,
 				B214116F2CE5339600699B15 /* FirebaseMessaging in Frameworks */,
@@ -790,6 +792,7 @@
 				81A56C072BD92A9800C7B596 /* WishKit */,
 				817FD0362C457E060071468A /* AIProxy */,
 				B214116E2CE5339600699B15 /* FirebaseMessaging */,
+				B21411E52CE69F1D00699B15 /* Alamofire */,
 			);
 			productName = WrapFast;
 			productReference = 811A37832B6EBA3B00C9E8B6 /* FormFighter.app */;
@@ -826,6 +829,7 @@
 				81D531E32B7E2BBE0044D990 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				81A56C062BD92A9800C7B596 /* XCRemoteSwiftPackageReference "wishkit-ios" */,
 				817FD0352C457E060071468A /* XCRemoteSwiftPackageReference "AIProxySwift" */,
+				B21411E42CE69F1D00699B15 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 811A37842B6EBA3B00C9E8B6 /* Products */;
 			projectDirPath = "";
@@ -1300,6 +1304,14 @@
 				minimumVersion = 24.0.0;
 			};
 		};
+		B21411E42CE69F1D00699B15 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1367,6 +1379,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 81DE14C52B740A2300C41EA9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		B21411E52CE69F1D00699B15 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B21411E42CE69F1D00699B15 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

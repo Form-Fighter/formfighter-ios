@@ -4,6 +4,7 @@ import Vision
 import Photos
 import AVKit
 import FirebaseFirestore
+import Alamofire
 
 // Create a dedicated error type
 enum ResultsViewError: LocalizedError {
@@ -151,57 +152,69 @@ struct ResultsView: View {
     }
     
     private func uploadToServer(feedbackId: String, coachId: String?) async {
+        isUploading = true  // Show loading state
+        
         do {
-            let boundary = "Boundary-\(UUID().uuidString)"
-            var request = URLRequest(url: URL(string: "https://your-server.com/api/upload")!)
-            request.httpMethod = "POST"
-            
-            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-            request.setValue(userManager.userId, forHTTPHeaderField: "userID")
-            
-            var body = Data()
-            
             let videoData = try Data(contentsOf: videoURL)
-            body.append("--\(boundary)\r\n")
-            body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(videoURL.lastPathComponent)\"\r\n")
-            body.append("Content-Type: video/quicktime\r\n\r\n")
-            body.append(videoData)
-            body.append("\r\n")
             
-            body.append("--\(boundary)\r\n")
-            body.append("Content-Disposition: form-data; name=\"feedbackId\"\r\n\r\n")
-            body.append(feedbackId)
-            body.append("\r\n")
+            let headers: HTTPHeaders = [
+                "userID": userManager.userId,
+                "Content-Type": "multipart/form-data"
+            ]
             
-            if let coachId = coachId {
-                body.append("--\(boundary)\r\n")
-                body.append("Content-Disposition: form-data; name=\"coachId\"\r\n\r\n")
-                body.append(coachId)
-                body.append("\r\n")
+            // Convert to async/await pattern
+            try await withCheckedThrowingContinuation { continuation in
+                AF.upload(multipartFormData: { multipartFormData in
+                    // Add video file
+                    multipartFormData.append(
+                        videoData,
+                        withName: "file",
+                        fileName: videoURL.lastPathComponent,
+                        mimeType: "video/quicktime"
+                    )
+                    
+                    // Add feedbackId
+                    multipartFormData.append(
+                        feedbackId.data(using: .utf8)!,
+                        withName: "feedbackId"
+                    )
+                    
+                    // Add coachId if available
+                    if let coachId = coachId {
+                        multipartFormData.append(
+                            coachId.data(using: .utf8)!,
+                            withName: "coachId"
+                        )
+                    }
+                }, to: "https://www.form-fighter.com/api/upload",
+                   headers: headers)
+                .uploadProgress { progress in
+                    print("Upload Progress: \(progress.fractionCompleted)")
+                }
+                .responseData { response in
+                    switch response.result {
+                    case .success:
+                        print("Upload successful")
+                        continuation.resume()
+                    case .failure(let error):
+                        print("Upload failed: \(error)")
+                        continuation.resume(throwing: error)
+                    }
+                }
             }
             
-            body.append("--\(boundary)--\r\n")
-            request.httpBody = body
-            
-            let (_, response) = try await URLSession.shared.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
-                throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Server error"])
-            }
-            
-            print("Upload initiated successfully")
+            // If we get here, upload was successful
+            print("Upload completed successfully")
             
         } catch {
-            activeError = .uploadError(error)
+            print("Upload error: \(error)")
+            await MainActor.run {
+                activeError = .uploadError(error)
+            }
         }
-    }
-}
-
-extension Data {
-    mutating func append(_ string: String) {
-        if let data = string.data(using: .utf8) {
-            append(data)
+        
+        await MainActor.run {
+            isUploading = false  // Hide loading state
         }
     }
 }
