@@ -16,32 +16,38 @@ struct LoginView: View {
     
     var body: some View {
         ZStack {
+            // Add black background
+            Color.black
+                .ignoresSafeArea()
+            
             if isSigningIn {
                 ProgressView()
-                    .tint(.brand)
+                    .tint(.white) // Changed to white for better visibility on black
                     .scaleEffect(2)
-                    .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                
-                // MARK: Customize the Login View as you wish.
+                // Main content
                 VStack(spacing: 32) {
                     Text("\(Const.appName)")
                         .font(.special(.extraLargeTitle, weight: .black))
-                        .foregroundStyle(.brand.gradient)
+                        .foregroundStyle(.white) // Changed to white
+                    
                     Image("app-logo")
                         .resizable()
                         .scaledToFit()
                         .frame(maxWidth: 180)
-                    Text("Start scanning your meals!")
+                    
+                    Text("Master Your Form")  // Updated text to match Muay Thai theme
                         .font(.special(.title3, weight: .bold))
+                        .foregroundColor(.white)  // Changed to white
                         .frame(maxWidth: .infinity)
-                        .multilineTextAlignment(.center)
+                        
                 }
                 
                 VStack {
-                    if canEnableFreeCredits {
-                        freeCreditsText
-                    }
+                    // if canEnableFreeCredits {
+                    //     freeCreditsText
+                    // }
                     
                     CustomSignInWithAppleButton {
                         signIn()

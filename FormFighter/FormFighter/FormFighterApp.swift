@@ -23,6 +23,7 @@ struct FormFighterApp: App {
     @StateObject var userManager = UserManager.shared
     @State private var pendingCoachId: String?
     @State private var showCoachConfirmation = false
+    @State private var showSplash = true
     
     let cameraManager = CameraManager() // Create an instance of CameraManager
     
@@ -52,18 +53,33 @@ struct FormFighterApp: App {
     
     var body: some Scene {
         WindowGroup {
-            Group {
-                if !hasCompletedOnboarding {
-                    onboarding
-                    // MARK: - If you want to configure Crashlytics, uncomment the line below and comment 'onboarding' above.
-                    // configureCrashlytics
-                    
-                    // MARK: - If you don't need User Authentication, remove the following conditionals
-                    // and just show 'tabs' view
-                } else if userManager.isAuthenticated {
-                    tabs
-                } else {
-                    LoginView(showPaywallInTheOnboarding: false)
+            ZStack {
+                Group {
+                    if !hasCompletedOnboarding {
+                        onboarding
+                        // MARK: - If you want to configure Crashlytics, uncomment the line below and comment 'onboarding' above.
+                        // configureCrashlytics
+                        
+                        // MARK: - If you don't need User Authentication, remove the following conditionals
+                        // and just show 'tabs' view
+                    } else if userManager.isAuthenticated {
+                        tabs
+                    } else {
+                        LoginView(showPaywallInTheOnboarding: false)
+                    }
+                }
+                .opacity(showSplash ? 0 : 1)
+                
+                if showSplash {
+                    SplashScreenView()
+                        .transition(.opacity)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                withAnimation(.easeOut(duration: 0.3)) {
+                                    showSplash = false
+                                }
+                            }
+                        }
                 }
             }
             .preferredColorScheme(selectedScheme)

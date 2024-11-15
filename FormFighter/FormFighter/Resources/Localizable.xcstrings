@@ -3863,6 +3863,9 @@
         }
       }
     },
+    "Master Your Form" : {
+
+    },
     "Message ChatGPT..." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -5199,6 +5202,7 @@
 
     },
     "Start scanning your meals!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

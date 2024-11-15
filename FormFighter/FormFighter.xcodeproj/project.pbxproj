@@ -164,6 +164,8 @@
 		B214118E2CE672C600699B15 /* countdown.wav in Resources */ = {isa = PBXBuildFile; fileRef = B214118C2CE672C500699B15 /* countdown.wav */; };
 		B214118F2CE672C600699B15 /* start.wav in Resources */ = {isa = PBXBuildFile; fileRef = B214118D2CE672C600699B15 /* start.wav */; };
 		B21411E62CE69F1D00699B15 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = B21411E52CE69F1D00699B15 /* Alamofire */; };
+		B21411E82CE7063E00699B15 /* splashscreen.gif in Resources */ = {isa = PBXBuildFile; fileRef = B21411E72CE7063E00699B15 /* splashscreen.gif */; };
+		B21411EA2CE706F500699B15 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411E92CE706F500699B15 /* SplashScreenView.swift */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
 		B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */; };
 		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
@@ -319,6 +321,8 @@
 		B21411872CE6491F00699B15 /* PunchStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PunchStats.swift; sourceTree = "<group>"; };
 		B214118C2CE672C500699B15 /* countdown.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = countdown.wav; sourceTree = "<group>"; };
 		B214118D2CE672C600699B15 /* start.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = start.wav; sourceTree = "<group>"; };
+		B21411E72CE7063E00699B15 /* splashscreen.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = splashscreen.gif; sourceTree = "<group>"; };
+		B21411E92CE706F500699B15 /* SplashScreenView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighterDebug.entitlements; sourceTree = "<group>"; };
 		B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntNumberFieldView.swift; sourceTree = "<group>"; };
 		B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -433,6 +437,7 @@
 		818D3F862B70096100DF7299 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B21411E72CE7063E00699B15 /* splashscreen.gif */,
 				B214118C2CE672C500699B15 /* countdown.wav */,
 				B214118D2CE672C600699B15 /* start.wav */,
 				81D531BA2B7E2B4A0044D990 /* Animations */,
@@ -593,6 +598,7 @@
 		818D3FD42B713AEE00DF7299 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
+				B21411E92CE706F500699B15 /* SplashScreenView.swift */,
 				B214117F2CE63BE400699B15 /* EmojiButton.swift */,
 				B214117B2CE6247300699B15 /* MuayThaiButtonStyle.swift */,
 				818D3FD72B713CD400DF7299 /* RoundedButton.swift */,
@@ -862,6 +868,7 @@
 				818D3FA12B7009E100DF7299 /* ClashDisplay-Regular.otf in Resources */,
 				81D531D92B7E2B660044D990 /* message.json in Resources */,
 				81D531D82B7E2B660044D990 /* bookmark.json in Resources */,
+				B21411E82CE7063E00699B15 /* splashscreen.gif in Resources */,
 				B2C9DEED2C6AA65500508A59 /* GoogleService-Info.plist in Resources */,
 				81D531D72B7E2B660044D990 /* success.json in Resources */,
 				81D531D12B7E2B660044D990 /* cat-loading.json in Resources */,
@@ -970,6 +977,7 @@
 				81DE14DC2B75270500C41EA9 /* FirestoreService.swift in Sources */,
 				8125D5BA2B77FC77001A846B /* Message.swift in Sources */,
 				B214117A2CE54D1700699B15 /* FeedbackViewModel.swift in Sources */,
+				B21411EA2CE706F500699B15 /* SplashScreenView.swift in Sources */,
 				81DE14F82B76356700C41EA9 /* AnalyzeMealVisionService.swift in Sources */,
 				818D3FE62B71643600DF7299 /* MultiplePagesOnboardingFeatureModel.swift in Sources */,
 				81DE14EC2B762B9F00C41EA9 /* Endpoints.swift in Sources */,
