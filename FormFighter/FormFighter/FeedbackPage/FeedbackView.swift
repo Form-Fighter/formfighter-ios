@@ -4,6 +4,7 @@ import FirebaseFirestore
 import SceneKit
 import QuickLook
 import AVKit
+import ModelIO
 
 
 struct FeedbackView: View {
@@ -39,6 +40,8 @@ struct FeedbackView: View {
     // Add these properties for video sync
     @State private var originalPlayer: AVPlayer?
     @State private var overlayPlayer: AVPlayer?
+    
+    @State private var animationController: AnimationController?
     
     var body: some View {
         Group {
@@ -136,32 +139,68 @@ struct FeedbackView: View {
                                 )
                                 .frame(height: 300)
                                 .cornerRadius(12)
-.overlay(
-    RoundedRectangle(cornerRadius: 12)
-        .stroke(ThemeColors.primary, lineWidth: 2)
-)
-                                .onAppear {
-                                    // Find and play all animations
-                                    scene.rootNode.enumerateChildNodes { (node, _) in
-                                        // Get all animation keys
-                                        for key in node.animationKeys {
-                                            if let animation = node.animation(forKey: key) {
-                                                // Remove existing animation
-                                                node.removeAnimation(forKey: key)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(ThemeColors.primary, lineWidth: 2)
+                                )
+                                   .onAppear {
+                                    if let url = modelURL {
+                                        print("\n=== Loading Animation Using ModelIO ===")
+                                        print("Model URL: \(url)")
+                                        
+                                        // Create asset and print initial info
+                                        let asset = MDLAsset(url: url)
+                                        print("\nAsset Details:")
+                                        print("- Total objects: \(asset.count)")
+                                        
+                                        // Debug each object in the asset
+                                        for index in 0..<asset.count {
+                                            if let object = asset.object(at: index) as? MDLObject {
+                                                print("\nObject \(index):")
+                                                print("- Type: \(type(of: object))")
+                                                print("- Name: \(object.name ?? "unnamed")")
                                                 
-                                                // Create a new animation that loops
-                                                let loopingAnimation = animation.copy() as! CAAnimation
-                                                loopingAnimation.repeatCount = .infinity
-                                                loopingAnimation.isRemovedOnCompletion = false
-                                                
-                                                // Add the looping animation
-                                                node.addAnimation(loopingAnimation, forKey: "loop")
+                                                // Check for mesh sequence data
+                                                if let mesh = object as? MDLMesh {
+                                                    print("- Mesh Details:")
+                                                    print("  - Vertex count: \(mesh.vertexCount)")
+                                                    print("  - Submesh count: \(mesh.submeshes?.count ?? 0)")
+                                                    
+                                                    // Look for morph targets/blend shapes
+//                                                    if let morphGeometry = mesh.geometry as? MDLMorphGeometry {
+//                                                        print("  - Found morph targets!")
+//                                                        print("  - Target count: \(morphGeometry.targetCount)")
+//                                                    }
+                                                }
                                             }
                                         }
+                                        
+                                        // Try to load as SCNScene for additional info
+                                        do {
+                                            let scene = try SCNScene(url: url, options: nil)
+                                            print("\nScene Graph (looking for mesh sequences):")
+                                            debugPrintSCNNode(scene.rootNode, level: 0)
+                                            
+                                            // Look for morph targets in SceneKit
+                                            if let mesh = scene.rootNode.childNode(withName: "Mesh", recursively: true)?.geometry as? SCNGeometry {
+                                                print("\nMesh Morpher Info:")
+                                                print("- Has morpher: \(mesh.morpher != nil)")
+                                                if let morpher = mesh.morpher {
+                                                    print("- Target count: \(morpher.targets.count)")
+                                                    print("- Target names: \(morpher.targets.map { $0.name ?? "unnamed" })")
+                                                }
+                                            }
+                                        } catch {
+                                            print("\nFailed to load as SCNScene: \(error)")
+                                        }
+                                        
+                                        let sceneView = SCNView()
+                                        let controller = AnimationController(sceneView: sceneView)
+                                        controller.setupScene(with: url)
+                                        
+                                        // Store controller reference if needed
+                                        self.animationController = controller
                                     }
-                                    
-                                    // Ensure scene is playing
-                                    scene.isPaused = false
                                 }
                             } else {
                                 Text("Failed to load 3D model")
@@ -693,6 +732,27 @@ struct FeedbackStepThree: View {
                 .padding(.vertical)
         }
         .padding(.horizontal)
+    }
+}
+
+// Helper function to print MDL object hierarchy
+private func debugPrintMDLObject(_ object: MDLObject, level: Int) {
+    let indent = String(repeating: "  ", count: level)
+    print("\(indent)- \(type(of: object)): \(object.name ?? "unnamed")")
+    
+    if let objectContainer = object as? MDLObjectContainer {
+        for child in objectContainer.objects {
+            debugPrintMDLObject(child, level: level + 1)
+        }
+    }
+}
+
+// Helper function to print SCN node hierarchy
+private func debugPrintSCNNode(_ node: SCNNode, level: Int) {
+    let indent = String(repeating: "  ", count: level)
+    print("\(indent)- \(node.name ?? "unnamed")")
+    node.childNodes.forEach { child in
+        debugPrintSCNNode(child, level: level + 1)
     }
 }
 
