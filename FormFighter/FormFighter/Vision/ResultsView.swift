@@ -28,9 +28,11 @@ enum ResultsViewError: LocalizedError {
 struct ResultsView: View {
     var videoURL: URL
     @Environment(\.dismiss) var dismiss
+    @AppStorage("selectedTab") private var selectedTab: String = TabIdentifier.vision.rawValue
+    @State private var shouldSwitchToProfile = false
     
     @State private var player: AVPlayer
-    @State private var navigateToFeedback = false
+    @State private var shouldNavigateToFeedback = false
     @EnvironmentObject var userManager: UserManager
     @State private var isUploading = false
     @State private var activeError: ResultsViewError?
@@ -44,29 +46,26 @@ struct ResultsView: View {
     
     var body: some View {
         ZStack {
+            // Video player
             VideoPlayer(player: player)
                 .edgesIgnoringSafeArea(.all)
+                .disabled(true)
                 .onAppear {
                     player.play()
-                    NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player.currentItem, queue: .main) { _ in
-                        player.seek(to: .zero)
-                        player.play()
-                    }
-                }
-                .onDisappear {
-                    deleteTemporaryVideo()
                 }
             
+            // Upload overlay
             if isUploading {
                 Color.black.opacity(0.5)
-                ProgressView("Uploading...")
-                    .foregroundColor(.white)
+                uploadingView
             }
             
+            // Buttons at bottom
             VStack {
                 Spacer()
-                HStack {
+                HStack(spacing: 20) {
                     Button("Discard") {
+                        deleteTemporaryVideo()
                         dismiss()
                     }
                     .foregroundColor(.white)
@@ -88,6 +87,12 @@ struct ResultsView: View {
                 .padding(.bottom, 30)
             }
         }
+        .navigationDestination(isPresented: $shouldNavigateToFeedback) {
+            if let feedbackId = feedbackId {
+                FeedbackView(feedbackId: feedbackId, videoURL: videoURL)
+                    .environmentObject(UserManager.shared)
+            }
+        }
         .navigationBarBackButtonHidden(true)
         .alert(
             "Error",
@@ -106,10 +111,10 @@ struct ResultsView: View {
                 }
             }
         )
-        .navigationDestination(isPresented: $navigateToFeedback) {
-            if let feedbackId = feedbackId {
-                FeedbackView(feedbackId: feedbackId, videoURL: videoURL)
-            }
+        .onDisappear {
+            // Cleanup
+            player.pause()
+            player.replaceCurrentItem(with: nil)
         }
     }
     
@@ -123,10 +128,14 @@ struct ResultsView: View {
     }
     
     private func initiateFeedback() async {
-        if userManager.userId.isEmpty {
+        guard !isUploading else { return }
+        guard !userManager.userId.isEmpty else {
             activeError = .userNotLoggedIn
             return
         }
+        
+        isUploading = true
+        defer { isUploading = false }
         
         do {
             let userDoc = try await db.collection("users").document(userManager.userId).getDocument()
@@ -140,47 +149,41 @@ struct ResultsView: View {
                 "fileName": videoURL.lastPathComponent
             ])
             
-            Task {
-                await uploadToServer(feedbackId: feedbackRef.documentID, coachId: coachId)
-            }
-            
-            self.feedbackId = feedbackRef.documentID
-            self.navigateToFeedback = true
-            
+            // Upload video immediately after creating feedback document
+            await uploadToServer(feedbackId: feedbackRef.documentID, coachId: coachId)
         } catch {
             activeError = .failedToCreateFeedback(error)
         }
     }
     
     private func uploadToServer(feedbackId: String, coachId: String?) async {
-        isUploading = true  // Show loading state
+        print("⚡️ Starting upload")
+        isUploading = true
         
         do {
-            let videoData = try Data(contentsOf: videoURL)
-            
             let headers: HTTPHeaders = [
                 "userID": userManager.userId,
                 "Content-Type": "multipart/form-data"
             ]
             
-            // Convert to async/await pattern
-            try await withCheckedThrowingContinuation { continuation in
+            print("⚡️ feedbackId: \(feedbackId)")
+            print("⚡️ coachId: \(coachId ?? "nil")")
+            print("⚡️ videoURL: \(videoURL)")
+            
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
                 AF.upload(multipartFormData: { multipartFormData in
-                    // Add video file
                     multipartFormData.append(
-                        videoData,
+                        videoURL,
                         withName: "file",
                         fileName: videoURL.lastPathComponent,
                         mimeType: "video/quicktime"
                     )
                     
-                    // Add feedbackId
                     multipartFormData.append(
                         feedbackId.data(using: .utf8)!,
                         withName: "feedbackId"
                     )
                     
-                    // Add coachId if available
                     if let coachId = coachId {
                         multipartFormData.append(
                             coachId.data(using: .utf8)!,
@@ -192,30 +195,52 @@ struct ResultsView: View {
                 .uploadProgress { progress in
                     print("Upload Progress: \(progress.fractionCompleted)")
                 }
-                .responseData { response in
-                    switch response.result {
-                    case .success:
-                        print("Upload successful")
-                        continuation.resume()
-                    case .failure(let error):
-                        print("Upload failed: \(error)")
+                .response { response in
+                    if let error = response.error {
+                        print("⚡️ Upload failed: \(error)")
                         continuation.resume(throwing: error)
+                    } else {
+                        print("⚡️ Upload success")
+                        Task { @MainActor in
+                            print("⚡️ Setting navigation state")
+                            self.isUploading = false
+                            self.feedbackId = feedbackId
+                            print("⚡️ Switching to profile tab")
+                            selectedTab = TabIdentifier.profile.rawValue
+                            NotificationCenter.default.post(
+                                name: NSNotification.Name("OpenFeedback"),
+                                object: nil,
+                                userInfo: ["feedbackId": feedbackId]
+                            )
+                            dismiss()  // Dismiss the camera flow
+                        }
+                        continuation.resume()
                     }
                 }
             }
-            
-            // If we get here, upload was successful
-            print("Upload completed successfully")
-            
         } catch {
-            print("Upload error: \(error)")
+            print("⚡️ Upload error: \(error)")
             await MainActor.run {
                 activeError = .uploadError(error)
+                isUploading = false
             }
         }
-        
-        await MainActor.run {
-            isUploading = false  // Hide loading state
+    }
+    
+    private var uploadingView: some View {
+        VStack(spacing: 20) {
+            if isUploading {
+                ProgressView()
+                    .scaleEffect(1.5)
+                    .padding()
+                Text("Uploading...")
+            } else {
+                Image(systemName: "figure.martial.arts")
+                    .font(.system(size: 60))
+                    .foregroundColor(.blue)
+                Text("Upload Complete!")
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

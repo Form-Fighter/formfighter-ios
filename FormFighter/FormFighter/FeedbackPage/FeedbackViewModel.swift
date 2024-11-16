@@ -48,10 +48,37 @@ class FeedbackViewModel: ObservableObject {
                 // Only decode if status is completed
                 if self.status == .completed {
                     do {
+                        // Add debug logging for the raw data
+                        os_log("Raw feedback data: %@", log: self.logger, type: .debug, String(describing: data))
+                        
+                        // Attempt to decode and log each required field
+                        if let title = data["title"] as? String {
+                            os_log("Found title: %@", log: self.logger, type: .debug, title)
+                        } else {
+                            os_log("Missing required field: title", log: self.logger, type: .debug)
+                        }
+                        
+                        if let feedback = data["feedback"] as? [String: Any] {
+                            os_log("Found feedback object: %@", log: self.logger, type: .debug, String(describing: feedback))
+                        } else {
+                            os_log("Missing required field: feedback", log: self.logger, type: .debug)
+                        }
+                        
                         self.feedback = try Firestore.Decoder().decode(FeedbackModels.FeedbackData.self, from: data)
                         os_log("Successfully decoded feedback data", log: self.logger, type: .debug)
                     } catch {
                         os_log("Feedback decoding error: %@", log: self.logger, type: .error, error.localizedDescription)
+                        // Add more detailed error information
+                        if let decodingError = error as? DecodingError {
+                            switch decodingError {
+                            case .keyNotFound(let key, _):
+                                os_log("Missing key: %@", log: self.logger, type: .error, key.stringValue)
+                            case .valueNotFound(let type, _):
+                                os_log("Missing value for type: %@", log: self.logger, type: .error, String(describing: type))
+                            default:
+                                os_log("Other decoding error: %@", log: self.logger, type: .error, String(describing: decodingError))
+                            }
+                        }
                         self.error = "Failed to decode feedback data"
                     }
                 }

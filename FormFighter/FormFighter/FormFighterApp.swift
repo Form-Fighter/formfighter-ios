@@ -24,6 +24,7 @@ struct FormFighterApp: App {
     @State private var pendingCoachId: String?
     @State private var showCoachConfirmation = false
     @State private var showSplash = true
+    @State private var selectedTab: TabIdentifier = .profile
     
     let cameraManager = CameraManager() // Create an instance of CameraManager
     
@@ -53,63 +54,94 @@ struct FormFighterApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ZStack {
-                Group {
-                    if !hasCompletedOnboarding {
-                        onboarding
-                        // MARK: - If you want to configure Crashlytics, uncomment the line below and comment 'onboarding' above.
-                        // configureCrashlytics
-                        
-                        // MARK: - If you don't need User Authentication, remove the following conditionals
-                        // and just show 'tabs' view
-                    } else if userManager.isAuthenticated {
-                        tabs
-                    } else {
-                        LoginView(showPaywallInTheOnboarding: false)
+            NavigationStack {
+                ZStack {
+                    Group {
+                        if !hasCompletedOnboarding {
+                            onboarding
+                        } else if userManager.isAuthenticated {
+                            TabView(selection: $selectedTab) {
+                                VisionView()
+                                    .tabItem { 
+                                        Label("Train", systemImage: "figure.boxing")
+                                            .foregroundStyle(ThemeColors.primary)
+                                    }
+                                    .toolbarBackground(.visible, for: .navigationBar)
+                                    .toolbarBackground(ThemeColors.background.opacity(1), for: .navigationBar)
+                                    .navigationBarTitleDisplayMode(.inline)
+                                    .toolbar {
+                                        ToolbarItem(placement: .principal) {
+                                            Text("Train")
+                                                .font(.headline)
+                                                .foregroundColor(ThemeColors.primary)
+                                        }
+                                    }
+                                    .tag(TabIdentifier.vision)
+                               
+                                ProfileView()
+                                    .tabItem { 
+                                        Label("Progress", systemImage: "chart.line.uptrend.xyaxis")
+                                            .foregroundStyle(ThemeColors.primary)
+                                    }
+                                    .tag(TabIdentifier.profile)
+
+                                SettingsView(vm: SettingsVM())
+                                    .tabItem { 
+                                        Label("Settings", systemImage: "gearshape.fill")
+                                            .foregroundStyle(ThemeColors.primary)
+                                    }
+                                    .tag(TabIdentifier.settings)
+                            }
+                            .tint(ThemeColors.primary)
+                            .background(ThemeColors.background)
+                        } else {
+                            LoginView(showPaywallInTheOnboarding: false)
+                        }
                     }
-                }
-                .opacity(showSplash ? 0 : 1)
-                
-                if showSplash {
-                    SplashScreenView()
-                        .transition(.opacity)
-                        .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                                withAnimation(.easeOut(duration: 0.3)) {
-                                    showSplash = false
+                    .opacity(showSplash ? 0 : 1)
+                    
+                    if showSplash {
+                        SplashScreenView()
+                            .transition(.opacity)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                    withAnimation(.easeOut(duration: 0.3)) {
+                                        showSplash = false
+                                    }
                                 }
                             }
-                        }
+                    }
+                }
+                .preferredColorScheme(selectedScheme)
+               // .environmentObject(purchasesManager)
+                .environmentObject(authManager)
+                .environmentObject(userManager)
+                .onOpenURL { url in
+                    handleDeepLink(url)
+                }
+                .alert("Join Team", isPresented: $showCoachConfirmation) {
+                    Button("Cancel", role: .cancel) {
+                        pendingCoachId = nil
+                    }
+                    Button("Join") {
+                        assignCoach()
+                    }
+                } message: {
+                    if let coachId = pendingCoachId {
+                        Text("Would you like to join Coach \(coachId)'s team?")
+                    }
+                }
+                .onChange(of: scenePhase) { newScenePhase in
+                    switch newScenePhase {
+                    case .active:
+                    //    purchasesManager.fetchCustomerInfo()
+                        userManager.setAuthenticationState()
+                    default:
+                        break
+                    }
                 }
             }
-            .preferredColorScheme(selectedScheme)
-           // .environmentObject(purchasesManager)
-            .environmentObject(authManager)
-            .environmentObject(userManager)
-            .onOpenURL { url in
-                handleDeepLink(url)
-            }
-            .alert("Join Team", isPresented: $showCoachConfirmation) {
-                Button("Cancel", role: .cancel) {
-                    pendingCoachId = nil
-                }
-                Button("Join") {
-                    assignCoach()
-                }
-            } message: {
-                if let coachId = pendingCoachId {
-                    Text("Would you like to join Coach \(coachId)'s team?")
-                }
-            }
-            .onChange(of: scenePhase) { newScenePhase in
-                switch newScenePhase {
-                case .active:
-                //    purchasesManager.fetchCustomerInfo()
-                    userManager.setAuthenticationState()
-                default:
-                    break
-                }
-            }
+            .environment(\.tabSelection, $selectedTab)
         }
     }
     
@@ -120,50 +152,6 @@ struct FormFighterApp: App {
             OnePageOnboardingView()
         }
     }
-    
-    var tabs: some View {
-        NavigationStack {
-            TabView {
-                VisionView( cameraManager: cameraManager)
-                    .tabItem { 
-                        Label("Train", systemImage: "figure.boxing")
-                            .foregroundStyle(ThemeColors.primary)
-                    }
-                    .toolbarBackground(.visible, for: .navigationBar)
-                    .toolbarBackground(ThemeColors.background.opacity(1), for: .navigationBar)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .principal) {
-                            Text("Train")
-                                .font(.headline)
-                                .foregroundColor(ThemeColors.primary)
-                        }
-                    }
-               
-                ProfileView()
-                    .tabItem { 
-                        Label("Progress", systemImage: "chart.line.uptrend.xyaxis")
-                            .foregroundStyle(ThemeColors.primary)
-                    }
-
-                SettingsView(vm: SettingsVM())
-                    .tabItem { 
-                        Label("Settings", systemImage: "gearshape.fill")
-                            .foregroundStyle(ThemeColors.primary)
-                    }
-            }
-            .tint(ThemeColors.primary)
-            .background(ThemeColors.background)
-        }
-    }
-    
-#if DEBUG
-    var configureCrashlytics: some View {
-        
-        TestCrashlyticsView()
-        
-    }
-#endif
     
     var selectedScheme: ColorScheme? {
         guard let theme = ColorSchemeType(rawValue: systemTheme) else { return nil}

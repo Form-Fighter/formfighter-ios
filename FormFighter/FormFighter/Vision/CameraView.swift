@@ -33,6 +33,7 @@ struct CameraVisionView: View {
     @State private var canDismissInstructions = false
     @State private var buttonOpacity = 0.5
     @State private var isCountingDown: Bool = false
+    @State private var currentTurnAngle: Double = 0
     
     var cameraManager: CameraManager
     
@@ -46,7 +47,9 @@ struct CameraVisionView: View {
                                   isBodyComplete: $isBodyComplete,
                                   hasTurnedBody: $hasTurnedBody,
                                   isCountingDown: $isCountingDown,
+                                  currentTurnAngle: $currentTurnAngle,
                                   cameraManager: cameraManager
+                                  
                 )
                 .edgesIgnoringSafeArea(.all)
                 
@@ -102,18 +105,7 @@ struct CameraVisionView: View {
                     .padding(.top, 50)
                 }
                 
-                // Updated turn body message
-                if isBodyDetected && isBodyComplete && !hasTurnedBody {
-                    VStack {
-                        Text("Turn your body left or right slightly so we can see your stance! 🥋")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.green.opacity(0.8))
-                            .cornerRadius(15)
-                    }
-                    .padding(.top, 50)
-                }
+             
                 
                 // New overlay instructions (shows only first time)
                 if showInstructions {
@@ -126,7 +118,7 @@ struct CameraVisionView: View {
                             InstructionRow(number: 1, text: "Record in a well lit indoor room", icon: "light.min")
                             InstructionRow(number: 2, text: "Stand 6-8 feet from camera", icon: "person.and.arrow.left.and.arrow.right")
                             InstructionRow(number: 3, text: "Show your full body in frame", icon: "figure.stand")
-                            InstructionRow(number: 4, text: "Turn your body 30 degrees left or right to show your stance", icon: "arrow.triangle.2.circlepath")
+                            InstructionRow(number: 4, text: "Turn your body 7 degrees left or right to show your stance", icon: "arrow.triangle.2.circlepath")
                             InstructionRow(number: 5, text: "Hold still for recording", icon: "video.fill")
                             InstructionRow(number: 6, text: "Perform ONE jab in 2 seconds", icon: "figure.boxing")
                         }
@@ -226,10 +218,48 @@ struct CameraVisionView: View {
                     .cornerRadius(15)
                     .padding(.top, 100)
                 }
+                
+                // Add to CameraVisionView body, after the existing overlays
+                if isBodyDetected && isBodyComplete && !hasTurnedBody {
+                    VStack {
+                        HStack(spacing: 15) {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .foregroundColor(.white)
+                                .font(.system(size: 30))
+                            
+                            Text("Turn \(currentTurnAngle, specifier: "%.0f")° / 7°")
+                                .font(.title2.bold())
+                                .foregroundColor(.white)
+                        }
+                        .padding()
+                        .background(Color.black.opacity(0.7))
+                        .cornerRadius(15)
+                        
+                        // Progress arc
+                        ZStack {
+                            Circle()
+                                .stroke(Color.white.opacity(0.3), lineWidth: 10)
+                                .frame(width: 100, height: 100)
+                            
+                            Circle()
+                                .trim(from: 0, to: min(CGFloat(currentTurnAngle) / 7.0, 1.0))
+                                .stroke(Color.green, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                                .frame(width: 100, height: 100)
+                                .rotationEffect(.degrees(-90))
+                                .animation(.linear, value: currentTurnAngle)
+                        }
+                    }
+                    .padding(.top, 50)
+                }
             }
             .navigationDestination(isPresented: $navigateToPreview) {
                 if let videoURL = videoURL {
                     ResultsView(videoURL: videoURL)
+                        .environmentObject(UserManager.shared)
+                        .onAppear {
+                            // Stop camera when navigating to results
+                            cameraManager.stopSession()
+                        }
                 }
             }
         }
@@ -334,19 +364,23 @@ struct CameraVisionView: View {
     func simulateRecording() {
         isRecording = true
         recordingMessage = "Recording..."
-        recordingProgress = 1.0  // Start at full
+        recordingProgress = 0.0  // Start empty
         
         cameraManager.startRecording()
         
-        // Animate from full to empty
-        withAnimation(.linear(duration: 2.0)) {
-            recordingProgress = 0.0
-        }
-        
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
-            recordingMessage = "Recording finished"
-            cameraManager.stopRecording()
-            resetTimers()
+        // Create a timer that updates progress every 0.1 seconds
+        let progressTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+            withAnimation {
+                recordingProgress += 0.05  // Increment by 5% each time (20 steps over 2 seconds)
+            }
+            
+            // Stop the timer when we reach full
+            if recordingProgress >= 1.0 {
+                timer.invalidate()
+                recordingMessage = "Recording finished"
+                cameraManager.stopRecording()
+                resetTimers()
+            }
         }
     }
     
@@ -410,21 +444,20 @@ struct CameraPreviewView: UIViewControllerRepresentable {
     @Binding var isBodyComplete: Bool
     @Binding var hasTurnedBody: Bool
     @Binding var isCountingDown: Bool
+    @Binding var currentTurnAngle: Double
     
     var cameraManager: CameraManager
     
     class Coordinator: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         var parent: CameraPreviewView
         var hasTurnedBodyCompleted = false
-        let confidenceThreshold: VNConfidence = 0.07
+        let confidenceThreshold: VNConfidence = 0.00001  // Even lower threshold for better detection
         
-        // Add initializer
         init(parent: CameraPreviewView) {
             self.parent = parent
             super.init()
         }
         
-        // Keep the existing required points for body completion check
         let requiredPoints: [VNHumanBodyPoseObservation.JointName] = [
             .nose,
             .leftWrist,
@@ -434,17 +467,13 @@ struct CameraPreviewView: UIViewControllerRepresentable {
         ]
         
         func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-            // Skip vision processing if counting down
-            if parent.isCountingDown {
-                return
-            }
+            guard parent.cameraManager.isActive else { return }
+            if parent.isCountingDown { return }
             
             guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
             
             let request = VNDetectHumanBodyPoseRequest { [self] request, error in
-                guard let results = request.results as? [VNHumanBodyPoseObservation], error == nil else {
-                    return
-                }
+                guard let results = request.results as? [VNHumanBodyPoseObservation], error == nil else { return }
                 
                 var newBodyPoints: [CGPoint] = []
                 var bodyDetected = false
@@ -454,38 +483,35 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                     if let recognizedPoints = try? bodyObservation.recognizedPoints(.all) {
                         bodyDetected = !recognizedPoints.isEmpty
                         
-                        // Debug print each required point's confidence
-                        print("Confidence values:")
-                        for pointName in self.requiredPoints {
-                            if let point = recognizedPoints[pointName] {
-                                print("\(pointName): \(point.confidence)")
-                                
-                                if point.confidence > self.confidenceThreshold {
-                                    let normalizedPoint = point.location
-                                    let convertedPoint = self.convertVisionPoint(normalizedPoint, to: self.parent.cameraManager.previewLayer)
-                                    newBodyPoints.append(convertedPoint)
-                                }
+                        // First check all required points are present
+                        for pointName in requiredPoints {
+                            if let point = recognizedPoints[pointName],
+                               point.confidence > confidenceThreshold {
+                                let normalizedPoint = point.location
+                                let convertedPoint = convertVisionPoint(normalizedPoint, to: parent.cameraManager.previewLayer)
+                                newBodyPoints.append(convertedPoint)
                             } else {
-                                print("\(pointName): not detected")
                                 bodyComplete = false
+                                break
                             }
                         }
-                        print("--------------------")
                         
-                        // Detección del ángulo de los hombros
-                        if let leftShoulder = recognizedPoints[.leftShoulder],
+                        // Then check shoulders for turn if body is complete
+                        if bodyComplete,
+                           let leftShoulder = recognizedPoints[.leftShoulder],
                            let rightShoulder = recognizedPoints[.rightShoulder],
-                           leftShoulder.confidence > self.confidenceThreshold,
-                           rightShoulder.confidence > self.confidenceThreshold {
+                           leftShoulder.confidence > confidenceThreshold,
+                           rightShoulder.confidence > confidenceThreshold {
                             
-                            let shoulderAngle = self.calculateAngleBetweenPoints(left: leftShoulder.location, right: rightShoulder.location)
+                            let shoulderAngle = calculateAngleBetweenPoints(
+                                left: leftShoulder.location,
+                                right: rightShoulder.location
+                            )
                             let adjustedAngle = abs(shoulderAngle - 90)
                             
-                            // Si el giro es mayor a 30 grados, activar hasTurnedBody
-                            if adjustedAngle > 7 {
+                            if adjustedAngle >= 3 && adjustedAngle <= 10 {
                                 DispatchQueue.main.async {
                                     self.parent.hasTurnedBody = true
-                                    self.hasTurnedBodyCompleted = true  // Marcar el giro como completo
                                 }
                             }
                         }
@@ -496,7 +522,6 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                     self.parent.detectedBodyPoints = newBodyPoints
                     self.parent.isBodyDetected = bodyDetected
                     self.parent.isBodyComplete = bodyComplete
-                    self.parent.smoothedBodyPoints = self.parent.applySmoothing(to: newBodyPoints)
                 }
             }
             
@@ -567,7 +592,23 @@ struct CameraPreviewView: UIViewControllerRepresentable {
 class CameraManager: NSObject, ObservableObject {
     var captureSession: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
-    var movieOutput = AVCaptureMovieFileOutput() // Output for video recording
+    var movieOutput = AVCaptureMovieFileOutput()
+    @Published var isActive = false  // Changed to false by default
+    
+    func stopSession() {
+        captureSession?.stopRunning()
+        isActive = false
+    }
+    
+    func startSession() {
+        guard !isActive else { return }
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            self?.captureSession?.startRunning()
+            DispatchQueue.main.async {
+                self?.isActive = true
+            }
+        }
+    }
     
     func setupCamera(in view: UIView, delegate: AVCaptureVideoDataOutputSampleBufferDelegate) {
         let captureSession = AVCaptureSession()
@@ -664,8 +705,6 @@ class CameraManager: NSObject, ObservableObject {
     func stopRecording() {
         if movieOutput.isRecording {
             movieOutput.stopRecording()
-        } else {
-            print("No recording in progress to stop.")
         }
     }
 }
@@ -679,7 +718,10 @@ extension CameraManager: AVCaptureFileOutputRecordingDelegate {
         } else {
             if FileManager.default.fileExists(atPath: outputFileURL.path) {
                 Logger.log(message: "Video recording completed successfully", event: .debug)
-                // Rest of the code...
+                // Post notification with the URL
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: NSNotification.Name("VideoRecorded"), object: outputFileURL)
+                }
             } else {
                 Logger.log(message: "Video file not created correctly", event: .error)
             }

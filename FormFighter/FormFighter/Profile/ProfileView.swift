@@ -11,6 +11,8 @@ struct ProfileView: View {
     @EnvironmentObject private var userManager: UserManager
     @State private var selectedTab: TimePeriod = .week
     @State private var sortOption: SortOption = .date
+    @State private var selectedFeedbackId: String?
+    @State private var showFeedbackView = false
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
@@ -107,6 +109,20 @@ struct ProfileView: View {
         )
         .onAppear {
             viewModel.fetchUserFeedback(userId: userManager.userId)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("OpenFeedback"))) { notification in
+            if let feedbackId = notification.userInfo?["feedbackId"] as? String {
+                selectedFeedbackId = feedbackId
+                showFeedbackView = true
+            }
+        }
+        .sheet(isPresented: $showFeedbackView) {
+            if let feedbackId = selectedFeedbackId {
+                NavigationView {
+                    FeedbackView(feedbackId: feedbackId, videoURL: nil)
+                        .environmentObject(UserManager.shared)
+                }
+            }
         }
     }
 }

@@ -46,16 +46,21 @@ struct FeedbackView: View {
     var body: some View {
         Group {
             if let feedback = viewModel.feedback {
+               
                 completedFeedbackView
             } else if let error = viewModel.error {
+               
                 UnexpectedErrorView(error: error)
             } else if videoURL != nil {
+               
                 uploadingView
             } else {
+               
                 processingView
             }
         }
         .onAppear {
+            print("⚡️ FeedbackView body appeared")
             viewModel.setupFirestoreListener(feedbackId: feedbackId)
             if videoURL == nil {
                 checkExistingUserFeedback()
@@ -119,11 +124,14 @@ struct FeedbackView: View {
                             .padding(.top)
                     }
                     
-                    ScoreCardView(jabScore: feedback.modelFeedback.body.jab_score)
+                    if let jabScore = feedback.modelFeedback?.body?.jab_score {
+                        ScoreCardView(jabScore: jabScore)
+                    }
                     
                     // 3D Model Viewer
-                    if !feedback.animation_usdz_url.isEmpty,
-                       let usdzUrl = URL(string: feedback.animation_usdz_url) {
+                    if let usdzUrl = feedback.animation_usdz_url,
+                       !usdzUrl.isEmpty,
+                       let url = URL(string: usdzUrl) {
                         VStack {
                             if isLoadingModel {
                                 ProgressView("Loading 3D Model...")
@@ -184,11 +192,11 @@ struct FeedbackView: View {
                                             // Look for morph targets in SceneKit
                                             if let mesh = scene.rootNode.childNode(withName: "Mesh", recursively: true)?.geometry as? SCNGeometry {
                                                 print("\nMesh Morpher Info:")
-                                                print("- Has morpher: \(mesh.morpher != nil)")
-                                                if let morpher = mesh.morpher {
-                                                    print("- Target count: \(morpher.targets.count)")
-                                                    print("- Target names: \(morpher.targets.map { $0.name ?? "unnamed" })")
-                                                }
+                                              //  print("- Has morpher: \(mesh.morpher != nil)")
+//                                                if let morpher = mesh.morpher {
+//                                                    print("- Target count: \(morpher.targets.count)")
+//                                                    print("- Target names: \(morpher.targets.map { $0.name ?? "unnamed" })")
+//                                                }
                                             }
                                         } catch {
                                             print("\nFailed to load as SCNScene: \(error)")
@@ -261,15 +269,17 @@ struct FeedbackView: View {
                             }
                         }
                         .onAppear {
-                            loadUSDZModel(from: usdzUrl)
+                            loadUSDZModel(from: url)
                         }
                     }
                     
                     // Video Comparison
-                    if !feedback.videoUrl.isEmpty,
-                       !feedback.overlay_video_url.isEmpty,
-                       let originalURL = URL(string: feedback.videoUrl),
-                       let overlayURL = URL(string: feedback.overlay_video_url) {
+                    if let videoUrl = feedback.videoUrl,
+                       let overlayUrl = feedback.overlay_video_url,
+                       !videoUrl.isEmpty,
+                       !overlayUrl.isEmpty,
+                       let originalURL = URL(string: videoUrl),
+                       let overlayURL = URL(string: overlayUrl) {
                         
                         HStack {
                             if let player1 = originalPlayer {
@@ -297,9 +307,17 @@ struct FeedbackView: View {
                     }
                     
                     // Existing feedback sections
-                    FeedbackSection(title: "Extension", feedback: feedback.modelFeedback.body.feedback.extensionFeedback)
-                    FeedbackSection(title: "Guard", feedback: feedback.modelFeedback.body.feedback.guardPosition)
-                    FeedbackSection(title: "Retraction", feedback: feedback.modelFeedback.body.feedback.retraction)
+                    if let feedbackDetails = feedback.modelFeedback?.body?.feedback {
+                        if let extensionFeedback = feedbackDetails.extensionFeedback {
+                            FeedbackSection(title: "Extension", feedback: extensionFeedback)
+                        }
+                        if let guardFeedback = feedbackDetails.guardPosition {
+                            FeedbackSection(title: "Guard", feedback: guardFeedback)
+                        }
+                        if let retractionFeedback = feedbackDetails.retraction {
+                            FeedbackSection(title: "Retraction", feedback: retractionFeedback)
+                        }
+                    }
                     
                    
                 }

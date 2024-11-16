@@ -6,11 +6,17 @@ struct VisionView: View {
     @State private var showCameraView = false
     @State private var missingPermissionsMessage = ""
     
-    let cameraManager: CameraManager
+    @StateObject private var cameraManager = CameraManager()
     
     var body: some View {
         if showCameraView {
             CameraVisionView(cameraManager: cameraManager)
+                .onAppear {
+                    cameraManager.startSession()
+                }
+                .onDisappear {
+                    cameraManager.stopSession()
+                }
         } else {
             VStack {
                 Text("🥊 Muay Thai Vision Access 🥊")

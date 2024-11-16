@@ -175,8 +175,8 @@ A: \(Const.appName) is an AI-powered app designed to help fighters improve their
 **Q: How should I position myself for the best results in \(Const.appName)?**
 A: For optimal feedback, ensure your full body is visible in the camera, ideally no more than 8 feet away. Position the camera at chest level, and angle your body 30 degrees toward the camera in a well-lit indoor space with minimal background clutter.
 
-**Q: Why does the app recommend facing the camera at 30 degrees?**
-A: A slight 30-degree turn allows the app’s computer vision model to capture your form in a way that emphasizes key aspects of technique, like hip rotation, arm extension, and foot positioning.
+**Q: Why does the app recommend facing the camera at 7 degrees?**
+A: A slight 7-degree turn allows the app’s computer vision model to capture your form in a way that emphasizes key aspects of technique, like hip rotation, arm extension, and foot positioning.
 
 **Q: How important is lighting and background for accurate analysis?**
 A: Proper lighting is essential for the AI to recognize your movements accurately. Record in a well-lit room, and avoid cluttered backgrounds, as this can interfere with the app’s ability to detect your body position.

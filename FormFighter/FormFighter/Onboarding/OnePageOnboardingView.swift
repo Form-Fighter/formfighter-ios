@@ -18,8 +18,8 @@ struct OnePageOnboardingView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     OnboardingFeature(image: Image(systemName: "1.circle"),
                                       imageColor: .brand,
-                                      title: "Turn 30 degrees",
-                                      description: "Turn 30 degrees from the camera for the best results")
+                                      title: "Turn 7 degrees",
+                                      description: "Turn 7 degrees from the camera for the best results")
                     OnboardingFeature(image: Image(systemName: "2.circle"),
                                       imageColor: .ruby,
                                       title: "Tidy & Bright",
