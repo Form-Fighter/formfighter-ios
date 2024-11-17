@@ -163,8 +163,11 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
     
     private func handleNotification(_ userInfo: [AnyHashable: Any]) {
         if let feedbackId = userInfo["feedbackId"] as? String {
-            print("Should navigate to feedback: \(feedbackId)")
-            // Handle feedback navigation here
+            NotificationCenter.default.post(
+                name: NSNotification.Name("OpenFeedback"),
+                object: nil,
+                userInfo: ["feedbackId": feedbackId]
+            )
         }
     }
 }

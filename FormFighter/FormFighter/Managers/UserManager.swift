@@ -11,7 +11,14 @@ enum UserManagerError: LocalizedError {
 
 class UserManager: ObservableObject {
     static let shared: UserManager = UserManager()
-    @Published var user: User?
+    @Published var user: User? {
+        didSet {
+            print("User property changed:")
+            print("First Name: \(user?.firstName ?? "nil")")
+            print("Last Name: \(user?.lastName ?? "nil")")
+            print("Full Name: \(user?.name ?? "nil")")
+        }
+    }
     @Published var isAuthenticated = false
     @Published var isSubscriptionActive = false
     @Published var purchasesManager: PurchasesManager
@@ -51,7 +58,7 @@ class UserManager: ObservableObject {
         guard let currentUser = Auth.auth().currentUser else { return }
 //        let newUser = User(id: currentUser.uid, name: currentUser.displayName ?? "", firstName: "", lastName: "", weight: "", height: "", wingSpan: "", preferredStance: "", email: currentUser.email ?? "")
         
-        let newUser = User(id: currentUser.uid, name: currentUser.displayName ?? "", firstName: "", lastName: "", coachID: "", email: currentUser.email ?? "")
+        let newUser = User(id: currentUser.uid, name: currentUser.displayName ?? "", firstName: "", lastName: "", coachID: "", myCoach: "", email: currentUser.email ?? "")
         
         try await firestoreService.createUser(userID: newUser.id, with: newUser)
     }
@@ -59,7 +66,7 @@ class UserManager: ObservableObject {
     func setFirebaseAuthUser() {
         if let currentUser = Auth.auth().currentUser {
             //self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", weight: "", height: "", wingSpan: "", preferredStance: "", email: "")
-            self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", coachID: "" , email: "")
+            self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", coachID: "" , myCoach: "", email: "")
 
         } else {
             Logger.log(message: "There is no current Auth user", event: .error)
@@ -83,10 +90,15 @@ class UserManager: ObservableObject {
             return
         }
         do {
+            print("Fetching user info for ID: \(currentUser.id)")
             guard let fetchedUser = try await firestoreService.fetchUser(userID: currentUser.id) else {
                 Logger.log(message: "User does not exists in the database", event: .error)
                 throw UserManagerError.notExists
             }
+            print("Fetched user data:")
+            print("First Name: \(fetchedUser.firstName)")
+            print("Last Name: \(fetchedUser.lastName)")
+            print("Full Name: \(fetchedUser.name)")
             self.user = fetchedUser
             Logger.log(message: "User \(fetchedUser.id) fetched successfully", event: .debug)
         } catch {

@@ -29,7 +29,7 @@ struct SettingsView: View {
             Group {
                 info
                 userInfo
-                settings
+               // settings
                 madeBy
             }
             .listRowBackground(Color.thaiGray.opacity(0.1))
@@ -223,22 +223,23 @@ struct SettingsView: View {
             LabeledContent {
                 TextField("Type your first name", 
                          text: Binding(
-                            get: { userManager.user?.firstName ?? "" },
+                            get: { 
+                                print("Getting firstName: \(userManager.firstName)")
+                                return userManager.firstName 
+                            },
                             set: { newValue in
-                                if var user = userManager.user {
-                                    user.firstName = newValue
-                                    user.name = "\(newValue) \(user.lastName)"  // Update full name
-                                    userManager.user = user
-                                }
+                                print("Setting firstName to: \(newValue)")
+                                userManager.firstName = newValue
+                                vm.updateUserInfo(
+                                    firstName: newValue,
+                                    lastName: userManager.lastName
+                                )
                             }
                          ))
                     .multilineTextAlignment(.trailing)
                     .fontWeight(.medium)
                     .submitLabel(.done)
                     .focused($firstNameTextFieldFocused)
-                    .onSubmit {
-                        handleSubmit()
-                    }
             } label: {
                 Text("First Name")
             }
@@ -247,34 +248,56 @@ struct SettingsView: View {
             LabeledContent {
                 TextField("Type your last name", 
                          text: Binding(
-                            get: { userManager.user?.lastName ?? "" },
+                            get: { 
+                                print("Getting lastName: \(userManager.lastName)")
+                                return userManager.lastName 
+                            },
                             set: { newValue in
-                                if var user = userManager.user {
-                                    user.lastName = newValue
-                                    user.name = "\(user.firstName) \(newValue)"  // Update full name
-                                    userManager.user = user
-                                }
+                                print("Setting lastName to: \(newValue)")
+                                userManager.lastName = newValue
+                                vm.updateUserInfo(
+                                    firstName: userManager.firstName,
+                                    lastName: newValue
+                                )
                             }
                          ))
                     .multilineTextAlignment(.trailing)
                     .fontWeight(.medium)
                     .submitLabel(.done)
                     .focused($lastNameTextFieldFocused)
-                    .onSubmit {
-                        handleSubmit()
-                    }
             } label: {
                 Text("Last Name")
             }
             
             // Updated Coach ID label
             LabeledContent {
-                Text(userManager.user?.coachID ?? "No Coach")
+                Text(userManager.user?.myCoach ?? "No Coach")
                     .multilineTextAlignment(.trailing)
                     .fontWeight(.medium)
                     .foregroundColor(.secondary)
             } label: {
                 Text("Your Coach")
+            }
+            
+            Button(role: .destructive) {
+                Task {
+                    try? await authManager.signOut { error in
+                        if error == nil {
+                            userManager.isAuthenticated = false
+                            userManager.resetUserProperties()
+                        }
+                    }
+                }
+            } label: {
+                Text("Sign Out")
+                    .foregroundColor(.red)
+            }
+            
+            Button(role: .destructive) {
+                vm.isShowingDeleteUserAlert = true
+            } label: {
+                Text("Delete Account")
+                    .foregroundColor(.red)
             }
         }
     }

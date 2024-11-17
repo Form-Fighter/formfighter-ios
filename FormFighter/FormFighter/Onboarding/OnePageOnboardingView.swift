@@ -35,32 +35,29 @@ struct OnePageOnboardingView: View {
                 
                 RoundedButton(title: "Continue") {
                     Haptic.shared.lightImpact()
-                    // MARK: - If you wish to end the onboarding here, rather than request review and authentication, just
-                    // remove the navigation below and uncomment hasCompletedOnboarding
-                    navigate.toggle()
-                    // hasCompletedOnboarding = true
+                    hasCompletedOnboarding = true
                 }
             }
             .padding(40)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.customBackground)
-        .navigationDestination(isPresented: $navigate) {
-            // MARK: - If you want to skip request review and navigate directly to LoginView or
-            // any other view, just comment the line below and add the proper view you wish.
-            // Even that requesting the review without trying the app could feel dumb, evidences
-            // have demonstrated that this converts so much:
-            // https://x.com/evgeniymikholap/status/1714612296117608571?s=20
-            // Other strategy is requesting review after a success moment. For example in a to-do list app,
-            // after completing one ore several tasks.
-            // It's important to know that you only have 3 ATTEMPTS PER YEAR to request a review, so place them wisely.
-           // RequestReviewView()
+        // .navigationDestination(isPresented: $navigate) {
+        //     // MARK: - If you want to skip request review and navigate directly to LoginView or
+        //     // any other view, just comment the line below and add the proper view you wish.
+        //     // Even that requesting the review without trying the app could feel dumb, evidences
+        //     // have demonstrated that this converts so much:
+        //     // https://x.com/evgeniymikholap/status/1714612296117608571?s=20
+        //     // Other strategy is requesting review after a success moment. For example in a to-do list app,
+        //     // after completing one ore several tasks.
+        //     // It's important to know that you only have 3 ATTEMPTS PER YEAR to request a review, so place them wisely.
+        //    // RequestReviewView()
             
-            //For PROD
-            LoginView(showPaywallInTheOnboarding: false)
+        //     //For PROD
+        //     LoginView(showPaywallInTheOnboarding: false)
             
             
-        }
+        // }
     }
 }
 

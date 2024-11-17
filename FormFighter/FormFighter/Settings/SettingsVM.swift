@@ -78,13 +78,14 @@ class SettingsVM: ObservableObject {
         let email = currentUser.email
         let coachID = currentUser.coachID
         let fullName = "\(firstName) \(lastName)"
-        
+        let myCoach = currentUser.myCoach
         let updatedUser = User(
             id: userId,
             name: fullName,
             firstName: firstName,
             lastName: lastName,
             coachID: coachID,
+            myCoach: myCoach,
             email: email
         )
         

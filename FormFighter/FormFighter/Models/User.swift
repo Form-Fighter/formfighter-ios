@@ -7,6 +7,7 @@ struct User: Codable {
     var firstName: String
     var lastName: String
     var coachID: String
+    var myCoach: String
 //    var weight: String
 //    var height: String
 //    var wingSpan: String
@@ -20,6 +21,6 @@ extension User {
 //    }
     
     static func mockUser() -> User {
-           User(id: UUID().uuidString, name: "Unknown", firstName:"Unknown", lastName: "Unknown", coachID: "Unknown", email: "unknown@email.com")
+           User(id: UUID().uuidString, name: "Unknown", firstName:"Unknown", lastName: "Unknown", coachID: "Unknown", myCoach: "Unknown", email: "unknown@email.com")
        }
 }
