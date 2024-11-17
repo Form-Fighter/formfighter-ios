@@ -4380,6 +4380,9 @@
         }
       }
     },
+    "Please try filming yourself again" : {
+
+    },
     "Please type '%@' to confirm." : {
       "localizations" : {
         "de" : {
@@ -5191,6 +5194,9 @@
     "Sign Out" : {
 
     },
+    "Something went wrong" : {
+
+    },
     "Sort by" : {
 
     },
@@ -5267,6 +5273,16 @@
     },
     "Stay Updated" : {
 
+    },
+    "Step %lld of %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Step %1$lld of %2$lld"
+          }
+        }
+      }
     },
     "Step %lld of 3" : {
 
@@ -6248,10 +6264,7 @@
     "Unveil the hidden meanings in every drawing with the power of the latest Artificial Intelligence" : {
 
     },
-    "Upload Complete!" : {
-
-    },
-    "Uploading..." : {
+    "Uploading your video" : {
 
     },
     "User" : {

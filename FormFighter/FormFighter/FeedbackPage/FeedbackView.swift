@@ -7,6 +7,7 @@ import AVKit
 struct FeedbackView: View {
     let feedbackId: String
     let videoURL: URL?
+    @Environment(\.dismiss) private var dismiss
     
     @StateObject private var notificationManager = NotificationManager.shared
     @StateObject private var viewModel = FeedbackViewModel()
@@ -34,20 +35,14 @@ struct FeedbackView: View {
     // Add these properties for video sync
     @State private var originalPlayer: AVPlayer?
     @State private var overlayPlayer: AVPlayer?
-    
+     
     var body: some View {
         Group {
             if let feedback = viewModel.feedback {
-               
                 completedFeedbackView
             } else if let error = viewModel.error {
-               
                 UnexpectedErrorView(error: error)
-            } else if videoURL != nil {
-               
-                uploadingView
             } else {
-               
                 processingView
             }
         }
@@ -75,33 +70,86 @@ struct FeedbackView: View {
     
     private var processingView: some View {
         VStack(spacing: 20) {
-            ProgressView()
-                .scaleEffect(1.5)
-            
-            Text(viewModel.status.message)
-                .font(.headline)
-                .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
-                .padding()
-                .animation(.easeInOut, value: viewModel.status)
-            
-            // Display random Muay Thai tips while processing
-            if viewModel.status.isProcessing {
-                Text(muayThaiTips[currentTipIndex])
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+            if viewModel.status == .error {
+                // Error State
+                VStack(spacing: 16) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.system(size: 50))
+                        .foregroundColor(ThemeColors.primary)
+                    
+                    Text("Something went wrong")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
+                    
+                    Text("Please try filming yourself again")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                    
+                    Button(action: {
+                        // Dismiss the view
+                        dismiss()
+                    }) {
+                        Text("Try Again")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(ThemeColors.primary)
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
+                }
+            } else {
+                // Normal Processing State
+                let currentStep = FeedbackStatus.orderedProcessingStatuses.firstIndex(of: viewModel.status.rawValue) ?? 0
+                let totalSteps = FeedbackStatus.orderedProcessingStatuses.count
+                
+                // Progress indicator with step count
+                VStack(spacing: 8) {
+                    Text("Step \(currentStep) of \(totalSteps)")
+                        .font(.headline)
+                        .foregroundColor(ThemeColors.primary)
+                    
+                    ProgressView(value: Double(currentStep), total: Double(totalSteps))
+                        .tint(ThemeColors.primary)
+                        .scaleEffect(1.5)
+                        .frame(width: 200)
+                }
+                
+                // Show the message from FeedbackStatus
+                Text(viewModel.status.message)
+                    .font(.title3)
+                    .fontWeight(.bold)
                     .multilineTextAlignment(.center)
+                    .foregroundColor(.primary)
                     .padding()
-                    .onAppear {
-                        // Rotate through tips every few seconds
-                        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
-                            withAnimation {
-                                currentTipIndex = (currentTipIndex + 1) % muayThaiTips.count
+                    .animation(.easeInOut, value: viewModel.status)
+                
+                // Display random Muay Thai tips while processing
+                if viewModel.status != .completed {
+                    Text(muayThaiTips[currentTipIndex])
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                        .onAppear {
+                            Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+                                withAnimation {
+                                    currentTipIndex = (currentTipIndex + 1) % muayThaiTips.count
+                                }
                             }
                         }
-                    }
+                }
             }
         }
+        .padding(30)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(UIColor.systemBackground))
+                .shadow(radius: 10)
+        )
         .padding()
     }
     

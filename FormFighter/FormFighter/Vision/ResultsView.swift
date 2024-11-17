@@ -38,6 +38,18 @@ struct ResultsView: View {
     @State private var activeError: ResultsViewError?
     @State private var feedbackId: String?
     let db = Firestore.firestore()
+    @State private var currentTipIndex = 0
+    @State private var isShowingBoxing = true
+    @State private var symbolOpacity = 1.0
+    
+    private let muayThaiTips = [
+        "Keep your guard up - protect your chin!",
+        "Turn your hip over when throwing kicks",
+        "Stay light on your feet, ready to move",
+        "Breathe out when striking",
+        "Return kicks and punches back to guard quickly",
+        "Keep your elbows close to protect your body"
+    ]
     
     init(videoURL: URL) {
         self.videoURL = videoURL
@@ -229,18 +241,52 @@ struct ResultsView: View {
     
     private var uploadingView: some View {
         VStack(spacing: 20) {
-            if isUploading {
-                ProgressView()
-                    .scaleEffect(1.5)
-                    .padding()
-                Text("Uploading...")
-            } else {
-                Image(systemName: "figure.martial.arts")
-                    .font(.system(size: 60))
-                    .foregroundColor(.blue)
-                Text("Upload Complete!")
+            VStack(spacing: 8) {
+                Text("Uploading your video")
+                    .font(.headline)
+                    .foregroundColor(ThemeColors.primary)
+                
+                // Sparring animation
+                ZStack {
+                    Image(systemName: "figure.boxing")
+                        .opacity(isShowingBoxing ? 1 : 0)
+                    Image(systemName: "figure.kickboxing")
+                        .opacity(isShowingBoxing ? 0 : 1)
+                }
+                .font(.system(size: 50))
+                .foregroundColor(ThemeColors.primary)
+                .frame(width: 200, height: 60)
+                .onAppear {
+                    withAnimation(
+                        .easeInOut(duration: 1.0)
+                        .repeatForever(autoreverses: true)
+                    ) {
+                        isShowingBoxing.toggle()
+                    }
+                }
             }
+            
+            // Display random Muay Thai tips while uploading
+            Text(muayThaiTips[currentTipIndex])
+                .font(.title3)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+                .foregroundColor(.primary)
+                .padding()
+                .onAppear {
+                    Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+                        withAnimation {
+                            currentTipIndex = (currentTipIndex + 1) % muayThaiTips.count
+                        }
+                    }
+                }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(30)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(UIColor.systemBackground))
+                .shadow(radius: 10)
+        )
+        .padding()
     }
 }

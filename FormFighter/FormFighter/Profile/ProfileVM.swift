@@ -145,6 +145,20 @@ class ProfileVM: ObservableObject {
                     return nil
                 }
                 
+                // Check for modelFeedback.body.error
+                if let modelFeedback = data["modelFeedback"] as? [String: Any],
+                   let body = modelFeedback["body"] as? [String: Any] {
+                    // If there's any error field in body, skip this feedback
+                    if let error = body["error"] as? String {
+                        os_log("Skipping feedback with body error: %@ - Error: %@", 
+                              log: self.logger, 
+                              type: .debug, 
+                              document.documentID,
+                              error)
+                        return nil
+                    }
+                }
+                
                 let jabScore: Double
                 
                 if status == .completed {

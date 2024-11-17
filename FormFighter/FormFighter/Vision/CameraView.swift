@@ -451,7 +451,7 @@ struct CameraPreviewView: UIViewControllerRepresentable {
     class Coordinator: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         var parent: CameraPreviewView
         var hasTurnedBodyCompleted = false
-        let confidenceThreshold: VNConfidence = 0.00001  // Even lower threshold for better detection
+        let confidenceThreshold: VNConfidence = 0.3  // Increased from 0.00001
         
         init(parent: CameraPreviewView) {
             self.parent = parent
@@ -465,6 +465,15 @@ struct CameraPreviewView: UIViewControllerRepresentable {
             .leftAnkle,
             .rightAnkle
         ]
+        
+        // Add these properties
+        private var lastBodyStateChange = Date()
+        private var stateChangeDebounceInterval: TimeInterval = 0.5  // Half second minimum between changes
+        
+        // Add these state tracking variables
+        private var consecutiveBodyDetections = 0
+        private var consecutiveBodyLosses = 0
+        private let requiredConsecutiveFrames = 3  // Number of consistent frames needed
         
         func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
             guard parent.cameraManager.isActive else { return }
@@ -496,32 +505,63 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                             }
                         }
                         
-                        // Then check shoulders for turn if body is complete
+                        // Update consecutive frame counters
+                        if bodyDetected && bodyComplete {
+                            consecutiveBodyDetections += 1
+                            consecutiveBodyLosses = 0
+                        } else {
+                            consecutiveBodyLosses += 1
+                            consecutiveBodyDetections = 0
+                        }
+                        
+                        // Then check shoulders and hips for turn if body is complete
                         if bodyComplete,
                            let leftShoulder = recognizedPoints[.leftShoulder],
                            let rightShoulder = recognizedPoints[.rightShoulder],
+                           let leftHip = recognizedPoints[.leftHip],
+                           let rightHip = recognizedPoints[.rightHip],
                            leftShoulder.confidence > confidenceThreshold,
-                           rightShoulder.confidence > confidenceThreshold {
+                           rightShoulder.confidence > confidenceThreshold,
+                           leftHip.confidence > confidenceThreshold,
+                           rightHip.confidence > confidenceThreshold {
                             
                             let shoulderAngle = calculateAngleBetweenPoints(
                                 left: leftShoulder.location,
                                 right: rightShoulder.location
                             )
-                            let adjustedAngle = abs(shoulderAngle - 90)
+                            let hipAngle = calculateAngleBetweenPoints(
+                                left: leftHip.location,
+                                right: rightHip.location
+                            )
                             
-                            if adjustedAngle >= 3 && adjustedAngle <= 10 {
+                            let shoulderAdjustedAngle = abs(shoulderAngle - 90)
+                            let hipAdjustedAngle = abs(hipAngle - 90)
+                            
+                            // Both shoulders and hips need to be turned
+                            if shoulderAdjustedAngle >= 3 && shoulderAdjustedAngle <= 10 &&
+                               hipAdjustedAngle >= 3 && hipAdjustedAngle <= 10 {
                                 DispatchQueue.main.async {
                                     self.parent.hasTurnedBody = true
                                 }
                             }
                         }
+                        
+                        // Only update UI state after meeting threshold and debounce time
+                        let now = Date()
+                        if now.timeIntervalSince(lastBodyStateChange) >= stateChangeDebounceInterval {
+                            DispatchQueue.main.async {
+                                if self.consecutiveBodyDetections >= self.requiredConsecutiveFrames {
+                                    self.parent.isBodyDetected = true
+                                    self.parent.isBodyComplete = true
+                                    self.lastBodyStateChange = now
+                                } else if self.consecutiveBodyLosses >= self.requiredConsecutiveFrames {
+                                    self.parent.isBodyDetected = false
+                                    self.parent.isBodyComplete = false
+                                    self.lastBodyStateChange = now
+                                }
+                            }
+                        }
                     }
-                }
-                
-                DispatchQueue.main.async {
-                    self.parent.detectedBodyPoints = newBodyPoints
-                    self.parent.isBodyDetected = bodyDetected
-                    self.parent.isBodyComplete = bodyComplete
                 }
             }
             

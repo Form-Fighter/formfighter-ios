@@ -30,6 +30,19 @@ enum FeedbackStatus: String {
         animatingModel.rawValue
     ]
     
+    static let orderedProcessingStatuses: [String] = [
+        "request_received",
+        "building_wham_network",
+        "data_preprocessing",
+        "performing_slam",
+        "extracting_image_features",
+        "running_wham_network",
+        "running_smplify",
+        "creating_visualization",
+        "extracting_feedback",
+        "animating_model"
+    ]
+    
     var isProcessing: Bool {
         return FeedbackStatus.processingStatuses.contains(self.rawValue)
     }
