@@ -327,6 +327,7 @@
 		B21411E92CE706F500699B15 /* SplashScreenView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		B21411ED2CE9221400699B15 /* TabIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabIdentifier.swift; sourceTree = "<group>"; };
 		B21411EF2CE92D7F00699B15 /* VideoPlayerObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerObserver.swift; sourceTree = "<group>"; };
+		B256D8A02CEA638F00085249 /* FormFighter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighter.entitlements; sourceTree = "<group>"; };
 		B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighterDebug.entitlements; sourceTree = "<group>"; };
 		B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntNumberFieldView.swift; sourceTree = "<group>"; };
 		B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -383,6 +384,7 @@
 		811A37852B6EBA3B00C9E8B6 /* FormFighter */ = {
 			isa = PBXGroup;
 			children = (
+				B256D8A02CEA638F00085249 /* FormFighter.entitlements */,
 				B21411722CE537BB00699B15 /* Components */,
 				B214115D2CCF1A1C00699B15 /* User Feedback Page */,
 				B214115A2CCF128600699B15 /* FeedbackPage */,
@@ -1220,7 +1222,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = FormFighter/FormFighter.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "FormFighter/Preview\\ Content";
