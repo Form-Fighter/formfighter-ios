@@ -1,10 +1,7 @@
 import SwiftUI
 import Firebase
 import FirebaseFirestore
-import SceneKit
-import QuickLook
 import AVKit
-import ModelIO
 
 
 struct FeedbackView: View {
@@ -19,9 +16,6 @@ struct FeedbackView: View {
     @State private var userComment = ""
     @State private var selectedEmoji: UserFeedbackType?
     @State private var hasSubmittedFeedback = false
-    @State private var isLoadingModel = false
-    @State private var sceneModel: SCNScene?
-    @State private var modelURL: URL?
     @State private var feedbackRating: Double = 3
     @State private var selectedImprovements: [String] = []
     @State private var wouldRecommend: Bool = false
@@ -40,8 +34,6 @@ struct FeedbackView: View {
     // Add these properties for video sync
     @State private var originalPlayer: AVPlayer?
     @State private var overlayPlayer: AVPlayer?
-    
-    @State private var animationController: AnimationController?
     
     var body: some View {
         Group {
@@ -116,6 +108,33 @@ struct FeedbackView: View {
     private var completedFeedbackView: some View {
         ScrollView {
             VStack(spacing: 24) {
+                // Add Share button at the top
+                Button(action: {
+                    // Share both videos if available
+                    if let originalURL = originalPlayer?.currentItem?.asset as? AVURLAsset,
+                       let overlayURL = overlayPlayer?.currentItem?.asset as? AVURLAsset {
+                        let activityVC = UIActivityViewController(
+                            activityItems: [originalURL.url, overlayURL.url],
+                            applicationActivities: nil
+                        )
+                        // Get the window scene to present the share sheet
+                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                           let window = windowScene.windows.first {
+                            window.rootViewController?.present(activityVC, animated: true)
+                        }
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "square.and.arrow.up")
+                        Text("Share")
+                    }
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                }
+                .padding(.horizontal)
+
                 if let feedback = viewModel.feedback {
                     if !hasSubmittedFeedback {
                         FeedbackPromptButton(action: { showFeedbackPrompt = true })
@@ -127,153 +146,8 @@ struct FeedbackView: View {
                     if let jabScore = feedback.modelFeedback?.body?.jab_score {
                         ScoreCardView(jabScore: jabScore)
                     }
-                    
-                    // 3D Model Viewer
-                    if let usdzUrl = feedback.animation_usdz_url,
-                       !usdzUrl.isEmpty,
-                       let url = URL(string: usdzUrl) {
-                        VStack {
-                            if isLoadingModel {
-                                ProgressView("Loading 3D Model...")
-                                    .frame(height: 300)
-                            } else if let scene = sceneModel {
-                                SceneView(
-                                    scene: scene,
-                                    options: [
-                                        .allowsCameraControl,
-                                        .autoenablesDefaultLighting,
-                                        .temporalAntialiasingEnabled
-                                    ]
-                                )
-                                .frame(height: 300)
-                                .cornerRadius(12)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(ThemeColors.primary, lineWidth: 2)
-                                )
-                                   .onAppear {
-                                    if let url = modelURL {
-                                        print("\n=== Loading Animation Using ModelIO ===")
-                                        print("Model URL: \(url)")
-                                        
-                                        // Create asset and print initial info
-                                        let asset = MDLAsset(url: url)
-                                        print("\nAsset Details:")
-                                        print("- Total objects: \(asset.count)")
-                                        
-                                        // Debug each object in the asset
-                                        for index in 0..<asset.count {
-                                            if let object = asset.object(at: index) as? MDLObject {
-                                                print("\nObject \(index):")
-                                                print("- Type: \(type(of: object))")
-                                                print("- Name: \(object.name ?? "unnamed")")
-                                                
-                                                // Check for mesh sequence data
-                                                if let mesh = object as? MDLMesh {
-                                                    print("- Mesh Details:")
-                                                    print("  - Vertex count: \(mesh.vertexCount)")
-                                                    print("  - Submesh count: \(mesh.submeshes?.count ?? 0)")
-                                                    
-                                                    // Look for morph targets/blend shapes
-//                                                    if let morphGeometry = mesh.geometry as? MDLMorphGeometry {
-//                                                        print("  - Found morph targets!")
-//                                                        print("  - Target count: \(morphGeometry.targetCount)")
-//                                                    }
-                                                }
-                                            }
-                                        }
-                                        
-                                        // Try to load as SCNScene for additional info
-                                        do {
-                                            let scene = try SCNScene(url: url, options: nil)
-                                            print("\nScene Graph (looking for mesh sequences):")
-                                            debugPrintSCNNode(scene.rootNode, level: 0)
-                                            
-                                            // Look for morph targets in SceneKit
-                                            if let mesh = scene.rootNode.childNode(withName: "Mesh", recursively: true)?.geometry as? SCNGeometry {
-                                                print("\nMesh Morpher Info:")
-                                              //  print("- Has morpher: \(mesh.morpher != nil)")
-//                                                if let morpher = mesh.morpher {
-//                                                    print("- Target count: \(morpher.targets.count)")
-//                                                    print("- Target names: \(morpher.targets.map { $0.name ?? "unnamed" })")
-//                                                }
-                                            }
-                                        } catch {
-                                            print("\nFailed to load as SCNScene: \(error)")
-                                        }
-                                        
-                                        let sceneView = SCNView()
-                                        let controller = AnimationController(sceneView: sceneView)
-                                        controller.setupScene(with: url)
-                                        
-                                        // Store controller reference if needed
-                                        self.animationController = controller
-                                    }
-                                }
-                            } else {
-                                Text("Failed to load 3D model")
-                                    .frame(height: 300)
-                            }
-                            
-                            // AR Quick Look Button
-                            if let modelURL = modelURL {
-                                HStack(spacing: 16) {
-                                    Button(action: {
-                                        let quickLook = QLPreviewController()
-                                        let coordinator = makeCoordinator()
-                                        quickLook.delegate = coordinator
-                                        let dataSource = ARQuickLookDataSource(url: modelURL)
-                                        quickLook.dataSource = dataSource
-                                        
-                                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                                           let rootVC = windowScene.windows.first?.rootViewController {
-                                            DispatchQueue.main.async {
-                                                rootVC.present(quickLook, animated: true)
-                                            }
-                                        }
-                                    }) {
-                                        Label("AR", systemImage: "arkit")
-                                            .font(.headline)
-                                            .foregroundColor(.white)
-                                            .frame(maxWidth: .infinity)
-                                            .padding()
-                                            .background(ThemeColors.primary)
-                                            .cornerRadius(12)
-                                            .lineLimit(1)
-                                    }
-                                    
-                                    Button(action: {
-                                        let url = "https://www.form-fighter.com/feedback/\(feedbackId)"
-                                        let activityVC = UIActivityViewController(
-                                            activityItems: [url],
-                                            applicationActivities: nil
-                                        )
-                                        
-                                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                                           let rootVC = windowScene.windows.first?.rootViewController {
-                                            activityVC.popoverPresentationController?.sourceView = rootVC.view
-                                            rootVC.present(activityVC, animated: true)
-                                        }
-                                    }) {
-                                        Label("Share", systemImage: "square.and.arrow.up")
-                                            .font(.headline)
-                                            .foregroundColor(.white)
-                                            .frame(maxWidth: .infinity)
-                                            .padding()
-                                            .background(ThemeColors.primary)
-                                            .cornerRadius(12)
-                                    }
-                                }
-                                .padding(.horizontal)
-                                .disabled(isLoadingModel)
-                            }
-                        }
-                        .onAppear {
-                            loadUSDZModel(from: url)
-                        }
-                    }
-                    
-                    // Video Comparison
+
+                           // Video Comparison
                     if let videoUrl = feedback.videoUrl,
                        let overlayUrl = feedback.overlay_video_url,
                        !videoUrl.isEmpty,
@@ -281,15 +155,15 @@ struct FeedbackView: View {
                        let originalURL = URL(string: videoUrl),
                        let overlayURL = URL(string: overlayUrl) {
                         
-                        HStack {
-                            if let player1 = originalPlayer {
-                                VideoPlayer(player: player1)
+                        VStack {
+                            if let player2 = overlayPlayer {
+                                VideoPlayer(player: player2)
                                     .frame(height: 200)
                                     .cornerRadius(12)
                             }
                             
-                            if let player2 = overlayPlayer {
-                                VideoPlayer(player: player2)
+                            if let player1 = originalPlayer {
+                                VideoPlayer(player: player1)
                                     .frame(height: 200)
                                     .cornerRadius(12)
                             }
@@ -305,6 +179,7 @@ struct FeedbackView: View {
                             overlayPlayer = nil
                         }
                     }
+                    
                     
                     // Existing feedback sections
                     if let feedbackDetails = feedback.modelFeedback?.body?.feedback {
@@ -422,59 +297,6 @@ struct FeedbackView: View {
         // Start playback
         originalPlayer?.play()
         overlayPlayer?.play()
-    }
-    
-    private func loadUSDZModel(from url: URL) {
-        isLoadingModel = true
-        modelURL = url
-        
-        // First download the file to local storage
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let localURL = documentsDirectory.appendingPathComponent("model.usdz")
-        
-        URLSession.shared.downloadTask(with: url) { tempURL, response, error in
-            guard let tempURL = tempURL, error == nil else {
-                DispatchQueue.main.async {
-                    self.isLoadingModel = false
-                    print("Download error: \(error?.localizedDescription ?? "unknown error")")
-                }
-                return
-            }
-            
-            do {
-                // Remove any existing file
-                try? FileManager.default.removeItem(at: localURL)
-                // Move downloaded file to documents
-                try FileManager.default.moveItem(at: tempURL, to: localURL)
-                
-                // Load the scene from local file
-                DispatchQueue.global(qos: .userInitiated).async {
-                    if let scene = try? SCNScene(url: localURL, options: [
-                        .checkConsistency: true,
-                        .convertToYUp: true,
-                        .flattenScene: true,
-                        .preserveOriginalTopology: true,
-                        .createNormalsIfAbsent: true
-                    ]) {
-                        DispatchQueue.main.async {
-                            self.modelURL = localURL
-                            self.sceneModel = scene
-                            self.isLoadingModel = false
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            self.isLoadingModel = false
-                            print("Failed to load scene from local file")
-                        }
-                    }
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.isLoadingModel = false
-                    print("File handling error: \(error.localizedDescription)")
-                }
-            }
-        }.resume()
     }
 }
 
@@ -641,41 +463,6 @@ struct FeedbackPromptButton: View {
     }
 }
 
-// Add this class to handle AR Quick Look
-class ARQuickLookDataSource: NSObject, QLPreviewControllerDataSource {
-    let url: URL
-    
-    init(url: URL) {
-        self.url = url
-        super.init()
-    }
-    
-    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-        return 1
-    }
-    
-    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-        return url as QLPreviewItem
-    }
-}
-
-class Coordinator: NSObject, QLPreviewControllerDelegate {
-    var parent: FeedbackView
-    
-    init(_ parent: FeedbackView) {
-        self.parent = parent
-    }
-    
-    func previewControllerDidDismiss(_ controller: QLPreviewController) {
-        // Handle dismissal if needed
-    }
-}
-
-extension FeedbackView {
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-}
 
 struct FeedbackStepOne: View {
     @Binding var selectedEmoji: UserFeedbackType?
@@ -753,25 +540,6 @@ struct FeedbackStepThree: View {
     }
 }
 
-// Helper function to print MDL object hierarchy
-private func debugPrintMDLObject(_ object: MDLObject, level: Int) {
-    let indent = String(repeating: "  ", count: level)
-    print("\(indent)- \(type(of: object)): \(object.name ?? "unnamed")")
-    
-    if let objectContainer = object as? MDLObjectContainer {
-        for child in objectContainer.objects {
-            debugPrintMDLObject(child, level: level + 1)
-        }
-    }
-}
 
-// Helper function to print SCN node hierarchy
-private func debugPrintSCNNode(_ node: SCNNode, level: Int) {
-    let indent = String(repeating: "  ", count: level)
-    print("\(indent)- \(node.name ?? "unnamed")")
-    node.childNodes.forEach { child in
-        debugPrintSCNNode(child, level: level + 1)
-    }
-}
 
 

@@ -1832,9 +1832,6 @@
     "Any additional thoughts?" : {
 
     },
-    "AR" : {
-
-    },
     "Are you sure you want to delete the account?" : {
       "localizations" : {
         "de" : {
@@ -3082,9 +3079,6 @@
     "Experience an AI's perspective on what each artwork symbolizes" : {
 
     },
-    "Failed to load 3D model" : {
-
-    },
     "Fighter Profile" : {
 
     },
@@ -3643,9 +3637,6 @@
 
     },
     "Let's go!" : {
-
-    },
-    "Loading 3D Model..." : {
 
     },
     "Loading..." : {

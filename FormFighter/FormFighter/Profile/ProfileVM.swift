@@ -116,7 +116,7 @@ class ProfileVM: ObservableObject {
         let feedbackRef = db.collection("feedback")
             .whereField("userId", isEqualTo: userId)
         
-        listener = feedbackRef.addSnapshotListener { [weak self] snapshot, error in
+        listener = feedbackRef.addSnapshotListener { [weak self] (snapshot: QuerySnapshot?, error: Error?) in
             guard let self = self else { return }
             
             if let error = error {
@@ -135,14 +135,16 @@ class ProfileVM: ObservableObject {
             self.feedbacks = documents.compactMap { document in
                 let data = document.data()
                 
-                // Check for error field
-                if let _ = data["error"] as? String {
-                    os_log("Skipping feedback with error: %@", log: self.logger, type: .debug, document.documentID)
+                // Skip if document has an error field or missing/null status
+                guard data["error"] == nil,  // Skip if error field exists
+                      let statusString = data["status"] as? String,  // Skip if status is null or not a string
+                      !statusString.isEmpty,  // Skip if status is empty string
+                      let status = FeedbackStatus(rawValue: statusString)  // Skip if status is not valid
+                else {
+                    os_log("Skipping invalid feedback: %@", log: self.logger, type: .debug, document.documentID)
                     return nil
                 }
                 
-                let statusString = data["status"] as? String ?? ""
-                let status = FeedbackStatus(rawValue: statusString) ?? .pending
                 let jabScore: Double
                 
                 if status == .completed {

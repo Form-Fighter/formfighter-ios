@@ -33,11 +33,12 @@ struct ProfileView: View {
                         .padding(.top, 40)
                 } else {
                     // Analytics Section
-                    VStack(alignment: .leading, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 32) {
                         Text("Analytics")
                             .font(.system(.title2, design: .rounded, weight: .semibold))
-                            .foregroundColor(ThemeColors.accent)
+                            .foregroundColor(ThemeColors.primary)
                             .padding(.horizontal)
+                            .padding(.vertical, 8)
                         
                         TabView(selection: $selectedTab) {
                             StatsView(timeInterval: .day, feedbacks: viewModel.feedbacks, viewModel: viewModel)
@@ -59,30 +60,31 @@ struct ProfileView: View {
                                         .font(.headline) 
                                 }
                         }
-                        .frame(height: 600)
-                        .padding(.horizontal)
+                        .frame(height: 850)
+                      
                     }
-                    .padding(.vertical, 24)
+                    .padding(.vertical, 32)
                     .background(ThemeColors.background.opacity(0.5))
                     .cornerRadius(12)
-                    .padding(.horizontal)
+                    
                     
                     // Add more spacing before Training History
                     Spacer()
                         .frame(height: 24)
                     
                     // Training History Section
-                    VStack(alignment: .leading, spacing: 15) {
+                    VStack(alignment: .leading, spacing: 24) {
                         Text("Training History")
                             .font(.system(.title2, design: .rounded, weight: .semibold))
-                            .foregroundColor(ThemeColors.accent)
-                            .padding(.top)
+                            .foregroundColor(ThemeColors.primary)
+                            .padding(.top, 16)
                             .padding(.horizontal)
                         
                         PunchListView(viewModel: viewModel, sortOption: $sortOption)
                             .padding(.horizontal)
+                            .padding(.vertical, 8)
                     }
-                    .padding(.bottom, 30)
+                    .padding(.vertical, 32)
                 }
             }
         }
@@ -159,6 +161,14 @@ struct StatsView: View {
     var feedbacks: [ProfileVM.FeedbackListItem]
     @ObservedObject var viewModel: ProfileVM
     
+    private var feedbacksInInterval: [ProfileVM.FeedbackListItem] {
+        filterFeedbacks(for: timeInterval, from: feedbacks)
+    }
+    
+    private var averageScore: Int {
+        calculateAverageScore(for: feedbacksInInterval)
+    }
+    
     var chartData: [PunchStats] {
         switch timeInterval {
         case .day:
@@ -173,15 +183,9 @@ struct StatsView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            // Header
-           
-            
-            let feedbacksInInterval = filterFeedbacks(for: timeInterval, from: feedbacks)
-            let averageScore = calculateAverageScore(for: feedbacksInInterval)
-            
+        VStack(alignment: .leading, spacing: 40) {
             // Stats Grid
-            HStack(spacing: 16) {
+            VStack(spacing: 32) {
                 StatBox(
                     title: "Training Sessions",
                     value: "\(feedbacksInInterval.count)",
@@ -194,20 +198,29 @@ struct StatsView: View {
                     icon: "star.fill"
                 )
             }
-            .padding(.bottom, 16)
+            .padding(.horizontal)
+            .padding(.vertical, 16)
+            .padding(.bottom, 32)
             
-            // Line Chart
-            if !chartData.isEmpty {
-                LineChartView(data: chartData, timeInterval: timeInterval)
-                    .transition(.opacity)
-            } else {
-                Text("No data available for this time period")
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding()
+            // Line Chart - Separated from VStack with more padding
+            Group {
+                if !chartData.isEmpty {
+                    LineChartView(data: chartData, timeInterval: timeInterval)
+                        .transition(.opacity)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 400)  // Increased height
+                        .padding(.horizontal, 32)  // Increased horizontal padding
+                        .padding(.vertical, 24)    // Added vertical padding
+                        .background(ThemeColors.background.opacity(0.3))
+                        .cornerRadius(12)
+                } else {
+                    Text("No data available for this time period")
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding()
+                }
             }
         }
-        .padding()
         .background(ThemeColors.background.opacity(0.5))
         .cornerRadius(12)
     }
@@ -247,21 +260,25 @@ struct StatBox: View {
     let icon: String
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
-                Image(systemName: icon)
-                    .foregroundColor(ThemeColors.primary)
+        HStack(spacing: 16) {
+            Image(systemName: icon)
+                .foregroundColor(ThemeColors.primary)
+                .font(.system(size: 24))
+            
+            VStack(alignment: .leading, spacing: 8) {
                 Text(title)
-                    .font(.system(.caption, design: .rounded))
+                    .font(.system(.headline, design: .rounded))
                     .foregroundColor(.secondary)
+                
+                Text(value)
+                    .font(.system(.title, design: .rounded, weight: .bold))
+                    .foregroundColor(ThemeColors.primary)
             }
             
-            Text(value)
-                .font(.system(.title2, design: .rounded, weight: .bold))
-                .foregroundColor(ThemeColors.primary)
+            Spacer()
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
+        .frame(maxWidth: .infinity)
+        .padding(20)
         .background(ThemeColors.background)
         .cornerRadius(12)
         .overlay(

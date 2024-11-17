@@ -166,8 +166,8 @@
 		B21411E62CE69F1D00699B15 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = B21411E52CE69F1D00699B15 /* Alamofire */; };
 		B21411E82CE7063E00699B15 /* splashscreen.gif in Resources */ = {isa = PBXBuildFile; fileRef = B21411E72CE7063E00699B15 /* splashscreen.gif */; };
 		B21411EA2CE706F500699B15 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411E92CE706F500699B15 /* SplashScreenView.swift */; };
-		B21411EC2CE7ECEC00699B15 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411EB2CE7ECEC00699B15 /* AnimationController.swift */; };
 		B21411EE2CE9221400699B15 /* TabIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411ED2CE9221400699B15 /* TabIdentifier.swift */; };
+		B21411F02CE92D7F00699B15 /* VideoPlayerObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411EF2CE92D7F00699B15 /* VideoPlayerObserver.swift */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
 		B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */; };
 		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
@@ -325,8 +325,8 @@
 		B214118D2CE672C600699B15 /* start.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = start.wav; sourceTree = "<group>"; };
 		B21411E72CE7063E00699B15 /* splashscreen.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = splashscreen.gif; sourceTree = "<group>"; };
 		B21411E92CE706F500699B15 /* SplashScreenView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
-		B21411EB2CE7ECEC00699B15 /* AnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnimationController.swift; path = FormFighter/FeedbackPage/AnimationController.swift; sourceTree = SOURCE_ROOT; };
 		B21411ED2CE9221400699B15 /* TabIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabIdentifier.swift; sourceTree = "<group>"; };
+		B21411EF2CE92D7F00699B15 /* VideoPlayerObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerObserver.swift; sourceTree = "<group>"; };
 		B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighterDebug.entitlements; sourceTree = "<group>"; };
 		B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntNumberFieldView.swift; sourceTree = "<group>"; };
 		B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -693,6 +693,7 @@
 		B214115A2CCF128600699B15 /* FeedbackPage */ = {
 			isa = PBXGroup;
 			children = (
+				B21411EF2CE92D7F00699B15 /* VideoPlayerObserver.swift */,
 				B21411822CE63BED00699B15 /* Components */,
 				B21411792CE54D1700699B15 /* FeedbackViewModel.swift */,
 				B214115B2CCF151B00699B15 /* FeedbackView.swift */,
@@ -740,7 +741,6 @@
 		B21411822CE63BED00699B15 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				B21411EB2CE7ECEC00699B15 /* AnimationController.swift */,
 				B21411812CE63BED00699B15 /* ImprovementsGridView.swift */,
 			);
 			path = Components;
@@ -1010,8 +1010,8 @@
 				818D3FB72B700E9D00DF7299 /* +URLCache.swift in Sources */,
 				81DE14E62B754C6A00C41EA9 /* DeleteConfirmationAlert.swift in Sources */,
 				8125D5C22B7BF8F7001A846B /* DALLEResponse.swift in Sources */,
+				B21411F02CE92D7F00699B15 /* VideoPlayerObserver.swift in Sources */,
 				818D3F7E2B6FA14E00DF7299 /* DALLEView.swift in Sources */,
-				B21411EC2CE7ECEC00699B15 /* AnimationController.swift in Sources */,
 				8125D5B22B77F0EC001A846B /* ChatGPTRequestModel.swift in Sources */,
 				81B2C7052BFF4FF900780BBD /* TipShim.swift in Sources */,
 				818D3FB92B700E9D00DF7299 /* +JSONDecoder.swift in Sources */,
