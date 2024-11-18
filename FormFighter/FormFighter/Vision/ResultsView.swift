@@ -6,6 +6,7 @@ import AVKit
 import FirebaseFirestore
 import Alamofire
 import os
+import FirebaseAnalytics
 
 // Create a dedicated error type
 enum ResultsViewError: LocalizedError {
@@ -171,6 +172,7 @@ struct ResultsView: View {
     private func uploadToServer(feedbackId: String, coachId: String?) async {
         print("⚡️ Starting upload")
         isUploading = true
+        let startTime = Date()
         
         do {
             let headers: HTTPHeaders = [
@@ -232,7 +234,8 @@ struct ResultsView: View {
             }
             
             // After successful upload
-            Tracker.videoUploadCompleted(duration: uploadDuration, filmingDuration: recordingDuration)
+            let duration = Date().timeIntervalSince(startTime)
+            Tracker.videoUploadCompleted(duration: duration, filmingDuration: nil)
             
         } catch {
             print("⚡️ Upload error: \(error)")

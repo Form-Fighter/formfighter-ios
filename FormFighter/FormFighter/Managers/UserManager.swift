@@ -4,6 +4,8 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Combine
 import OSLog
+import FirebaseAnalytics  // Add this import
+
 
 enum UserManagerError: LocalizedError {
     case notExists

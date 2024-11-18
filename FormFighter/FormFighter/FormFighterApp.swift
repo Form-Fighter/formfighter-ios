@@ -141,12 +141,12 @@ struct FormFighterApp: App {
                     }
                 }
                 .onAppear {
-                    Analytics.logEvent(AnalyticsEventAppOpen, parameters: nil)
-                    Analytics.logEvent("session_start", parameters: nil)
+                    Tracker.appOpened()
+                    Tracker.appSessionBegan()
                 }
                 .onChange(of: scenePhase) { newPhase in
                     if newPhase == .background {
-                        Analytics.logEvent("session_end", parameters: nil)
+                        Tracker.appSessionEnded()
                     }
                 }
             }

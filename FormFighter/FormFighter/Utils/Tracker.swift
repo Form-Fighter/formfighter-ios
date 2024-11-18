@@ -270,4 +270,17 @@ final class Tracker {
         
         Analytics.logEvent("video_upload_completed", parameters: parameters)
     }
+    
+    // Add these static methods
+    static func appOpened() {
+        Analytics.logEvent("app_opened", parameters: nil)
+    }
+    
+    static func appSessionBegan() {
+        Analytics.logEvent("app_session_began", parameters: nil)
+    }
+    
+    static func appSessionEnded() {
+        Analytics.logEvent("app_session_ended", parameters: nil)
+    }
 }

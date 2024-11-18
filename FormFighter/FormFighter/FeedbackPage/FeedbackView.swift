@@ -176,21 +176,7 @@ struct FeedbackView: View {
         ScrollView {
             VStack(spacing: 24) {
                 // Add Share button at the top
-                Button(action: {
-                    // Share both videos if available
-                    if let originalURL = originalPlayer?.currentItem?.asset as? AVURLAsset,
-                       let overlayURL = overlayPlayer?.currentItem?.asset as? AVURLAsset {
-                        let activityVC = UIActivityViewController(
-                            activityItems: [originalURL.url, overlayURL.url],
-                            applicationActivities: nil
-                        )
-                        // Get the window scene to present the share sheet
-                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                           let window = windowScene.windows.first {
-                            window.rootViewController?.present(activityVC, animated: true)
-                        }
-                    }
-                }) {
+                Button(action: shareVideo) {
                     HStack {
                         Image(systemName: "square.and.arrow.up")
                         Text("Share")
@@ -376,6 +362,30 @@ struct FeedbackView: View {
             "section": section,
             "feedback_id": feedbackId
         ])
+    }
+    
+    // Add this helper function to handle sharing
+    private func shareVideo() {
+        guard let videoURL = videoURL else { return }
+        
+        let activityVC = UIActivityViewController(
+            activityItems: [videoURL],
+            applicationActivities: nil
+        )
+        
+        // Get the root view controller
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootViewController = windowScene.windows.first?.rootViewController {
+            // Find the top-most presented controller
+            var topController = rootViewController
+            while let presenter = topController.presentedViewController {
+                topController = presenter
+            }
+            
+          
+            
+            topController.present(activityVC, animated: true)
+        }
     }
 }
 
