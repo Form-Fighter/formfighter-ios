@@ -110,6 +110,22 @@ struct FeedbackView: View {
                 .onAppear {
                     Tracker.processingCompleted(success: false)
                 }
+            } else if !FeedbackStatus.processingStatuses.contains(viewModel.status.rawValue) {
+                // Initial loading state
+                VStack(spacing: 16) {
+                    Text("Preparing your feedback...")
+                        .font(.headline)
+                        .foregroundColor(ThemeColors.primary)
+                    
+                    ProgressView() // Shows a spinner
+                    
+                    // Show a random tip while waiting
+                    Text(muayThaiTips[currentTipIndex])
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                }
             } else {
                 // Normal Processing State
                 let currentStep = FeedbackStatus.orderedProcessingStatuses.firstIndex(of: viewModel.status.rawValue) ?? 0

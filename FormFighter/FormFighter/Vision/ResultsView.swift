@@ -42,7 +42,6 @@ struct ResultsView: View {
     @State private var currentTipIndex = 0
     @State private var isShowingBoxing = true
     @State private var symbolOpacity = 1.0
-    @State private var playerLooper: AVPlayerLooper?
     
     private let muayThaiTips = [
         "Keep your guard up - protect your chin!",
@@ -56,13 +55,22 @@ struct ResultsView: View {
     init(videoURL: URL) {
         self.videoURL = videoURL
         let playerItem = AVPlayerItem(url: videoURL)
-        self._player = State(initialValue: AVPlayer(playerItem: playerItem))
-        self._playerLooper = State(initialValue: AVPlayerLooper(player: AVQueuePlayer(playerItem: playerItem), templateItem: playerItem))
+        let player = AVPlayer(playerItem: playerItem)
+        player.actionAtItemEnd = .none  // Prevents player from stopping at end
+        self._player = State(initialValue: player)
+        
+        NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: playerItem,
+            queue: .main
+        ) { _ in
+            playerItem.seek(to: .zero)
+            player.play()
+        }
     }
     
     var body: some View {
         ZStack {
-            // Video player
             VideoPlayer(player: player)
                 .edgesIgnoringSafeArea(.all)
                 .disabled(true)
@@ -128,7 +136,6 @@ struct ResultsView: View {
             }
         )
         .onDisappear {
-            // Cleanup
             player.pause()
             player.replaceCurrentItem(with: nil)
         }
