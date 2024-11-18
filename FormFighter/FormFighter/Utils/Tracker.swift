@@ -189,4 +189,85 @@ final class Tracker {
             "rating": rating
         ])
     }
+    
+    // Add these new static properties at the top of the class
+    private static var filmingStartTime: Date?
+    private static var feedbackPageStartTime: Date?
+    private static var processingStartTime: Date?
+    private static var errorPageStartTime: Date?
+    
+    // Add these new methods
+    static func filmingStarted() {
+        filmingStartTime = Date()
+        Analytics.logEvent("filming_started", parameters: nil)
+    }
+    
+    static func processingStarted() {
+        processingStartTime = Date()
+        Analytics.logEvent("processing_started", parameters: nil)
+    }
+    
+    static func processingCompleted(success: Bool) {
+        guard let startTime = processingStartTime else { return }
+        let duration = Date().timeIntervalSince(startTime)
+        Analytics.logEvent("processing_completed", parameters: [
+            "duration": duration,
+            "success": success
+        ])
+        processingStartTime = nil
+    }
+    
+    static func errorPageViewed(errorType: String) {
+        errorPageStartTime = Date()
+        Analytics.logEvent("error_page_viewed", parameters: [
+            "error_type": errorType
+        ])
+    }
+    
+    static func errorPageDismissed() {
+        guard let startTime = errorPageStartTime else { return }
+        let duration = Date().timeIntervalSince(startTime)
+        Analytics.logEvent("error_page_dismissed", parameters: [
+            "duration": duration
+        ])
+        errorPageStartTime = nil
+    }
+    
+    static func feedbackPageOpened(feedbackId: String) {
+        feedbackPageStartTime = Date()
+        Analytics.logEvent("feedback_page_opened", parameters: [
+            "feedback_id": feedbackId
+        ])
+        
+        // Calculate time from filming to viewing feedback if available
+        if let startTime = filmingStartTime {
+            let duration = Date().timeIntervalSince(startTime)
+            Analytics.logEvent("filming_to_feedback_duration", parameters: [
+                "duration": duration,
+                "feedback_id": feedbackId
+            ])
+        }
+    }
+    
+    static func feedbackPageClosed(feedbackId: String) {
+        guard let startTime = feedbackPageStartTime else { return }
+        let duration = Date().timeIntervalSince(startTime)
+        Analytics.logEvent("feedback_page_closed", parameters: [
+            "duration": duration,
+            "feedback_id": feedbackId
+        ])
+        feedbackPageStartTime = nil
+    }
+    
+    static func videoUploadCompleted(duration: TimeInterval, filmingDuration: TimeInterval?) {
+        var parameters: [String: Any] = ["duration": duration]
+        
+        if let filmStart = filmingStartTime {
+            let totalDuration = Date().timeIntervalSince(filmStart)
+            parameters["filming_to_upload_duration"] = totalDuration
+            filmingStartTime = nil // Reset after use
+        }
+        
+        Analytics.logEvent("video_upload_completed", parameters: parameters)
+    }
 }

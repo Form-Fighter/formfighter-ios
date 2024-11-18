@@ -230,12 +230,21 @@ struct ResultsView: View {
                     }
                 }
             }
+            
+            // After successful upload
+            Tracker.videoUploadCompleted(duration: uploadDuration, filmingDuration: recordingDuration)
+            
         } catch {
             print("⚡️ Upload error: \(error)")
             await MainActor.run {
                 activeError = .uploadError(error)
                 isUploading = false
             }
+            Tracker.errorOccurred(
+                domain: "VideoUpload",
+                code: (error as NSError).code,
+                description: error.localizedDescription
+            )
         }
     }
     

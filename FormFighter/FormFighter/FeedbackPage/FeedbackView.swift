@@ -56,9 +56,11 @@ struct FeedbackView: View {
                 "feedback_id": feedbackId,
                 "status": viewModel.status.rawValue
             ])
+            Tracker.feedbackPageOpened(feedbackId: feedbackId)
         }
         .onDisappear {
             viewModel.cleanup()
+            Tracker.feedbackPageClosed(feedbackId: feedbackId)
         }
         .sheet(isPresented: $showFeedbackPrompt) {
             UserFeedbackPrompt(
@@ -105,6 +107,9 @@ struct FeedbackView: View {
                     }
                     .padding(.horizontal)
                 }
+                .onAppear {
+                    Tracker.processingCompleted(success: false)
+                }
             } else {
                 // Normal Processing State
                 let currentStep = FeedbackStatus.orderedProcessingStatuses.firstIndex(of: viewModel.status.rawValue) ?? 0
@@ -120,6 +125,16 @@ struct FeedbackView: View {
                         .tint(ThemeColors.primary)
                         .scaleEffect(1.5)
                         .frame(width: 200)
+                }
+                .onAppear {
+                    if currentStep == 0 {  // Only start tracking when processing begins
+                        Tracker.processingStarted()
+                    }
+                }
+                .onChange(of: viewModel.status) { newStatus in
+                    if newStatus == .completed {
+                        Tracker.processingCompleted(success: true)
+                    }
                 }
                 
                 // Show the message from FeedbackStatus
