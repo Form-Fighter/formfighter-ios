@@ -42,6 +42,7 @@ struct ResultsView: View {
     @State private var currentTipIndex = 0
     @State private var isShowingBoxing = true
     @State private var symbolOpacity = 1.0
+    @State private var playerLooper: AVPlayerLooper?
     
     private let muayThaiTips = [
         "Keep your guard up - protect your chin!",
@@ -54,7 +55,9 @@ struct ResultsView: View {
     
     init(videoURL: URL) {
         self.videoURL = videoURL
-        self._player = State(initialValue: AVPlayer(url: videoURL))
+        let playerItem = AVPlayerItem(url: videoURL)
+        self._player = State(initialValue: AVPlayer(playerItem: playerItem))
+        self._playerLooper = State(initialValue: AVPlayerLooper(player: AVQueuePlayer(playerItem: playerItem), templateItem: playerItem))
     }
     
     var body: some View {
@@ -219,7 +222,7 @@ struct ResultsView: View {
                             print("⚡️ Setting navigation state")
                             self.isUploading = false
                             self.feedbackId = feedbackId
-                            print("��️ Switching to profile tab")
+                            print("️ Switching to profile tab")
                             selectedTab = TabIdentifier.profile.rawValue
                             NotificationCenter.default.post(
                                 name: NSNotification.Name("OpenFeedback"),
@@ -234,8 +237,8 @@ struct ResultsView: View {
             }
             
             // After successful upload
-            let duration = Date().timeIntervalSince(startTime)
-            Tracker.videoUploadCompleted(duration: duration, filmingDuration: nil)
+            let uploadDuration = Date().timeIntervalSince(startTime)
+            Tracker.videoUploadCompleted(duration: uploadDuration)
             
         } catch {
             print("⚡️ Upload error: \(error)")

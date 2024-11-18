@@ -366,10 +366,11 @@ struct FeedbackView: View {
     
     // Add this helper function to handle sharing
     private func shareVideo() {
-        guard let videoURL = videoURL else { return }
+        let feedbackUrl = "https://www.form-fighter.com/feedback/\(feedbackId)"
+        print("📱 Sharing feedback URL: \(feedbackUrl)")
         
         let activityVC = UIActivityViewController(
-            activityItems: [videoURL],
+            activityItems: [feedbackUrl],
             applicationActivities: nil
         )
         
@@ -381,8 +382,6 @@ struct FeedbackView: View {
             while let presenter = topController.presentedViewController {
                 topController = presenter
             }
-            
-          
             
             topController.present(activityVC, animated: true)
         }
@@ -407,18 +406,18 @@ struct UnexpectedErrorView: View {
                 .foregroundColor(.secondary)
                 .padding()
             
-            Button(action: {
-                // Add retry logic here if needed
-            }) {
-                Text("Try Again")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal)
+            // Button(action: {
+            //     // Add retry logic here if needed
+            // }) {
+            //     Text("Try Again")
+            //         .font(.headline)
+            //         .foregroundColor(.white)
+            //         .padding()
+            //         .frame(maxWidth: .infinity)
+            //         .background(Color.blue)
+            //         .cornerRadius(10)
+            // }
+            // .padding(.horizontal)
         }
         .padding()
     }
