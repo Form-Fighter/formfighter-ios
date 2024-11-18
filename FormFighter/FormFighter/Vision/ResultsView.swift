@@ -217,7 +217,7 @@ struct ResultsView: View {
                             print("⚡️ Setting navigation state")
                             self.isUploading = false
                             self.feedbackId = feedbackId
-                            print("⚡️ Switching to profile tab")
+                            print("��️ Switching to profile tab")
                             selectedTab = TabIdentifier.profile.rawValue
                             NotificationCenter.default.post(
                                 name: NSNotification.Name("OpenFeedback"),
@@ -288,5 +288,12 @@ struct ResultsView: View {
                 .shadow(radius: 10)
         )
         .padding()
+    }
+    
+    private func handleUploadError(_ error: Error) {
+        Analytics.logEvent("upload_error", parameters: [
+            "error_description": error.localizedDescription,
+            "error_code": (error as NSError).code
+        ])
     }
 }

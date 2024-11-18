@@ -155,6 +155,21 @@ class UserManager: ObservableObject {
         }
     }
     
+    func trackRetentionDay() {
+        guard let firstLoginDate = UserDefaults.standard.object(forKey: "firstLoginDate") as? Date else {
+            UserDefaults.standard.set(Date(), forKey: "firstLoginDate")
+            return
+        }
+        
+        let daysSinceFirstLogin = Calendar.current.dateComponents([.day], from: firstLoginDate, to: Date()).day ?? 0
+        
+        if [1, 7, 30].contains(daysSinceFirstLogin) {
+            Analytics.logEvent("retention_day", parameters: [
+                "day": daysSinceFirstLogin
+            ])
+        }
+    }
+    
 }
 
 extension UserManager {

@@ -52,7 +52,10 @@ class Logger {
     // Add new method to log non-fatal errors to Crashlytics
     static func recordError(_ error: Error, context: [String: Any]? = nil) {
         Crashlytics.crashlytics().record(error: error, userInfo: context)
+        var params = context
+        params["error_description"] = error.localizedDescription
         
+        Analytics.logEvent("app_error", parameters: params)
         // Also log to Analytics
         Tracker.errorOccurred(
             domain: (error as NSError).domain,

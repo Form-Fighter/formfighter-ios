@@ -52,6 +52,10 @@ struct FeedbackView: View {
             if videoURL == nil {
                 checkExistingUserFeedback()
             }
+            Analytics.logEvent("feedback_viewed", parameters: [
+                "feedback_id": feedbackId,
+                "status": viewModel.status.rawValue
+            ])
         }
         .onDisappear {
             viewModel.cleanup()
@@ -314,6 +318,11 @@ struct FeedbackView: View {
                 hasSubmittedFeedback = true
                 showFeedbackPrompt = false
                 Tracker.feedbackSubmitted(type: emoji, rating: feedbackRating)
+                Analytics.logEvent("feedback_written", parameters: [
+                    "feedback_id": feedbackId,
+                    "rating": feedbackRating,
+                    "has_comment": !userComment.isEmpty
+                ])
             }
         }
     }
@@ -345,6 +354,13 @@ struct FeedbackView: View {
         // Start playback
         originalPlayer?.play()
         overlayPlayer?.play()
+    }
+    
+    private func trackFeedbackInteraction(section: String) {
+        Analytics.logEvent("feedback_interaction", parameters: [
+            "section": section,
+            "feedback_id": feedbackId
+        ])
     }
 }
 
