@@ -35,6 +35,11 @@ struct CameraVisionView: View {
     @State private var isCountingDown: Bool = false
     @State private var currentTurnAngle: Double = 0
     
+    // Add new state properties at the top with other @State variables
+    @State private var fullBodyPlayer: AVAudioPlayer?
+    @State private var turnBodyPlayer: AVAudioPlayer?
+    @State private var jabInstructionPlayer: AVAudioPlayer?
+    
     var cameraManager: CameraManager
     
     var body: some View {
@@ -48,7 +53,8 @@ struct CameraVisionView: View {
                                   hasTurnedBody: $hasTurnedBody,
                                   isCountingDown: $isCountingDown,
                                   currentTurnAngle: $currentTurnAngle,
-                                  cameraManager: cameraManager
+                                  cameraManager: cameraManager,
+                                  turnBodyPlayer: turnBodyPlayer
                                   
                 )
                 .edgesIgnoringSafeArea(.all)
@@ -103,6 +109,9 @@ struct CameraVisionView: View {
                             .cornerRadius(15)
                     }
                     .padding(.top, 50)
+                    .onAppear {
+                        fullBodyPlayer?.play()
+                    }
                 }
                 
              
@@ -115,12 +124,13 @@ struct CameraVisionView: View {
                             .foregroundColor(.white)
                         
                         VStack(alignment: .leading, spacing: 15) {
-                            InstructionRow(number: 1, text: "Record in a well lit indoor room", icon: "light.min")
-                            InstructionRow(number: 2, text: "Stand 6-8 feet from camera", icon: "person.and.arrow.left.and.arrow.right")
-                            InstructionRow(number: 3, text: "Show your full body in frame", icon: "figure.stand")
-                            InstructionRow(number: 4, text: "Turn your body 7 degrees left or right to show your stance", icon: "arrow.triangle.2.circlepath")
-                            InstructionRow(number: 5, text: "Hold still for recording", icon: "video.fill")
-                            InstructionRow(number: 6, text: "Perform ONE jab in 2 seconds", icon: "figure.boxing")
+                            InstructionRow(number: 1, text: "Turn on audio for best experience 🔊", icon: "speaker.wave.2.fill")
+                            InstructionRow(number: 2, text: "Record in a well lit indoor room", icon: "light.min")
+                            InstructionRow(number: 3, text: "Stand 6-8 feet from camera", icon: "person.and.arrow.left.and.arrow.right")
+                            InstructionRow(number: 4, text: "Show your full body in frame", icon: "figure.stand")
+                            InstructionRow(number: 5, text: "Turn your body 7 degrees left or right to show your stance", icon: "arrow.triangle.2.circlepath")
+                            InstructionRow(number: 6, text: "Hold still for recording", icon: "video.fill")
+                            InstructionRow(number: 7, text: "Perform ONE jab in 2 seconds", icon: "figure.boxing")
                         }
                         
                         Button("Got it! 👊") {
@@ -250,6 +260,9 @@ struct CameraVisionView: View {
                         }
                     }
                     .padding(.top, 50)
+                    .onAppear {
+                        turnBodyPlayer?.play()
+                    }
                 }
             }
             .navigationDestination(isPresented: $navigateToPreview) {
@@ -262,6 +275,22 @@ struct CameraVisionView: View {
                         }
                 }
             }
+            .onChange(of: isBodyDetected) { _ in
+                print("isBodyDetected changed to: \(isBodyDetected)")
+                checkBodyDetectionState()
+                checkBodyAndStartTimers()
+            }
+            .onChange(of: isBodyComplete) { _ in
+                print("isBodyComplete changed to: \(isBodyComplete)")
+                checkBodyDetectionState()
+                checkBodyAndStartTimers()
+            }
+            .onChange(of: hasTurnedBody) { _ in
+                print("hasTurnedBody changed to: \(hasTurnedBody)")
+                checkBodyDetectionState()
+                checkBodyAndStartTimers()
+            }
+            .ignoresSafeArea()
         }
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
@@ -273,17 +302,8 @@ struct CameraVisionView: View {
                 }
             }
             setupAudioPlayers()
+          //  checkBodyDetectionState()
         }
-        .onChange(of: isBodyDetected) { _ in
-            checkBodyAndStartTimers()
-        }
-        .onChange(of: isBodyComplete) { _ in
-            checkBodyAndStartTimers()
-        }
-        .onChange(of: hasTurnedBody) { _ in
-            checkBodyAndStartTimers()
-        }
-        .ignoresSafeArea()
     }
     
     // Función que actualiza y suaviza los puntos detectados
@@ -366,6 +386,7 @@ struct CameraVisionView: View {
         recordingMessage = "Recording..."
         recordingProgress = 0.0  // Start empty
         
+        jabInstructionPlayer?.play()  // Play the instruction once
         cameraManager.startRecording()
         
         // Create a timer that updates progress every 0.1 seconds
@@ -391,6 +412,12 @@ struct CameraVisionView: View {
         secondTimer?.invalidate()
         secondTimer = nil
         
+      
+        fullBodyPlayer?.stop()
+        
+      
+        turnBodyPlayer?.stop()
+        
         isCounting = false
         isRecording = false
         timer1 = 0
@@ -402,6 +429,7 @@ struct CameraVisionView: View {
         if isRecording {
             cameraManager.stopRecording()
         }
+        jabInstructionPlayer?.stop()
     }
     
     // Add these new helper views and functions
@@ -434,6 +462,51 @@ struct CameraVisionView: View {
             startPlayer = try? AVAudioPlayer(contentsOf: startURL)
             startPlayer?.prepareToPlay()
         }
+        
+        // Setup full body sound
+        if let fullBodyURL = Bundle.main.url(forResource: "FullBodyInFrame", withExtension: "wav") {
+            do {
+                fullBodyPlayer = try AVAudioPlayer(contentsOf: fullBodyURL)
+                fullBodyPlayer?.prepareToPlay()
+                print("Full Body player initialized successfully")
+            } catch {
+                print("Error initializing Full Body player: \(error)")
+            }
+        } else {
+            print("Failed to find Full Body sound file")
+        }
+        
+        // Setup turn body sound
+        if let turnBodyURL = Bundle.main.url(forResource: "TurnBodySlightly", withExtension: "wav") {
+            do {
+                turnBodyPlayer = try AVAudioPlayer(contentsOf: turnBodyURL)
+                turnBodyPlayer?.prepareToPlay()
+                print("Turn Body player initialized successfully")
+            } catch {
+                print("Error initializing Turn Body player: \(error)")
+            }
+        } else {
+            print("Failed to find Turn Body sound file")
+        }
+        
+        // Setup jab instruction sound
+        if let jabInstructionURL = Bundle.main.url(forResource: "JabStraightAhead", withExtension: "wav") {
+            jabInstructionPlayer = try? AVAudioPlayer(contentsOf: jabInstructionURL)
+            jabInstructionPlayer?.prepareToPlay()
+        }
+    }
+    
+    // Add new function to handle body detection state changes
+    func checkBodyDetectionState() {
+        print("checkBodyDetectionState called - isBodyDetected: \(isBodyDetected), isBodyComplete: \(isBodyComplete), hasTurnedBody: \(hasTurnedBody)")
+        
+        if !isBodyDetected || !isBodyComplete {
+            print("Playing full body audio instruction")
+            fullBodyPlayer?.play()
+        } else if isBodyDetected && isBodyComplete && !hasTurnedBody {
+            print("Playing turn body audio instruction")
+            turnBodyPlayer?.play()
+        }
     }
 }
 
@@ -447,6 +520,7 @@ struct CameraPreviewView: UIViewControllerRepresentable {
     @Binding var currentTurnAngle: Double
     
     var cameraManager: CameraManager
+    var turnBodyPlayer: AVAudioPlayer?
     
     class Coordinator: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         var parent: CameraPreviewView
@@ -549,15 +623,19 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                         // Only update UI state after meeting threshold and debounce time
                         let now = Date()
                         if now.timeIntervalSince(lastBodyStateChange) >= stateChangeDebounceInterval {
+                            print("About to change body detection state")
                             DispatchQueue.main.async {
                                 if self.consecutiveBodyDetections >= self.requiredConsecutiveFrames {
                                     self.parent.isBodyDetected = true
                                     self.parent.isBodyComplete = true
                                     self.lastBodyStateChange = now
+                                    print("Body Detection State: TRUE - consecutive detections: \(self.consecutiveBodyDetections)")
                                 } else if self.consecutiveBodyLosses >= self.requiredConsecutiveFrames {
                                     self.parent.isBodyDetected = false
                                     self.parent.isBodyComplete = false
                                     self.lastBodyStateChange = now
+                                    print("Body Detection State: FALSE - consecutive losses: \(self.consecutiveBodyLosses)")
+                                   // self.parent.turnBodyPlayer?.play()
                                 }
                             }
                         }

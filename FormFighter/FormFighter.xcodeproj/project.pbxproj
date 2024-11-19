@@ -144,6 +144,9 @@
 		81E98B112B72B0B6000E8996 /* CustomSignInWithAppleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E98B102B72B0B6000E8996 /* CustomSignInWithAppleButton.swift */; };
 		81F5C5112BCED29A001A0F57 /* AnimatedSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */; };
 		B20242A12C6C5A8500256733 /* FormFighterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811A37862B6EBA3B00C9E8B6 /* FormFighterApp.swift */; };
+		B2119AD42CED115F0071C52E /* TurnBodySlightly.wav in Resources */ = {isa = PBXBuildFile; fileRef = B2119AD32CED115F0071C52E /* TurnBodySlightly.wav */; };
+		B2119AD62CED11660071C52E /* FullBodyInFrame.wav in Resources */ = {isa = PBXBuildFile; fileRef = B2119AD52CED11660071C52E /* FullBodyInFrame.wav */; };
+		B2119AD82CED116F0071C52E /* JabStraightAhead.wav in Resources */ = {isa = PBXBuildFile; fileRef = B2119AD72CED116E0071C52E /* JabStraightAhead.wav */; };
 		B214115C2CCF151B00699B15 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214115B2CCF151B00699B15 /* FeedbackView.swift */; };
 		B214115F2CCF1A4500699B15 /* UserFeedbackPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214115E2CCF1A4500699B15 /* UserFeedbackPage.swift */; };
 		B21411612CE530A100699B15 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411602CE530A100699B15 /* NotificationManager.swift */; };
@@ -305,6 +308,9 @@
 		81E98B0E2B72B058000E8996 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		81E98B102B72B0B6000E8996 /* CustomSignInWithAppleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomSignInWithAppleButton.swift; sourceTree = "<group>"; };
 		81F5C5102BCED29A001A0F57 /* AnimatedSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedSelector.swift; sourceTree = "<group>"; };
+		B2119AD32CED115F0071C52E /* TurnBodySlightly.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = TurnBodySlightly.wav; sourceTree = "<group>"; };
+		B2119AD52CED11660071C52E /* FullBodyInFrame.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = FullBodyInFrame.wav; sourceTree = "<group>"; };
+		B2119AD72CED116E0071C52E /* JabStraightAhead.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = JabStraightAhead.wav; sourceTree = "<group>"; };
 		B214115B2CCF151B00699B15 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		B214115E2CCF1A4500699B15 /* UserFeedbackPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFeedbackPage.swift; sourceTree = "<group>"; };
 		B21411602CE530A100699B15 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
@@ -445,6 +451,9 @@
 			children = (
 				B21411E72CE7063E00699B15 /* splashscreen.gif */,
 				B214118C2CE672C500699B15 /* countdown.wav */,
+				B2119AD72CED116E0071C52E /* JabStraightAhead.wav */,
+				B2119AD52CED11660071C52E /* FullBodyInFrame.wav */,
+				B2119AD32CED115F0071C52E /* TurnBodySlightly.wav */,
 				B214118D2CE672C600699B15 /* start.wav */,
 				81D531BA2B7E2B4A0044D990 /* Animations */,
 				818D3F872B70096B00DF7299 /* Fonts */,
@@ -888,7 +897,9 @@
 				81D531CF2B7E2B660044D990 /* bot-watching.json in Resources */,
 				81D531D02B7E2B660044D990 /* sandwich-loading.json in Resources */,
 				81D531DA2B7E2B660044D990 /* ai.json in Resources */,
+				B2119AD82CED116F0071C52E /* JabStraightAhead.wav in Resources */,
 				81D531E22B7E2B660044D990 /* palette.json in Resources */,
+				B2119AD62CED11660071C52E /* FullBodyInFrame.wav in Resources */,
 				818D3F9F2B7009E100DF7299 /* ClashDisplay-Light.otf in Resources */,
 				818D3F9E2B7009E100DF7299 /* ClashDisplay-Extralight.otf in Resources */,
 				81D531D62B7E2B660044D990 /* plane.json in Resources */,
@@ -897,6 +908,7 @@
 				B214118F2CE672C600699B15 /* start.wav in Resources */,
 				B214118E2CE672C600699B15 /* countdown.wav in Resources */,
 				81D531D42B7E2B660044D990 /* cart.json in Resources */,
+				B2119AD42CED115F0071C52E /* TurnBodySlightly.wav in Resources */,
 				818D3F922B7009B500DF7299 /* BricolageGrotesque-Light.ttf in Resources */,
 				818D3FA32B7009E100DF7299 /* ClashDisplay-SemiBold.otf in Resources */,
 				818D3F942B7009B500DF7299 /* BricolageGrotesque-Medium.ttf in Resources */,
