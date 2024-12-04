@@ -1,11 +1,13 @@
 import Foundation
 import RevenueCat
+import UIKit
 
 class PurchasesManager: ObservableObject {
     enum PurchasesError: LocalizedError {
         case noCurrentOffering
         case noPackage
         case noPremiumEntitlement
+        case cancelFailed
         
         var errorDescription: String {
             switch self {
@@ -15,6 +17,8 @@ class PurchasesManager: ObservableObject {
                 "There is no package to purchase."
             case .noPremiumEntitlement:
                 "There is no premium entitlement."
+            case .cancelFailed:
+                "Unable to open subscription settings."
             }
         }
     }
@@ -22,8 +26,10 @@ class PurchasesManager: ObservableObject {
     enum SubscriptionType {
         case weekly
         case monthly
+        case quarterly
         case annual
         case lifetime
+        
         
         var name: String {
             switch self {
@@ -31,6 +37,8 @@ class PurchasesManager: ObservableObject {
                 "Weekly"
             case .monthly:
                 "Monthly"
+            case .quarterly:
+                "Quarterly"
             case .annual:
                 "Annual"
             case .lifetime:
@@ -43,6 +51,14 @@ class PurchasesManager: ObservableObject {
     
     @Published var currentOffering: Offering?
     @Published var entitlement: EntitlementInfo?
+    @Published var trialStatus: TrialStatus = .unknown
+    
+    enum TrialStatus {
+        case eligible
+        case active
+        case expired
+        case unknown
+    }
     
     // MARK: Useful for changing remotely the amount of free credits you give to users to try your app,
     // without having to create a new app version and pass a new review.
@@ -83,6 +99,24 @@ class PurchasesManager: ObservableObject {
             return price
         } else {
             Logger.log(message: "Cannot obtain Weekly Localized String ", event: .warning)
+            return "ERROR"
+        }
+    }
+
+    var quarterlyPrice: Double {
+        if let price = currentOffering?.threeMonth?.storeProduct.price {
+            return NSDecimalNumber(decimal: price).doubleValue
+        } else {
+            Logger.log(message: "Cannot obtain Quarterly price, returning default value: \(24.99)", event: .warning)
+            return 24.99
+        }
+    }   
+
+    var quarterlyPriceLocalized: String {
+        if let price = currentOffering?.threeMonth?.storeProduct.localizedPriceString {
+            return price
+        } else {
+            Logger.log(message: "Cannot obtain Quarterly Localized String ", event: .warning)
             return "ERROR"
         }
     }
@@ -151,6 +185,7 @@ class PurchasesManager: ObservableObject {
     private func setupRevenueCat() {
         Purchases.logLevel = .error
         Purchases.configure(withAPIKey: Const.Purchases.key)
+        checkTrialStatus()
     }
     
     func fetchOfferings() {
@@ -181,6 +216,41 @@ class PurchasesManager: ObservableObject {
         }
     }
     
+    func checkTrialStatus() {
+        Purchases.shared.getCustomerInfo { [weak self] customerInfo, error in
+            guard let self = self else { return }
+            
+            if let firstSeen = customerInfo?.originalAppUserId {
+                let firstSeenDate = Date(timeIntervalSince1970: TimeInterval(firstSeen) ?? Date().timeIntervalSince1970)
+                let trialEndDate = firstSeenDate.addingTimeInterval(72 * 3600) // 72 hours
+                
+                DispatchQueue.main.async {
+                    if customerInfo?.entitlements.all[Const.Purchases.premiumEntitlementIdentifier]?.isActive == true {
+                        // User is subscribed
+                        self.trialStatus = .expired
+                    } else if Date() < trialEndDate {
+                        // Within 48-hour window
+                        self.trialStatus = .active
+                    } else {
+                        // Trial expired
+                        self.trialStatus = .expired
+                    }
+                }
+            } else {
+                // New user
+                self.trialStatus = .eligible
+            }
+        }
+    }
+    
+    var isTrialActive: Bool {
+        trialStatus == .active
+    }
+    
+    var isPremiumActive: Bool {
+        entitlement?.isActive == true || isTrialActive
+    }
+    
     // MARK: Use this function to purchase manually if you build a custom paywall or purcharse
     // buttons over your app.
     func purchaseSubscription(_ type: SubscriptionType) async throws {
@@ -190,7 +260,9 @@ class PurchasesManager: ObservableObject {
             case .weekly:
                 currentOffering.weekly
             case .monthly:
-                currentOffering.monthly
+                currentOffering.monthly 
+            case .quarterly:
+                currentOffering.threeMonth
             case .annual:
                 currentOffering.annual
             case .lifetime:
@@ -211,6 +283,17 @@ class PurchasesManager: ObservableObject {
             
         } else {
             throw PurchasesError.noCurrentOffering
+        }
+    }
+    
+    func cancelSubscription() throws {
+        if let url = URL(string: "itms-apps://apps.apple.com/account/subscriptions") {
+            DispatchQueue.main.async {
+                UIApplication.shared.open(url, options: [:]) { _ in }
+            }
+        } else {
+            Logger.log(message: "Failed to create subscription settings URL", event: .error)
+            throw PurchasesError.cancelFailed
         }
     }
 }

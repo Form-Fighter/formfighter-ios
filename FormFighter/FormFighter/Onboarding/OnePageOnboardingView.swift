@@ -2,7 +2,7 @@ import SwiftUI
 
 struct OnePageOnboardingView: View {
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding: Bool = false
-    @State private var navigate = false
+    @State private var showPaywall = false
     
     var body: some View {
         ZStack {
@@ -35,13 +35,20 @@ struct OnePageOnboardingView: View {
                 
                 RoundedButton(title: "Continue") {
                     Haptic.shared.lightImpact()
-                    hasCompletedOnboarding = true
+                    // showPaywall = true
+                     hasCompletedOnboarding = true
                 }
             }
             .padding(40)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.customBackground)
+        .sheet(isPresented: $showPaywall) {
+            PaywallView() 
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+        }
+        
         // .navigationDestination(isPresented: $navigate) {
         //     // MARK: - If you want to skip request review and navigate directly to LoginView or
         //     // any other view, just comment the line below and add the proper view you wish.

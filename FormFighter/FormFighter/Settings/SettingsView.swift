@@ -1,6 +1,7 @@
 import SwiftUI
 import WishKit
 import TipKit
+import FirebaseFirestore
 
 struct SettingsView: View {
     @AppStorage("gptLanguage") var gptLanguage: GPTLanguage = .english
@@ -8,6 +9,7 @@ struct SettingsView: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var userManager: UserManager
     @EnvironmentObject var authManager: AuthManager
+    @EnvironmentObject var purchasesManager: PurchasesManager
     @StateObject var vm: SettingsVM
     @FocusState private var nameTextFieldFocused: Bool
     @FocusState private var firstNameTextFieldFocused: Bool
@@ -24,6 +26,10 @@ struct SettingsView: View {
     
     @ObservedObject private var notificationManager = NotificationManager.shared
     
+    @State private var showCancelFeedbackModal = false
+    @State private var cancellationFeedback = ""
+    @State private var isSavingFeedback = false
+
     var body: some View {
         List {
             Group {
@@ -48,7 +54,7 @@ struct SettingsView: View {
             }
         }
         .alert(isPresented: $vm.showAlert) {
-            Alert(title: Text("Oops! Something went wrong."), message: Text(vm.alertMessage), dismissButton: .default(Text("OK")))
+            Alert(title: Text("Purchase Status"), message: Text(vm.alertMessage), dismissButton: .default(Text("OK")))
         }
         .fullScreenCover(isPresented: $isShowingPaywall) {
             PaywallView()
@@ -278,6 +284,22 @@ struct SettingsView: View {
             } label: {
                 Text("Your Coach")
             }
+ 
+            // Subscription Status & Management
+            if !purchasesManager.isPremiumActive {
+                Button {
+                    isShowingPaywall.toggle()
+                    Tracker.tappedUnlockPremium()
+                } label: {
+                    HStack {
+                        Text("Start Subscription")
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.yellow)
+                    }
+                }
+            }
+            
+            subscriptionManagement
             
             Button(role: .destructive) {
                 Task {
@@ -298,6 +320,57 @@ struct SettingsView: View {
             } label: {
                 Text("Delete Account")
                     .foregroundColor(.red)
+            }
+        }
+        .sheet(isPresented: $showCancelFeedbackModal) {
+            NavigationView {
+                VStack(spacing: 20) {
+                    Text("Before You Go...")
+                        .font(.headline)
+                        .padding(.top)
+                    
+                    Text("We'd love to know why you're considering cancelling:")
+                        .multilineTextAlignment(.center)
+                    
+                    TextEditor(text: $cancellationFeedback)
+                        .frame(height: 100)
+                        .padding(4)
+                        .background(Color.secondary.opacity(0.2))
+                        .cornerRadius(8)
+                        .padding(.horizontal)
+                    
+                    Button("Submit & Cancel") {
+                        isSavingFeedback = true
+                        Task {
+                            await saveCancellationFeedback()
+                            do {
+                                try purchasesManager.cancelSubscription()
+                            } catch {
+                                Logger.log(message: "Failed to cancel subscription: \(error.localizedDescription)", event: .error)
+                                vm.alertMessage = "Failed to open subscription settings. Please try again."
+                                vm.showAlert = true
+                            }
+                            showCancelFeedbackModal = false
+                            isSavingFeedback = false
+                        }
+                    }
+                    .foregroundColor(.red)
+                    .padding()
+                    .disabled(isSavingFeedback)
+                    .overlay {
+                        if isSavingFeedback {
+                            ProgressView()
+                        }
+                    }
+                    
+                    Button("Keep Subscription") {
+                        showCancelFeedbackModal = false
+                    }
+                    .padding()
+                }
+                .navigationBarItems(trailing: Button("Close") {
+                    showCancelFeedbackModal = false
+                })
             }
         }
     }
@@ -387,6 +460,74 @@ struct SettingsView: View {
         vm.updateUserInfo(firstName: user.firstName, lastName: user.lastName)
         firstNameTextFieldFocused = false
         lastNameTextFieldFocused = false
+    }
+    
+    private func restorePurchases() async {
+        do {
+            await purchasesManager.fetchCustomerInfo()
+            
+            if purchasesManager.isPremiumActive {
+                vm.alertMessage = "Your subscription has been restored!"
+            } else {
+                vm.alertMessage = "No active subscription found."
+            }
+            vm.showAlert = true
+        } catch {
+            vm.alertMessage = "Failed to restore purchases. Please try again."
+            vm.showAlert = true
+        }
+    }
+    
+    var subscriptionManagement: some View {
+        Group {
+    
+            Button {
+                Task {
+                    await restorePurchases()
+                }
+            } label: {
+                HStack {
+                    Text("Restore Purchases")
+                        .foregroundStyle(colorScheme == .light ? .black : .white)
+                    Image(systemName: "arrow.clockwise")
+                        .foregroundColor(.blue)
+                }
+            }
+
+
+             if purchasesManager.isPremiumActive {
+                Button(role: .destructive) {
+                    showCancelFeedbackModal = true
+                } label: {
+                    HStack {
+                        Text("Cancel Subscription")
+                            .foregroundColor(.red)
+                        Image(systemName: "xmark.circle")
+                            .foregroundColor(.red)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func saveCancellationFeedback() async {
+        guard !cancellationFeedback.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        
+        let db = Firestore.firestore()
+        let feedbackData: [String: Any] = [
+            "userId": userManager.userId,
+            "feedback": cancellationFeedback,
+            "timestamp": FieldValue.serverTimestamp(),
+            "userEmail": userManager.user?.email ?? "Unknown",
+            "subscriptionType": purchasesManager.currentOffering?.identifier ?? "Unknown"
+        ]
+        
+        do {
+            try await db.collection("subscriptionFeedback").addDocument(data: feedbackData)
+            Tracker.subscriptionCancellationFeedback(feedback: cancellationFeedback)
+        } catch {
+            Logger.log(message: "Failed to save cancellation feedback: \(error.localizedDescription)", event: .error)
+        }
     }
 }
 

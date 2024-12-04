@@ -18,7 +18,7 @@ struct FormFighterApp: App {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.colorScheme) var colorScheme
     
-   // @StateObject var purchasesManager = PurchasesManager.shared
+    @StateObject var purchasesManager = PurchasesManager.shared
     @StateObject var authManager = AuthManager()
     @StateObject var userManager = UserManager.shared
     @State private var pendingCoachId: String?
@@ -59,7 +59,9 @@ struct FormFighterApp: App {
                     Group {
                         if !hasCompletedOnboarding {
                             onboarding
-                        } else if userManager.isAuthenticated {
+                        } else if purchasesManager.isPremiumActive && !userManager.isAuthenticated {
+                            LoginView(showPaywallInTheOnboarding: false)
+                        } else if userManager.isAuthenticated && purchasesManager.isPremiumActive {
                             TabView(selection: $selectedTab) {
                                 VisionView()
                                     .tabItem { 
@@ -95,7 +97,7 @@ struct FormFighterApp: App {
                             .tint(ThemeColors.primary)
                             .background(ThemeColors.background)
                         } else {
-                            LoginView(showPaywallInTheOnboarding: false)
+                            PaywallView()
                         }
                     }
                     .opacity(showSplash ? 0 : 1)
@@ -113,7 +115,7 @@ struct FormFighterApp: App {
                     }
                 }
                 .preferredColorScheme(selectedScheme)
-               // .environmentObject(purchasesManager)
+                .environmentObject(purchasesManager)
                 .environmentObject(authManager)
                 .environmentObject(userManager)
                 .onOpenURL { url in

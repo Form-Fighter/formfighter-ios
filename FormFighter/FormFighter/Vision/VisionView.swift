@@ -5,48 +5,65 @@ struct VisionView: View {
     @State private var hasCameraPermission = false
     @State private var showCameraView = false
     @State private var missingPermissionsMessage = ""
+    @State private var showPaywall = false
+    @EnvironmentObject private var purchasesManager: PurchasesManager
     
     @StateObject private var cameraManager = CameraManager()
     
     var body: some View {
-        if showCameraView {
-            CameraVisionView(cameraManager: cameraManager)
-                .onAppear {
-                    cameraManager.startSession()
-                }
-                .onDisappear {
-                    cameraManager.stopSession()
-                }
-        } else {
-            VStack {
-                Text("🥊 Muay Thai Vision Access 🥊")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .padding(.bottom, 5)
-                
-                Text(missingPermissionsMessage)
-                    .foregroundColor(.red)
-                    .padding()
-                    .multilineTextAlignment(.center)
-                
-                Button(action: openSettings) {
-                    Text("Enable Camera Access")
-                        .foregroundColor(.white)
+        ZStack {
+            if !purchasesManager.isPremiumActive {
+                PaywallView()
+            } else if showCameraView {
+                CameraVisionView(cameraManager: cameraManager)
+                    .onAppear {
+                        cameraManager.startSession()
+                    }
+                    .onDisappear {
+                        cameraManager.stopSession()
+                    }
+            } else {
+                VStack {
+                    Text("🥊 Muay Thai Vision Access 🥊")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(.bottom, 5)
+                    
+                    Text(missingPermissionsMessage)
+                        .foregroundColor(.red)
                         .padding()
-                        .background(Color.red)
-                        .cornerRadius(10)
-                        .shadow(radius: 3)
+                        .multilineTextAlignment(.center)
+                    
+                    Button(action: openSettings) {
+                        Text("Enable Camera Access")
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.red)
+                            .cornerRadius(10)
+                            .shadow(radius: 3)
+                    }
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color.white)
+                        .shadow(radius: 5)
+                )
+                .onTapGesture {
+                    if !purchasesManager.isPremiumActive {
+                        showPaywall = true
+                    }
                 }
             }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 15)
-                    .fill(Color.white)
-                    .shadow(radius: 5)
-            )
-            .onAppear {
-                checkPermissions()
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+        }
+        .onAppear {
+            if !purchasesManager.isPremiumActive {
+                showPaywall = true
             }
+            checkPermissions()
         }
     }
     

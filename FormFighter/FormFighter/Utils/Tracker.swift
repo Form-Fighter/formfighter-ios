@@ -283,4 +283,11 @@ final class Tracker {
     static func appSessionEnded() {
         Analytics.logEvent("app_session_ended", parameters: nil)
     }
+    
+    static func subscriptionCancellationFeedback(feedback: String) {
+        Analytics.logEvent("subscription_cancellation_feedback", parameters: [
+            "feedback": feedback
+        ])
+        Logger.log(message: "User submitted cancellation feedback", event: .info)
+    }
 }

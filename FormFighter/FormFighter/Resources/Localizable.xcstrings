@@ -532,6 +532,7 @@
       }
     },
     "☁️ Sync Your Foods in the Cloud" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -602,6 +603,7 @@
       }
     },
     "♥️ Support a Solo Developer" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1024,6 +1026,7 @@
       }
     },
     "📸 Food macros at one shot" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1106,6 +1109,7 @@
 
     },
     "🥙 Unlimited meal analysis" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1689,6 +1693,7 @@
       }
     },
     "Analyze meals with the power of AI as much as you want." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1911,6 +1916,9 @@
     "Back" : {
 
     },
+    "Before You Go..." : {
+
+    },
     "Birthdate" : {
 
     },
@@ -2054,6 +2062,9 @@
           }
         }
       }
+    },
+    "Cancel Subscription" : {
+
     },
     "Change progress" : {
       "localizations" : {
@@ -2205,6 +2216,9 @@
     "Children's World Through Their Art..." : {
 
     },
+    "Choose" : {
+
+    },
     "Choose Image Source" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2346,6 +2360,9 @@
           }
         }
       }
+    },
+    "Close" : {
+
     },
     "Color Scheme" : {
       "extractionState" : "stale",
@@ -3629,6 +3646,9 @@
         }
       }
     },
+    "Keep Subscription" : {
+
+    },
     "Kid's name" : {
 
     },
@@ -4099,6 +4119,7 @@
 
     },
     "Oops! Something went wrong." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4169,6 +4190,7 @@
       }
     },
     "P R E M I U M" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4596,6 +4618,9 @@
         }
       }
     },
+    "Premium Access" : {
+
+    },
     "Preparing your feedback..." : {
 
     },
@@ -4675,6 +4700,9 @@
     "Progress" : {
 
     },
+    "Purchase Status" : {
+
+    },
     "Ready to dive into" : {
 
     },
@@ -4748,7 +4776,16 @@
         }
       }
     },
+    "Restore Purchases" : {
+
+    },
+    "Risk-free trial • then %@" : {
+
+    },
     "Save" : {
+
+    },
+    "SAVE %lld%%" : {
 
     },
     "Save time" : {
@@ -4823,6 +4860,7 @@
       }
     },
     "Save time counting calories. Aim, shot and check the results." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5274,6 +5312,9 @@
         }
       }
     },
+    "Start Subscription" : {
+
+    },
     "Stay Updated" : {
 
     },
@@ -5368,6 +5409,7 @@
       }
     },
     "Store your meals and check its macros in the future." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5438,6 +5480,9 @@
       }
     },
     "Submit" : {
+
+    },
+    "Submit & Cancel" : {
 
     },
     "Tap to insert user name" : {
@@ -5594,6 +5639,7 @@
 
     },
     "This app was entirely created by 👨🏻‍💻 one person. Your support will directly contribute to my ongoing work and efforts." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5886,6 +5932,9 @@
     "Train in a tidy and well lit indoor room  for the best results" : {
 
     },
+    "Train Smarter,\nFight Better" : {
+
+    },
     "Training History" : {
 
     },
@@ -6122,6 +6171,9 @@
 
     },
     "Unexpected Error" : {
+
+    },
+    "Unlock Free Trial" : {
 
     },
     "Unlock Premium" : {
@@ -6482,6 +6534,9 @@
           }
         }
       }
+    },
+    "We'd love to know why you're considering cancelling:" : {
+
     },
     "Week" : {
 
