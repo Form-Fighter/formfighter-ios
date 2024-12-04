@@ -42,7 +42,7 @@ struct FormFighterApp: App {
         
         // Force solid navigation bar appearance
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
+       // appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor(ThemeColors.background)
         
         UINavigationBar.appearance().standardAppearance = appearance
@@ -69,7 +69,7 @@ struct FormFighterApp: App {
                                             .foregroundStyle(ThemeColors.primary)
                                     }
                                     .toolbarBackground(.visible, for: .navigationBar)
-                                    .toolbarBackground(ThemeColors.background.opacity(1), for: .navigationBar)
+                                    .toolbarBackground(ThemeColors.background, for: .navigationBar)
                                     .navigationBarTitleDisplayMode(.inline)
                                     .toolbar {
                                         ToolbarItem(placement: .principal) {

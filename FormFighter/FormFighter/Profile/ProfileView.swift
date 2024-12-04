@@ -33,12 +33,12 @@ struct ProfileView: View {
                         .padding(.top, 40)
                 } else {
                     // Analytics Section
-                    VStack(alignment: .leading, spacing: 32) {
+                    VStack(alignment: .leading, spacing: 16) {
                         Text("Analytics")
                             .font(.system(.title2, design: .rounded, weight: .semibold))
                             .foregroundColor(ThemeColors.primary)
                             .padding(.horizontal)
-                            .padding(.vertical, 8)
+                            .padding(.vertical, 1)
                         
                         TabView(selection: $selectedTab) {
                             StatsView(timeInterval: .day, feedbacks: viewModel.feedbacks, viewModel: viewModel)
@@ -60,11 +60,10 @@ struct ProfileView: View {
                                         .font(.headline) 
                                 }
                         }
-                        .frame(height: 850)
+                        .frame(height: 600)
                       
                     }
-                    .padding(.vertical, 32)
-                    .background(ThemeColors.background.opacity(0.5))
+                    .padding(.vertical, 4)
                     .cornerRadius(12)
                     
                     
@@ -88,27 +87,7 @@ struct ProfileView: View {
                 }
             }
         }
-        .background(ThemeColors.background.opacity(0.3))
-        .overlay(
-            // Add subtle bounce arrow indicator at the bottom
-            VStack {
-                Spacer()
-                Image(systemName: "chevron.compact.down")
-                    .font(.system(size: 40))
-                    .foregroundColor(ThemeColors.primary.opacity(0.6))
-                    .padding(.bottom, 10)
-                    .background(
-                        LinearGradient(
-                            gradient: Gradient(colors: [
-                                ThemeColors.background.opacity(0),
-                                ThemeColors.background.opacity(0.3)
-                            ]),
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-            }
-        )
+        .background(ThemeColors.background)
         .onAppear {
             viewModel.fetchUserFeedback(userId: userManager.userId)
         }
@@ -183,9 +162,8 @@ struct StatsView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 40) {
-            // Stats Grid
-            VStack(spacing: 32) {
+        VStack(alignment: .leading, spacing: 24) {
+            HStack(spacing: 16) {
                 StatBox(
                     title: "Training Sessions",
                     value: "\(feedbacksInInterval.count)",
@@ -200,29 +178,23 @@ struct StatsView: View {
             }
             .padding(.horizontal)
             .padding(.vertical, 16)
-            .padding(.bottom, 32)
             
-            // Line Chart - Separated from VStack with more padding
+            // Line Chart
             Group {
                 if !chartData.isEmpty {
                     LineChartView(data: chartData, timeInterval: timeInterval)
-                        .transition(.opacity)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 400)  // Increased height
-                        .padding(.horizontal, 32)  // Increased horizontal padding
-                        .padding(.vertical, 24)    // Added vertical padding
-                        .background(ThemeColors.background.opacity(0.3))
-                        .cornerRadius(12)
+                        .frame(height: 400)
+                        .padding(.horizontal)
                 } else {
                     Text("No data available for this time period")
                         .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding()
+                        .frame(height: 400)
                 }
             }
         }
-        .background(ThemeColors.background.opacity(0.5))
-        .cornerRadius(12)
     }
     
     private func filterFeedbacks(for timeInterval: TimePeriod, from feedbacks: [ProfileVM.FeedbackListItem]) -> [ProfileVM.FeedbackListItem] {
@@ -260,25 +232,26 @@ struct StatBox: View {
     let icon: String
     
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 8) {
             Image(systemName: icon)
                 .foregroundColor(ThemeColors.primary)
-                .font(.system(size: 24))
+                .font(.system(size: 18))
             
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.system(.headline, design: .rounded))
+                    .font(.system(.caption, design: .rounded))
                     .foregroundColor(.secondary)
+                    .lineLimit(1)
                 
                 Text(value)
-                    .font(.system(.title, design: .rounded, weight: .bold))
+                    .font(.system(.callout, design: .rounded, weight: .bold))
                     .foregroundColor(ThemeColors.primary)
             }
             
             Spacer()
         }
         .frame(maxWidth: .infinity)
-        .padding(20)
+        .padding(10)
         .background(ThemeColors.background)
         .cornerRadius(12)
         .overlay(
@@ -392,7 +365,7 @@ struct FeedbackRowView: View {
             }
         }
         .padding()
-        .background(ThemeColors.background.opacity(0.5))
+        .background(ThemeColors.background)
         .cornerRadius(8)
         .overlay(
             RoundedRectangle(cornerRadius: 8)
