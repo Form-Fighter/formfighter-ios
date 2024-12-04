@@ -63,27 +63,26 @@ struct ProfileView: View {
                         .frame(height: 600)
                       
                     }
-                    .padding(.vertical, 4)
+                    .padding(.vertical, 8)
                     .cornerRadius(12)
                     
                     
                     // Add more spacing before Training History
-                    Spacer()
-                        .frame(height: 24)
+                    
                     
                     // Training History Section
-                    VStack(alignment: .leading, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 16) {
                         Text("Training History")
                             .font(.system(.title2, design: .rounded, weight: .semibold))
                             .foregroundColor(ThemeColors.primary)
-                            .padding(.top, 16)
+                            .padding(.top, 8)
                             .padding(.horizontal)
                         
                         PunchListView(viewModel: viewModel, sortOption: $sortOption)
                             .padding(.horizontal)
-                            .padding(.vertical, 8)
+                            .padding(.vertical, 4)
                     }
-                    .padding(.vertical, 32)
+                    .padding(.vertical, 16)
                 }
             }
         }

@@ -12,6 +12,9 @@ struct VisionView: View {
     
     var body: some View {
         ZStack {
+            Color.black.ignoresSafeArea()
+            ThemeColors.background.ignoresSafeArea()
+            
             if !purchasesManager.isPremiumActive {
                 PaywallView()
             } else if showCameraView {
@@ -21,6 +24,9 @@ struct VisionView: View {
                     }
                     .onDisappear {
                         cameraManager.stopSession()
+                    }
+                    .safeAreaInset(edge: .bottom) {
+                        Color.clear.frame(height: 0)
                     }
             } else {
                 VStack {
@@ -56,6 +62,7 @@ struct VisionView: View {
                 }
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showPaywall) {
             PaywallView()
         }

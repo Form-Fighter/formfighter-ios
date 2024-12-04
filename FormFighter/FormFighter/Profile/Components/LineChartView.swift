@@ -104,7 +104,7 @@ struct LineChartView: View {
         case .week:
             return date.formatted(.dateTime.weekday(.abbreviated))
         case .month:
-            return date.formatted(.dateTime.month(.abbreviated))
+            return date.formatted(.dateTime.day())
         case .year:
             return ""
         }

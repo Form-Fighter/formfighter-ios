@@ -57,7 +57,7 @@ struct CameraVisionView: View {
                                   turnBodyPlayer: turnBodyPlayer
                                   
                 )
-                .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea(.all, edges: [.horizontal])
                 
                 
                 // Updated keypoints visualization
@@ -290,10 +290,12 @@ struct CameraVisionView: View {
                 checkBodyDetectionState()
                 checkBodyAndStartTimers()
             }
-            .ignoresSafeArea()
+            .ignoresSafeArea(.all, edges: [.horizontal, .top])
+           
         }
-        .navigationBarHidden(true)
-        .navigationBarBackButtonHidden(true)
+         
+       .navigationBarHidden(true)
+       .navigationBarBackButtonHidden(true)
         .onAppear {
             NotificationCenter.default.addObserver(forName: NSNotification.Name("VideoRecorded"), object: nil, queue: .main) { notification in
                 if let url = notification.object as? URL {

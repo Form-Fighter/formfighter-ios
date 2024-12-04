@@ -42,12 +42,14 @@ struct FormFighterApp: App {
         
         // Force solid navigation bar appearance
         let appearance = UINavigationBarAppearance()
-       // appearance.configureWithOpaqueBackground()
+        appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor(ThemeColors.background)
+        appearance.shadowColor = .clear
         
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        UINavigationBar.appearance().tintColor = UIColor(ThemeColors.primary)
         
         setupCrashlytics()
     }
@@ -96,6 +98,8 @@ struct FormFighterApp: App {
                             }
                             .tint(ThemeColors.primary)
                             .background(ThemeColors.background)
+                            .toolbarBackground(.visible, for: .tabBar)
+                            .toolbarBackground(ThemeColors.background, for: .tabBar)
                         } else {
                             PaywallView()
                         }
