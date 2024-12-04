@@ -21,62 +21,110 @@ struct PaywallView: View {
     private let quarterlyDiscount = 33.0
     
     var body: some View {
-        VStack(spacing: 24) {
-            Text("Train Smarter,\nFight Better")
-                .font(.special(.title, weight: .bold))
-                .multilineTextAlignment(.center)
-                .padding(.top)
+        ZStack {
+            // Add dynamic background
+            LinearGradient(
+                colors: [.black.opacity(0.9), Color.brand.opacity(0.8)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
             
-            // Subscription options - centered, no scrolling
-            if let weekly = purchasesManager.currentOffering?.weekly {
-                SubscriptionOptionView(
-                    package: weekly,
-                    isSelected: selectedPackage?.identifier == weekly.identifier,
-                    discount: nil as Double?,
-                    theme: .muayThai
-                ) {
-                    selectedPackage = weekly
+            VStack(spacing: 32) {
+                // Enhanced header
+                VStack(spacing: 16) {
+                    Image(systemName: "flame.fill")
+                        .font(.system(size: 44))
+                        .foregroundColor(.orange)
+                        .scaleEffect(buttonScale)
+                        .animation(
+                            Animation.easeInOut(duration: 1.0)
+                                .repeatForever(autoreverses: true),
+                            value: buttonScale
+                        )
+                    
+                    Text("Train Smarter")
+                        .font(.special(.title2, weight: .black))
+                        .foregroundColor(.white)
+                        .tracking(2)
+                    
+                    Text("Fight Better")
+                        .font(.special(.subheadline, weight: .medium))
+                        .foregroundColor(.white.opacity(0.8))
                 }
-                .padding(.horizontal)
-            }
-            
-            // Purchase button
-            Button(action: {
-                Task { await purchaseSelected() }
-            }) {
-                Text(isTrialEligible ? "Unlock Free Trial" : "Choose")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.brand)
-                    .cornerRadius(12)
-                    .scaleEffect(buttonScale)
-            }
-            .disabled(selectedPackage == nil || isLoading)
-            .padding(.horizontal)
-            
-            if isTrialEligible, let package = selectedPackage {
-                Text("Risk-free trial • then \(package.storeProduct.localizedPriceString)")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            // Bottom links
-            VStack(spacing: 12) {
-                Button("Restore Purchases") {
-                    Task {
-                        await restorePurchases()
-                    }
-                }
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .padding(.top, 40)
                 
-                TermsAndPrivacyPolicyView()
+                // Benefits section
+                VStack(spacing: 16) {
+                    benefitRow(icon: "checkmark.circle.fill", text: "Professional Training Programs")
+                    benefitRow(icon: "chart.line.uptrend.xyaxis", text: "Track Your Progress")
+                    benefitRow(icon: "video.fill", text: "HD Video Tutorials")
+                }
+                .padding(.vertical)
+
+                // Modified subscription option
+                if let weekly = purchasesManager.currentOffering?.weekly {
+                    SubscriptionOptionView(
+                        package: weekly,
+                        isSelected: selectedPackage?.identifier == weekly.identifier,
+                        discount: nil,
+                        theme: .muayThai
+                    ) {
+                        selectedPackage = weekly
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                            buttonScale = 1.1
+                        }
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.6).delay(0.1)) {
+                            buttonScale = 1.0
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+
+                // Enhanced purchase button
+                Button(action: {
+                    Task { await purchaseSelected() }
+                }) {
+                    Text(isTrialEligible ? "START FREE TRIAL NOW" : "UNLOCK PREMIUM")
+                        .font(.headline.bold())
+                        .foregroundColor(.black)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(
+                            LinearGradient(
+                                colors: [.yellow, .orange],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .cornerRadius(12)
+                        .shadow(color: .orange.opacity(0.5), radius: 10, x: 0, y: 5)
+                        .scaleEffect(buttonScale)
+                }
+                .disabled(selectedPackage == nil || isLoading)
+                .padding(.horizontal)
+
+                if isTrialEligible, let package = selectedPackage {
+                    Text("Risk-free trial • then \(package.storeProduct.localizedPriceString)")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                // Enhanced bottom links
+                VStack(spacing: 16) {
+                    Button("Restore Purchases") {
+                        Task { await restorePurchases() }
+                    }
+                    .font(.subheadline)
+                    .foregroundColor(.white.opacity(0.7))
+                    
+                    TermsAndPrivacyPolicyView()
+                        .foregroundColor(.white.opacity(0.5))
+                }
+                .padding(.bottom)
             }
-            .padding(.bottom)
         }
         .alert("Restore Purchases", isPresented: $showAlert) {
             Button("OK", role: .cancel) { }
@@ -146,6 +194,17 @@ struct PaywallView: View {
             showAlert = true
         }
     }
+    
+    private func benefitRow(icon: String, text: String) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .foregroundColor(.orange)
+            Text(text)
+                .foregroundColor(.white)
+            Spacer()
+        }
+        .padding(.horizontal)
+    }
 }
 
 struct SubscriptionOptionView: View {
@@ -157,24 +216,20 @@ struct SubscriptionOptionView: View {
     
     var body: some View {
         Button(action: action) {
-            VStack(alignment: .leading, spacing: 12) {
-                if let discount = discount {
-                    HStack {
-                        Text("SAVE \(Int(discount))%")
-                            .font(.caption.bold())
-                            .foregroundColor(.red)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.red.opacity(0.2))
-                            .cornerRadius(4)
-                        Spacer()
-                        if isSelected {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.red)
-                                .font(.title3)
-                        }
-                    }
+            VStack(alignment: .leading, spacing: 16) {
+                HStack {
+                    Text("PREMIUM ACCESS")
+                        .font(.caption.bold())
+                        .foregroundColor(.orange)
+                    
+                    Text(package.storeProduct.localizedPriceString)
+                        .font(.title.bold())
+                        .foregroundColor(.white)
+                    
+                    Text("per week")
+                        .font(.subheadline)
                 }
+                .padding(.horizontal)
                 
                 Spacer()
                 

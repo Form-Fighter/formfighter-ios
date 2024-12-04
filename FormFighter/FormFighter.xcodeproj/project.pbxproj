@@ -147,6 +147,7 @@
 		B2119AD42CED115F0071C52E /* TurnBodySlightly.wav in Resources */ = {isa = PBXBuildFile; fileRef = B2119AD32CED115F0071C52E /* TurnBodySlightly.wav */; };
 		B2119AD62CED11660071C52E /* FullBodyInFrame.wav in Resources */ = {isa = PBXBuildFile; fileRef = B2119AD52CED11660071C52E /* FullBodyInFrame.wav */; };
 		B2119AD82CED116F0071C52E /* JabStraightAhead.wav in Resources */ = {isa = PBXBuildFile; fileRef = B2119AD72CED116E0071C52E /* JabStraightAhead.wav */; };
+		B2119AEF2D010AD10071C52E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2119AED2D010AD10071C52E /* Extensions.swift */; };
 		B214115C2CCF151B00699B15 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214115B2CCF151B00699B15 /* FeedbackView.swift */; };
 		B214115F2CCF1A4500699B15 /* UserFeedbackPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214115E2CCF1A4500699B15 /* UserFeedbackPage.swift */; };
 		B21411612CE530A100699B15 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411602CE530A100699B15 /* NotificationManager.swift */; };
@@ -311,6 +312,7 @@
 		B2119AD32CED115F0071C52E /* TurnBodySlightly.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = TurnBodySlightly.wav; sourceTree = "<group>"; };
 		B2119AD52CED11660071C52E /* FullBodyInFrame.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = FullBodyInFrame.wav; sourceTree = "<group>"; };
 		B2119AD72CED116E0071C52E /* JabStraightAhead.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = JabStraightAhead.wav; sourceTree = "<group>"; };
+		B2119AED2D010AD10071C52E /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		B214115B2CCF151B00699B15 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		B214115E2CCF1A4500699B15 /* UserFeedbackPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFeedbackPage.swift; sourceTree = "<group>"; };
 		B21411602CE530A100699B15 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
@@ -371,6 +373,7 @@
 		811A377A2B6EBA3B00C9E8B6 = {
 			isa = PBXGroup;
 			children = (
+				B2119AEE2D010AD10071C52E /* Utilities */,
 				B214116C2CE5324500699B15 /* Views */,
 				B21411652CE530F200699B15 /* App */,
 				811A37852B6EBA3B00C9E8B6 /* FormFighter */,
@@ -699,6 +702,15 @@
 				81DE14DF2B752C4600C41EA9 /* StoreKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B2119AEE2D010AD10071C52E /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				B2119AED2D010AD10071C52E /* Extensions.swift */,
+			);
+			name = Utilities;
+			path = FormFighter/Utilities;
 			sourceTree = "<group>";
 		};
 		B214115A2CCF128600699B15 /* FeedbackPage */ = {
@@ -1038,6 +1050,7 @@
 				B21411662CE530F200699B15 /* AppDelegate.swift in Sources */,
 				818D3FDA2B713D0F00DF7299 /* PillButton.swift in Sources */,
 				8125D5B42B77F167001A846B /* ChatGPTService.swift in Sources */,
+				B2119AEF2D010AD10071C52E /* Extensions.swift in Sources */,
 				818D3FE42B715DCC00DF7299 /* MultiplePagesOnboardingFeature.swift in Sources */,
 				81DE14D62B75266200C41EA9 /* UserManager.swift in Sources */,
 				81DE14DA2B75269600C41EA9 /* User.swift in Sources */,

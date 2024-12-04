@@ -177,9 +177,13 @@ class PurchasesManager: ObservableObject {
     
     
     private init() {
+
+        setupDebugLogging()
+      
         setupRevenueCat()
         fetchOfferings()
         fetchCustomerInfo()
+        debugPrintCustomerInfo()
     }
     
     private func setupRevenueCat() {
@@ -286,14 +290,118 @@ class PurchasesManager: ObservableObject {
         }
     }
     
-    func cancelSubscription() throws {
-        if let url = URL(string: "itms-apps://apps.apple.com/account/subscriptions") {
-            DispatchQueue.main.async {
-                UIApplication.shared.open(url, options: [:]) { _ in }
+    func cancelSubscription() async throws {
+        // Fetch the latest customer info
+        let customerInfo = try await Purchases.shared.customerInfo()
+        
+        // Get all active subscriptions
+        guard let activeSubscription = customerInfo.activeSubscriptions.first else {
+            throw NSError(domain: "com.formfighter", code: -1, userInfo: [
+                NSLocalizedDescriptionKey: "No active subscription found"
+            ])
+        }
+        
+        Logger.log(message: "Attempting to cancel subscription: \(activeSubscription)", event: .info)
+        
+        // For anonymous users, just reset instead of logout
+        if customerInfo.originalAppUserId.starts(with: "$RCAnonymousID:") {
+            Logger.log(message: "Anonymous user detected, performing reset", event: .info)
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                Purchases.shared.logOut { customerInfo, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: ())
+                    }
+                }
             }
         } else {
-            Logger.log(message: "Failed to create subscription settings URL", event: .error)
-            throw PurchasesError.cancelFailed
+            // For logged-in users, perform logout
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                Purchases.shared.logOut { customerInfo, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: ())
+                    }
+                }
+            }
+        }
+        
+        // Fetch fresh customer info
+        await self.fetchCustomerInfo()
+        
+        // Clear local state
+        self.entitlement = nil
+        self.currentOffering = nil
+        
+        // Explicitly set trial status to expired
+        DispatchQueue.main.async {
+            self.trialStatus = .expired
+        }
+        
+        // Notify observers
+        NotificationCenter.default.post(name: .subscriptionStatusChanged, object: nil)
+        
+        Logger.log(message: "Successfully cancelled subscription", event: .info)
+    }
+    
+    // MARK: - Debug Functions
+    
+    func resetCustomerInfo() {
+        Task {
+            do {
+                // Reset the customer info in RevenueCat
+                try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                    Purchases.shared.logOut { customerInfo, error in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                        } else {
+                            continuation.resume(returning: ())
+                        }
+                    }
+                }
+                
+                // Fetch fresh customer info
+                await self.fetchCustomerInfo()
+                
+                // Clear local state
+                self.entitlement = nil
+                self.currentOffering = nil
+                
+                Logger.log(message: "Successfully reset customer info", event: .info)
+            } catch {
+                Logger.log(message: "Failed to reset customer info: \(error.localizedDescription)", event: .error)
+            }
         }
     }
+
+    func debugPrintCustomerInfo() {
+        Purchases.shared.getCustomerInfo { customerInfo, error in
+            if let error = error {
+                print("🔴 RevenueCat Error: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let info = customerInfo else {
+                print("🔴 RevenueCat: No customer info available")
+                return
+            }
+            
+            print("📱 RevenueCat Debug Info:")
+            print("└── Original App User ID: \(info.originalAppUserId)")
+            print("└── First Seen: \(Date(timeIntervalSince1970: TimeInterval(info.originalAppUserId) ?? 0))")
+            print("└── Latest Expiration Date: \(info.latestExpirationDate?.description ?? "None")")
+            print("└── Active Subscriptions: \(info.activeSubscriptions)")
+            print("└── All Purchased Product IDs: \(info.allPurchasedProductIdentifiers)")
+            print("└── Non Subscriptions: \(info.nonSubscriptionTransactions)")
+            print("└── Trial Status: \(self.trialStatus)")
+        }
+    }
+
+    private func setupDebugLogging() {
+        Purchases.logLevel = .debug
+        Logger.log(message: "RevenueCat debug logging enabled", event: .debug)
+    }
+ 
 }

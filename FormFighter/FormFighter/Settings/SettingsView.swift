@@ -343,13 +343,6 @@ struct SettingsView: View {
                         isSavingFeedback = true
                         Task {
                             await saveCancellationFeedback()
-                            do {
-                                try purchasesManager.cancelSubscription()
-                            } catch {
-                                Logger.log(message: "Failed to cancel subscription: \(error.localizedDescription)", event: .error)
-                                vm.alertMessage = "Failed to open subscription settings. Please try again."
-                                vm.showAlert = true
-                            }
                             showCancelFeedbackModal = false
                             isSavingFeedback = false
                         }
@@ -511,23 +504,41 @@ struct SettingsView: View {
     }
     
     private func saveCancellationFeedback() async {
-        guard !cancellationFeedback.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-        
-        let db = Firestore.firestore()
-        let feedbackData: [String: Any] = [
-            "userId": userManager.userId,
-            "feedback": cancellationFeedback,
-            "timestamp": FieldValue.serverTimestamp(),
-            "userEmail": userManager.user?.email ?? "Unknown",
-            "subscriptionType": purchasesManager.currentOffering?.identifier ?? "Unknown"
-        ]
-        
         do {
-            try await db.collection("subscriptionFeedback").addDocument(data: feedbackData)
-            Tracker.subscriptionCancellationFeedback(feedback: cancellationFeedback)
+            // Save feedback if provided
+            if !cancellationFeedback.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                let db = Firestore.firestore()
+                let feedbackData: [String: Any] = [
+                    "userId": userManager.userId,
+                    "feedback": cancellationFeedback,
+                    "timestamp": FieldValue.serverTimestamp(),
+                    "userEmail": userManager.user?.email ?? "Unknown",
+                    "subscriptionType": purchasesManager.currentOffering?.identifier ?? "Unknown"
+                ]
+                
+                try await db.collection("subscriptionFeedback").addDocument(data: feedbackData)
+                Tracker.subscriptionCancellationFeedback(feedback: cancellationFeedback)
+            }
+            
+            // Cancel subscription
+            try await purchasesManager.cancelSubscription()
+            
+            // Reset customer info
+            purchasesManager.resetCustomerInfo()
+            
+            // Show success message
+            vm.alertMessage = "Your subscription has been cancelled."
+            vm.showAlert = true
+            
+            // Close the modal
+            showCancelFeedbackModal = false
         } catch {
-            Logger.log(message: "Failed to save cancellation feedback: \(error.localizedDescription)", event: .error)
+            Logger.log(message: "Failed to process cancellation: \(error.localizedDescription)", event: .error)
+            vm.alertMessage = "Failed to cancel subscription. Please try again."
+            vm.showAlert = true
         }
+        
+        isSavingFeedback = false
     }
 }
 

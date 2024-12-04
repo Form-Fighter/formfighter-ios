@@ -2216,9 +2216,6 @@
     "Children's World Through Their Art..." : {
 
     },
-    "Choose" : {
-
-    },
     "Choose Image Source" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3093,6 +3090,9 @@
       }
     },
     "Experience an AI's perspective on what each artwork symbolizes" : {
+
+    },
+    "Fight Better" : {
 
     },
     "Fighter Profile" : {
@@ -4260,6 +4260,9 @@
         }
       }
     },
+    "per week" : {
+
+    },
     "Photo Library" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4621,6 +4624,9 @@
     "Premium Access" : {
 
     },
+    "PREMIUM ACCESS" : {
+
+    },
     "Preparing your feedback..." : {
 
     },
@@ -4783,9 +4789,6 @@
 
     },
     "Save" : {
-
-    },
-    "SAVE %lld%%" : {
 
     },
     "Save time" : {
@@ -5239,6 +5242,9 @@
 
     },
     "Sort by" : {
+
+    },
+    "START FREE TRIAL NOW" : {
 
     },
     "Start scanning your meals!" : {
@@ -5932,7 +5938,7 @@
     "Train in a tidy and well lit indoor room  for the best results" : {
 
     },
-    "Train Smarter,\nFight Better" : {
+    "Train Smarter" : {
 
     },
     "Training History" : {
@@ -6173,9 +6179,6 @@
     "Unexpected Error" : {
 
     },
-    "Unlock Free Trial" : {
-
-    },
     "Unlock Premium" : {
       "localizations" : {
         "de" : {
@@ -6245,6 +6248,9 @@
           }
         }
       }
+    },
+    "UNLOCK PREMIUM" : {
+
     },
     "Unlock Premium Features" : {
       "localizations" : {
