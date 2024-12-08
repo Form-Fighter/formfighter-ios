@@ -6,204 +6,273 @@ enum SubscriptionTheme {
     case muayThai
 }
 
+
 struct PaywallView: View {
-    @EnvironmentObject private var purchasesManager: PurchasesManager
-    @EnvironmentObject var userManager: UserManager
     @Environment(\.dismiss) var dismiss
-    @State private var selectedPackage: Package?
-    @State private var isTrialEligible = false
+    @EnvironmentObject var purchaseManager: PurchasesManager
     @State private var isLoading = false
-    @State private var buttonScale: CGFloat = 1.0
-    @State private var showAlert = false
-    @State private var alertMessage = ""
     
-    private let monthlyDiscount = 25.0
-    private let quarterlyDiscount = 33.0
+    #if DEBUG
+    private let showDebugButton = true
+    #else
+    private let showDebugButton = false
+    #endif
     
     var body: some View {
         ZStack {
-            // Add dynamic background
+            // Premium gradient background
             LinearGradient(
-                colors: [.black.opacity(0.9), Color.brand.opacity(0.8)],
+                colors: [
+                    .black,
+                    .brand.opacity(0.3),
+                    .black
+                ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
             .ignoresSafeArea()
             
-            VStack(spacing: 32) {
-                // Enhanced header
-                VStack(spacing: 16) {
-                    Image(systemName: "flame.fill")
-                        .font(.system(size: 44))
-                        .foregroundColor(.orange)
-                        .scaleEffect(buttonScale)
-                        .animation(
-                            Animation.easeInOut(duration: 1.0)
-                                .repeatForever(autoreverses: true),
-                            value: buttonScale
+            // Content
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 32) {
+                    // Header
+                    VStack(spacing: 16) {
+                        Text("Perfect Every Strike")
+                            .font(.special(.title, weight: .black))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.white, .white.opacity(0.8)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                        
+                        Text("Unlimited AI-Powered Feedback")
+                            .font(.special(.title3, weight: .medium))
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                    .padding(.top, 40)
+                    
+                    // Value Props
+                    VStack(spacing: 24) {
+                        ValuePropCard(
+                            icon: "target",
+                            title: "Clear Path to Mastery",
+                            description: "Get unlimited, data-backed feedback on every punch. Perfect for beginners and pros alike."
                         )
-                    
-                    Text("Train Smarter")
-                        .font(.special(.title2, weight: .black))
-                        .foregroundColor(.white)
-                        .tracking(2)
-                    
-                    Text("Fight Better")
-                        .font(.special(.subheadline, weight: .medium))
-                        .foregroundColor(.white.opacity(0.8))
-                }
-                .padding(.top, 40)
-                
-                // Benefits section
-                VStack(spacing: 16) {
-                    benefitRow(icon: "checkmark.circle.fill", text: "Professional Training Programs")
-                    benefitRow(icon: "chart.line.uptrend.xyaxis", text: "Track Your Progress")
-                    benefitRow(icon: "video.fill", text: "HD Video Tutorials")
-                }
-                .padding(.vertical)
-
-                // Modified subscription option
-                if let weekly = purchasesManager.currentOffering?.weekly {
-                    SubscriptionOptionView(
-                        package: weekly,
-                        isSelected: selectedPackage?.identifier == weekly.identifier,
-                        discount: nil,
-                        theme: .muayThai
-                    ) {
-                        selectedPackage = weekly
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                            buttonScale = 1.1
-                        }
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.6).delay(0.1)) {
-                            buttonScale = 1.0
-                        }
+                        
+                        ValuePropCard(
+                            icon: "ruler",
+                            title: "Precision Analysis",
+                            description: "Receive step-by-step feedback on your stance, hip rotation, hand position, shoulder alignment, and more. Every part of your technique is analyzed in detail."
+                        )
+                        
+                        ValuePropCard(
+                            icon: "bolt.fill",
+                            title: "Real-Time Results",
+                            description: "Get instant feedback after every jab—refine your speed, power, and accuracy to take your training to the next level."
+                        )
+                        
+                        ValuePropCard(
+                            icon: "chart.line.uptrend.xyaxis",
+                            title: "Track Progress",
+                            description: "See how your jab improves over time with detailed stats and analysis. Track your speed, power, and form corrections."
+                        )
+                        
+                        ValuePropCard(
+                            icon: "iphone.rear.camera",
+                            title: "Effortless Integration",
+                            description: "Just your phone and your jab. Train on your terms and get better every day."
+                        )
                     }
                     .padding(.horizontal)
-                }
-
-                // Enhanced purchase button
-                Button(action: {
-                    Task { await purchaseSelected() }
-                }) {
-                    Text(isTrialEligible ? "START FREE TRIAL NOW" : "UNLOCK PREMIUM")
-                        .font(.headline.bold())
-                        .foregroundColor(.black)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(
-                            LinearGradient(
-                                colors: [.yellow, .orange],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(12)
-                        .shadow(color: .orange.opacity(0.5), radius: 10, x: 0, y: 5)
-                        .scaleEffect(buttonScale)
-                }
-                .disabled(selectedPackage == nil || isLoading)
-                .padding(.horizontal)
-
-                if isTrialEligible, let package = selectedPackage {
-                    Text("Risk-free trial • then \(package.storeProduct.localizedPriceString)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-
-                Spacer()
-
-                // Enhanced bottom links
-                VStack(spacing: 16) {
-                    Button("Restore Purchases") {
-                        Task { await restorePurchases() }
-                    }
-                    .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.7))
                     
-                    TermsAndPrivacyPolicyView()
-                        .foregroundColor(.white.opacity(0.5))
-                }
-                .padding(.bottom)
-            }
-        }
-        .alert("Restore Purchases", isPresented: $showAlert) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text(alertMessage)
-        }
-        .onAppear {
-            withAnimation(Animation.easeInOut(duration: 1.0).repeatForever()) {
-                buttonScale = 1.05
-            }
-            checkTrialEligibility()
-        }
-    }
-    
-    private func purchaseSelected() async {
-        guard let package = selectedPackage else { return }
-        isLoading = true
-        defer { isLoading = false }
-        
-        do {
-            let purchaseResult = try await Purchases.shared.purchase(package: package)
-            if purchaseResult.customerInfo.entitlements.all[Const.Purchases.premiumEntitlementIdentifier]?.isActive == true {
-                dismiss()
-            }
-        } catch {
-            print("Purchase failed:", error.localizedDescription)
-        }
-    }
-    
-    private func checkTrialEligibility() {
-        Purchases.shared.getOfferings { offerings, error in
-            if let error = error {
-                print("❌ RevenueCat Offerings Error:", error.localizedDescription)
-                return
-            }
-            
-            print("📦 Current Offering:", offerings?.current?.identifier ?? "nil")
-            print("📦 Available Packages:", offerings?.current?.availablePackages.map { $0.identifier } ?? [])
-            
-            if let product = offerings?.current?.availablePackages.first?.storeProduct {
-                print("🏷 Product ID:", product.productIdentifier)
-                print("🏷 Has Intro Offer:", product.introductoryDiscount != nil)
-                
-                Purchases.shared.checkTrialOrIntroDiscountEligibility(product: product) { eligibility in
-                    DispatchQueue.main.async {
-                        self.isTrialEligible = eligibility == .eligible
+                    // Pricing
+                    VStack(spacing: 16) {
+                        if let offering = purchaseManager.currentOffering {
+                            if let weekly = offering.weekly {
+                                Text(weekly.storeProduct.localizedPriceString + "/week")
+                                    .font(.special(.title2, weight: .bold))
+                                    .foregroundColor(.white)
+                                
+                                if purchaseManager.trialStatus == .eligible {
+                                    Text("Start with 3-day free trial")
+                                        .font(.special(.subheadline, weight: .medium))
+                                        .foregroundColor(.white.opacity(0.7))
+                                }
+                                
+                                Text("Cancel anytime")
+                                    .font(.special(.subheadline, weight: .medium))
+                                    .foregroundColor(.white.opacity(0.7))
+                            }
+                        } else {
+                            ProgressView()
+                                .tint(.white)
+                        }
                     }
+                    .padding(.vertical)
+                    
+                    // CTA Button
+                    Button {
+                        Task {
+                            isLoading = true
+                            if let offering = purchaseManager.currentOffering,
+                               let weekly = offering.weekly {
+                                do {
+                                    try await purchaseManager.purchaseSubscription(.weekly)
+                                    dismiss()
+                                } catch {
+                                    print("Purchase failed: \(error)")
+                                }
+                            }
+                            isLoading = false
+                        }
+                    } label: {
+                        HStack {
+                            if isLoading {
+                                ProgressView()
+                                    .tint(.white)
+                            } else {
+                                Text(purchaseManager.trialStatus == .eligible ? "Start Free Trial" : "Subscribe Now")
+                                    .font(.special(.title3, weight: .bold))
+                                
+                                Image(systemName: "arrow.right")
+                                    .font(.title3)
+                            }
+                        }
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 56)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color.brand)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                                )
+                        )
+                        .shadow(color: .brand.opacity(0.5), radius: 20)
+                    }
+                    .disabled(isLoading || purchaseManager.currentOffering?.weekly == nil)
+                    .padding(.horizontal)
+                    
+                    // Footer links
+                    VStack(spacing: 12) {
+                        Button {
+                            Task {
+                                isLoading = true
+                                do {
+                                    await purchaseManager.fetchCustomerInfo()
+                                    dismiss()
+                                } catch {
+                                    print("Restore failed: \(error)")
+                                }
+                                isLoading = false
+                            }
+                        } label: {
+                            Text("Restore Purchases")
+                                .font(.special(.subheadline, weight: .medium))
+                                .foregroundColor(.white.opacity(0.7))
+                        }
+                        .disabled(isLoading)
+                        
+                        TermsAndPrivacyPolicyView()
+                            .foregroundColor(.white.opacity(0.5))
+                    }
+                    .padding(.vertical)
                 }
             }
-        }
-    }
-    
-    private func restorePurchases() async {
-        do {
-            let customerInfo = try await Purchases.shared.restorePurchases()
-            if customerInfo.entitlements.all[Const.Purchases.premiumEntitlementIdentifier]?.isActive == true {
-                alertMessage = "Your subscription has been restored!"
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    dismiss()
+            
+            // Close button
+            VStack {
+                HStack {
+                    Spacer()
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                    .padding()
                 }
-            } else {
-                alertMessage = "No active subscription found."
+                Spacer()
             }
-            showAlert = true
-        } catch {
-            alertMessage = "Failed to restore purchases. Please try again."
-            showAlert = true
+            
+            // Add debug button at the bottom
+            // if showDebugButton {
+            //     VStack {
+            //         Spacer()
+            //         Button {
+            //             Task {
+            //                 // Simulate successful purchase by setting both trial and entitlement
+            //                 purchaseManager.trialStatus = .active
+            //                 // Create a mock entitlement and set it
+            //                 // let mockEntitlement = EntitlementInfo(
+            //                 //     identifier: "premium",
+            //                 //     isActive: true,
+            //                 //     willRenew: true,
+            //                 //     periodType: .normal,
+            //                 //     latestPurchaseDate: Date(),
+            //                 //     originalPurchaseDate: Date(),
+            //                 //     expirationDate: Date().addingTimeInterval(7 * 24 * 60 * 60), // 7 days from now
+            //                 //     store: .appStore,
+            //                 //     isSandbox: true,
+            //                 //     unsubscribeDetectedAt: nil,
+            //                 //     billingIssueDetectedAt: nil
+            //                 // )
+            //                 // purchaseManager.entitlement = mockEntitlement
+            //                 await purchaseManager.fetchCustomerInfo()
+            //                 dismiss()
+            //             }
+            //         } label: {
+            //             Text("Debug: Simulate Purchase")
+            //                 .font(.special(.caption, weight: .medium))
+            //                 .foregroundColor(.white.opacity(0.5))
+            //         }
+            //         .padding(.bottom, 8)
+            //     }
+            // }
+        }
+        .task {
+            await purchaseManager.fetchOfferings()
         }
     }
+}
+
+// Value proposition card
+private struct ValuePropCard: View {
+    let icon: String
+    let title: String
+    let description: String
     
-    private func benefitRow(icon: String, text: String) -> some View {
-        HStack(spacing: 12) {
+    var body: some View {
+        HStack(alignment: .top, spacing: 16) {
             Image(systemName: icon)
-                .foregroundColor(.orange)
-            Text(text)
-                .foregroundColor(.white)
-            Spacer()
+                .font(.title2)
+                .foregroundColor(.brand)
+                .frame(width: 32)
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text(title)
+                    .font(.special(.title3, weight: .bold))
+                    .foregroundColor(.white)
+                
+                Text(description)
+                    .font(.special(.body, weight: .regular))
+                    .foregroundColor(.white.opacity(0.7))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
-        .padding(.horizontal)
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.black.opacity(0.3))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                )
+        )
     }
 }
 

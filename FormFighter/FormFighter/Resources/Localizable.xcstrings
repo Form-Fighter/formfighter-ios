@@ -2063,6 +2063,9 @@
         }
       }
     },
+    "Cancel anytime" : {
+
+    },
     "Cancel Subscription" : {
 
     },
@@ -2432,6 +2435,9 @@
         }
       }
     },
+    "Compare Your Options" : {
+
+    },
     "Complete your first session to see your stats" : {
 
     },
@@ -2717,6 +2723,9 @@
       }
     },
     "Date" : {
+
+    },
+    "Debug: Simulate Purchase" : {
 
     },
     "Delete" : {
@@ -3092,13 +3101,13 @@
     "Experience an AI's perspective on what each artwork symbolizes" : {
 
     },
-    "Fight Better" : {
-
-    },
     "Fighter Profile" : {
 
     },
     "First Name" : {
+
+    },
+    "For just $14.99/week, you'll get unlimited feedback on your technique — that's a fraction of what private coaching costs." : {
 
     },
     "Form Fighter Settings" : {
@@ -3256,6 +3265,9 @@
         }
       }
     },
+    "Here's what we found based on your answers!" : {
+
+    },
     "Hi, I will be your assistant. Please make your requests." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3402,9 +3414,6 @@
 
     },
     "How old is %@?" : {
-
-    },
-    "How to get the best results with %@⚡️" : {
 
     },
     "How to Record Your Form" : {
@@ -3563,6 +3572,9 @@
         }
       }
     },
+    "Invest in Yourself with Elite Feedback" : {
+
+    },
     "Is this the feedback you expected?" : {
 
     },
@@ -3656,6 +3668,9 @@
 
     },
     "Let's go!" : {
+
+    },
+    "Let's tailor your experience to help you master your technique." : {
 
     },
     "Loading..." : {
@@ -4263,6 +4278,9 @@
     "per week" : {
 
     },
+    "Perfect Every Strike" : {
+
+    },
     "Photo Library" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4785,9 +4803,6 @@
     "Restore Purchases" : {
 
     },
-    "Risk-free trial • then %@" : {
-
-    },
     "Save" : {
 
     },
@@ -4942,6 +4957,9 @@
     "Score: %lld" : {
 
     },
+    "See Your Savings" : {
+
+    },
     "Select Meal" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -5084,12 +5102,6 @@
       }
     },
     "Share" : {
-
-    },
-    "Share film with coaches and other fighters" : {
-
-    },
-    "Share with Coaches and Friends" : {
 
     },
     "Share your experience (optional)" : {
@@ -5238,13 +5250,16 @@
     "Sign Out" : {
 
     },
+    "Skip one training session, perfect every jab you'll ever throw." : {
+
+    },
     "Something went wrong" : {
 
     },
     "Sort by" : {
 
     },
-    "START FREE TRIAL NOW" : {
+    "Start Free Trial" : {
 
     },
     "Start scanning your meals!" : {
@@ -5319,6 +5334,12 @@
       }
     },
     "Start Subscription" : {
+
+    },
+    "Start with 3-day free trial" : {
+
+    },
+    "Start Your Journey" : {
 
     },
     "Stay Updated" : {
@@ -5489,6 +5510,9 @@
 
     },
     "Submit & Cancel" : {
+
+    },
+    "Subscribe Now" : {
 
     },
     "Tap to insert user name" : {
@@ -5856,9 +5880,6 @@
         }
       }
     },
-    "Tidy & Bright" : {
-
-    },
     "Time" : {
 
     },
@@ -5933,12 +5954,6 @@
       }
     },
     "Train" : {
-
-    },
-    "Train in a tidy and well lit indoor room  for the best results" : {
-
-    },
-    "Train Smarter" : {
 
     },
     "Training History" : {
@@ -6021,12 +6036,6 @@
       }
     },
     "Turn %.0f° / 7°" : {
-
-    },
-    "Turn 7 degrees" : {
-
-    },
-    "Turn 7 degrees from the camera for the best results" : {
 
     },
     "Type here" : {
@@ -6179,6 +6188,12 @@
     "Unexpected Error" : {
 
     },
+    "Unlimited AI-Powered Feedback" : {
+
+    },
+    "Unlock Elite Feedback Now!" : {
+
+    },
     "Unlock Premium" : {
       "localizations" : {
         "de" : {
@@ -6248,9 +6263,6 @@
           }
         }
       }
-    },
-    "UNLOCK PREMIUM" : {
-
     },
     "Unlock Premium Features" : {
       "localizations" : {
@@ -6621,6 +6633,9 @@
         }
       }
     },
+    "Welcome to\nForm Fighter" : {
+
+    },
     "Welcome to 🌯WrapFast⚡️!" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -6853,6 +6868,9 @@
       }
     },
     "Your name will be saved in the cloud." : {
+
+    },
+    "Your Savings Breakdown" : {
 
     }
   },
