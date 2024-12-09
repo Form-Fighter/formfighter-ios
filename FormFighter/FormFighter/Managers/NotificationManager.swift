@@ -9,6 +9,7 @@ import UserNotifications
 enum NotificationType {
     case feedback
     case system
+    case streak
     
     var title: String {
         switch self {
@@ -16,6 +17,8 @@ enum NotificationType {
             return "New Feedback"
         case .system:
             return "System Update"
+        case .streak:
+            return "Streak Notification"
         }
     }
 }
@@ -138,6 +141,69 @@ class NotificationManager: NSObject, ObservableObject {
                 print("Current FCM token: \(token)")
             }
         }
+    }
+    
+    func scheduleStreakNotification(streak: Int, lastTrainingTime: Date) {
+        // Cancel any existing streak notifications
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [NotificationType.streak.rawValue])
+        
+        let content = UNMutableNotificationContent()
+        let hour = Calendar.current.component(.hour, from: lastTrainingTime)
+        
+        // Customize message based on time and streak
+        if hour < 6 {
+            content.title = "Early Bird! 🌅"
+            content.body = "We know it's early, but don't let your \(streak)-day streak slip away. Quick jab?"
+        } else if hour >= 22 {
+            content.title = "Night Owl! 🌙"
+            content.body = "We know you're up late, but your \(streak)-day streak is worth protecting. Quick jab?"
+        } else {
+            content.title = "Protect Your Streak! 🔥"
+            content.body = "Don't break your \(streak)-day streak. Time for today's jab!"
+        }
+        
+        content.sound = .default
+        
+        // Schedule for same time tomorrow
+        var components = Calendar.current.dateComponents([.hour, .minute], from: lastTrainingTime)
+        components.day = Calendar.current.component(.day, from: Date()) + 1
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+        
+        let request = UNNotificationRequest(
+            identifier: NotificationType.streak.rawValue,
+            content: content,
+            trigger: trigger
+        )
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error scheduling streak notification: \(error)")
+            }
+        }
+        
+        // Save notification info to UserDefaults for tracking attempts
+        let notification = StreakNotification(
+            type: .streak,
+            streak: streak,
+            lastTrainingTime: lastTrainingTime
+        )
+        saveStreakNotification(notification)
+    }
+    
+    private func saveStreakNotification(_ notification: StreakNotification) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(notification) {
+            UserDefaults.standard.set(encoded, forKey: "streak_notification")
+        }
+    }
+    
+    private func loadStreakNotification() -> StreakNotification? {
+        if let data = UserDefaults.standard.data(forKey: "streak_notification") {
+            let decoder = JSONDecoder()
+            return try? decoder.decode(StreakNotification.self, from: data)
+        }
+        return nil
     }
 }
 
