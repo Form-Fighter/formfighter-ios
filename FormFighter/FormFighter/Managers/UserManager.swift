@@ -259,13 +259,13 @@ extension UserManager {
         set { user?.height = newValue }
     }
     
-    var wingspan: String {
-        get { user?.wingspan ?? "" }
-        set { user?.wingspan = newValue }
+    var reach: String {
+        get { user?.reach ?? "" }
+        set { user?.reach = newValue }
     }
     
-    var preferredStance: String {
-        get { user?.preferredStance ?? "" }
+    var preferredStance: String? {
+        get { user?.preferredStance }
         set { user?.preferredStance = newValue }
     }
     

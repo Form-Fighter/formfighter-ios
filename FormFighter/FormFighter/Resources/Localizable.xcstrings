@@ -211,6 +211,12 @@
         }
       }
     },
+    "'" : {
+
+    },
+    "\"" : {
+
+    },
     "**Q: What is %@?**\nA: %@ is a nutrition app that uses artificial intelligence to analyze images of meals taken by users in order to estimate macronutrients.\n\n**Q: How does %@ estimate macronutrients in my meals?**\nA: The app utilizes advanced AI algorithms to analyze photos of your meals, estimating the macronutrient content based on the visual characteristics of the food.\n\n** Q: Can %@ replace a professional nutritionist?**\nA: No, %@ is designed to provide estimations and does not replace the expertise of a professional nutritionist.\n\n**Q: Why might the app fail to analyze some images correctly?**\nA: Certain images may not be analyzed accurately due to factors like poor lighting, unclear images, or meals that the AI is not trained to recognize.\n\n**Q: How can I import pictures into %@?**\nA: You can import pictures directly from your Photo Library or use your device's Camera to take a new photo.\n\n**Q: Is there a free trial available?**\nA: Yes, %@ offers a free trial that allows a limited number of meal analyses. This lets you experience the app's capabilities before committing to a subscription.\n\n**Q: What does the premium subscription offer?**\nA: The premium subscription grants unlimited meal analyses, enabling you to use the app's AI analysis feature without restrictions.\n\n**Q: Why is there a cost associated with analyzing unlimited meals?**\nA: Analyzing meals with AI requires significant computer power, which incurs costs. The subscription fee helps cover these expenses, allowing us to offer continuous and efficient service.\n\n**Q: Who can I contact for support or feedback?**\nA: For any support requests or feedback, please reach out to us at %@. We're here to help!" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -675,6 +681,9 @@
           }
         }
       }
+    },
+    "⚙️ Account Management" : {
+
     },
     "✉️ Support" : {
       "localizations" : {
@@ -2951,7 +2960,6 @@
 
     },
     "Email" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3189,6 +3197,9 @@
         }
       }
     },
+    "ft" : {
+
+    },
     "Get Ready Fighter! Stay in the camera." : {
 
     },
@@ -3196,6 +3207,9 @@
 
     },
     "Got it! 👊" : {
+
+    },
+    "Height" : {
 
     },
     "Hello, World!" : {
@@ -3508,6 +3522,9 @@
       }
     },
     "I would recommend this app" : {
+
+    },
+    "in" : {
 
     },
     "Info" : {
@@ -4213,6 +4230,9 @@
         }
       }
     },
+    "Optional" : {
+
+    },
     "P R E M I U M" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4734,6 +4754,9 @@
 
     },
     "Purchase Status" : {
+
+    },
+    "Reach (inches)" : {
 
     },
     "Ready to dive into" : {
@@ -5266,6 +5289,9 @@
 
     },
     "Sort by" : {
+
+    },
+    "Stance" : {
 
     },
     "Start Free Trial" : {
@@ -6566,6 +6592,12 @@
 
     },
     "Week" : {
+
+    },
+    "Weight (lbs)" : {
+
+    },
+    "Weight in lbs" : {
 
     },
     "Welcome to" : {

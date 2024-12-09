@@ -9,7 +9,7 @@ struct User: Codable {
     var myCoach: String
     var height: String?
     var weight: String?
-    var wingspan: String?
+    var reach: String?
     var preferredStance: String?
     let email: String
     var currentStreak: Int?
@@ -26,7 +26,7 @@ extension User {
              myCoach: "Unknown",
              height: "",
              weight: "",
-             wingspan: "",
+             reach: "",
              preferredStance: "",
              email: "unknown@email.com",
              currentStreak: 0,

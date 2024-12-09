@@ -71,22 +71,34 @@ class SettingsVM: ObservableObject {
         }
     }
     
-    func updateUserInfo(firstName: String, lastName: String) {
+    func updateUserInfo(
+        firstName: String,
+        lastName: String,
+        height: String? = nil,
+        weight: String? = nil,
+        reach: String? = nil,
+        preferredStance: String? = nil,
+        email: String? = nil
+    ) {
         guard let currentUser = userManager.user else { return }
         
         let userId = currentUser.id
-        let email = currentUser.email
-        let coachID = currentUser.coachID
         let fullName = "\(firstName) \(lastName)"
-        let myCoach = currentUser.myCoach
+        
         let updatedUser = User(
             id: userId,
             name: fullName,
             firstName: firstName,
             lastName: lastName,
-            coachID: coachID,
-            myCoach: myCoach,
-            email: email
+            coachID: currentUser.coachID,
+            myCoach: currentUser.myCoach,
+            height: height ?? currentUser.height,
+            weight: weight ?? currentUser.weight,
+            reach: reach ?? currentUser.reach,
+            preferredStance: preferredStance ?? currentUser.preferredStance,
+            email: email ?? currentUser.email,
+            currentStreak: currentUser.currentStreak,
+            lastTrainingDate: currentUser.lastTrainingDate
         )
         
         Task {
@@ -97,11 +109,11 @@ class SettingsVM: ObservableObject {
                     userManager.user = updatedUser
                 }
                 
-                Logger.log(message: "User name updated successfully", event: .debug)
+                Logger.log(message: "User info updated successfully", event: .debug)
             } catch {
                 await MainActor.run {
-                    self.alertMessage = "Failed to update user info: \(error.localizedDescription)"
-                    self.showAlert = true
+                    showAlert = true
+                    alertMessage = "Failed to update user info"
                 }
                 Logger.log(message: error.localizedDescription, event: .error)
             }
