@@ -36,6 +36,7 @@ class UserManager: ObservableObject {
     }
     @Published var shouldShowCelebration: Bool = false
     private var userListener: ListenerRegistration?
+    let badgeService = BadgeService()
     
     private init(user: User? = nil,
                  isAuthenticated: Bool = false,
@@ -218,6 +219,23 @@ class UserManager: ObservableObject {
     
     deinit {
         userListener?.remove()
+    }
+    
+    // Start listening when user logs in
+    func signIn(userId: String) {
+        badgeService.startListening(userId: userId)
+    }
+    
+    // Stop listening when user logs out
+    func signOut() {
+        badgeService.stopListening()
+    }
+    
+    // Process events when they occur
+    func updateStreak(_ newStreak: Int) {
+        Task {
+            await badgeService.processEvent(.streakUpdated(days: newStreak))
+        }
     }
 }
 

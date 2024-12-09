@@ -67,6 +67,15 @@ class FeedbackViewModel: ObservableObject {
                         
                         self.feedback = try Firestore.Decoder().decode(FeedbackModels.FeedbackData.self, from: data)
                         os_log("Successfully decoded feedback data", log: self.logger, type: .debug)
+                        
+                        // Let the BadgeService handle all badge logic and update jab volume
+                      // Let the BadgeService handle all badge logic
+                        Task {
+                            if let feedback = self.feedback {
+                                await BadgeService.shared.processEvent(.processFeedback(feedback: feedback))
+                            }
+                        }
+                        
                     } catch {
                         os_log("Feedback decoding error: %@", log: self.logger, type: .error, error.localizedDescription)
                         // Add more detailed error information

@@ -175,6 +175,10 @@
 		B252ED672D06D41800013524 /* FeedbackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B252ED662D06D41800013524 /* FeedbackManager.swift */; };
 		B252ED692D06D43B00013524 /* FeedbackListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B252ED682D06D43B00013524 /* FeedbackListItem.swift */; };
 		B252ED6C2D06E41E00013524 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = B252ED6B2D06E41E00013524 /* ConfettiSwiftUI */; };
+		B252ED6E2D076D1800013524 /* Badge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B252ED6D2D076D1800013524 /* Badge.swift */; };
+		B252ED732D076D9400013524 /* BadgeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B252ED712D076D9400013524 /* BadgeService.swift */; };
+		B252ED752D076DAB00013524 /* BadgeCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B252ED742D076DAB00013524 /* BadgeCelebrationView.swift */; };
+		B252ED772D076E1900013524 /* BadgeGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B252ED762D076E1900013524 /* BadgeGridView.swift */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
 		B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */; };
 		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
@@ -340,6 +344,10 @@
 		B21411EF2CE92D7F00699B15 /* VideoPlayerObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerObserver.swift; sourceTree = "<group>"; };
 		B252ED662D06D41800013524 /* FeedbackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackManager.swift; sourceTree = "<group>"; };
 		B252ED682D06D43B00013524 /* FeedbackListItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackListItem.swift; sourceTree = "<group>"; };
+		B252ED6D2D076D1800013524 /* Badge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Badge.swift; sourceTree = "<group>"; };
+		B252ED712D076D9400013524 /* BadgeService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadgeService.swift; sourceTree = "<group>"; };
+		B252ED742D076DAB00013524 /* BadgeCelebrationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadgeCelebrationView.swift; sourceTree = "<group>"; };
+		B252ED762D076E1900013524 /* BadgeGridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadgeGridView.swift; sourceTree = "<group>"; };
 		B256D8A02CEA638F00085249 /* FormFighter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighter.entitlements; sourceTree = "<group>"; };
 		B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighterDebug.entitlements; sourceTree = "<group>"; };
 		B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntNumberFieldView.swift; sourceTree = "<group>"; };
@@ -379,6 +387,7 @@
 		811A377A2B6EBA3B00C9E8B6 = {
 			isa = PBXGroup;
 			children = (
+				B252ED722D076D9400013524 /* Services */,
 				B2119AEE2D010AD10071C52E /* Utilities */,
 				B214116C2CE5324500699B15 /* Views */,
 				B21411652CE530F200699B15 /* App */,
@@ -436,6 +445,7 @@
 		818D3F812B6FA3CA00DF7299 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B252ED6D2D076D1800013524 /* Badge.swift */,
 				B252ED682D06D43B00013524 /* FeedbackListItem.swift */,
 				B214117D2CE62E2300699B15 /* FeedbackStatus.swift */,
 				B21411672CE5311000699B15 /* FeedbackData.swift */,
@@ -762,6 +772,7 @@
 		B21411722CE537BB00699B15 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				B252ED742D076DAB00013524 /* BadgeCelebrationView.swift */,
 				B21411752CE5380700699B15 /* UserFeedbackSheet.swift */,
 				B21411702CE537BB00699B15 /* FeedbackSection.swift */,
 				B21411712CE537BB00699B15 /* ScoreCardView.swift */,
@@ -780,6 +791,7 @@
 		B21411852CE6477F00699B15 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				B252ED762D076E1900013524 /* BadgeGridView.swift */,
 				B21411842CE6477F00699B15 /* LineChartView.swift */,
 			);
 			path = Components;
@@ -791,6 +803,15 @@
 				B21411872CE6491F00699B15 /* PunchStats.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		B252ED722D076D9400013524 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B252ED712D076D9400013524 /* BadgeService.swift */,
+			);
+			name = Services;
+			path = FormFighter/Services;
 			sourceTree = "<group>";
 		};
 		B2B9F0B62CB0A77F00D7CFC8 /* Profile */ = {
@@ -983,6 +1004,7 @@
 				B21411762CE5380700699B15 /* UserFeedbackSheet.swift in Sources */,
 				81E98B082B72A781000E8996 /* RequestReviewView.swift in Sources */,
 				B21411732CE537BB00699B15 /* FeedbackSection.swift in Sources */,
+				B252ED752D076DAB00013524 /* BadgeCelebrationView.swift in Sources */,
 				B21411832CE63BED00699B15 /* ImprovementsGridView.swift in Sources */,
 				81D531F22B83CBC50044D990 /* ColorSchemeType.swift in Sources */,
 				81DE14F42B76352200C41EA9 /* AuthBackendService.swift in Sources */,
@@ -1009,6 +1031,7 @@
 				B214117C2CE6247300699B15 /* MuayThaiButtonStyle.swift in Sources */,
 				81E98B0D2B72AC81000E8996 /* KeychainManager.swift in Sources */,
 				B20242A12C6C5A8500256733 /* FormFighterApp.swift in Sources */,
+				B252ED6E2D076D1800013524 /* Badge.swift in Sources */,
 				818D3FE22B715B3D00DF7299 /* MultiplePagesOnboardingView.swift in Sources */,
 				B21411682CE5311000699B15 /* FeedbackData.swift in Sources */,
 				8125D5BE2B77FC8D001A846B /* MessageView.swift in Sources */,
@@ -1047,6 +1070,7 @@
 				B214115F2CCF1A4500699B15 /* UserFeedbackPage.swift in Sources */,
 				818D3FB72B700E9D00DF7299 /* +URLCache.swift in Sources */,
 				81DE14E62B754C6A00C41EA9 /* DeleteConfirmationAlert.swift in Sources */,
+				B252ED772D076E1900013524 /* BadgeGridView.swift in Sources */,
 				8125D5C22B7BF8F7001A846B /* DALLEResponse.swift in Sources */,
 				B21411F02CE92D7F00699B15 /* VideoPlayerObserver.swift in Sources */,
 				818D3F7E2B6FA14E00DF7299 /* DALLEView.swift in Sources */,
@@ -1067,6 +1091,7 @@
 				81DE14D62B75266200C41EA9 /* UserManager.swift in Sources */,
 				81DE14DA2B75269600C41EA9 /* User.swift in Sources */,
 				818D3FD62B713B1D00DF7299 /* OnboardingFeature.swift in Sources */,
+				B252ED732D076D9400013524 /* BadgeService.swift in Sources */,
 				818D3FB32B700E9D00DF7299 /* +Font.swift in Sources */,
 				B21411742CE537BB00699B15 /* ScoreCardView.swift in Sources */,
 				818D3FBF2B700F6200DF7299 /* Haptic.swift in Sources */,

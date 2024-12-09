@@ -88,6 +88,8 @@ struct ProfileView: View {
         }
     }
     @State private var triggerConfetti = 0
+    @State private var showingBadgeCelebration = false
+    @State private var earnedBadge: Badge?
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
@@ -104,6 +106,15 @@ struct ProfileView: View {
                             .onAppear {
                                 print("🎯 GamificationStats appeared - current streak: \(userManager.currentStreak)")
                             }
+                        
+                        
+                    }
+                    else if selectedSection == .history {
+BadgeGridView(
+                            badges: viewModel.badges,
+                            earnedBadges: viewModel.earnedBadges,
+                            progress: viewModel.badgeProgress
+                        )
                     }
                     
                     ProfileSectionTabs(selectedSection: $selectedSection)
@@ -123,6 +134,27 @@ struct ProfileView: View {
                 }
             }
             .confettiCannon(counter: $triggerConfetti, num: 50, openingAngle: Angle(degrees: 0), closingAngle: Angle(degrees: 360), radius: 200)
+            .onReceive(NotificationCenter.default.publisher(for: .badgeEarned)) { notification in
+                if let badgeId = notification.userInfo?["badgeId"] as? String,
+                   let badge = viewModel.getBadge(id: badgeId) {
+                    earnedBadge = badge
+                    showingBadgeCelebration = true
+                    triggerConfetti += 1
+                }
+            }
+            .overlay {
+                if showingBadgeCelebration, let badge = earnedBadge {
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+                        .overlay {
+                            BadgeCelebrationView(
+                                badge: badge,
+                                isPresented: $showingBadgeCelebration
+                            )
+                            .padding()
+                        }
+                }
+            }
         }
         .background(ThemeColors.background)
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("OpenFeedback"))) { notification in
@@ -266,6 +298,7 @@ struct AnalyticsSection: View {
                     }
             }
             .frame(height: 600)
+            .padding(.bottom, 50)
      
     }
 }
