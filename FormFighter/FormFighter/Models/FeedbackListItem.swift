@@ -7,12 +7,13 @@ struct FeedbackListItem: Identifiable {
     let status: FeedbackStatus
     let videoUrl: String?
     let score: Double
+    let modelFeedback: FeedbackModels.ModelFeedback?
     
     var isCompleted: Bool {
-        return status == .completed
+        status == .completed
     }
     
     var isLoading: Bool {
-        return status.isProcessing
+        FeedbackStatus.processingStatuses.contains(status.rawValue)
     }
 } 

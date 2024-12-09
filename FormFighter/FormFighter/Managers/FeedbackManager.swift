@@ -93,7 +93,8 @@ class FeedbackManager: ObservableObject {
                         date: (data["createdAt"] as? Timestamp)?.dateValue() ?? Date(),
                         status: status,
                         videoUrl: data["videoUrl"] as? String,
-                        score: jabScore
+                        score: jabScore,
+                        modelFeedback: try? JSONDecoder().decode(FeedbackModels.ModelFeedback.self, from: JSONSerialization.data(withJSONObject: data["modelFeedback"] ?? [:]))
                     )
                 }
                 
@@ -114,5 +115,29 @@ class FeedbackManager: ObservableObject {
     
     deinit {
         stopListening()
+    }
+    
+    struct BestScores {
+        let overall: Double
+        let `extension`: Double
+        let guardPosition: Double
+        let retraction: Double
+    }
+    
+    func getBestScores() -> BestScores {
+        let completedFeedbacks = feedbacks.filter { $0.isCompleted }
+        
+        // Find the feedback with the highest overall score
+        if let bestFeedback = completedFeedbacks.max(by: { $0.score < $1.score }),
+           let modelFeedback = bestFeedback.modelFeedback?.body?.feedback {
+            return BestScores(
+                overall: bestFeedback.score,
+                extension: modelFeedback.extensionFeedback?.score ?? 0,
+                guardPosition: modelFeedback.guardPosition?.score ?? 0,
+                retraction: modelFeedback.retraction?.score ?? 0
+            )
+        }
+        
+        return BestScores(overall: 0, extension: 0, guardPosition: 0, retraction: 0)
     }
 }

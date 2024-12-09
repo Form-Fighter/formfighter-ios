@@ -1953,6 +1953,9 @@
     "Before You Go..." : {
 
     },
+    "Best" : {
+
+    },
     "Best: %lld" : {
 
     },
@@ -2472,6 +2475,9 @@
         }
       }
     },
+    "Compared with Your Best" : {
+
+    },
     "Complete one training session every day to maintain your streak. Keep training to unlock special badges!" : {
 
     },
@@ -2687,6 +2693,9 @@
           }
         }
       }
+    },
+    "Current" : {
+
     },
     "DALL·E" : {
       "extractionState" : "stale",
@@ -2972,6 +2981,9 @@
         }
       }
     },
+    "Diff" : {
+
+    },
     "Discard" : {
 
     },
@@ -3134,6 +3146,9 @@
     "Experience an AI's perspective on what each artwork symbolizes" : {
 
     },
+    "Extension" : {
+
+    },
     "Fighter Profile" : {
 
     },
@@ -3226,6 +3241,9 @@
 
     },
     "Got it! 👊" : {
+
+    },
+    "Guard" : {
 
     },
     "Height" : {
@@ -4249,6 +4267,9 @@
     "Optional" : {
 
     },
+    "Overall" : {
+
+    },
     "P R E M I U M" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4852,6 +4873,9 @@
       }
     },
     "Restore Purchases" : {
+
+    },
+    "Retraction" : {
 
     },
     "Save" : {

@@ -61,7 +61,7 @@ struct FormFighterApp: App {
                 ZStack {
                     Group {
                         // TODO: Remove this once we have a proper onboarding
-                        if true{
+                        if false{
                             onboarding
                         } else if purchasesManager.isPremiumActive && !userManager.isAuthenticated {
                             LoginView(showPaywallInTheOnboarding: false)

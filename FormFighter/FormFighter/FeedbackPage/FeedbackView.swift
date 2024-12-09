@@ -290,7 +290,25 @@ struct FeedbackView: View {
                         }
                     }
                     
-                   
+                    if let feedbackDetails = feedback.modelFeedback?.body?.feedback,
+                       let currentScore = feedback.modelFeedback?.body?.jab_score {
+                        
+                        let bestScores = FeedbackManager.shared.getBestScores()
+                        
+                        if bestScores.overall > 0 {  // Only show if there's a previous best
+                            JabComparisonView(
+                                currentScore: currentScore,
+                                currentExtension: feedbackDetails.extensionFeedback?.score ?? 0,
+                                currentGuard: feedbackDetails.guardPosition?.score ?? 0,
+                                currentRetraction: feedbackDetails.retraction?.score ?? 0,
+                                bestScore: bestScores.overall,
+                                bestExtension: bestScores.extension,
+                                bestGuard: bestScores.guardPosition,
+                                bestRetraction: bestScores.retraction
+                            )
+                            .padding(.horizontal)
+                        }
+                    }
                 }
             }
             .padding()
