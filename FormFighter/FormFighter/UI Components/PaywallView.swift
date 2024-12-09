@@ -36,8 +36,8 @@ struct PaywallView: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 32) {
                     // Header
-                    VStack(spacing: 16) {
-                        Text("Perfect Every Strike")
+                    VStack(spacing: 12) {
+                        Text("Perfect Your Jab")
                             .font(.special(.title, weight: .black))
                             .foregroundStyle(
                                 LinearGradient(
@@ -46,10 +46,6 @@ struct PaywallView: View {
                                     endPoint: .bottom
                                 )
                             )
-                        
-                        Text("Unlimited AI-Powered Feedback")
-                            .font(.special(.title3, weight: .medium))
-                            .foregroundColor(.white.opacity(0.7))
                     }
                     .padding(.top, 40)
                     
@@ -57,32 +53,20 @@ struct PaywallView: View {
                     VStack(spacing: 24) {
                         ValuePropCard(
                             icon: "target",
-                            title: "Clear Path to Mastery",
-                            description: "Get unlimited, data-backed feedback on every punch. Perfect for beginners and pros alike."
-                        )
-                        
-                        ValuePropCard(
-                            icon: "ruler",
-                            title: "Precision Analysis",
-                            description: "Receive step-by-step feedback on your stance, hip rotation, hand position, shoulder alignment, and more. Every part of your technique is analyzed in detail."
+                            title: "AI-Powered Analysis",
+                            description: "Get instant, precise feedback on every punch."
                         )
                         
                         ValuePropCard(
                             icon: "bolt.fill",
-                            title: "Real-Time Results",
-                            description: "Get instant feedback after every jab—refine your speed, power, and accuracy to take your training to the next level."
+                            title: "Train Like a Pro",
+                            description: "Perfect your form with detailed technique analysis."
                         )
                         
                         ValuePropCard(
                             icon: "chart.line.uptrend.xyaxis",
                             title: "Track Progress",
-                            description: "See how your jab improves over time with detailed stats and analysis. Track your speed, power, and form corrections."
-                        )
-                        
-                        ValuePropCard(
-                            icon: "iphone.rear.camera",
-                            title: "Effortless Integration",
-                            description: "Just your phone and your jab. Train on your terms and get better every day."
+                            description: "See your improvements with detailed stats and metrics."
                         )
                     }
                     .padding(.horizontal)
@@ -158,22 +142,16 @@ struct PaywallView: View {
                     
                     // Footer links
                     VStack(spacing: 12) {
-                        Button {
+                        Button("Restore Purchases") {
                             Task {
                                 isLoading = true
-                                do {
-                                    await purchaseManager.fetchCustomerInfo()
-                                    dismiss()
-                                } catch {
-                                    print("Restore failed: \(error)")
-                                }
+                                await purchaseManager.fetchCustomerInfo()
+                                dismiss()
                                 isLoading = false
                             }
-                        } label: {
-                            Text("Restore Purchases")
-                                .font(.special(.subheadline, weight: .medium))
-                                .foregroundColor(.white.opacity(0.7))
                         }
+                        .font(.special(.subheadline, weight: .medium))
+                        .foregroundColor(.white.opacity(0.7))
                         .disabled(isLoading)
                         
                         TermsAndPrivacyPolicyView()
@@ -337,4 +315,5 @@ struct SubscriptionOptionView: View {
         .environmentObject(UserManager.shared)
         .environmentObject(PurchasesManager.shared)
 }
+
 

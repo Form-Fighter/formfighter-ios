@@ -6,10 +6,13 @@ import FirebaseAuth
 import UserNotifications
 
 // Add enum for notification types
-enum NotificationType {
-    case feedback
-    case system
-    case streak
+enum NotificationType: String, Codable {
+    case system = "system"
+    case feedback = "feedback"
+    case streak = "streak"
+    case earlyMorning = "early_morning"
+    case lateNight = "late_night"
+    case streakLost = "streak_lost"
     
     var title: String {
         switch self {
@@ -19,8 +22,21 @@ enum NotificationType {
             return "System Update"
         case .streak:
             return "Streak Notification"
+        case .earlyMorning:
+            return "Early Bird! 🌅"
+        case .lateNight:
+            return "Night Owl! 🌙"
+        case .streakLost:
+            return "Streak Lost! 💔"
         }
     }
+}
+
+struct StreakNotification: Codable {
+    let type: NotificationType
+    let streak: Int
+    let lastTrainingTime: Date
+    var attemptCount: Int
 }
 
 // Make NotificationManager inherit from NSObject
@@ -179,6 +195,8 @@ class NotificationManager: NSObject, ObservableObject {
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
                 print("Error scheduling streak notification: \(error)")
+            } else {
+                print("Successfully scheduled streak notification for tomorrow at \(components.hour ?? 0):\(components.minute ?? 0)")
             }
         }
         
@@ -186,7 +204,8 @@ class NotificationManager: NSObject, ObservableObject {
         let notification = StreakNotification(
             type: .streak,
             streak: streak,
-            lastTrainingTime: lastTrainingTime
+            lastTrainingTime: lastTrainingTime,
+            attemptCount: 0
         )
         saveStreakNotification(notification)
     }

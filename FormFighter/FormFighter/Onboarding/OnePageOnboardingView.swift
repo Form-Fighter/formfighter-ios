@@ -140,24 +140,24 @@ struct OnePageOnboardingView: View {
     private var welcomeView: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 40) {
-                Spacer()
-                    .frame(height: 40) // Add some top padding
-                
-                // Logo section
                 LogoSection(animateBackground: $animateBackground)
                 
-                // Text section
                 WelcomeTextSection()
                 
-                // Button section
                 WelcomeButtonSection(action: {
                     withAnimation {
                         currentStep += 1
                     }
                 })
                 
+                Button("Skip") {
+                    showPaywall = true
+                }
+                .foregroundColor(.white.opacity(0.6))
+                .padding(.top, 8)
+                
                 Spacer()
-                    .frame(height: 20) // Add some bottom padding
+                    .frame(height: 20)
             }
         }
     }
@@ -304,85 +304,48 @@ struct OnePageOnboardingView: View {
     private var insightsView: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 24) {
-                if insightPage == 1 {
-                    // First page - Insights with animations
-                    Text("Here's what we found based on your answers!")
-                        .font(.special(.title, weight: .bold))
-                        .multilineTextAlignment(.center)
-                        .padding(.top)
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                    
-                    // Animated Insights cards
-                    VStack(spacing: 16) {
-                        ForEach(Array(generateInsights().enumerated()), id: \.element) { index, insight in
-                            InsightCard(text: insight)
-                                .transition(.asymmetric(
-                                    insertion: .scale(scale: 0.8)
-                                        .combined(with: .opacity)
-                                        .combined(with: .offset(x: 0, y: 20)),
-                                    removal: .scale(scale: 0.8)
-                                        .combined(with: .opacity)
-                                ))
-                                .animation(
-                                    .spring(response: 0.6, dampingFraction: 0.8)
-                                    .delay(Double(index) * 0.15),
-                                    value: insightPage
-                                )
-                        }
-                    }
-                    .padding(.horizontal)
-                    
-                    // Animated Next button
-                    RoundedButton(title: "See Your Savings") {
-                        withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                            insightPage = 2
-                        }
-                    }
-                    .buttonStyle(PremiumButtonStyle()) // Custom animated button style
-                    .padding(.horizontal)
-                    .padding(.bottom)
-                    .transition(.scale.combined(with: .opacity))
-                    
-                } else {
-                    // Second page - Comparison and CTA with animations
-                    VStack(spacing: 24) {
-                        Text("Your Savings Breakdown")
-                            .font(.special(.title, weight: .bold))
-                            .multilineTextAlignment(.center)
-                            .padding(.top)
-                            .transition(.move(edge: .top).combined(with: .opacity))
-                        
-                        ComparisonTableView()
-                            .transition(.scale.combined(with: .opacity))
-                        
-                        VStack(spacing: 16) {
-                            Text("Invest in Yourself with Elite Feedback")
-                                .font(.special(.title3, weight: .bold))
-                                .multilineTextAlignment(.center)
-                            
-                            Text("For just $14.99/week, you'll get unlimited feedback on your technique — that's a fraction of what private coaching costs.")
-                                .font(.special(.body, weight: .regular))
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.white.opacity(0.7))
-                        }
-                        .padding(.horizontal)
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
-                        
-                        RoundedButton(title: "Unlock Elite Feedback Now!") {
-                            showPaywall = true
-                        }
-                        .buttonStyle(PremiumButtonStyle())
-                        .padding(.horizontal)
-                        .padding(.bottom)
-                        .transition(.scale.combined(with: .opacity))
-                    }
-                    .transition(.asymmetric(
-                        insertion: .move(edge: .trailing).combined(with: .opacity),
-                        removal: .move(edge: .leading).combined(with: .opacity)
-                    ))
+                // Simplified savings message
+                Text("With Form Fighter, you'll save")
+                    .font(.special(.title, weight: .bold))
+                    .multilineTextAlignment(.center)
+                    .padding(.top)
+                
+                // Large savings amount
+                if let savings = calculateSavings() {
+                    Text("$\(savings)")
+                        .font(.system(size: 64, weight: .heavy))
+                        .foregroundColor(.brand)
+                        .padding(.vertical, 8)
                 }
+                
+                Text("per year")
+                    .font(.special(.title3, weight: .medium))
+                    .foregroundColor(.white.opacity(0.7))
+                
+                // Comparison table
+                ComparisonTableView()
+                    .padding(.top, 24)
+                
+                // CTA Button
+                RoundedButton(title: "Get Started Now") {
+                    showPaywall = true
+                }
+                .buttonStyle(PremiumButtonStyle())
+                .padding(.horizontal)
+                .padding(.vertical, 24)
             }
+            .padding(.horizontal)
         }
+    }
+    
+    // New helper method to calculate savings
+    private func calculateSavings() -> Int? {
+        if let monthlyCoaching = selectedAnswers["How much do you spend monthly on private coaching?"]?.first {
+            let yearlyCoachingSpending = calculateYearlyCoachingSpending(from: monthlyCoaching)
+            let yearlyAppCost = 780 // $14.99 * 52 weeks
+            return yearlyCoachingSpending - yearlyAppCost
+        }
+        return nil
     }
     
     private func isStepValid(_ step: OnboardingSurveyStep) -> Bool {
@@ -511,8 +474,9 @@ struct QuestionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(question.question)
-                .font(.headline)
+                .font(.special(.title3, weight: .bold))
                 .foregroundColor(.white)
+                .padding(.bottom, 4)
             
             if question.isOpenEnded {
                 TextEditor(text: $openEndedResponse)
@@ -556,6 +520,7 @@ struct QuestionView: View {
         selectedAnswers[question.question] = currentAnswers
     }
 }
+
 struct OptionButton: View {
     let option: String
     let isSelected: Bool
@@ -566,15 +531,17 @@ struct OptionButton: View {
         Button(action: action) {
             HStack {
                 Text(option)
-                    .foregroundColor(isSelected ? .white : .primary)
+                    .font(.special(.body, weight: .medium))
+                    .foregroundColor(isSelected ? .white : .white.opacity(0.9))
                 Spacer()
                 Image(systemName: allowsMultipleSelection ? 
                       (isSelected ? "checkmark.square.fill" : "square") :
                       (isSelected ? "checkmark.circle.fill" : "circle"))
+                    .foregroundColor(isSelected ? .white : .white.opacity(0.6))
             }
             .padding()
-            .background(isSelected ? Color.brand : Color.secondary.opacity(0.2))
-            .cornerRadius(8)
+            .background(isSelected ? Color.brand : Color.white.opacity(0.1))
+            .cornerRadius(12)
         }
     }
 }
@@ -670,21 +637,20 @@ struct BackgroundView: View {
     
     var body: some View {
         ZStack {
-            // Base gradient
+            // Updated gradient only
             LinearGradient(
                 colors: [
-                    Color.black,
-                    Color.brand.opacity(0.3),
-                    Color.black
+                    .brand.opacity(0.4),
+                    .black.opacity(0.5),
+                    .black.opacity(0.3)
                 ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
+                startPoint: .top,
+                endPoint: .bottom
             )
             
-            // Animated overlay
+            // Keeping original animated circles
             GeometryReader { geometry in
                 ZStack {
-                    // Animated circles
                     Circle()
                         .fill(Color.brand.opacity(0.1))
                         .frame(width: geometry.size.width * 0.8)
@@ -703,15 +669,6 @@ struct BackgroundView: View {
                     value: animate
                 )
             }
-            
-            // Noise overlay for texture
-            Color.black.opacity(0.1)
-                .overlay(
-                    Image("noise-texture") // You'll need to add this asset
-                        .resizable()
-                        .blendMode(.overlay)
-                        .opacity(0.5)
-                )
         }
         .ignoresSafeArea()
     }
@@ -719,74 +676,51 @@ struct BackgroundView: View {
 
 private struct ComparisonTableView: View {
     var body: some View {
-        VStack(spacing: 24) {
-            Text("Compare Your Options")
-                .font(.special(.title3, weight: .bold))
-                .multilineTextAlignment(.center)
-            
+        VStack(spacing: 16) {
             VStack(spacing: 2) {
-                // Header
                 ComparisonRow(
                     feature: "Feature",
-                    coaching: "Private Coach\n$100+/hr",
-                    gym: "Group Classes\n$100+/mo",
-                    app: "Form Fighter\n$14.99/week",
+                    coaching: "Private Coach",
+                    app: "Form Fighter",
                     isHeader: true
                 )
                 
                 Divider()
                     .background(Color.white.opacity(0.2))
                 
-                // Rows
                 ComparisonRow(
-                    feature: "Feedback Frequency",
-                    coaching: "During sessions",
-                    gym: "During classes",
-                    app: "Every rep"
+                    feature: "Cost",
+                    coaching: "$400+/month",
+                    app: "$59.96/month"
                 )
                 
                 ComparisonRow(
-                    feature: "Availability",
+                    feature: "Feedback",
                     coaching: "Limited hours",
-                    gym: "Limited hours",
-                    app: "24/7"
+                    app: "24/7 access"
                 )
                 
                 ComparisonRow(
                     feature: "Analysis",
                     coaching: "Varies by coach",
-                    gym: "Limited in groups",
-                    app: "Always consistent"
-                )
-                
-                ComparisonRow(
-                    feature: "Monthly Cost",
-                    coaching: "$400+",
-                    gym: "$100+",
-                    app: "$59.96"
+                    app: "Every rep"
                 )
             }
             .background(Color.black.opacity(0.3))
             .cornerRadius(12)
-            
-            Text("Skip one training session, perfect every jab you'll ever throw.")
-                .font(.special(.body, weight: .medium))
-                .multilineTextAlignment(.center)
-                .foregroundColor(.white.opacity(0.7))
         }
-        .padding(.horizontal)
     }
 }
 
+// Simplified ComparisonRow
 private struct ComparisonRow: View {
     let feature: String
     let coaching: String
-    let gym: String
     let app: String
     var isHeader: Bool = false
     
     var body: some View {
-        HStack(alignment: .center, spacing: 4) {
+        HStack(spacing: 4) {
             Text(feature)
                 .frame(width: 70, alignment: .leading)
             
@@ -795,14 +729,6 @@ private struct ComparisonRow: View {
             
             Text(coaching)
                 .frame(maxWidth: .infinity)
-                .minimumScaleFactor(0.7)
-            
-            Divider()
-                .background(Color.white.opacity(0.2))
-            
-            Text(gym)
-                .frame(maxWidth: .infinity)
-                .minimumScaleFactor(0.7)
             
             Divider()
                 .background(Color.white.opacity(0.2))
@@ -810,12 +736,10 @@ private struct ComparisonRow: View {
             Text(app)
                 .frame(maxWidth: .infinity)
                 .foregroundColor(isHeader ? .white : .brand)
-                .minimumScaleFactor(0.7)
         }
         .font(.special(isHeader ? .caption : .caption2, weight: isHeader ? .bold : .regular))
         .padding(.vertical, 8)
         .padding(.horizontal, 12)
-        .multilineTextAlignment(.center)
     }
 }
 

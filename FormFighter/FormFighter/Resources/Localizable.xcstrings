@@ -1210,6 +1210,9 @@
     "🙂" : {
 
     },
+    "$%lld" : {
+
+    },
     "1" : {
 
     },
@@ -2469,9 +2472,6 @@
         }
       }
     },
-    "Compare Your Options" : {
-
-    },
     "Complete one training session every day to maintain your streak. Keep training to unlock special badges!" : {
 
     },
@@ -3140,9 +3140,6 @@
     "First Name" : {
 
     },
-    "For just $14.99/week, you'll get unlimited feedback on your technique — that's a fraction of what private coaching costs." : {
-
-    },
     "Form Fighter Settings" : {
 
     },
@@ -3225,6 +3222,9 @@
     "Get Ready!" : {
 
     },
+    "Get Started Now" : {
+
+    },
     "Got it! 👊" : {
 
     },
@@ -3303,9 +3303,6 @@
           }
         }
       }
-    },
-    "Here's what we found based on your answers!" : {
-
     },
     "Hi, I will be your assistant. Please make your requests." : {
       "extractionState" : "manual",
@@ -3616,9 +3613,6 @@
           }
         }
       }
-    },
-    "Invest in Yourself with Elite Feedback" : {
-
     },
     "Is this the feedback you expected?" : {
 
@@ -4329,7 +4323,10 @@
     "per week" : {
 
     },
-    "Perfect Every Strike" : {
+    "per year" : {
+
+    },
+    "Perfect Your Jab" : {
 
     },
     "Photo Library" : {
@@ -5011,9 +5008,6 @@
     "Score: %lld" : {
 
     },
-    "See Your Savings" : {
-
-    },
     "Select Meal" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -5304,7 +5298,7 @@
     "Sign Out" : {
 
     },
-    "Skip one training session, perfect every jab you'll ever throw." : {
+    "Skip" : {
 
     },
     "Something went wrong" : {
@@ -6245,12 +6239,6 @@
     "Unexpected Error" : {
 
     },
-    "Unlimited AI-Powered Feedback" : {
-
-    },
-    "Unlock Elite Feedback Now!" : {
-
-    },
     "Unlock Premium" : {
       "localizations" : {
         "de" : {
@@ -6776,6 +6764,9 @@
     "Who's the Artist?" : {
 
     },
+    "With Form Fighter, you'll save" : {
+
+    },
     "Would you like to join Coach %@'s team?" : {
 
     },
@@ -6931,9 +6922,6 @@
       }
     },
     "Your name will be saved in the cloud." : {
-
-    },
-    "Your Savings Breakdown" : {
 
     }
   },
