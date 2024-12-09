@@ -374,6 +374,9 @@
     "%lld" : {
 
     },
+    "%lld day streak" : {
+
+    },
     "%lld kcal" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1919,6 +1922,9 @@
     "Before You Go..." : {
 
     },
+    "Best: %lld" : {
+
+    },
     "Birthdate" : {
 
     },
@@ -2438,6 +2444,9 @@
     "Compare Your Options" : {
 
     },
+    "Complete one training session every day to maintain your streak. Keep training to unlock special badges!" : {
+
+    },
     "Complete your first session to see your stats" : {
 
     },
@@ -2723,9 +2732,6 @@
       }
     },
     "Date" : {
-
-    },
-    "Debug: Simulate Purchase" : {
 
     },
     "Delete" : {
@@ -3409,6 +3415,9 @@
           }
         }
       }
+    },
+    "History" : {
+
     },
     "How helpful was the feedback?" : {
 
@@ -5956,10 +5965,10 @@
     "Train" : {
 
     },
-    "Training History" : {
+    "Training Session" : {
 
     },
-    "Training Session" : {
+    "Training Streak" : {
 
     },
     "Try Again" : {

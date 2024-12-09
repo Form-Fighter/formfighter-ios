@@ -5,91 +5,126 @@
 //  Created by Julian Parker on 10/4/24.
 //
 import SwiftUI
+import ConfettiSwiftUI
+
+enum ProfileSection {
+    case analytics, history
+}
+
+// Break down the tab button into its own view
+struct ProfileTabButton: View {
+    let section: ProfileSection
+    let isSelected: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 8) {
+                Image(systemName: section == .analytics ? "chart.bar.fill" : "clock.fill")
+                    .font(.system(size: 16))
+                Text(section == .analytics ? "Analytics" : "History")
+                    .font(.system(.body, design: .rounded))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(
+                Capsule()
+                    .fill(
+                        isSelected ?
+                        AnyShapeStyle(
+                            LinearGradient(
+                                colors: [Color.brand, Color.brand.opacity(0.8)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        ) :
+                        AnyShapeStyle(Color.clear)
+                    )
+            )
+            .foregroundColor(isSelected ? .white : .gray)
+        }
+    }
+}
+
+// Simplified ProfileSectionTabs
+struct ProfileSectionTabs: View {
+    @Binding var selectedSection: ProfileSection
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            ForEach([ProfileSection.analytics, .history], id: \.self) { section in
+                ProfileTabButton(
+                    section: section,
+                    isSelected: selectedSection == section,
+                    action: {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            selectedSection = section
+                        }
+                    }
+                )
+            }
+        }
+        .padding(4)
+        .background(
+            Capsule()
+                .fill(Color.gray.opacity(0.15))
+        )
+        .padding(.horizontal)
+    }
+}
 
 struct ProfileView: View {
     @StateObject private var viewModel = ProfileVM()
     @EnvironmentObject private var userManager: UserManager
+    @EnvironmentObject private var feedbackManager: FeedbackManager
     @State private var selectedTab: TimePeriod = .week
     @State private var sortOption: SortOption = .date
+    @State private var selectedSection: ProfileSection = .analytics
     @State private var selectedFeedbackId: String?
     @State private var showFeedbackView = false
+    @State private var showStreakCelebration = false {
+        didSet {
+            print("🎯 ProfileView - showStreakCelebration changed to: \(showStreakCelebration)")
+        }
+    }
+    @State private var triggerConfetti = 0
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
-            VStack(alignment: .leading, spacing: 30) {
-                // Fighter Profile Header
-                Text("Fighter Profile")
-                    .font(.system(.largeTitle, design: .rounded, weight: .bold))
-                    .foregroundColor(ThemeColors.primary)
-                    .padding(.top, 20)
-                    .padding(.horizontal)
+            VStack(alignment: .leading, spacing: 24) {
+                ProfileHeader()
                 
                 if viewModel.isLoading {
                     LoadingView()
-                        .frame(maxWidth: .infinity)
-                        .padding(.top, 40)
                 } else if viewModel.feedbacks.isEmpty {
                     EmptyStateView()
-                        .padding(.top, 40)
                 } else {
-                    // Analytics Section
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Analytics")
-                            .font(.system(.title2, design: .rounded, weight: .semibold))
-                            .foregroundColor(ThemeColors.primary)
-                            .padding(.horizontal)
-                            .padding(.vertical, 1)
-                        
-                        TabView(selection: $selectedTab) {
-                            StatsView(timeInterval: .day, feedbacks: viewModel.feedbacks, viewModel: viewModel)
-                                .tag(TimePeriod.day)
-                                .tabItem { 
-                                    Label("24h", systemImage: "clock")
-                                        .font(.headline) 
-                                }
-                            StatsView(timeInterval: .week, feedbacks: viewModel.feedbacks, viewModel: viewModel)
-                                .tag(TimePeriod.week)
-                                .tabItem { 
-                                    Label("Week", systemImage: "calendar")
-                                        .font(.headline) 
-                                }
-                            StatsView(timeInterval: .month, feedbacks: viewModel.feedbacks, viewModel: viewModel)
-                                .tag(TimePeriod.month)
-                                .tabItem { 
-                                    Label("Month", systemImage: "calendar.badge.clock")
-                                        .font(.headline) 
-                                }
-                        }
-                        .frame(height: 600)
-                      
+                    if selectedSection == .analytics {
+                        GamificationStats(showStreakCelebration: $showStreakCelebration)
+                            .onAppear {
+                                print("🎯 GamificationStats appeared - current streak: \(userManager.currentStreak)")
+                            }
                     }
-                    .padding(.vertical, 8)
-                    .cornerRadius(12)
                     
+                    ProfileSectionTabs(selectedSection: $selectedSection)
                     
-                    // Add more spacing before Training History
-                    
-                    
-                    // Training History Section
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Training History")
-                            .font(.system(.title2, design: .rounded, weight: .semibold))
-                            .foregroundColor(ThemeColors.primary)
-                            .padding(.top, 8)
-                            .padding(.horizontal)
-                        
-                        PunchListView(viewModel: viewModel, sortOption: $sortOption)
-                            .padding(.horizontal)
-                            .padding(.vertical, 4)
+                    if selectedSection == .analytics {
+                        AnalyticsSection(selectedTab: $selectedTab, viewModel: viewModel)
+                    } else {
+                        HistorySection(viewModel: viewModel, sortOption: $sortOption)
                     }
-                    .padding(.vertical, 16)
                 }
             }
+            .onChange(of: userManager.currentStreak) { newValue in
+                print("🎯 ProfileView - Streak changed to: \(newValue)")
+                if newValue == 1 && !showStreakCelebration {
+                    print("🎯 ProfileView - Triggering celebration")
+                    celebrate()
+                }
+            }
+            .confettiCannon(counter: $triggerConfetti, num: 50, openingAngle: Angle(degrees: 0), closingAngle: Angle(degrees: 360), radius: 200)
         }
         .background(ThemeColors.background)
-        .onAppear {
-            viewModel.fetchUserFeedback(userId: userManager.userId)
-        }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("OpenFeedback"))) { notification in
             if let feedbackId = notification.userInfo?["feedbackId"] as? String {
                 selectedFeedbackId = feedbackId
@@ -103,6 +138,147 @@ struct ProfileView: View {
                         .environmentObject(UserManager.shared)
                 }
             }
+        }
+    }
+    
+    private func celebrate() {
+        print("🎯 ProfileView - Celebration started")
+        Task { @MainActor in
+            showStreakCelebration = true
+            triggerConfetti += 1
+            Haptic.shared.success()
+            
+            try? await Task.sleep(nanoseconds: 3_000_000_000) // 3 seconds
+            showStreakCelebration = false
+            print("🎯 ProfileView - Celebration ended")
+        }
+    }
+}
+
+// Separate content view
+struct ProfileContent: View {
+    @ObservedObject var viewModel: ProfileVM
+    @Binding var selectedTab: TimePeriod
+    @Binding var sortOption: SortOption
+    @Binding var selectedSection: ProfileSection
+    @Binding var showStreakCelebration: Bool
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 24) {
+            ProfileHeader()
+            
+            if viewModel.isLoading {
+                LoadingView()
+            } else if viewModel.feedbacks.isEmpty {
+                EmptyStateView()
+            } else {
+                ProfileMainContent(
+                    viewModel: viewModel,
+                    selectedTab: $selectedTab,
+                    sortOption: $sortOption,
+                    selectedSection: $selectedSection,
+                    showStreakCelebration: $showStreakCelebration
+                )
+            }
+        }
+    }
+}
+
+// Header component
+struct ProfileHeader: View {
+    var body: some View {
+        Text("Fighter Profile")
+            .font(.system(.largeTitle, design: .rounded, weight: .bold))
+            .foregroundColor(ThemeColors.primary)
+            .padding(.top, 20)
+            .padding(.horizontal)
+    }
+}
+
+// Main content component
+struct ProfileMainContent: View {
+    @ObservedObject var viewModel: ProfileVM
+    @Binding var selectedTab: TimePeriod
+    @Binding var sortOption: SortOption
+    @Binding var selectedSection: ProfileSection
+    @Binding var showStreakCelebration: Bool
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            if selectedSection == .analytics {
+                GamificationStats(showStreakCelebration: $showStreakCelebration)
+            }
+            
+            ProfileSectionTabs(selectedSection: $selectedSection)
+            
+            if selectedSection == .analytics {
+                AnalyticsSection(selectedTab: $selectedTab, viewModel: viewModel)
+            } else {
+                HistorySection(viewModel: viewModel, sortOption: $sortOption)
+            }
+        }
+    }
+}
+
+// Gamification Stats component
+struct GamificationStats: View {
+    @EnvironmentObject var userManager: UserManager
+    @EnvironmentObject var feedbackManager: FeedbackManager
+    @Binding var showStreakCelebration: Bool
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            StreakView(count: userManager.currentStreak, showCelebration: $showStreakCelebration)
+            Spacer()
+            PersonalBestView(score: feedbackManager.personalBest)
+        }
+        .padding(.horizontal)
+    }
+}
+
+// Analytics Section component
+struct AnalyticsSection: View {
+    @Binding var selectedTab: TimePeriod
+    @ObservedObject var viewModel: ProfileVM
+    
+    var body: some View {
+      
+      
+            
+            TabView(selection: $selectedTab) {
+                StatsView(timeInterval: .day, feedbacks: viewModel.feedbacks, viewModel: viewModel)
+                    .tag(TimePeriod.day)
+                    .tabItem { 
+                        Label("24h", systemImage: "clock")
+                            .font(.headline) 
+                    }
+                StatsView(timeInterval: .week, feedbacks: viewModel.feedbacks, viewModel: viewModel)
+                    .tag(TimePeriod.week)
+                    .tabItem { 
+                        Label("Week", systemImage: "calendar")
+                            .font(.headline) 
+                    }
+                StatsView(timeInterval: .month, feedbacks: viewModel.feedbacks, viewModel: viewModel)
+                    .tag(TimePeriod.month)
+                    .tabItem { 
+                        Label("Month", systemImage: "calendar.badge.clock")
+                            .font(.headline) 
+                    }
+            }
+            .frame(height: 600)
+     
+    }
+}
+
+// History Section component
+struct HistorySection: View {
+    @ObservedObject var viewModel: ProfileVM
+    @Binding var sortOption: SortOption
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            PunchListView(viewModel: viewModel, sortOption: $sortOption)
+                .padding(.horizontal)
         }
     }
 }
@@ -127,7 +303,9 @@ struct EmptyStateView: View {
 }
 
 enum TimePeriod: String {
-    case day, week, month, year
+    case day = "24h"
+    case week = "Week"
+    case month = "Month"
 }
 
 enum SortOption: String {
@@ -136,10 +314,10 @@ enum SortOption: String {
 
 struct StatsView: View {
     var timeInterval: TimePeriod
-    var feedbacks: [ProfileVM.FeedbackListItem]
+    var feedbacks: [FeedbackListItem]
     @ObservedObject var viewModel: ProfileVM
     
-    private var feedbacksInInterval: [ProfileVM.FeedbackListItem] {
+    private var feedbacksInInterval: [FeedbackListItem] {
         filterFeedbacks(for: timeInterval, from: feedbacks)
     }
     
@@ -147,16 +325,18 @@ struct StatsView: View {
         calculateAverageScore(for: feedbacksInInterval)
     }
     
+    // Convert feedbacks to PunchStats for the chart
     var chartData: [PunchStats] {
-        switch timeInterval {
-        case .day:
-            return viewModel.hourlyStats
-        case .week:
-            return viewModel.dailyStats
-        case .month:
-            return viewModel.weeklyStats
-        case .year:
-            return []
+        let sortedFeedbacks = feedbacksInInterval
+            .filter { $0.isCompleted }
+            .sorted { $0.date < $1.date }
+        
+        return sortedFeedbacks.map { feedback in
+            PunchStats(
+                timestamp: feedback.date,
+                score: feedback.score,
+                count: 1  // We can enhance this later if needed
+            )
         }
     }
     
@@ -196,12 +376,12 @@ struct StatsView: View {
         }
     }
     
-    private func filterFeedbacks(for timeInterval: TimePeriod, from feedbacks: [ProfileVM.FeedbackListItem]) -> [ProfileVM.FeedbackListItem] {
+    private func filterFeedbacks(for interval: TimePeriod, from feedbacks: [FeedbackListItem]) -> [FeedbackListItem] {
         let currentDate = Date()
         let calendar = Calendar.current
         
         return feedbacks.filter { feedback in
-            switch timeInterval {
+            switch interval {
             case .day:
                 return calendar.isDate(feedback.date, inSameDayAs: currentDate)
             case .week:
@@ -210,14 +390,11 @@ struct StatsView: View {
             case .month:
                 let monthAgo = calendar.date(byAdding: .month, value: -1, to: currentDate)!
                 return feedback.date >= monthAgo
-            case .year:
-                let yearAgo = calendar.date(byAdding: .year, value: -1, to: currentDate)!
-                return feedback.date >= yearAgo
             }
         }
     }
     
-    private func calculateAverageScore(for feedbacks: [ProfileVM.FeedbackListItem]) -> Int {
+    private func calculateAverageScore(for feedbacks: [FeedbackListItem]) -> Int {
         let completedFeedbacks = feedbacks.filter { $0.isCompleted }
         guard !completedFeedbacks.isEmpty else { return 0 }
         let totalScore = completedFeedbacks.reduce(0.0) { $0 + $1.score }
@@ -279,58 +456,145 @@ struct PunchListView: View {
     @EnvironmentObject var userManager: UserManager
     @ObservedObject var viewModel: ProfileVM
     @Binding var sortOption: SortOption
-    @State private var currentPage: Int = 1
-    private let itemsPerPage = 5
     
-    // Add computed properties for pagination
-    private var sortedFeedbacks: [ProfileVM.FeedbackListItem] {
-        switch sortOption {
-        case .date:
-            return viewModel.feedbacks.sorted(by: { $0.date > $1.date })
-        case .score:
-            return viewModel.feedbacks.sorted(by: { $0.score > $1.score })
+    // Grouped feedbacks
+    private var groupedFeedbacks: [(String, [FeedbackListItem])] {
+        let sorted = sortedFeedbacks
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        
+        return Dictionary(grouping: sorted) { feedback -> String in
+            let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: feedback.date), to: today).day!
+            switch days {
+            case 0: return "Today"
+            case 1: return "Yesterday"
+            case 2...7: return "This Week"
+            case 8...30: return "This Month"
+            default: return "Earlier"
+            }
+        }
+        .sorted { group1, group2 in
+            let order = ["Today", "Yesterday", "This Week", "This Month", "Earlier"]
+            return order.firstIndex(of: group1.key)! < order.firstIndex(of: group2.key)!
         }
     }
     
-    private var paginatedFeedbacks: [ProfileVM.FeedbackListItem] {
-        let startIndex = (currentPage - 1) * itemsPerPage
-        return Array(sortedFeedbacks.dropFirst(startIndex).prefix(itemsPerPage))
-    }
-    
-    private var totalPages: Int {
-        Int(ceil(Double(sortedFeedbacks.count) / Double(itemsPerPage)))
+    // Keep existing sorting logic
+    private var sortedFeedbacks: [FeedbackListItem] {
+        switch sortOption {
+        case .date: return viewModel.feedbacks.sorted(by: { $0.date > $1.date })
+        case .score: return viewModel.feedbacks.sorted(by: { $0.score > $1.score })
+        }
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 20) {
+            // Placeholders moved to top
+          
+            
+            // Sort picker
             Picker("Sort by", selection: $sortOption) {
                 Text("Date").tag(SortOption.date)
                 Text("Score").tag(SortOption.score)
             }
             .pickerStyle(SegmentedPickerStyle())
             
+            // Existing ScrollView with grouped feedbacks
             ScrollView {
-                LazyVStack(spacing: 10) {
-                    ForEach(paginatedFeedbacks, id: \.id) { feedback in
-                        NavigationLink(destination: FeedbackView(feedbackId: feedback.id, videoURL: nil)) {
-                            FeedbackRowView(feedback: feedback)
+                VStack(alignment: .leading, spacing: 24) {
+                    ForEach(groupedFeedbacks, id: \.0) { group in
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text(group.0)
+                                .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal)
+                            
+                            ForEach(group.1) { feedback in
+                                NavigationLink(destination: FeedbackView(feedbackId: feedback.id, videoURL: nil)) {
+                                    FeedbackRowView(feedback: feedback)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .transition(.opacity.combined(with: .offset(y: 5)))
+                            }
                         }
-                        .buttonStyle(PlainButtonStyle())
                     }
                 }
+                .padding(.top, 8)
             }
-            
-            PaginationControls(currentPage: $currentPage, totalPages: totalPages)
+        }
+    }
+}
+
+// Helper Views for Future Features
+struct StreakView: View {
+    let count: Int
+    @Binding var showCelebration: Bool
+    @State private var showingTooltip = false
+    @State private var scale: CGFloat = 1.0
+    @State private var confettiCounter = 0
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "flame.fill")
+                .foregroundColor(.orange)
+                .scaleEffect(scale)
+            Text("\(count) day streak")
+                .font(.system(.caption, design: .rounded, weight: .medium))
+                .scaleEffect(scale)
         }
         .onAppear {
-            viewModel.fetchUserFeedback(userId: userManager.userId)
+            print("🔥 StreakView appeared with count: \(count)")
+        }
+        .onChange(of: showCelebration) { newValue in
+            print("🔥 StreakView - Celebration changed to: \(newValue)")
+            if newValue {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                    scale = 1.3
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                        scale = 1.0
+                    }
+                }
+                confettiCounter += 1
+                showCelebration = false
+            }
+        }
+        .onTapGesture {
+            showingTooltip.toggle()
+        }
+        .popover(isPresented: $showingTooltip) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Training Streak")
+                    .font(.headline)
+                Text("Complete one training session every day to maintain your streak. Keep training to unlock special badges!")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .padding()
+            .frame(maxWidth: 300, idealHeight: 150)
+            .presentationCompactAdaptation(.popover)
+        }
+        .confettiCannon(counter: $confettiCounter, num: 50, radius: 200)
+    }
+}
+
+struct PersonalBestView: View {
+    let score: Double
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "trophy.fill")
+                .foregroundColor(.yellow)
+            Text("Best: \(Int(score))")
+                .font(.system(.caption, design: .rounded, weight: .medium))
         }
     }
 }
 
 // New helper views
 struct FeedbackRowView: View {
-    let feedback: ProfileVM.FeedbackListItem
+    let feedback: FeedbackListItem
     
     var body: some View {
         HStack {

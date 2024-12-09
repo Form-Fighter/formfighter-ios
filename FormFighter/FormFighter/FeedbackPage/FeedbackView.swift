@@ -5,12 +5,22 @@ import AVKit
 
 
 struct FeedbackView: View {
+    @StateObject private var viewModel: FeedbackViewModel
     let feedbackId: String
     let videoURL: URL?
+    
+    @State private var isLoading = true
+    @State private var hasAppeared = false
+    
+    init(feedbackId: String, videoURL: URL? = nil) {
+        self.feedbackId = feedbackId
+        self.videoURL = videoURL
+        self._viewModel = StateObject(wrappedValue: FeedbackViewModel())
+    }
+    
     @Environment(\.dismiss) private var dismiss
     
     @StateObject private var notificationManager = NotificationManager.shared
-    @StateObject private var viewModel = FeedbackViewModel()
     @State private var currentTipIndex = 0
     @State private var lastNotifiedStatus: FeedbackStatus = .pending
     @State private var showFeedbackPrompt = false
@@ -38,29 +48,32 @@ struct FeedbackView: View {
      
     var body: some View {
         Group {
-            if let feedback = viewModel.feedback {
-                completedFeedbackView
+            if isLoading {
+                ProgressView()
+                    .onAppear {
+                        if !hasAppeared {
+                            hasAppeared = true
+                            setupView()
+                        }
+                    }
+            } else if let feedback = viewModel.feedback {
+                ScrollView {
+                    completedFeedbackView
+                }
             } else if let error = viewModel.error {
                 UnexpectedErrorView(error: error)
             } else {
                 processingView
             }
         }
-        .onAppear {
-            print("⚡️ FeedbackView body appeared")
-            viewModel.setupFirestoreListener(feedbackId: feedbackId)
-            if videoURL == nil {
-                checkExistingUserFeedback()
+        .onChange(of: viewModel.feedback) { newValue in
+            if newValue != nil {
+                isLoading = false
             }
-            Analytics.logEvent("feedback_viewed", parameters: [
-                "feedback_id": feedbackId,
-                "status": viewModel.status.rawValue
-            ])
-            Tracker.feedbackPageOpened(feedbackId: feedbackId)
         }
         .onDisappear {
+            print("⚡️ FeedbackView cleaning up")
             viewModel.cleanup()
-            Tracker.feedbackPageClosed(feedbackId: feedbackId)
         }
         .sheet(isPresented: $showFeedbackPrompt) {
             UserFeedbackPrompt(
@@ -71,6 +84,20 @@ struct FeedbackView: View {
                 wouldRecommend: $wouldRecommend,
                 onSubmit: submitUserFeedback
             )
+        }
+    }
+    
+    private func setupView() {
+        print("⚡️ FeedbackView setting up listener for ID: \(feedbackId)")
+        viewModel.setupFirestoreListener(feedbackId: feedbackId)
+        if videoURL == nil {
+            print("⚡️ Checking existing user feedback")
+            checkExistingUserFeedback()
+        }
+        
+        // Set loading to false after a timeout
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isLoading = false
         }
     }
     
@@ -442,6 +469,8 @@ struct UnexpectedErrorView: View {
 struct FeedbackView_Previews: PreviewProvider {
     static var previews: some View {
         FeedbackView(feedbackId: "sampleFeedbackId", videoURL: nil)
+            .environmentObject(UserManager.shared)
+            .environmentObject(FeedbackManager.shared)
     }
 }
 

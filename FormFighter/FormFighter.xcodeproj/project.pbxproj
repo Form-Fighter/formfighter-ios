@@ -172,6 +172,9 @@
 		B21411EA2CE706F500699B15 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411E92CE706F500699B15 /* SplashScreenView.swift */; };
 		B21411EE2CE9221400699B15 /* TabIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411ED2CE9221400699B15 /* TabIdentifier.swift */; };
 		B21411F02CE92D7F00699B15 /* VideoPlayerObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21411EF2CE92D7F00699B15 /* VideoPlayerObserver.swift */; };
+		B252ED672D06D41800013524 /* FeedbackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B252ED662D06D41800013524 /* FeedbackManager.swift */; };
+		B252ED692D06D43B00013524 /* FeedbackListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B252ED682D06D43B00013524 /* FeedbackListItem.swift */; };
+		B252ED6C2D06E41E00013524 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = B252ED6B2D06E41E00013524 /* ConfettiSwiftUI */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
 		B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */; };
 		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
@@ -335,6 +338,8 @@
 		B21411E92CE706F500699B15 /* SplashScreenView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		B21411ED2CE9221400699B15 /* TabIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabIdentifier.swift; sourceTree = "<group>"; };
 		B21411EF2CE92D7F00699B15 /* VideoPlayerObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerObserver.swift; sourceTree = "<group>"; };
+		B252ED662D06D41800013524 /* FeedbackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackManager.swift; sourceTree = "<group>"; };
+		B252ED682D06D43B00013524 /* FeedbackListItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackListItem.swift; sourceTree = "<group>"; };
 		B256D8A02CEA638F00085249 /* FormFighter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighter.entitlements; sourceTree = "<group>"; };
 		B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighterDebug.entitlements; sourceTree = "<group>"; };
 		B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntNumberFieldView.swift; sourceTree = "<group>"; };
@@ -355,6 +360,7 @@
 				B214116F2CE5339600699B15 /* FirebaseMessaging in Frameworks */,
 				817FD0372C457E060071468A /* AIProxy in Frameworks */,
 				81E98B0B2B72AC63000E8996 /* KeychainSwift in Frameworks */,
+				B252ED6C2D06E41E00013524 /* ConfettiSwiftUI in Frameworks */,
 				81DE14CD2B740A2300C41EA9 /* FirebaseCrashlytics in Frameworks */,
 				81DE14C72B740A2300C41EA9 /* FirebaseAnalytics in Frameworks */,
 				81DE14CF2B740A2300C41EA9 /* FirebaseFirestore in Frameworks */,
@@ -430,6 +436,7 @@
 		818D3F812B6FA3CA00DF7299 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B252ED682D06D43B00013524 /* FeedbackListItem.swift */,
 				B214117D2CE62E2300699B15 /* FeedbackStatus.swift */,
 				B21411672CE5311000699B15 /* FeedbackData.swift */,
 				818D3FE52B71643600DF7299 /* MultiplePagesOnboardingFeatureModel.swift */,
@@ -682,6 +689,7 @@
 		81DE14BC2B73F04000C41EA9 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				B252ED662D06D41800013524 /* FeedbackManager.swift */,
 				B21411602CE530A100699B15 /* NotificationManager.swift */,
 				81DE14D72B75267E00C41EA9 /* AuthManager.swift */,
 				81DE14DB2B75270500C41EA9 /* FirestoreService.swift */,
@@ -828,6 +836,7 @@
 				817FD0362C457E060071468A /* AIProxy */,
 				B214116E2CE5339600699B15 /* FirebaseMessaging */,
 				B21411E52CE69F1D00699B15 /* Alamofire */,
+				B252ED6B2D06E41E00013524 /* ConfettiSwiftUI */,
 			);
 			productName = WrapFast;
 			productReference = 811A37832B6EBA3B00C9E8B6 /* FormFighter.app */;
@@ -865,6 +874,7 @@
 				81A56C062BD92A9800C7B596 /* XCRemoteSwiftPackageReference "wishkit-ios" */,
 				817FD0352C457E060071468A /* XCRemoteSwiftPackageReference "AIProxySwift" */,
 				B21411E42CE69F1D00699B15 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				B252ED6A2D06E41E00013524 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
 			);
 			productRefGroup = 811A37842B6EBA3B00C9E8B6 /* Products */;
 			projectDirPath = "";
@@ -978,6 +988,7 @@
 				81DE14F42B76352200C41EA9 /* AuthBackendService.swift in Sources */,
 				B214116D2CE5324500699B15 /* NotificationPermissionView.swift in Sources */,
 				818D3FB82B700E9D00DF7299 /* +Array.swift in Sources */,
+				B252ED672D06D41800013524 /* FeedbackManager.swift in Sources */,
 				81DE14F22B76303200C41EA9 /* Meal.swift in Sources */,
 				81A02D3A2BA333CC00061567 /* BrutoButton.swift in Sources */,
 				818D3FCC2B70100F00DF7299 /* RequestMethod.swift in Sources */,
@@ -1023,6 +1034,7 @@
 				81DE14E82B75510700C41EA9 /* CopiedToClipboardView.swift in Sources */,
 				81A02D462BA4C67900061567 /* +Double.swift in Sources */,
 				818D3FB62B700E9D00DF7299 /* +UIScreen.swift in Sources */,
+				B252ED692D06D43B00013524 /* FeedbackListItem.swift in Sources */,
 				81DE14F02B762F2D00C41EA9 /* MealVisionResponse.swift in Sources */,
 				818D3FD82B713CD400DF7299 /* RoundedButton.swift in Sources */,
 				B214117E2CE62E2300699B15 /* FeedbackStatus.swift in Sources */,
@@ -1363,6 +1375,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		B252ED6A2D06E41E00013524 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simibac/ConfettiSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1435,6 +1455,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B21411E42CE69F1D00699B15 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		B252ED6B2D06E41E00013524 /* ConfettiSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B252ED6A2D06E41E00013524 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
+			productName = ConfettiSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

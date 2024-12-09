@@ -7,6 +7,7 @@ import FirebaseFirestore
 import Alamofire
 import os
 import FirebaseAnalytics
+import FirebaseAuth
 
 // Create a dedicated error type
 enum ResultsViewError: LocalizedError {
@@ -227,9 +228,12 @@ struct ResultsView: View {
                         print("⚡️ Upload success")
                         Task { @MainActor in
                             print("⚡️ Setting navigation state")
+                            updateUserStreak()
                             self.isUploading = false
                             self.feedbackId = feedbackId
                             print("️ Switching to profile tab")
+                            self.shouldNavigateToFeedback = true
+                            print("🎯 Navigation flag set: \(self.shouldNavigateToFeedback)")
                             selectedTab = TabIdentifier.profile.rawValue
                             NotificationCenter.default.post(
                                 name: NSNotification.Name("OpenFeedback"),
@@ -317,5 +321,92 @@ struct ResultsView: View {
             "error_description": error.localizedDescription,
             "error_code": (error as NSError).code
         ])
+    }
+    
+    private func updateUserStreak() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        let userRef = db.collection("users").document(userId)
+        
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        
+        print("🎯 Starting streak update for user: \(userId)")
+        
+        // MARK: - DEBUG ONLY - Comment out for production
+        #if DEBUG
+        let debugResetStreak = true // Set to true to force streak update
+        if debugResetStreak {
+            // Set last training date to yesterday to force streak increment
+            let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
+            userRef.updateData([
+                "lastTrainingDate": Timestamp(date: yesterday),
+                "currentStreak": 0
+            ]) { error in
+                if let error = error {
+                    print("❌ Debug reset failed: \(error.localizedDescription)")
+                } else {
+                    print("✅ Debug reset successful")
+                    // Remove the recursive call and instead proceed with the normal streak update
+                    self.performStreak(userRef: userRef, today: today, calendar: calendar)
+                }
+            }
+            return
+        }
+        #endif
+        
+        performStreak(userRef: userRef, today: today, calendar: calendar)
+    }
+    
+    private func performStreak(userRef: DocumentReference, today: Date, calendar: Calendar) {
+        userRef.getDocument { document, error in
+            guard let document = document,
+                  document.exists else { 
+                print("❌ No document found for streak update")
+                return 
+            }
+            
+            let lastTrainingDate = (document.data()?["lastTrainingDate"] as? Timestamp)?.dateValue()
+            let currentStreak = document.data()?["currentStreak"] as? Int ?? 0
+            
+            print("📊 Current streak: \(currentStreak)")
+            print("📅 Last training date: \(String(describing: lastTrainingDate))")
+            
+            var newStreak = currentStreak
+            
+            if let lastTrainingDate = lastTrainingDate {
+                let lastTrainingDay = calendar.startOfDay(for: lastTrainingDate)
+                let daysBetween = calendar.dateComponents([.day], from: lastTrainingDay, to: today).day ?? 0
+                
+                print("📍 Days between: \(daysBetween)")
+                
+                if daysBetween == 1 {
+                    // Consecutive day
+                    newStreak += 1
+                } else if daysBetween == 0 {
+                    // Same day, don't increment
+                    return
+                } else {
+                    // Streak broken
+                    newStreak = 1
+                }
+            } else {
+                // First training session
+                newStreak = 1
+            }
+            
+            print("🔥 New streak: \(newStreak)")
+            
+            // Update Firestore
+            userRef.updateData([
+                "currentStreak": newStreak,
+                "lastTrainingDate": Timestamp(date: today)
+            ]) { error in
+                if let error = error {
+                    print("❌ Error updating streak: \(error.localizedDescription)")
+                } else {
+                    print("✅ Streak updated successfully to: \(newStreak)")
+                }
+            }
+        }
     }
 }

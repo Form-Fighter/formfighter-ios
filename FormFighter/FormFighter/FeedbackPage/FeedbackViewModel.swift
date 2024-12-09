@@ -13,18 +13,20 @@ class FeedbackViewModel: ObservableObject {
     private let logger = OSLog(subsystem: "com.formfighter", category: "FeedbackViewModel")
     
     func setupFirestoreListener(feedbackId: String) {
-        os_log("Setting up Firestore listener for feedback ID: %@", log: logger, type: .debug, feedbackId)
+        print("⚡️ Setting up listener for feedback: \(feedbackId)")
+        cleanup()
         
         listener = db.collection("feedback").document(feedbackId)
             .addSnapshotListener { [weak self] documentSnapshot, error in
                 guard let self = self else { return }
                 
                 if let error = error {
-                    os_log("Firestore listener error: %@", log: self.logger, type: .error, error.localizedDescription)
+                    print("❌ Listener error: \(error.localizedDescription)")
                     self.error = error.localizedDescription
                     return
                 }
                 
+                print("📥 Received feedback update")
                 guard let document = documentSnapshot, document.exists,
                       let data = document.data() else {
                     os_log("Document not found for feedback ID: %@", log: self.logger, type: .error, feedbackId)
@@ -32,9 +34,8 @@ class FeedbackViewModel: ObservableObject {
                     return
                 }
                 
-                // Check for error field
+                // Check for error field first
                 if let errorMessage = data["error"] as? String {
-                    os_log("Feedback processing error: %@", log: self.logger, type: .error, errorMessage)
                     self.error = errorMessage
                     return
                 }
@@ -137,8 +138,8 @@ class FeedbackViewModel: ObservableObject {
     }
     
     func cleanup() {
-        os_log("Cleaning up FeedbackViewModel", log: logger, type: .debug)
         listener?.remove()
+        listener = nil
     }
     
     deinit {
