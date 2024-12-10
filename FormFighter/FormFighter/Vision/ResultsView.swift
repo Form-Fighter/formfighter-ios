@@ -369,7 +369,7 @@ struct ResultsView: View {
             let currentStreak = document.data()?["currentStreak"] as? Int ?? 0
             
             print("📊 Current streak: \(currentStreak)")
-            print("📅 Last training date: \(String(describing: lastTrainingDate))")
+            print("���� Last training date: \(String(describing: lastTrainingDate))")
             
             var newStreak = currentStreak
             
@@ -406,6 +406,13 @@ struct ResultsView: View {
                 } else {
                     print("✅ Streak updated successfully to: \(newStreak)")
                 }
+            }
+            
+            if newStreak > currentStreak {
+                NotificationManager.shared.scheduleStreakNotification(
+                    streak: newStreak,
+                    lastTrainingTime: Date()
+                )
             }
         }
     }
