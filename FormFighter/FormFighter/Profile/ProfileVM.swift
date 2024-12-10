@@ -10,188 +10,68 @@ import Foundation
 import Firebase
 import FirebaseFirestore
 import os.log
+import Combine
 
 class ProfileVM: ObservableObject {
+    @Published var isLoading = false
     @Published var feedbacks: [FeedbackListItem] = []
-    @Published var isLoading = true
-    @Published var error: String?
+    @Published var badges: [Badge] = []
+    @Published var earnedBadges: [UserBadge] = []
+    @Published var badgeProgress: [BadgeProgress] = []
     
-    private let db = Firestore.firestore()
-    private var listener: ListenerRegistration?
-    private var hasInitialized = false
-    private let logger = OSLog(subsystem: "com.formfighter", category: "ProfileVM")
+    private let feedbackManager: FeedbackManager
+    private let badgeService = BadgeService.shared
+    private var cancellables = Set<AnyCancellable>()
     
-    struct FeedbackListItem: Identifiable {
-        let id: String
-        let date: Date
-        let status: FeedbackStatus
-        let videoUrl: String?
-        let score: Double
+    init(feedbackManager: FeedbackManager = .shared) {
+        self.feedbackManager = feedbackManager
         
-        var isCompleted: Bool {
-            return status == .completed
+        // Start badge listener if user is authenticated
+        if let userId = Auth.auth().currentUser?.uid {
+            BadgeService.shared.startListening(userId: userId)
         }
         
-        var isLoading: Bool {
-            return status.isProcessing
-        }
+        // Subscribe to badge service updates
+        badgeService.$userBadges
+            .assign(to: &$earnedBadges)
+        
+        badgeService.$badgeProgress
+            .assign(to: &$badgeProgress)
+            
+        // Observe changes to FeedbackManager's properties
+        feedbackManager.$isLoading
+            .assign(to: \.isLoading, on: self)
+            .store(in: &cancellables)
+            
+        feedbackManager.$feedbacks
+            .assign(to: \.feedbacks, on: self)
+            .store(in: &cancellables)
+        
+        // Load badges
+        loadBadges()
     }
     
-  
-    
-    @Published var hourlyStats: [PunchStats] = []
-    @Published var dailyStats: [PunchStats] = []
-    @Published var weeklyStats: [PunchStats] = []
-    
-    private func processStatsData() {
-        let calendar = Calendar.current
-        let now = Date()
-        
-        // Process hourly stats (24 hours)
-        let dayAgo = calendar.date(byAdding: .hour, value: -24, to: now)!
-        hourlyStats = processTimeIntervalStats(
-            from: dayAgo,
-            to: now,
-            interval: .hour,
-            calendar: calendar
-        )
-        
-        // Process daily stats (7 days)
-        let weekAgo = calendar.date(byAdding: .day, value: -7, to: now)!
-        dailyStats = processTimeIntervalStats(
-            from: weekAgo,
-            to: now,
-            interval: .day,
-            calendar: calendar
-        )
-        
-        // Process weekly stats (4 weeks)
-        let monthAgo = calendar.date(byAdding: .day, value: -28, to: now)!
-        weeklyStats = processTimeIntervalStats(
-            from: monthAgo,
-            to: now,
-            interval: .weekOfYear,
-            calendar: calendar
-        )
+    private func loadBadges() {
+        badges = [
+            Badge(id: "first_jab", name: "First Jab", description: "Complete your first training session", type: .instant, iconName: "star.fill", targetValue: nil, category: .milestone),
+            Badge(id: "perfect_score", name: "Perfect Form", description: "Score 9.5 or higher", type: .instant, iconName: "trophy.fill", targetValue: nil, category: .performance),
+            Badge(id: "extension_master", name: "Extension Master", description: "Score 9.0+ on extension", type: .instant, iconName: "hand.raised.fill", targetValue: nil, category: .performance),
+            Badge(id: "early_bird", name: "Early Bird", description: "Train before 6 AM", type: .instant, iconName: "sunrise.fill", targetValue: nil, category: .fun),
+            Badge(id: "night_owl", name: "Night Owl", description: "Train after 10 PM", type: .instant, iconName: "moon.stars.fill", targetValue: nil, category: .fun),
+            Badge(id: "three_day_streak", name: "Three Day Streak", description: "Train for 3 days in a row", type: .progress, iconName: "flame.fill", targetValue: 3, category: .streak),
+            Badge(id: "weekly_warrior", name: "Weekly Warrior", description: "Train for 7 days in a row", type: .progress, iconName: "flame.fill", targetValue: 7, category: .streak),
+            Badge(id: "unstoppable", name: "Unstoppable", description: "Train for 14 days in a row", type: .progress, iconName: "flame.fill", targetValue: 14, category: .streak),
+            Badge(id: "monthly_master", name: "Monthly Master", description: "Train for 30 days in a row", type: .progress, iconName: "flame.fill", targetValue: 30, category: .streak),
+            Badge(id: "jab_rookie", name: "Jab Rookie", description: "Complete 100 jabs", type: .cumulative, iconName: "figure.boxing", targetValue: 100, category: .volume),
+            Badge(id: "jab_veteran", name: "Jab Veteran", description: "Complete 500 jabs", type: .cumulative, iconName: "figure.boxing", targetValue: 500, category: .volume),
+            Badge(id: "jab_master", name: "Jab Master", description: "Complete 1000 jabs", type: .cumulative, iconName: "figure.boxing", targetValue: 1000, category: .volume)
+        ]
     }
     
-    private func processTimeIntervalStats(
-        from startDate: Date,
-        to endDate: Date,
-        interval: Calendar.Component,
-        calendar: Calendar
-    ) -> [PunchStats] {
-        var stats: [PunchStats] = []
-        var currentDate = startDate
-        
-        while currentDate <= endDate {
-            let nextDate = calendar.date(byAdding: interval, value: 1, to: currentDate)!
-            let periodFeedbacks = feedbacks.filter { feedback in
-                feedback.date >= currentDate && feedback.date < nextDate && feedback.isCompleted
-            }
-            
-            if !periodFeedbacks.isEmpty {
-                let averageScore = periodFeedbacks.reduce(0.0) { $0 + $1.score } / Double(periodFeedbacks.count)
-                
-                stats.append(PunchStats(
-                    timestamp: currentDate,
-                    score: averageScore,
-                    count: periodFeedbacks.count
-                ))
-            }
-            
-            currentDate = nextDate
-        }
-        
-        return stats
-    }
-    
-    func fetchUserFeedback(userId: String) {
-        guard !hasInitialized else { return }
-        hasInitialized = true
-        
-        os_log("Fetching feedback for user: %@", log: logger, type: .debug, userId)
-        isLoading = true
-        
-        let feedbackRef = db.collection("feedback")
-            .whereField("userId", isEqualTo: userId)
-        
-        listener = feedbackRef.addSnapshotListener { [weak self] (snapshot: QuerySnapshot?, error: Error?) in
-            guard let self = self else { return }
-            
-            if let error = error {
-                os_log("Error fetching feedback: %@", log: self.logger, type: .error, error.localizedDescription)
-                self.error = error.localizedDescription
-                self.isLoading = false
-                return
-            }
-            
-            guard let documents = snapshot?.documents else {
-                os_log("No feedback documents found", log: self.logger, type: .debug)
-                self.isLoading = false
-                return
-            }
-            
-            self.feedbacks = documents.compactMap { document in
-                let data = document.data()
-                
-                // Skip if document has an error field or missing/null status
-                guard data["error"] == nil,  // Skip if error field exists
-                      let statusString = data["status"] as? String,  // Skip if status is null or not a string
-                      !statusString.isEmpty,  // Skip if status is empty string
-                      let status = FeedbackStatus(rawValue: statusString)  // Skip if status is not valid
-                else {
-                    os_log("Skipping invalid feedback: %@", log: self.logger, type: .debug, document.documentID)
-                    return nil
-                }
-                
-                // Check for modelFeedback.body.error
-                if let modelFeedback = data["modelFeedback"] as? [String: Any],
-                   let body = modelFeedback["body"] as? [String: Any] {
-                    // If there's any error field in body, skip this feedback
-                    if let error = body["error"] as? String {
-                        os_log("Skipping feedback with body error: %@ - Error: %@", 
-                              log: self.logger, 
-                              type: .debug, 
-                              document.documentID,
-                              error)
-                        return nil
-                    }
-                }
-                
-                let jabScore: Double
-                
-                if status == .completed {
-                    if let modelFeedback = data["modelFeedback"] as? [String: Any],
-                       let body = modelFeedback["body"] as? [String: Any],
-                       let score = body["jab_score"] as? Double {
-                        jabScore = score
-                    } else {
-                        jabScore = 0.0
-                    }
-                } else {
-                    jabScore = 0.0
-                }
-                
-                os_log("Processing feedback: %@ with status: %@", log: self.logger, type: .debug, document.documentID, status.rawValue)
-                
-                return FeedbackListItem(
-                    id: document.documentID,
-                    date: (data["createdAt"] as? Timestamp)?.dateValue() ?? Date(),
-                    status: status,
-                    videoUrl: data["videoUrl"] as? String,
-                    score: jabScore
-                )
-            }
-            
-            os_log("Fetched %d valid feedback items", log: self.logger, type: .debug, self.feedbacks.count)
-            self.isLoading = false
-            self.processStatsData()
-        }
-    }
-    
-    deinit {
-        os_log("ProfileVM deinitializing, removing listener", log: logger, type: .debug)
-        listener?.remove()
+    func getBadge(id: String) -> Badge? {
+        badges.first { $0.id == id }
     }
 }
+
+// Badge Model
+

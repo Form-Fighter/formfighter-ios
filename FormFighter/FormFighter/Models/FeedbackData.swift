@@ -57,4 +57,10 @@ enum FeedbackModels {
             case retraction
         }
     }
+}
+
+extension FeedbackModels.FeedbackData: Equatable {
+    static func == (lhs: FeedbackModels.FeedbackData, rhs: FeedbackModels.FeedbackData) -> Bool {
+        return lhs.videoUrl == rhs.videoUrl
+    }
 } 

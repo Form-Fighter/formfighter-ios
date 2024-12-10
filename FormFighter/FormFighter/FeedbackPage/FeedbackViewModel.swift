@@ -13,18 +13,20 @@ class FeedbackViewModel: ObservableObject {
     private let logger = OSLog(subsystem: "com.formfighter", category: "FeedbackViewModel")
     
     func setupFirestoreListener(feedbackId: String) {
-        os_log("Setting up Firestore listener for feedback ID: %@", log: logger, type: .debug, feedbackId)
+        print("⚡️ Setting up listener for feedback: \(feedbackId)")
+        cleanup()
         
         listener = db.collection("feedback").document(feedbackId)
             .addSnapshotListener { [weak self] documentSnapshot, error in
                 guard let self = self else { return }
                 
                 if let error = error {
-                    os_log("Firestore listener error: %@", log: self.logger, type: .error, error.localizedDescription)
+                    print("❌ Listener error: \(error.localizedDescription)")
                     self.error = error.localizedDescription
                     return
                 }
                 
+                print("📥 Received feedback update")
                 guard let document = documentSnapshot, document.exists,
                       let data = document.data() else {
                     os_log("Document not found for feedback ID: %@", log: self.logger, type: .error, feedbackId)
@@ -32,9 +34,8 @@ class FeedbackViewModel: ObservableObject {
                     return
                 }
                 
-                // Check for error field
+                // Check for error field first
                 if let errorMessage = data["error"] as? String {
-                    os_log("Feedback processing error: %@", log: self.logger, type: .error, errorMessage)
                     self.error = errorMessage
                     return
                 }
@@ -66,6 +67,15 @@ class FeedbackViewModel: ObservableObject {
                         
                         self.feedback = try Firestore.Decoder().decode(FeedbackModels.FeedbackData.self, from: data)
                         os_log("Successfully decoded feedback data", log: self.logger, type: .debug)
+                        
+                        // Let the BadgeService handle all badge logic and update jab volume
+                      // Let the BadgeService handle all badge logic
+                        Task {
+                            if let feedback = self.feedback {
+                                await BadgeService.shared.processEvent(.processFeedback(feedback: feedback))
+                            }
+                        }
+                        
                     } catch {
                         os_log("Feedback decoding error: %@", log: self.logger, type: .error, error.localizedDescription)
                         // Add more detailed error information
@@ -137,8 +147,8 @@ class FeedbackViewModel: ObservableObject {
     }
     
     func cleanup() {
-        os_log("Cleaning up FeedbackViewModel", log: logger, type: .debug)
         listener?.remove()
+        listener = nil
     }
     
     deinit {

@@ -26,6 +26,17 @@ class UserManager: ObservableObject {
     @Published var purchasesManager: PurchasesManager
     let firestoreService: DatabaseServiceProtocol
     var entitlementCancellable: AnyCancellable?
+    @Published var currentStreak: Int = 0 {
+        willSet {
+            print("🔥 UserManager - Streak will change from \(currentStreak) to \(newValue)")
+        }
+        didSet {
+            print("🔥 UserManager - Streak changed from \(oldValue) to \(currentStreak)")
+        }
+    }
+    @Published var shouldShowCelebration: Bool = false
+    private var userListener: ListenerRegistration?
+    let badgeService = BadgeService()
     
     private init(user: User? = nil,
                  isAuthenticated: Bool = false,
@@ -79,9 +90,11 @@ class UserManager: ObservableObject {
         if let _ = Auth.auth().currentUser {
             Logger.log(message: "🟢 Authenticated set to TRUE", event: .debug)
             isAuthenticated = true
+            startListening()
         } else {
             Logger.log(message: "🔴 Authenticated set to FALSE", event: .debug)
             isAuthenticated = false
+            userListener?.remove()
         }
     }
     
@@ -172,6 +185,58 @@ class UserManager: ObservableObject {
         }
     }
     
+    func startListening() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        print("🔥 Starting user listener for: \(userId)")
+        
+        userListener = Firestore.firestore()
+            .collection("users").document(userId)
+            .addSnapshotListener { [weak self] documentSnapshot, error in
+                guard let document = documentSnapshot else {
+                    print("❌ Error fetching user document: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                
+                if let newStreak = document.data()?["currentStreak"] as? Int {
+                    print("🔥 Received streak update: \(newStreak)")
+                    DispatchQueue.main.async {
+                        // If streak increased, trigger celebration
+                        if newStreak > self?.currentStreak ?? 0 {
+                            self?.shouldShowCelebration = true
+                        }
+                        self?.currentStreak = newStreak
+                    }
+                }
+                
+                // Update other user properties as needed
+                if let userData = try? document.data(as: User.self) {
+                    DispatchQueue.main.async {
+                        self?.user = userData
+                    }
+                }
+            }
+    }
+    
+    deinit {
+        userListener?.remove()
+    }
+    
+    // Start listening when user logs in
+    func signIn(userId: String) {
+        badgeService.startListening(userId: userId)
+    }
+    
+    // Stop listening when user logs out
+    func signOut() {
+        badgeService.stopListening()
+    }
+    
+    // Process events when they occur
+    func updateStreak(_ newStreak: Int) {
+        Task {
+            await badgeService.processEvent(.streakUpdated(days: newStreak))
+        }
+    }
 }
 
 extension UserManager {
@@ -202,24 +267,28 @@ extension UserManager {
         set { user?.coachID = newValue }
     }
     
-//    var weight: String {
-//        get { user?.weight ?? "0" }
-//        set { user?.weight = newValue }
-//    }
-//    
-//    var wingSpan: String  {
-//        get { user?.wingSpan ?? "0" }
-//        set { user?.wingSpan = newValue }
-//    }
-//    
-//    var height: String {
-//        get { user?.height ?? "0" }
-//        set { user?.height = newValue }
-//    }
-//    
-//    var prefferedStance: String {
-//        get { user?.preferredStance ?? "unknown" }
-//        set { user?.preferredStance = newValue }
-//    }
+    var weight: String {
+        get { user?.weight ?? "" }
+        set { user?.weight = newValue }
+    }
     
+    var height: String {
+        get { user?.height ?? "" }
+        set { user?.height = newValue }
+    }
+    
+    var reach: String {
+        get { user?.reach ?? "" }
+        set { user?.reach = newValue }
+    }
+    
+    var preferredStance: String? {
+        get { user?.preferredStance }
+        set { user?.preferredStance = newValue }
+    }
+    
+    var lastTrainingDate: Date? {
+        get { user?.lastTrainingDate }
+        set { user?.lastTrainingDate = newValue }
+    }
 }

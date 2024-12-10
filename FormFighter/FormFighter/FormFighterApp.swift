@@ -21,6 +21,7 @@ struct FormFighterApp: App {
     @StateObject var purchasesManager = PurchasesManager.shared
     @StateObject var authManager = AuthManager()
     @StateObject var userManager = UserManager.shared
+    @StateObject var feedbackManager = FeedbackManager.shared
     @State private var pendingCoachId: String?
     @State private var showCoachConfirmation = false
     @State private var showSplash = true
@@ -59,7 +60,8 @@ struct FormFighterApp: App {
             NavigationStack {
                 ZStack {
                     Group {
-                        if !hasCompletedOnboarding {
+                        // TODO: Remove this once we have a proper onboarding
+                        if false{
                             onboarding
                         } else if !userManager.isAuthenticated {
                             LoginView(showPaywallInTheOnboarding: false)
@@ -122,6 +124,7 @@ struct FormFighterApp: App {
                 .environmentObject(purchasesManager)
                 .environmentObject(authManager)
                 .environmentObject(userManager)
+                .environmentObject(feedbackManager)
                 .onOpenURL { url in
                     handleDeepLink(url)
                 }

@@ -3,6 +3,11 @@ import WishKit
 import TipKit
 import FirebaseFirestore
 
+enum StanceType: String, CaseIterable {
+    case orthodox = "Orthodox"
+    case southpaw = "Southpaw"
+}
+
 struct SettingsView: View {
     @AppStorage("gptLanguage") var gptLanguage: GPTLanguage = .english
     @AppStorage("systemThemeValue") var systemTheme: Int = ColorSchemeType.allCases.first?.rawValue ?? 0
@@ -29,7 +34,14 @@ struct SettingsView: View {
     @State private var showCancelFeedbackModal = false
     @State private var cancellationFeedback = ""
     @State private var isSavingFeedback = false
-
+    
+    @State private var heightFeet: String = ""
+    @State private var heightInches: String = ""
+    @State private var localWeight: String = ""
+    @State private var localReach: String = ""
+    @State private var localEmail: String = ""
+    @State private var selectedStance: StanceType?
+    
     var body: some View {
         List {
             Group {
@@ -224,102 +236,251 @@ struct SettingsView: View {
 //        }
     
     var userInfo: some View {
-        Section("🥊 Fighter Profile") {
-            // First Name
-            LabeledContent {
-                TextField("Type your first name", 
-                         text: Binding(
-                            get: { 
-                                print("Getting firstName: \(userManager.firstName)")
-                                return userManager.firstName 
-                            },
-                            set: { newValue in
-                                print("Setting firstName to: \(newValue)")
-                                userManager.firstName = newValue
-                                vm.updateUserInfo(
-                                    firstName: newValue,
-                                    lastName: userManager.lastName
-                                )
-                            }
-                         ))
-                    .multilineTextAlignment(.trailing)
-                    .fontWeight(.medium)
-                    .submitLabel(.done)
-                    .focused($firstNameTextFieldFocused)
-            } label: {
-                Text("First Name")
-            }
-            
-            // Last Name
-            LabeledContent {
-                TextField("Type your last name", 
-                         text: Binding(
-                            get: { 
-                                print("Getting lastName: \(userManager.lastName)")
-                                return userManager.lastName 
-                            },
-                            set: { newValue in
-                                print("Setting lastName to: \(newValue)")
-                                userManager.lastName = newValue
-                                vm.updateUserInfo(
-                                    firstName: userManager.firstName,
-                                    lastName: newValue
-                                )
-                            }
-                         ))
-                    .multilineTextAlignment(.trailing)
-                    .fontWeight(.medium)
-                    .submitLabel(.done)
-                    .focused($lastNameTextFieldFocused)
-            } label: {
-                Text("Last Name")
-            }
-            
-            // Updated Coach ID label
-            LabeledContent {
-                Text(userManager.user?.myCoach ?? "No Coach")
-                    .multilineTextAlignment(.trailing)
-                    .fontWeight(.medium)
-                    .foregroundColor(.secondary)
-            } label: {
-                Text("Your Coach")
-            }
- 
-            // Subscription Status & Management
-            if !purchasesManager.isPremiumActive {
-                Button {
-                    isShowingPaywall.toggle()
-                    Tracker.tappedUnlockPremium()
+        Group {
+            // Fighter Profile Section
+            Section("🥊 Fighter Profile") {
+                // First Name
+                LabeledContent {
+                    TextField("Type your first name", 
+                             text: Binding(
+                                get: { 
+                                    print("Getting firstName: \(userManager.firstName)")
+                                    return userManager.firstName 
+                                },
+                                set: { newValue in
+                                    print("Setting firstName to: \(newValue)")
+                                    userManager.firstName = newValue
+                                    vm.updateUserInfo(
+                                        firstName: newValue,
+                                        lastName: userManager.lastName
+                                    )
+                                }
+                             ))
+                        .multilineTextAlignment(.trailing)
+                        .fontWeight(.medium)
+                        .submitLabel(.done)
+                        .focused($firstNameTextFieldFocused)
                 } label: {
-                    HStack {
-                        Text("Start Subscription")
-                        Image(systemName: "star.fill")
-                            .foregroundColor(.yellow)
+                    Text("First Name")
+                }
+                
+                // Last Name
+                LabeledContent {
+                    TextField("Type your last name", 
+                             text: Binding(
+                                get: { 
+                                    print("Getting lastName: \(userManager.lastName)")
+                                    return userManager.lastName 
+                                },
+                                set: { newValue in
+                                    print("Setting lastName to: \(newValue)")
+                                    userManager.lastName = newValue
+                                    vm.updateUserInfo(
+                                        firstName: userManager.firstName,
+                                        lastName: newValue
+                                    )
+                                }
+                             ))
+                        .multilineTextAlignment(.trailing)
+                        .fontWeight(.medium)
+                        .submitLabel(.done)
+                        .focused($lastNameTextFieldFocused)
+                } label: {
+                    Text("Last Name")
+                }
+                
+                // Height (ft'in")
+                LabeledContent {
+                    HStack(spacing: 4) {
+                        TextField("ft", text: $heightFeet)
+                            .frame(width: 30)
+                            .multilineTextAlignment(.trailing)
+                            .keyboardType(.numberPad)
+                            .onChange(of: heightFeet) { newValue in
+                                // Limit to 8 feet
+                                if let feet = Int(newValue), feet > 8 {
+                                    heightFeet = "8"
+                                    // If we're at 8 feet, inches must be 3 or less
+                                    if let inches = Int(heightInches), inches > 3 {
+                                        heightInches = "3"
+                                    }
+                                }
+                                updateHeight()
+                            }
+                        
+                        Text("'")
+                        
+                        TextField("in", text: $heightInches)
+                            .frame(width: 30)
+                            .multilineTextAlignment(.trailing)
+                            .keyboardType(.numberPad)
+                            .onChange(of: heightInches) { newValue in
+                                // If at 8 feet, limit to 3 inches
+                                if let feet = Int(heightFeet), feet == 8 {
+                                    if let inches = Int(newValue), inches > 3 {
+                                        heightInches = "3"
+                                    }
+                                } else {
+                                    // Otherwise limit to 11 inches
+                                    if let inches = Int(newValue), inches >= 12 {
+                                        heightInches = "11"
+                                    }
+                                }
+                                updateHeight()
+                            }
+                        
+                        Text("\"")
+                    }
+                } label: {
+                    Text("Height")
+                }
+                .onAppear {
+                    initializeHeightFields()
+                }
+                
+                // Weight (lbs)
+                LabeledContent {
+                    TextField("Weight in lbs", text: $localWeight)
+                        .multilineTextAlignment(.trailing)
+                        .keyboardType(.numberPad)
+                        .onChange(of: localWeight) { newValue in
+                            userManager.weight = newValue
+                            vm.updateUserInfo(
+                                firstName: userManager.firstName,
+                                lastName: userManager.lastName,
+                                height: userManager.height,
+                                weight: newValue
+                            )
+                        }
+                        .onAppear {
+                            localWeight = userManager.weight
+                        }
+                } label: {
+                    Text("Weight (lbs)")
+                }
+                
+                // Updated Coach ID label
+                LabeledContent {
+                    Text(userManager.user?.myCoach ?? "No Coach")
+                        .multilineTextAlignment(.trailing)
+                        .fontWeight(.medium)
+                        .foregroundColor(.secondary)
+                } label: {
+                    Text("Your Coach")
+                }
+ 
+                // Email
+                LabeledContent {
+                    TextField("Email", text: $localEmail)
+                        .multilineTextAlignment(.trailing)
+                        .keyboardType(.emailAddress)
+                        .textContentType(.emailAddress)
+                        .autocapitalization(.none)
+                        .onChange(of: localEmail) { newValue in
+                            vm.updateUserInfo(
+                                firstName: userManager.firstName,
+                                lastName: userManager.lastName,
+                                email: newValue
+                            )
+                        }
+                } label: {
+                    Text("Email")
+                }
+                
+                // Reach
+                LabeledContent {
+                    TextField("Optional", text: $localReach)
+                        .multilineTextAlignment(.trailing)
+                        .keyboardType(.numberPad)
+                        .onChange(of: localReach) { newValue in
+                            userManager.reach = newValue
+                            vm.updateUserInfo(
+                                firstName: userManager.firstName,
+                                lastName: userManager.lastName,
+                                reach: newValue
+                            )
+                        }
+                } label: {
+                    Text("Reach (inches)")
+                }
+                
+                // Preferred Stance
+                Picker("Stance", selection: Binding<StanceType>(
+                    get: { 
+                        if let stance = userManager.preferredStance,
+                           stance.lowercased() == "southpaw" {
+                            return StanceType.southpaw
+                        }
+                        return StanceType.orthodox
+                    },
+                    set: { (newValue: StanceType) in
+                        userManager.preferredStance = newValue.rawValue
+                        vm.updateUserInfo(
+                            firstName: userManager.firstName,
+                            lastName: userManager.lastName,
+                            preferredStance: newValue.rawValue
+                        )
+                    }
+                )) {
+                    ForEach(StanceType.allCases, id: \.self) { stance in
+                        Text(stance.rawValue).tag(stance)
                     }
                 }
             }
             
-            subscriptionManagement
-            
-            Button(role: .destructive) {
-                Task {
-                    try? await authManager.signOut { error in
-                        if error == nil {
-                            userManager.isAuthenticated = false
-                            userManager.resetUserProperties()
+            // Account Management Section
+            Section("⚙️ Account Management") {
+                // Subscription Status & Management
+                if !purchasesManager.isPremiumActive {
+                    Button {
+                        isShowingPaywall.toggle()
+                        Tracker.tappedUnlockPremium()
+                    } label: {
+                        HStack {
+                            Text("Start Subscription")
+                            Image(systemName: "star.fill")
+                                .foregroundColor(.yellow)
                         }
                     }
                 }
-            } label: {
-                Text("Sign Out")
-                    .foregroundColor(.red)
-            }
-            
-            Button(role: .destructive) {
-                vm.isShowingDeleteUserAlert = true
-            } label: {
-                Text("Delete Account")
-                    .foregroundColor(.red)
+
+                 Button {
+                    Task {
+                        await restorePurchases()
+                    }
+                } label: {
+                    HStack {
+                        Text("Restore Purchases")
+                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                        Image(systemName: "arrow.clockwise")
+                            .foregroundColor(.blue)
+                    }
+                }
+                
+                subscriptionManagement
+                
+               
+                
+                Button(role: .destructive) {
+                    Task {
+                        try? await authManager.signOut { error in
+                            if error == nil {
+                                userManager.isAuthenticated = false
+                                userManager.resetUserProperties()
+                            }
+                        }
+                    }
+                } label: {
+                    Text("Sign Out")
+                        .foregroundColor(.red)
+                }
+                
+                Button(role: .destructive) {
+                    vm.isShowingDeleteUserAlert = true
+                } label: {
+                    Text("Delete Account")
+                        .foregroundColor(.red)
+                }
             }
         }
         .sheet(isPresented: $showCancelFeedbackModal) {
@@ -365,6 +526,9 @@ struct SettingsView: View {
                     showCancelFeedbackModal = false
                 })
             }
+        }
+        .onAppear {
+            initializeFields()
         }
     }
     
@@ -474,18 +638,6 @@ struct SettingsView: View {
     var subscriptionManagement: some View {
         Group {
     
-            Button {
-                Task {
-                    await restorePurchases()
-                }
-            } label: {
-                HStack {
-                    Text("Restore Purchases")
-                        .foregroundStyle(colorScheme == .light ? .black : .white)
-                    Image(systemName: "arrow.clockwise")
-                        .foregroundColor(.blue)
-                }
-            }
 
 
              if purchasesManager.isPremiumActive {
@@ -539,6 +691,39 @@ struct SettingsView: View {
         }
         
         isSavingFeedback = false
+    }
+    
+    private func initializeHeightFields() {
+        if heightFeet.isEmpty || heightInches.isEmpty {
+            let totalInches = Int(userManager.height) ?? 0
+            heightFeet = "\(totalInches / 12)"
+            heightInches = "\(totalInches % 12)"
+        }
+    }
+    
+    private func updateHeight() {
+        let feet = Int(heightFeet) ?? 0
+        let inches = Int(heightInches) ?? 0
+        let totalInches = (feet * 12 + inches).description
+        
+        // Only update if the value has actually changed
+        if userManager.height != totalInches {
+            userManager.height = totalInches
+            vm.updateUserInfo(
+                firstName: userManager.firstName,
+                lastName: userManager.lastName,
+                height: totalInches,
+                weight: userManager.weight
+            )
+        }
+    }
+    
+    private func initializeFields() {
+        localReach = userManager.reach
+        localEmail = userManager.email
+        if let stance = userManager.preferredStance {
+            selectedStance = stance.lowercased() == "southpaw" ? .southpaw : .orthodox
+        }
     }
 }
 
