@@ -668,23 +668,35 @@ struct FeedbackView: View {
                 backgroundLayer.cornerRadius = 10
                 cardLayer.addSublayer(backgroundLayer)
                 
-                // Create text layer for scores
+                // Create text layer for score
                 let textLayer = CATextLayer()
-                
-                // Get individual scores
                 let overallScore: Double = viewModel.feedback?.modelFeedback?.body?.jab_score ?? 0
-                let guardScore: Double = viewModel.feedback?.modelFeedback?.body?.feedback?.guardPosition?.score ?? 0
-                let extensionScore: Double = viewModel.feedback?.modelFeedback?.body?.feedback?.extensionFeedback?.score ?? 0
-                let retractionScore: Double = viewModel.feedback?.modelFeedback?.body?.feedback?.retraction?.score ?? 0
                 
-                // Create the text with explicit formatting
-                let formatString: NSString = "Overall: %.1f/10\nGuard: %.1f/10\nExtension: %.1f/10\nRetraction: %.1f/10" as NSString
-                textLayer.string = NSString(format: formatString, overallScore, guardScore, extensionScore, retractionScore)
+                print("💬 Creating text layer with score: \(overallScore)")
+                
+                // Configure text layer - MAKING IT RED AND BIGGER
+                textLayer.string = String(format: "Score: %.1f/10", overallScore)
+                textLayer.fontSize = cardHeight * 0.6  // Made it bigger!
+                textLayer.foregroundColor = CGColor(red: 1, green: 0, blue: 0, alpha: 1)  // BRIGHT RED
+                textLayer.alignmentMode = .center
+                textLayer.contentsScale = UIScreen.main.scale  // This fixes blurry text!
+                textLayer.frame = CGRect(
+                    x: 0,
+                    y: (cardHeight - (cardHeight * 0.6)) / 2,  // Adjusted for new size
+                    width: cardWidth,
+                    height: cardHeight * 0.6
+                )
+                
+                print("💬 Text layer frame: \(textLayer.frame)")
                 
                 // Add layers in correct order
-                parentLayer.addSublayer(videoLayer)    // Video goes first
-                parentLayer.addSublayer(cardLayer)     // Feedback card
-                parentLayer.addSublayer(logoLayer)     // Logo goes on top
+                cardLayer.addSublayer(backgroundLayer)
+                cardLayer.addSublayer(textLayer)
+                print("💬 Added text layer to card")
+                
+                parentLayer.addSublayer(videoLayer)
+                parentLayer.addSublayer(cardLayer)
+                parentLayer.addSublayer(logoLayer)
                 
                 // Create the animation tool
                 videoComposition.animationTool = AVVideoCompositionCoreAnimationTool(
