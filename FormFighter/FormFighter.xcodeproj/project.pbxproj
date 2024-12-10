@@ -187,6 +187,18 @@
 		B2B9F0BA2CB0A8EF00D7CFC8 /* ProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B92CB0A8EF00D7CFC8 /* ProfileVM.swift */; };
 		B2B9F0BC2CB0BA8000D7CFC8 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0BB2CB0BA8000D7CFC8 /* CameraView.swift */; };
 		B2C9DEED2C6AA65500508A59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */; };
+		B2F447E92D08062F0032E53C /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447E82D08062F0032E53C /* Challenge.swift */; };
+		B2F447F22D081AE20032E53C /* ActiveChallengeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447EA2D081AE20032E53C /* ActiveChallengeView.swift */; };
+		B2F447F32D081AE20032E53C /* ChallengeHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447EB2D081AE20032E53C /* ChallengeHistoryView.swift */; };
+		B2F447F42D081AE20032E53C /* CreateChallengeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447EC2D081AE20032E53C /* CreateChallengeView.swift */; };
+		B2F447F52D081AE20032E53C /* EventFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447ED2D081AE20032E53C /* EventFeedView.swift */; };
+		B2F447F62D081AE20032E53C /* ChallengeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447EF2D081AE20032E53C /* ChallengeView.swift */; };
+		B2F447F72D081AE20032E53C /* ChallengeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447F02D081AE20032E53C /* ChallengeViewModel.swift */; };
+		B2F447F92D0822800032E53C /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447F82D0822800032E53C /* ShareSheet.swift */; };
+		B2F447FB2D0827A90032E53C /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447FA2D0827A90032E53C /* LeaderboardView.swift */; };
+		B2F447FD2D0827B60032E53C /* ChallengeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447FC2D0827B60032E53C /* ChallengeService.swift */; };
+		B2F447FF2D082ABB0032E53C /* ChallengeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447FE2D082ABB0032E53C /* ChallengeService.swift */; };
+		B2F448012D082BCC0032E53C /* ChallengeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F448002D082BCC0032E53C /* ChallengeError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -359,6 +371,18 @@
 		B2B9F0B92CB0A8EF00D7CFC8 /* ProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVM.swift; sourceTree = "<group>"; };
 		B2B9F0BB2CB0BA8000D7CFC8 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B2F447E82D08062F0032E53C /* Challenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
+		B2F447EA2D081AE20032E53C /* ActiveChallengeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveChallengeView.swift; sourceTree = "<group>"; };
+		B2F447EB2D081AE20032E53C /* ChallengeHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeHistoryView.swift; sourceTree = "<group>"; };
+		B2F447EC2D081AE20032E53C /* CreateChallengeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateChallengeView.swift; sourceTree = "<group>"; };
+		B2F447ED2D081AE20032E53C /* EventFeedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventFeedView.swift; sourceTree = "<group>"; };
+		B2F447EF2D081AE20032E53C /* ChallengeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeView.swift; sourceTree = "<group>"; };
+		B2F447F02D081AE20032E53C /* ChallengeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeViewModel.swift; sourceTree = "<group>"; };
+		B2F447F82D0822800032E53C /* ShareSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
+		B2F447FA2D0827A90032E53C /* LeaderboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeaderboardView.swift; path = FormFighter/Challenge/Components/LeaderboardView.swift; sourceTree = "<group>"; };
+		B2F447FC2D0827B60032E53C /* ChallengeService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChallengeService.swift; path = Services/ChallengeService.swift; sourceTree = "<group>"; };
+		B2F447FE2D082ABB0032E53C /* ChallengeService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeService.swift; sourceTree = "<group>"; };
+		B2F448002D082BCC0032E53C /* ChallengeError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -391,6 +415,8 @@
 		811A377A2B6EBA3B00C9E8B6 = {
 			isa = PBXGroup;
 			children = (
+				B2F447FA2D0827A90032E53C /* LeaderboardView.swift */,
+				B2F447F12D081AE20032E53C /* Challenge */,
 				B252ED722D076D9400013524 /* Services */,
 				B2119AEE2D010AD10071C52E /* Utilities */,
 				B214116C2CE5324500699B15 /* Views */,
@@ -412,6 +438,7 @@
 		811A37852B6EBA3B00C9E8B6 /* FormFighter */ = {
 			isa = PBXGroup;
 			children = (
+				B2F447FC2D0827B60032E53C /* ChallengeService.swift */,
 				B256D8A02CEA638F00085249 /* FormFighter.entitlements */,
 				B21411722CE537BB00699B15 /* Components */,
 				B214115D2CCF1A1C00699B15 /* User Feedback Page */,
@@ -449,6 +476,8 @@
 		818D3F812B6FA3CA00DF7299 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B2F448002D082BCC0032E53C /* ChallengeError.swift */,
+				B2F447E82D08062F0032E53C /* Challenge.swift */,
 				B252ED6D2D076D1800013524 /* Badge.swift */,
 				B252ED682D06D43B00013524 /* FeedbackListItem.swift */,
 				B214117D2CE62E2300699B15 /* FeedbackStatus.swift */,
@@ -777,6 +806,7 @@
 		B21411722CE537BB00699B15 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				B2F447F82D0822800032E53C /* ShareSheet.swift */,
 				B252ED782D07A9FC00013524 /* JabComparisonView.swift */,
 				B252ED742D076DAB00013524 /* BadgeCelebrationView.swift */,
 				B21411752CE5380700699B15 /* UserFeedbackSheet.swift */,
@@ -814,6 +844,7 @@
 		B252ED722D076D9400013524 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				B2F447FE2D082ABB0032E53C /* ChallengeService.swift */,
 				B252ED712D076D9400013524 /* BadgeService.swift */,
 			);
 			name = Services;
@@ -829,6 +860,28 @@
 				B2B9F0B92CB0A8EF00D7CFC8 /* ProfileVM.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		B2F447EE2D081AE20032E53C /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B2F447EA2D081AE20032E53C /* ActiveChallengeView.swift */,
+				B2F447EB2D081AE20032E53C /* ChallengeHistoryView.swift */,
+				B2F447EC2D081AE20032E53C /* CreateChallengeView.swift */,
+				B2F447ED2D081AE20032E53C /* EventFeedView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		B2F447F12D081AE20032E53C /* Challenge */ = {
+			isa = PBXGroup;
+			children = (
+				B2F447EE2D081AE20032E53C /* Components */,
+				B2F447EF2D081AE20032E53C /* ChallengeView.swift */,
+				B2F447F02D081AE20032E53C /* ChallengeViewModel.swift */,
+			);
+			name = Challenge;
+			path = FormFighter/Challenge;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1006,12 +1059,15 @@
 				B21411802CE63BE400699B15 /* EmojiButton.swift in Sources */,
 				81CBCEF32C2B348C005DD2E7 /* crAionOnboarding.swift in Sources */,
 				81D531E72B836EFE0044D990 /* MacroBarView.swift in Sources */,
+				B2F447F32D081AE20032E53C /* ChallengeHistoryView.swift in Sources */,
 				B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */,
 				B21411762CE5380700699B15 /* UserFeedbackSheet.swift in Sources */,
+				B2F447F72D081AE20032E53C /* ChallengeViewModel.swift in Sources */,
 				81E98B082B72A781000E8996 /* RequestReviewView.swift in Sources */,
 				B21411732CE537BB00699B15 /* FeedbackSection.swift in Sources */,
 				B252ED752D076DAB00013524 /* BadgeCelebrationView.swift in Sources */,
 				B21411832CE63BED00699B15 /* ImprovementsGridView.swift in Sources */,
+				B2F447FF2D082ABB0032E53C /* ChallengeService.swift in Sources */,
 				81D531F22B83CBC50044D990 /* ColorSchemeType.swift in Sources */,
 				81DE14F42B76352200C41EA9 /* AuthBackendService.swift in Sources */,
 				B214116D2CE5324500699B15 /* NotificationPermissionView.swift in Sources */,
@@ -1026,12 +1082,14 @@
 				81DE14FA2B76371200C41EA9 /* MealVisionRequestModel.swift in Sources */,
 				818D3F7C2B6FA14100DF7299 /* VisionView.swift in Sources */,
 				B21411EE2CE9221400699B15 /* TabIdentifier.swift in Sources */,
+				B2F447F42D081AE20032E53C /* CreateChallengeView.swift in Sources */,
 				8125D5BC2B77FC81001A846B /* MessageCell.swift in Sources */,
 				81DE14BE2B73F0D300C41EA9 /* PurchasesManager.swift in Sources */,
 				81A02D3E2BA38C4800061567 /* BrutoImageButton.swift in Sources */,
 				818D3FC72B70100F00DF7299 /* APIClient.swift in Sources */,
 				811A37892B6EBA3B00C9E8B6 /* ChatGPTView.swift in Sources */,
 				B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */,
+				B2F447F52D081AE20032E53C /* EventFeedView.swift in Sources */,
 				818D3F832B6FA3F100DF7299 /* GPTLanguage.swift in Sources */,
 				B214115C2CCF151B00699B15 /* FeedbackView.swift in Sources */,
 				B214117C2CE6247300699B15 /* MuayThaiButtonStyle.swift in Sources */,
@@ -1042,6 +1100,7 @@
 				B21411682CE5311000699B15 /* FeedbackData.swift in Sources */,
 				8125D5BE2B77FC8D001A846B /* MessageView.swift in Sources */,
 				818D3FB42B700E9D00DF7299 /* +UIFont.swift in Sources */,
+				B2F447F92D0822800032E53C /* ShareSheet.swift in Sources */,
 				81DE14C02B73F6FC00C41EA9 /* PaywallView.swift in Sources */,
 				818D3FCB2B70100F00DF7299 /* RequestError.swift in Sources */,
 				814731F22B7D381B00E223A7 /* DALLEVM.swift in Sources */,
@@ -1069,6 +1128,7 @@
 				81DE14F02B762F2D00C41EA9 /* MealVisionResponse.swift in Sources */,
 				818D3FD82B713CD400DF7299 /* RoundedButton.swift in Sources */,
 				B214117E2CE62E2300699B15 /* FeedbackStatus.swift in Sources */,
+				B2F447FD2D0827B60032E53C /* ChallengeService.swift in Sources */,
 				81DE14D82B75267E00C41EA9 /* AuthManager.swift in Sources */,
 				81D531E92B836F7C0044D990 /* MacroBarsView.swift in Sources */,
 				81E98B112B72B0B6000E8996 /* CustomSignInWithAppleButton.swift in Sources */,
@@ -1085,12 +1145,15 @@
 				8125D5B22B77F0EC001A846B /* ChatGPTRequestModel.swift in Sources */,
 				81B2C7052BFF4FF900780BBD /* TipShim.swift in Sources */,
 				818D3FB92B700E9D00DF7299 /* +JSONDecoder.swift in Sources */,
+				B2F447F22D081AE20032E53C /* ActiveChallengeView.swift in Sources */,
 				8125D5C02B77FCFA001A846B /* ChatGPTVM.swift in Sources */,
 				818D3FBE2B700F6200DF7299 /* Logger.swift in Sources */,
 				8125D5B82B77F237001A846B /* ChatGPTResponse.swift in Sources */,
 				81DE14EE2B762BC200C41EA9 /* CryptoUtils.swift in Sources */,
+				B2F447FB2D0827A90032E53C /* LeaderboardView.swift in Sources */,
 				81DE14EA2B75563600C41EA9 /* FAQView.swift in Sources */,
 				818D3FC82B70100F00DF7299 /* EmptyResponse.swift in Sources */,
+				B2F448012D082BCC0032E53C /* ChallengeError.swift in Sources */,
 				B21411662CE530F200699B15 /* AppDelegate.swift in Sources */,
 				818D3FDA2B713D0F00DF7299 /* PillButton.swift in Sources */,
 				8125D5B42B77F167001A846B /* ChatGPTService.swift in Sources */,
@@ -1098,6 +1161,7 @@
 				818D3FE42B715DCC00DF7299 /* MultiplePagesOnboardingFeature.swift in Sources */,
 				81DE14D62B75266200C41EA9 /* UserManager.swift in Sources */,
 				81DE14DA2B75269600C41EA9 /* User.swift in Sources */,
+				B2F447F62D081AE20032E53C /* ChallengeView.swift in Sources */,
 				818D3FD62B713B1D00DF7299 /* OnboardingFeature.swift in Sources */,
 				B252ED732D076D9400013524 /* BadgeService.swift in Sources */,
 				818D3FB32B700E9D00DF7299 /* +Font.swift in Sources */,
@@ -1108,6 +1172,7 @@
 				8125D5C42B7BFA16001A846B /* DALLERequestModel.swift in Sources */,
 				818D3F852B6FA53C00DF7299 /* OnePageOnboardingView.swift in Sources */,
 				B21411862CE6478000699B15 /* LineChartView.swift in Sources */,
+				B2F447E92D08062F0032E53C /* Challenge.swift in Sources */,
 				818D3FE02B71413000DF7299 /* +String.swift in Sources */,
 				818D3FA62B700A3500DF7299 /* Constants.swift in Sources */,
 				81DE14C22B73FCB700C41EA9 /* PaywallFeature.swift in Sources */,

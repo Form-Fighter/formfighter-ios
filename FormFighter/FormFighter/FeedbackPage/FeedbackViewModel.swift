@@ -12,6 +12,9 @@ class FeedbackViewModel: ObservableObject {
     private var listener: ListenerRegistration?
     private let logger = OSLog(subsystem: "com.formfighter", category: "FeedbackViewModel")
     
+    @Published var challengeToast: String?
+    private let challengeService = ChallengeService.shared
+    
     func setupFirestoreListener(feedbackId: String) {
         print("⚡️ Setting up listener for feedback: \(feedbackId)")
         cleanup()
@@ -153,5 +156,58 @@ class FeedbackViewModel: ObservableObject {
     
     deinit {
         cleanup()
+    }
+    
+    private func handleFeedbackUpdate(_ document: DocumentSnapshot) {
+        do {
+            let data = document.data() ?? [:]
+            self.feedback = try Firestore.Decoder().decode(FeedbackModels.FeedbackData.self, from: data)
+            
+            os_log("Successfully decoded feedback data", log: self.logger, type: .debug)
+            
+            // Process feedback for badges and challenges
+            if let feedback = self.feedback {
+                Task {
+                    do {
+                        try await processFeedback(feedback, documentId: document.documentID)
+                    } catch {
+                        os_log("Error processing feedback: %@", log: self.logger, type: .error, error.localizedDescription)
+                        self.error = error.localizedDescription
+                    }
+                }
+            }
+        } catch {
+            os_log("Feedback decoding error: %@", log: self.logger, type: .error, error.localizedDescription)
+            self.error = error.localizedDescription
+        }
+    }
+    
+    private func processFeedback(_ feedback: FeedbackModels.FeedbackData, documentId: String) async throws {
+        guard let score = feedback.modelFeedback?.body?.jab_score else { return }
+        
+        // Process badges first
+        await BadgeService.shared.processEvent(.processFeedback(feedback: feedback))
+        
+        // Process challenge if active
+        if let activeChallenge = challengeService.activeChallenge,
+           activeChallenge.endTime > Date() {
+            do {
+                try await challengeService.processEvent(.feedbackViewed(
+                    feedbackId: documentId,
+                    score: score
+                ))
+                
+                DispatchQueue.main.async {
+                    self.challengeToast = "Score added to challenge!"
+                    // Hide toast after 3 seconds
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        self.challengeToast = nil
+                    }
+                }
+            } catch {
+                os_log("Failed to process challenge feedback: %@", log: logger, type: .error, error.localizedDescription)
+                self.error = error.localizedDescription
+            }
+        }
     }
 } 

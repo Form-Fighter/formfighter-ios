@@ -1,6 +1,7 @@
 enum TabIdentifier: String {
     case vision = "vision"
     case profile = "profile"
+    case challenge = "challenge"
     case settings = "settings"
 } 
 

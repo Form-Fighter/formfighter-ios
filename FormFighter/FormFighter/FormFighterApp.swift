@@ -91,6 +91,13 @@ struct FormFighterApp: App {
                                     }
                                     .tag(TabIdentifier.profile)
 
+                                ChallengeView()
+                                    .tabItem { 
+                                        Label("Challenge", systemImage: "trophy.fill")
+                                            .foregroundStyle(ThemeColors.primary)
+                                    }
+                                    .tag(TabIdentifier.challenge)
+
                                 SettingsView(vm: SettingsVM())
                                     .tabItem { 
                                         Label("Settings", systemImage: "gearshape.fill")

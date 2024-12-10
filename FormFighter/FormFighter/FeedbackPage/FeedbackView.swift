@@ -69,7 +69,33 @@ struct FeedbackView: View {
                     }
             } else if let feedback = viewModel.feedback {
                 ScrollView {
-                    completedFeedbackView
+                    VStack(spacing: 20) {
+                        completedFeedbackView
+                        
+                        // Challenge Indicator (if in active challenge)
+                        if let challenge = ChallengeService.shared.activeChallenge,
+                           challenge.endTime > Date() {
+                            HStack {
+                                Image(systemName: "trophy.fill")
+                                    .foregroundColor(ThemeColors.primary)
+                                Text("This jab will count towards '\(challenge.name)'")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.horizontal)
+                            .padding(.vertical, 8)
+                            .background(Color(.systemBackground))
+                            .cornerRadius(8)
+                        }
+                    }
+                }
+                // Challenge Toast
+                .overlay(alignment: .bottom) {
+                    if let toastMessage = viewModel.challengeToast {
+                        ToastView(message: toastMessage)
+                            .transition(.move(edge: .bottom))
+                            .animation(.spring(), value: viewModel.challengeToast)
+                    }
                 }
             } else if let error = viewModel.error {
                 UnexpectedErrorView(error: error)
@@ -1129,6 +1155,23 @@ struct FeedbackStepThree: View {
                 .padding(.vertical)
         }
         .padding(.horizontal)
+    }
+}
+
+// Toast View Component
+struct ToastView: View {
+    let message: String
+    
+    var body: some View {
+        Text(message)
+            .font(.subheadline)
+            .foregroundColor(.white)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .background(ThemeColors.primary)
+            .cornerRadius(20)
+            .shadow(radius: 4)
+            .padding(.bottom, 20)
     }
 }
 

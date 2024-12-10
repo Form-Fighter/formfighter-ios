@@ -1576,6 +1576,9 @@
         }
       }
     },
+    "Activity Feed" : {
+
+    },
     "AI's Language" : {
       "localizations" : {
         "de" : {
@@ -2113,6 +2116,18 @@
 
     },
     "Cancel Subscription" : {
+
+    },
+    "Challenge" : {
+
+    },
+    "Challenge Details" : {
+
+    },
+    "Challenge Name" : {
+
+    },
+    "Challenge will last for 2 hours once created" : {
 
     },
     "Change progress" : {
@@ -2699,6 +2714,12 @@
           }
         }
       }
+    },
+    "Create a challenge or join one through an invitation link" : {
+
+    },
+    "Create Challenge" : {
+
     },
     "Current" : {
 
@@ -3730,6 +3751,9 @@
     "Last Name" : {
 
     },
+    "Leaderboard" : {
+
+    },
     "Let's go!" : {
 
     },
@@ -4105,7 +4129,16 @@
     "New Badge Earned!" : {
 
     },
+    "New Challenge" : {
+
+    },
     "Next" : {
+
+    },
+    "No Active Challenge" : {
+
+    },
+    "No activity yet" : {
 
     },
     "No data available for this time period" : {
@@ -5188,6 +5221,9 @@
     "Share" : {
 
     },
+    "Share Challenge" : {
+
+    },
     "Share your experience (optional)" : {
 
     },
@@ -5602,6 +5638,9 @@
     "Subscribe Now" : {
 
     },
+    "Suggested Stakes" : {
+
+    },
     "Tap to insert user name" : {
 
     },
@@ -5895,6 +5934,9 @@
           }
         }
       }
+    },
+    "This jab will count towards '%@'" : {
+
     },
     "This process may take up to a couple of minutes. Thank you for your patience!" : {
       "extractionState" : "stale",
@@ -6798,6 +6840,9 @@
 
     },
     "Who's the Artist?" : {
+
+    },
+    "Winner" : {
 
     },
     "With Form Fighter, you'll save" : {
