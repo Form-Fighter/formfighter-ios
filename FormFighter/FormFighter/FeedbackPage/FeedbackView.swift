@@ -62,12 +62,13 @@ struct FeedbackView: View {
             if isLoading {
                 ProgressView()
                     .onAppear {
+                        print("⚡️ FeedbackView body appeared")
                         if !hasAppeared {
                             hasAppeared = true
                             setupView()
                         }
                     }
-            } else if let feedback = viewModel.feedback {
+            } else if let feedback = viewModel.feedback, viewModel.status == .completed {
                 ScrollView {
                     VStack(spacing: 20) {
                         completedFeedbackView
@@ -105,13 +106,29 @@ struct FeedbackView: View {
         }
         .onChange(of: viewModel.feedback) { newValue in
             if newValue != nil {
-                isLoading = false
+                withAnimation {
+                    isLoading = false
+                }
+                // Analytics
+                Analytics.logEvent("feedback_viewed", parameters: [
+                    "feedback_id": feedbackId,
+                    "status": viewModel.status.rawValue
+                ])
+                Tracker.feedbackPageOpened(feedbackId: feedbackId)
+            }
+        }
+        .onChange(of: viewModel.status) { newStatus in
+            print("⚡️ Status changed to: \(newStatus)")
+            if newStatus == .completed {
+                withAnimation {
+                    isLoading = false
+                }
             }
         }
         .onDisappear {
             print("⚡️ FeedbackView cleaning up")
             viewModel.cleanup()
-            VideoCache.shared.clearCache()
+            Tracker.feedbackPageClosed(feedbackId: feedbackId)
         }
         .sheet(isPresented: $showFeedbackPrompt) {
             UserFeedbackPrompt(
@@ -491,9 +508,17 @@ struct FeedbackView: View {
             applicationActivities: nil
         )
         
+        // Get the root view controller
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let rootViewController = windowScene.windows.first?.rootViewController {
-            rootViewController.present(activityVC, animated: true)
+            // Find the top-most presented controller
+            var topController = rootViewController
+            while let presenter = topController.presentedViewController {
+                topController = presenter
+            }
+            
+            // Present from the top-most controller
+            topController.present(activityVC, animated: true)
         }
     }
     

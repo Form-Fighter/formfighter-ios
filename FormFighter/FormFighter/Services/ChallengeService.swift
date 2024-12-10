@@ -19,27 +19,50 @@ class ChallengeService: ObservableObject {
     func startListening(userId: String) {
         // Listen for active challenge
         let activeChallengeListener = db.collection("challenges")
-            .whereField("participants", arrayContains: ["id": userId])
-            .addSnapshotListener { [weak self] snapshot, error in
+            .whereField("participants", arrayContains: userId)
+            .addSnapshotListener { [weak self] querySnapshot, error in
+                guard let self = self else { return }
+                
                 if let error = error {
-                    os_log("Error listening for active challenge: %@", log: self?.logger ?? .default, type: .error, error.localizedDescription)
+                    os_log("Error listening for active challenge: %@", log: self.logger, type: .error, error.localizedDescription)
                     return
                 }
                 
-                self?.activeChallenge = snapshot?.documents.first.flatMap { try? $0.data(as: Challenge.self) }
+                if let document = querySnapshot?.documents.first {
+                    do {
+                        let challenge = try document.data(as: Challenge.self)
+                        Task { @MainActor [weak self] in
+                            self?.activeChallenge = challenge
+                        }
+                    } catch {
+                        print("Error decoding challenge: \(error)")
+                    }
+                } else {
+                    Task { @MainActor [weak self] in
+                        self?.activeChallenge = nil
+                    }
+                }
             }
         
         // Listen for completed challenges
         let completedChallengesListener = db.collection("completedChallenges")
-            .whereField("participants", arrayContains: ["id": userId])
+            .whereField("participants", arrayContains: userId)
             .order(by: "endTime", descending: true)
-            .addSnapshotListener { [weak self] snapshot, error in
+            .addSnapshotListener { [weak self] querySnapshot, error in
+                guard let self = self else { return }
+                
                 if let error = error {
-                    os_log("Error listening for completed challenges: %@", log: self?.logger ?? .default, type: .error, error.localizedDescription)
+                    os_log("Error listening for completed challenges: %@", log: self.logger, type: .error, error.localizedDescription)
                     return
                 }
                 
-                self?.completedChallenges = snapshot?.documents.compactMap { try? $0.data(as: Challenge.self) } ?? []
+                let challenges = querySnapshot?.documents.compactMap { document in
+                    try? document.data(as: Challenge.self)
+                } ?? []
+                
+                Task { @MainActor [weak self] in
+                    self?.completedChallenges = challenges
+                }
             }
         
         listeners.append(contentsOf: [activeChallengeListener, completedChallengesListener])

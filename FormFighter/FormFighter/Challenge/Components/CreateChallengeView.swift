@@ -77,15 +77,25 @@ struct CreateChallengeView: View {
     }
     
     private func createChallenge() async {
-        isCreating = true
-        defer { isCreating = false }
+        await MainActor.run {
+            isCreating = true
+        }
+        defer { 
+            Task { @MainActor in
+                isCreating = false
+            }
+        }
         
         do {
             try await viewModel.createChallenge(name: name, description: description)
-            dismiss()
+            await MainActor.run {
+                dismiss()
+            }
         } catch {
-            self.error = error
-            showError = true
+            await MainActor.run {
+                self.error = error
+                showError = true
+            }
         }
     }
 } 
