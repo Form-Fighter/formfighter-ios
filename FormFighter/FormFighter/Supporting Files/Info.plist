@@ -39,6 +39,8 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+ <key>NSPhotoLibraryUsageDescription</key>
+<string>FormFighter needs access to save your form videos to your camera roll so you can share them.</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>NSAppTransportSecurity</key>

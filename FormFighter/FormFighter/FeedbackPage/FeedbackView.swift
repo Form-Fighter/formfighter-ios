@@ -2,6 +2,8 @@ import SwiftUI
 import Firebase
 import FirebaseFirestore
 import AVKit
+import AVFoundation
+import Photos  // Add this for PHPhotoLibrary
 
 
 struct FeedbackView: View {
@@ -46,6 +48,15 @@ struct FeedbackView: View {
     @State private var originalPlayer: AVPlayer?
     @State private var overlayPlayer: AVPlayer?
      
+    private class SharingState: ObservableObject {
+        @Published var isLoading = false
+        @Published var error: String?
+    }
+    
+    @StateObject private var sharingState = SharingState()
+    
+    @State private var showingSavedAlert = false
+    
     var body: some View {
         Group {
             if isLoading {
@@ -74,6 +85,7 @@ struct FeedbackView: View {
         .onDisappear {
             print("⚡️ FeedbackView cleaning up")
             viewModel.cleanup()
+            VideoCache.shared.clearCache()
         }
         .sheet(isPresented: $showFeedbackPrompt) {
             UserFeedbackPrompt(
@@ -85,6 +97,29 @@ struct FeedbackView: View {
                 onSubmit: submitUserFeedback
             )
         }
+        .overlay(
+            Group {
+                if showingSavedAlert {
+                    VStack {
+                        Spacer()
+                        Text("Saved to Camera Roll")
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.black.opacity(0.75))
+                            .cornerRadius(10)
+                            .padding(.bottom, 30)
+                    }
+                    .transition(.move(edge: .bottom))
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            withAnimation {
+                                showingSavedAlert = false
+                            }
+                        }
+                    }
+                }
+            }
+        )
     }
     
     private func setupView() {
@@ -218,32 +253,24 @@ struct FeedbackView: View {
     private var completedFeedbackView: some View {
         ScrollView {
             VStack(spacing: 24) {
-                // Add Share button at the top
-                Button(action: shareVideo) {
-                    HStack {
-                        Image(systemName: "square.and.arrow.up")
-                        Text("Share")
-                    }
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
+                // User Feedback Prompt (moved to top)
+                if !hasSubmittedFeedback {
+                    FeedbackPromptButton(action: { showFeedbackPrompt = true })
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .animation(.spring(response: 0.5, dampingFraction: 0.6), value: hasSubmittedFeedback)
                 }
-                .padding(.horizontal)
-
+                
                 if let feedback = viewModel.feedback {
-                    if !hasSubmittedFeedback {
-                        FeedbackPromptButton(action: { showFeedbackPrompt = true })
-                            .transition(.move(edge: .top).combined(with: .opacity))
-                            .animation(.spring(response: 0.5, dampingFraction: 0.6), value: hasSubmittedFeedback)
-                            .padding(.top)
+                    HStack {
+                        if let jabScore = feedback.modelFeedback?.body?.jab_score {
+                            ScoreCardView(jabScore: jabScore)
+                        }
                     }
+                    .padding(.horizontal)
                     
-                    if let jabScore = feedback.modelFeedback?.body?.jab_score {
-                        ScoreCardView(jabScore: jabScore)
-                    }
-
-                           // Video Comparison
+                    shareButtons
+                    
+                    // Video Comparison (existing code)
                     if let videoUrl = feedback.videoUrl,
                        let overlayUrl = feedback.overlay_video_url,
                        !videoUrl.isEmpty,
@@ -276,20 +303,23 @@ struct FeedbackView: View {
                         }
                     }
                     
-                    
-                    // Existing feedback sections
+                    // Feedback Sections
                     if let feedbackDetails = feedback.modelFeedback?.body?.feedback {
-                        if let extensionFeedback = feedbackDetails.extensionFeedback {
-                            FeedbackSection(title: "Extension", feedback: extensionFeedback)
+                        Group {
+                            if let extensionFeedback = feedbackDetails.extensionFeedback {
+                                FeedbackSection(title: "Extension", feedback: extensionFeedback)
+                            }
+                            if let guardFeedback = feedbackDetails.guardPosition {
+                                FeedbackSection(title: "Guard", feedback: guardFeedback)
+                            }
+                            if let retractionFeedback = feedbackDetails.retraction {
+                                FeedbackSection(title: "Retraction", feedback: retractionFeedback)
+                            }
                         }
-                        if let guardFeedback = feedbackDetails.guardPosition {
-                            FeedbackSection(title: "Guard", feedback: guardFeedback)
-                        }
-                        if let retractionFeedback = feedbackDetails.retraction {
-                            FeedbackSection(title: "Retraction", feedback: retractionFeedback)
-                        }
+                        .padding(.horizontal)
                     }
                     
+                    // Comparison View (at the bottom)
                     if let feedbackDetails = feedback.modelFeedback?.body?.feedback,
                        let currentScore = feedback.modelFeedback?.body?.jab_score {
                         
@@ -425,7 +455,7 @@ struct FeedbackView: View {
         ])
     }
     
-    // Add this helper function to handle sharing
+    // 1. Basic Share Button Function
     private func shareVideo() {
         let feedbackUrl = "https://www.form-fighter.com/feedback/\(feedbackId)"
         print("📱 Sharing feedback URL: \(feedbackUrl)")
@@ -435,16 +465,415 @@ struct FeedbackView: View {
             applicationActivities: nil
         )
         
-        // Get the root view controller
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let rootViewController = windowScene.windows.first?.rootViewController {
-            // Find the top-most presented controller
-            var topController = rootViewController
-            while let presenter = topController.presentedViewController {
-                topController = presenter
+            rootViewController.present(activityVC, animated: true)
+        }
+    }
+    
+    // 2. Process and Share Video Function
+    private func processAndShareVideo(for platform: String, isLoading: ReferenceWritableKeyPath<SharingState, Bool>) {
+        guard let overlayUrl = viewModel.feedback?.overlay_video_url,
+              let url = URL(string: overlayUrl) else {
+            sharingState.error = "Video not available"
+            return
+        }
+        
+        // Set loading state
+        sharingState[keyPath: isLoading] = true
+        sharingState.error = nil
+        
+        // Download and process video
+        URLSession.shared.dataTask(with: url) { [self] data, response, error in
+            DispatchQueue.main.async {
+                sharingState[keyPath: isLoading] = false
+                
+                if let error = error {
+                    sharingState.error = "Failed to download video"
+                    print("Error downloading video: \(error)")
+                    return
+                }
+                
+                guard let data = data else {
+                    sharingState.error = "No video data received"
+                    return
+                }
+                
+                do {
+                    let processedUrl = try processVideo(data: data)
+                    presentShareSheet(with: processedUrl)
+                } catch {
+                    sharingState.error = "Failed to process video"
+                    print("Error processing video: \(error)")
+                }
+            }
+        }.resume()
+    }
+    
+    // 3. Share Buttons View
+    private var shareButtons: some View {
+        VStack {
+            if let error = sharingState.error {
+                Text(error)
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .padding(.bottom, 4)
             }
             
-            topController.present(activityVC, animated: true)
+            HStack(spacing: 16) {
+                // Share Button
+                Button(action: shareVideo) {
+                    HStack {
+                        Image(systemName: "square.and.arrow.up")
+                        Text("Share")
+                            .font(.subheadline)
+                    }
+                    .padding()
+                    .background(ThemeColors.primary.opacity(0.1))
+                    .foregroundColor(ThemeColors.primary)
+                    .cornerRadius(12)
+                }
+                
+                // Save to Camera Roll Button
+                Button(action: saveVideoToCameraRoll) {
+                    HStack {
+                        if sharingState.isLoading {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        } else {
+                            Image(systemName: "square.and.arrow.down")
+                        }
+                        Text("Save Video")
+                            .font(.subheadline)
+                    }
+                    .padding()
+                    .background(ThemeColors.primary.opacity(0.1))
+                    .foregroundColor(ThemeColors.primary)
+                    .cornerRadius(12)
+                }
+                .disabled(sharingState.isLoading)
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    private func saveVideoToCameraRoll() {
+        guard let overlayUrl = viewModel.feedback?.overlay_video_url,
+              let url = URL(string: overlayUrl) else {
+            sharingState.error = "Video not available"
+            return
+        }
+        
+        sharingState.isLoading = true
+        sharingState.error = nil
+        
+        print("📱 Starting video download...")
+        
+        Task {
+            do {
+                // Download video
+                let (data, _) = try await URLSession.shared.data(from: url)
+                print("✅ Video downloaded, size: \(data.count) bytes")
+                
+                // Create temporary URLs
+                let tempInputURL = FileManager.default.temporaryDirectory.appendingPathComponent("input.mp4")
+                let tempOutputURL = FileManager.default.temporaryDirectory.appendingPathComponent("output.mp4")
+                
+                // Save downloaded data to temp file
+                try data.write(to: tempInputURL)
+                
+                // Create asset from the saved file
+                let asset = AVAsset(url: tempInputURL)
+                let composition = AVMutableComposition()
+                
+                // Create video track
+                guard let compositionTrack = composition.addMutableTrack(
+                    withMediaType: .video,
+                    preferredTrackID: kCMPersistentTrackID_Invalid
+                ) else {
+                    throw NSError(domain: "VideoProcessing", code: -1, userInfo: ["description": "Could not create video track"])
+                }
+                
+                // Get source video track
+                guard let sourceVideoTrack = try await asset.loadTracks(withMediaType: .video).first else {
+                    throw NSError(domain: "VideoProcessing", code: -1, userInfo: ["description": "No source video track"])
+                }
+                
+                // Get video duration
+                let duration = try await asset.load(.duration)
+                let timeRange = CMTimeRange(start: .zero, duration: duration)
+                
+                // Add video to composition
+                try compositionTrack.insertTimeRange(timeRange, of: sourceVideoTrack, at: .zero)
+                
+                // Add audio if it exists
+                if let audioTrack = try? await asset.loadTracks(withMediaType: .audio).first,
+                   let compositionAudioTrack = composition.addMutableTrack(
+                    withMediaType: .audio,
+                    preferredTrackID: kCMPersistentTrackID_Invalid
+                   ) {
+                    try compositionAudioTrack.insertTimeRange(timeRange, of: audioTrack, at: .zero)
+                }
+                
+                // Get video size
+                let videoSize = try await sourceVideoTrack.load(.naturalSize)
+                
+                // Create video composition
+                let videoComposition = AVMutableVideoComposition()
+                videoComposition.renderSize = videoSize
+                videoComposition.frameDuration = CMTime(value: 1, timescale: 30)
+                
+                // Create composition instruction
+                let instruction = AVMutableVideoCompositionInstruction()
+                instruction.timeRange = timeRange
+                let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: compositionTrack)
+                instruction.layerInstructions = [layerInstruction]
+                videoComposition.instructions = [instruction]
+                
+                // Set up the parent layer
+                let parentLayer = CALayer()
+                parentLayer.frame = CGRect(origin: .zero, size: videoSize)
+                
+                // Set up the video layer
+                let videoLayer = CALayer()
+                videoLayer.frame = CGRect(origin: .zero, size: videoSize)
+                
+                // Add logo overlay
+                let logoLayer = CALayer()
+                logoLayer.contents = UIImage(named: "app-logo-new")?.cgImage
+                let logoSize = videoSize.width * 0.15
+                logoLayer.frame = CGRect(
+                    x: 20,
+                    y: videoSize.height - logoSize - 20,
+                    width: logoSize,
+                    height: logoSize
+                )
+                logoLayer.opacity = 0.9
+                
+                // Create feedback card layer
+                let cardLayer = CALayer()
+                let cardHeight = videoSize.height * 0.15
+                let cardWidth = videoSize.width * 0.8
+                cardLayer.frame = CGRect(
+                    x: (videoSize.width - cardWidth) / 2,
+                    y: videoSize.height - cardHeight - 20,
+                    width: cardWidth,
+                    height: cardHeight
+                )
+                
+                // Create background with rounded corners
+                let backgroundLayer = CALayer()
+                backgroundLayer.frame = cardLayer.bounds
+                backgroundLayer.backgroundColor = CGColor(gray: 0, alpha: 0.7)
+                backgroundLayer.cornerRadius = 10
+                cardLayer.addSublayer(backgroundLayer)
+                
+                // Create text layer for scores
+                let textLayer = CATextLayer()
+                
+                // Get individual scores
+                let overallScore: Double = viewModel.feedback?.modelFeedback?.body?.jab_score ?? 0
+                let guardScore: Double = viewModel.feedback?.modelFeedback?.body?.feedback?.guardPosition?.score ?? 0
+                let extensionScore: Double = viewModel.feedback?.modelFeedback?.body?.feedback?.extensionFeedback?.score ?? 0
+                let retractionScore: Double = viewModel.feedback?.modelFeedback?.body?.feedback?.retraction?.score ?? 0
+                
+                // Create the text with explicit formatting
+                let formatString: NSString = "Overall: %.1f/10\nGuard: %.1f/10\nExtension: %.1f/10\nRetraction: %.1f/10" as NSString
+                textLayer.string = NSString(format: formatString, overallScore, guardScore, extensionScore, retractionScore)
+                
+                // Add layers in correct order
+                parentLayer.addSublayer(videoLayer)    // Video goes first
+                parentLayer.addSublayer(cardLayer)     // Feedback card
+                parentLayer.addSublayer(logoLayer)     // Logo goes on top
+                
+                // Create the animation tool
+                videoComposition.animationTool = AVVideoCompositionCoreAnimationTool(
+                    postProcessingAsVideoLayer: videoLayer,
+                    in: parentLayer
+                )
+                
+                // Create export session
+                guard let exportSession = AVAssetExportSession(
+                    asset: composition,
+                    presetName: AVAssetExportPresetHighestQuality
+                ) else {
+                    throw NSError(domain: "VideoProcessing", code: -1, userInfo: ["description": "Could not create export session"])
+                }
+                
+                exportSession.outputURL = tempOutputURL
+                exportSession.outputFileType = .mp4
+                exportSession.videoComposition = videoComposition
+                
+                // Export the video
+                await exportSession.export()
+                
+                // Check export status
+                if exportSession.status == .completed {
+                    // Save to camera roll
+                    try await PHPhotoLibrary.requestAuthorization(for: .readWrite)
+                    try await PHPhotoLibrary.shared().performChanges {
+                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: tempOutputURL)
+                    }
+                    
+                    await MainActor.run {
+                        sharingState.isLoading = false
+                        showingSavedAlert = true
+                        print("✅ Video saved to camera roll with logo!")
+                    }
+                } else if let error = exportSession.error {
+                    throw error
+                }
+                
+                // Clean up temp files
+                try? FileManager.default.removeItem(at: tempInputURL)
+                try? FileManager.default.removeItem(at: tempOutputURL)
+                
+            } catch {
+                await MainActor.run {
+                    sharingState.isLoading = false
+                    sharingState.error = "Failed to process video"
+                    print("❌ Processing error: \(error)")
+                }
+            }
+        }
+    }
+    
+    private func processVideoAsset(asset: AVAsset, composition: AVMutableComposition, data: Data) throws {
+        // Create video track
+        guard let videoTrack = composition.addMutableTrack(
+            withMediaType: .video,
+            preferredTrackID: kCMPersistentTrackID_Invalid
+        ) else {
+            throw NSError(domain: "VideoProcessing", code: -1, userInfo: ["description": "Could not create video track"])
+        }
+        
+        // Get source video track
+        guard let sourceVideoTrack = try? asset.tracks(withMediaType: .video).first else {
+            throw NSError(domain: "VideoProcessing", code: -1, userInfo: ["description": "No source video track"])
+        }
+        
+        // Add video
+        try videoTrack.insertTimeRange(
+            CMTimeRange(start: .zero, duration: asset.duration),
+            of: sourceVideoTrack,
+            at: .zero
+        )
+        
+        // Rest of your video processing code...
+    }
+    
+    private func processVideo(data: Data) throws -> URL {
+        // First, save the incoming data to a temporary file
+        let tempInputURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString)_input.mp4")
+        try data.write(to: tempInputURL)
+        
+        // Create asset from the saved file
+        let asset = AVAsset(url: tempInputURL)
+        
+        // Create composition
+        let composition = AVMutableComposition()
+        
+        // Get video track
+        guard let sourceVideoTrack = try? asset.tracks(withMediaType: .video).first,
+              let compositionVideoTrack = composition.addMutableTrack(
+                withMediaType: .video,
+                preferredTrackID: kCMPersistentTrackID_Invalid
+              ) else {
+            throw NSError(domain: "VideoProcessing", code: -1, userInfo: ["description": "Could not create video track"])
+        }
+        
+        // Insert the video track
+        try compositionVideoTrack.insertTimeRange(
+            CMTimeRange(start: .zero, duration: asset.duration),
+            of: sourceVideoTrack,
+            at: .zero
+        )
+        
+        // Add audio if it exists
+        if let sourceAudioTrack = try? asset.tracks(withMediaType: .audio).first,
+           let compositionAudioTrack = composition.addMutableTrack(
+            withMediaType: .audio,
+            preferredTrackID: kCMPersistentTrackID_Invalid
+           ) {
+            try? compositionAudioTrack.insertTimeRange(
+                CMTimeRange(start: .zero, duration: asset.duration),
+                of: sourceAudioTrack,
+                at: .zero
+            )
+        }
+        
+        // Create export session
+        let exportURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString)_output.mp4")
+        
+        guard let exportSession = AVAssetExportSession(
+            asset: composition,
+            presetName: AVAssetExportPresetHighestQuality
+        ) else {
+            throw NSError(domain: "VideoProcessing", code: -1, userInfo: ["description": "Could not create export session"])
+        }
+        
+        exportSession.outputURL = exportURL
+        exportSession.outputFileType = .mp4
+        
+        // Export the video synchronously
+        let semaphore = DispatchSemaphore(value: 0)
+        exportSession.exportAsynchronously {
+            semaphore.signal()
+        }
+        semaphore.wait()
+        
+        // Check export status
+        guard exportSession.status == .completed else {
+            throw NSError(
+                domain: "VideoProcessing",
+                code: -1,
+                userInfo: ["description": "Export failed: \(exportSession.error?.localizedDescription ?? "unknown error")"]
+            )
+        }
+        
+        // Clean up input file
+        try? FileManager.default.removeItem(at: tempInputURL)
+        
+        return exportURL
+    }
+    
+    private func presentShareSheet(with videoUrl: URL) {
+        let activityVC = UIActivityViewController(
+            activityItems: [videoUrl],
+            applicationActivities: nil
+        )
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootViewController = windowScene.windows.first?.rootViewController {
+            rootViewController.present(activityVC, animated: true)
+        }
+    }
+    
+    // Helper view for consistent share buttons
+    private struct ShareButton: View {
+        let action: () -> Void
+        let icon: String
+        let label: String
+        let isLoading: Bool
+        
+        var body: some View {
+            Button(action: action) {
+                VStack {
+                    if isLoading {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                    } else {
+                        Image(systemName: icon)
+                    }
+                    Text(label)
+                        .font(.caption)
+                }
+                .padding()
+                .background(ThemeColors.primary.opacity(0.1))
+                .foregroundColor(ThemeColors.primary)
+                .cornerRadius(12)
+            }
+            .disabled(isLoading)
         }
     }
 }
