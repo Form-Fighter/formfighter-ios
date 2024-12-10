@@ -300,6 +300,7 @@ class PurchasesManager: ObservableObject {
                 Logger.log(message: "Premium purchased!", event: .info)
                 Tracker.purchasedPremium()
                 self.entitlement = entitlement
+                self.checkSubscribed()
             } else {
                 throw PurchasesError.noPremiumEntitlement
             }
