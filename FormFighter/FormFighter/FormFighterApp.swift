@@ -55,55 +55,59 @@ struct FormFighterApp: App {
         setupCrashlytics()
     }
     
+    var normalUI: some View {
+        TabView(selection: $selectedTab) {
+            VisionView()
+                .tabItem {
+                    Label("Train", systemImage: "figure.boxing")
+                        .foregroundStyle(ThemeColors.primary)
+                }
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarBackground(ThemeColors.background, for: .navigationBar)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text("Train")
+                            .font(.headline)
+                            .foregroundColor(ThemeColors.primary)
+                    }
+                }
+                .tag(TabIdentifier.vision)
+           
+            ProfileView()
+                .tabItem {
+                    Label("Progress", systemImage: "chart.line.uptrend.xyaxis")
+                        .foregroundStyle(ThemeColors.primary)
+                }
+                .tag(TabIdentifier.profile)
+
+            SettingsView(vm: SettingsVM())
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
+                        .foregroundStyle(ThemeColors.primary)
+                }
+                .tag(TabIdentifier.settings)
+        }
+        .tint(ThemeColors.primary)
+        .background(ThemeColors.background)
+        .toolbarBackground(.visible, for: .tabBar)
+        .toolbarBackground(ThemeColors.background, for: .tabBar)
+    }
+    
     var body: some Scene {
         WindowGroup {
             NavigationStack {
                 ZStack {
                     Group {
                         // TODO: Remove this once we have a proper onboarding
-                        if false{
+                        if false {
                             onboarding
+                        } else if !purchasesManager.premiumSubscribed {
+                            PaywallView()
                         } else if !userManager.isAuthenticated {
                             LoginView(showPaywallInTheOnboarding: false)
-                        } else if userManager.isAuthenticated && purchasesManager.premiumSubscribed {
-                            TabView(selection: $selectedTab) {
-                                VisionView()
-                                    .tabItem { 
-                                        Label("Train", systemImage: "figure.boxing")
-                                            .foregroundStyle(ThemeColors.primary)
-                                    }
-                                    .toolbarBackground(.visible, for: .navigationBar)
-                                    .toolbarBackground(ThemeColors.background, for: .navigationBar)
-                                    .navigationBarTitleDisplayMode(.inline)
-                                    .toolbar {
-                                        ToolbarItem(placement: .principal) {
-                                            Text("Train")
-                                                .font(.headline)
-                                                .foregroundColor(ThemeColors.primary)
-                                        }
-                                    }
-                                    .tag(TabIdentifier.vision)
-                               
-                                ProfileView()
-                                    .tabItem { 
-                                        Label("Progress", systemImage: "chart.line.uptrend.xyaxis")
-                                            .foregroundStyle(ThemeColors.primary)
-                                    }
-                                    .tag(TabIdentifier.profile)
-
-                                SettingsView(vm: SettingsVM())
-                                    .tabItem { 
-                                        Label("Settings", systemImage: "gearshape.fill")
-                                            .foregroundStyle(ThemeColors.primary)
-                                    }
-                                    .tag(TabIdentifier.settings)
-                            }
-                            .tint(ThemeColors.primary)
-                            .background(ThemeColors.background)
-                            .toolbarBackground(.visible, for: .tabBar)
-                            .toolbarBackground(ThemeColors.background, for: .tabBar)
                         } else {
-                            PaywallView()
+                            normalUI
                         }
                     }
                     .opacity(showSplash ? 0 : 1)
