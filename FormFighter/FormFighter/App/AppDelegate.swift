@@ -66,4 +66,20 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         
         completionHandler()
     }
-} 
+    
+    // save affilateID from universal link
+    func application(_ app: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        if let url = userActivity.webpageURL {
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            if let queryItems = components?.queryItems {
+                for item in queryItems {
+                    if item.name == "affiliateID", let itemValue = item.value {
+                        print("Affiliate ID: \(itemValue)")
+                        UserDefaults.standard.set(itemValue, forKey: "affiliateID")
+                    }
+                }
+            }
+        }
+        return true
+    }
+}

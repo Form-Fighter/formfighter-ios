@@ -1,6 +1,8 @@
 import Foundation
 import RevenueCat
 import UIKit
+import SwiftUI
+import Firebase
 
 class PurchasesManager: ObservableObject {
     enum PurchasesError: LocalizedError {
@@ -59,6 +61,7 @@ class PurchasesManager: ObservableObject {
     // 3. If user's subscription expired or user cancelled within the trial period, it will be false
     @Published var premiumSubscribed: Bool = false
     @Published var eliteSubscribed: Bool = false
+    @AppStorage("affiliateID") private var affiliateID: String = ""
     
     enum TrialStatus {
         case eligible
@@ -315,7 +318,10 @@ class PurchasesManager: ObservableObject {
                 Logger.log(message: "Premium purchased!", event: .info)
                 Tracker.purchasedPremium()
                 self.entitlement = entitlement
+                // update subscribe status
                 self.checkSubscribed()
+                // record sales data
+                self.recordSale(affiliateID: affiliateID, userID: UserManager.shared.userId, amount: package.localizedPriceString)
             } else {
                 throw PurchasesError.noPremiumEntitlement
             }
@@ -439,4 +445,20 @@ class PurchasesManager: ObservableObject {
         Logger.log(message: "RevenueCat debug logging enabled", event: .debug)
     }
  
+    func recordSale(affiliateID: String, userID: String, amount: String) {
+        let db = Firestore.firestore()
+        let saleData: [String: Any] = [
+            "userID": userID,
+            "amount": amount,
+            "timestamp": ISO8601DateFormatter().string(from: Date())
+        ]
+        
+        db.collection("affiliates").document(affiliateID).collection("sales").addDocument(data: saleData) { error in
+            if let error = error {
+                print("Error adding document: \(error)")
+            } else {
+                print("Sale recorded successfully.")
+            }
+        }
+    }
 }
