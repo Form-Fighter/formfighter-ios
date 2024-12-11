@@ -50,13 +50,15 @@ class PurchasesManager: ObservableObject {
     static let shared = PurchasesManager()
     
     @Published var currentOffering: Offering?
+    @Published var eliteOffering: Offering?
     @Published var entitlement: EntitlementInfo?
     @Published var trialStatus: TrialStatus = .unknown
-    // We are now using a new variable isSubscribed for IAP
+    // We are now using a new variable premiumSubscribed for IAP
     // 1. If user first open the app, it will be false
     // 2. If user is in the subscription period, it will be true
     // 3. If user's subscription expired or user cancelled within the trial period, it will be false
-    @Published var isSubscribed: Bool = false
+    @Published var premiumSubscribed: Bool = false
+    @Published var eliteSubscribed: Bool = false
     
     enum TrialStatus {
         case eligible
@@ -209,6 +211,14 @@ class PurchasesManager: ObservableObject {
                 } else {
                     Logger.log(message: "Cannot find current offering", event: .error)
                 }
+                
+                if let eliteOffering = offerings?.currentOffering(forPlacement: Const.Purchases.eliteEntitlementIdentifier){
+                    self?.eliteOffering = eliteOffering
+                    Logger.log(message: "Elite Offering '\(eliteOffering.identifier)' fetched", event: .debug)
+                } else {
+                    Logger.log(message: "Cannot find elite offering", event: .error)
+                    print(offerings?.all)
+                }
             }
         }
     }
@@ -260,8 +270,13 @@ class PurchasesManager: ObservableObject {
                 return
             }
             Logger.log(message: "Active subscriptions count is \(info.activeSubscriptions.count)", event: .info)
-            if info.activeSubscriptions.count > 0 {
-                isSubscribed = true
+            
+            if info.entitlements[Const.Purchases.premiumEntitlementIdentifier]?.isActive == true {
+                premiumSubscribed = true
+            }
+            
+            if info.entitlements[Const.Purchases.eliteEntitlementIdentifier]?.isActive == true {
+                eliteSubscribed = true
             }
         }
     }

@@ -65,7 +65,7 @@ struct FormFighterApp: App {
                             onboarding
                         } else if !userManager.isAuthenticated {
                             LoginView(showPaywallInTheOnboarding: false)
-                        } else if userManager.isAuthenticated && purchasesManager.isSubscribed {
+                        } else if userManager.isAuthenticated && purchasesManager.premiumSubscribed {
                             TabView(selection: $selectedTab) {
                                 VisionView()
                                     .tabItem { 
