@@ -1,6 +1,8 @@
 import Foundation
 import RevenueCat
 import UIKit
+import SwiftUI
+import Firebase
 
 class PurchasesManager: ObservableObject {
     enum PurchasesError: LocalizedError {
@@ -50,8 +52,16 @@ class PurchasesManager: ObservableObject {
     static let shared = PurchasesManager()
     
     @Published var currentOffering: Offering?
+    @Published var eliteOffering: Offering?
     @Published var entitlement: EntitlementInfo?
     @Published var trialStatus: TrialStatus = .unknown
+    // We are now using a new variable premiumSubscribed for IAP
+    // 1. If user first open the app, it will be false
+    // 2. If user is in the subscription period, it will be true
+    // 3. If user's subscription expired or user cancelled within the trial period, it will be false
+    @Published var premiumSubscribed: Bool = false
+    @Published var eliteSubscribed: Bool = false
+    @AppStorage("affiliateID") private var affiliateID: String = ""
     
     enum TrialStatus {
         case eligible
@@ -189,7 +199,8 @@ class PurchasesManager: ObservableObject {
     private func setupRevenueCat() {
         Purchases.logLevel = .error
         Purchases.configure(withAPIKey: Const.Purchases.key)
-        checkTrialStatus()
+        //checkTrialStatus()
+        checkSubscribed()
     }
     
     func fetchOfferings() {
@@ -202,6 +213,14 @@ class PurchasesManager: ObservableObject {
                     Logger.log(message: "Current Offering '\(current.identifier)' fetched", event: .debug)
                 } else {
                     Logger.log(message: "Cannot find current offering", event: .error)
+                }
+                
+                if let eliteOffering = offerings?.currentOffering(forPlacement: Const.Purchases.eliteEntitlementIdentifier){
+                    self?.eliteOffering = eliteOffering
+                    Logger.log(message: "Elite Offering '\(eliteOffering.identifier)' fetched", event: .debug)
+                } else {
+                    Logger.log(message: "Cannot find elite offering", event: .error)
+                    print(offerings?.all)
                 }
             }
         }
@@ -247,6 +266,24 @@ class PurchasesManager: ObservableObject {
         }
     }
     
+    func checkSubscribed() {
+        Purchases.shared.getCustomerInfo { [weak self] customerInfo, error in
+            guard let self = self, let info = customerInfo else {
+                Logger.log(message: "checkSubscribed returns without a info", event: .debug)
+                return
+            }
+            Logger.log(message: "Active subscriptions count is \(info.activeSubscriptions.count)", event: .info)
+            
+            if info.entitlements[Const.Purchases.premiumEntitlementIdentifier]?.isActive == true {
+                premiumSubscribed = true
+            }
+            
+            if info.entitlements[Const.Purchases.eliteEntitlementIdentifier]?.isActive == true {
+                eliteSubscribed = true
+            }
+        }
+    }
+    
     var isTrialActive: Bool {
         trialStatus == .active
     }
@@ -281,6 +318,10 @@ class PurchasesManager: ObservableObject {
                 Logger.log(message: "Premium purchased!", event: .info)
                 Tracker.purchasedPremium()
                 self.entitlement = entitlement
+                // update subscribe status
+                self.checkSubscribed()
+                // record sales data
+                self.recordSale(affiliateID: affiliateID, userID: UserManager.shared.userId, amount: package.localizedPriceString)
             } else {
                 throw PurchasesError.noPremiumEntitlement
             }
@@ -404,4 +445,20 @@ class PurchasesManager: ObservableObject {
         Logger.log(message: "RevenueCat debug logging enabled", event: .debug)
     }
  
+    func recordSale(affiliateID: String, userID: String, amount: String) {
+        let db = Firestore.firestore()
+        let saleData: [String: Any] = [
+            "userID": userID,
+            "amount": amount,
+            "timestamp": ISO8601DateFormatter().string(from: Date())
+        ]
+        
+        db.collection("affiliates").document(affiliateID).collection("sales").addDocument(data: saleData) { error in
+            if let error = error {
+                print("Error adding document: \(error)")
+            } else {
+                print("Sale recorded successfully.")
+            }
+        }
+    }
 }
