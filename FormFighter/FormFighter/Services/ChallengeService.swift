@@ -73,26 +73,27 @@ class ChallengeService: ObservableObject {
         listeners.removeAll()
     }
     
-    func handleInvite(challengeId: String, userId: String, userName: String) async throws {
-        let challengeRef = db.collection("challenges").document(challengeId)
-        
-        guard let challengeDoc = try? await challengeRef.getDocument(),
-              let challenge = try? challengeDoc.data(as: Challenge.self),
-              challenge.endTime > Date() else {
+    func handleInvite(challengeId: String, referrerId: String? = nil) async throws {
+        guard let userId = Auth.auth().currentUser?.uid,
+              let userName = userManager.user?.firstName else {
             throw ChallengeError.invalidChallenge
         }
         
-        let newParticipant = Challenge.Participant(
-            id: userId,
-            name: userName,
-            inviteCount: 0,
-            totalJabs: 0,
-            averageScore: 0
-        )
+        isLoading = true
+        defer { isLoading = false }
         
-        try await challengeRef.updateData([
-            "participants": FieldValue.arrayUnion([try Firestore.Encoder().encode(newParticipant)])
-        ])
+        do {
+            try await handleInvite(
+                challengeId: challengeId,
+                userId: userId,
+                userName: userName,
+                referrerId: referrerId
+            )
+            showToast(message: "Successfully joined challenge!")
+        } catch {
+            self.error = error
+            throw error
+        }
     }
     
     func checkAndHandleChallengeCompletion() async {
@@ -161,8 +162,52 @@ class ChallengeService: ObservableObject {
             ])
             
         case .invite(let userId, let userName):
-            // Handle invite event
-            break
+            let challengeRef = db.collection("challenges").document(activeChallenge?.id ?? "")
+            
+            guard let challengeDoc = try? await challengeRef.getDocument(),
+                  challengeDoc.exists,
+                  var challenge = try? challengeDoc.data(as: Challenge.self) else {
+                throw ChallengeError.invalidChallenge
+            }
+            
+            // Create new participant
+            let newParticipant = Challenge.Participant(
+                id: userId,
+                name: userName,
+                inviteCount: 0,
+                totalJabs: 0,
+                averageScore: 0
+            )
+            
+            // Create the invite event
+            let event = Challenge.ChallengeEvent(
+                id: UUID().uuidString,
+                timestamp: Date(),
+                type: .invite,
+                userId: userId,
+                userName: userName,
+                details: "Joined the challenge"
+            )
+            
+            try await challengeRef.updateData([
+                "participants": FieldValue.arrayUnion([try Firestore.Encoder().encode(newParticipant)]),
+                "events": FieldValue.arrayUnion([try Firestore.Encoder().encode(event)])
+            ])
+            
+            // Notify other participants
+            await notifyParticipants(
+                challenge: challenge,
+                title: "New Challenger! 🥊",
+                body: "\(userName) joined the challenge!",
+                excludeUserId: userId
+            )
         }
+    }
+    
+    private func notifyParticipants(challenge: Challenge, title: String, body: String, excludeUserId: String? = nil) async {
+        NotificationManager.shared.sendChallengeNotification(
+            message: body,
+            challengeId: challenge.id
+        )
     }
 } 

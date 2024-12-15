@@ -4,6 +4,7 @@ import FirebaseFirestore
 import FirebaseMessaging
 import FirebaseAuth
 import UserNotifications
+import Alamofire
 
 // Add enum for notification types
 enum NotificationType: String, Codable {
@@ -225,19 +226,27 @@ class NotificationManager: NSObject, ObservableObject {
         return nil
     }
     
-    func sendChallengeNotification(title: String, body: String) {
-        let content = UNMutableNotificationContent()
-        content.title = title
-        content.body = body
-        content.sound = .default
+    func sendChallengeNotification(message: String, challengeId: String) {
+        let serverURL = URL(string: "https://www.form-fighter.com/challenge")!
         
-        let request = UNNotificationRequest(
-            identifier: UUID().uuidString,
-            content: content,
-            trigger: UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-        )
+        let payload = [
+            "message": message,
+            "challengeId": challengeId
+        ]
         
-        UNUserNotificationCenter.current().add(request)
+        AF.request(serverURL,
+                   method: .post,
+                   parameters: payload,
+                   encoder: JSONParameterEncoder.default)
+            .validate()
+            .responseData { response in
+                switch response.result {
+                case .success:
+                    print("✅ Challenge notification request sent to server")
+                case .failure(let error):
+                    print("❌ Failed to send challenge notification request: \(error)")
+                }
+            }
     }
 }
 

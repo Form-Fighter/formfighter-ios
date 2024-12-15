@@ -78,7 +78,7 @@ class ChallengeViewModel: ObservableObject {
         }
     }
     
-    func handleInvite(challengeId: String) async throws {
+    func processInvite(challengeId: String, referrerId: String?) async throws {
         guard let userId = Auth.auth().currentUser?.uid,
               let userName = userManager.user?.firstName else {
             throw ChallengeError.invalidChallenge
@@ -88,11 +88,12 @@ class ChallengeViewModel: ObservableObject {
         defer { isLoading = false }
         
         do {
-            try await challengeService.handleInvite(
-                challengeId: challengeId,
+            try await challengeService.processEvent(.invite(
                 userId: userId,
-                userName: userName
-            )
+                userName: userName,
+                referrerId: referrerId,
+                challengeId: challengeId
+            ))
             showToast(message: "Successfully joined challenge!")
         } catch {
             self.error = error

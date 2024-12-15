@@ -15,6 +15,17 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         // Set messaging delegate before registering for remote notifications
         Messaging.messaging().delegate = self
         
+        // Request authorization
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            print("Notification authorization granted: \(granted)")
+            if let error = error {
+                print("Notification authorization error: \(error)")
+            }
+        }
+        
+        // Register for remote notifications
+        application.registerForRemoteNotifications()
+        
         return true
     }
     
@@ -46,11 +57,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                               willPresent notification: UNNotification,
                               withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
-        
-        if let feedbackId = userInfo["feedbackId"] as? String {
-            print("Received notification with feedbackId: \(feedbackId)")
-        }
-        
+        print("📱 Will present notification: \(userInfo)")
+        handleNotification(userInfo)
         completionHandler([.banner, .sound, .badge])
     }
     
@@ -58,16 +66,36 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                               didReceive response: UNNotificationResponse,
                               withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        
-        if let feedbackId = userInfo["feedbackId"] as? String {
-            print("User tapped notification with feedbackId: \(feedbackId)")
-            // Handle the feedbackId as needed
-        }
-        
+        print("📱 Did receive notification response: \(userInfo)")
+        handleNotification(userInfo)
         completionHandler()
     }
     
-    // save affilateID from universal link
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        
+        print("📱 Received remote notification: \(userInfo)")
+        handleNotification(userInfo)
+        completionHandler(.newData)
+    }
+    
+    private func handleNotification(_ userInfo: [AnyHashable: Any]) {
+        if let challengeId = userInfo["challengeId"] as? String {
+            NotificationCenter.default.post(
+                name: NSNotification.Name("OpenChallenge"),
+                object: nil,
+                userInfo: ["challengeId": challengeId]
+            )
+        } else if let feedbackId = userInfo["feedbackId"] as? String {
+            NotificationCenter.default.post(
+                name: NSNotification.Name("OpenFeedback"),
+                object: nil,
+                userInfo: ["feedbackId": feedbackId]
+            )
+        }
+    }
+    
+    // Universal link handling
     func application(_ app: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         if let url = userActivity.webpageURL {
             let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
@@ -83,6 +111,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         return true
     }
     
+    // URL Scheme handling
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         if url.scheme == "formfighter" && url.host == "join" {
             if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),

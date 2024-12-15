@@ -290,4 +290,18 @@ final class Tracker {
         ])
         Logger.log(message: "User submitted cancellation feedback", event: .info)
     }
+
+    static func notificationReceived(feedbackId: String) {
+        Analytics.logEvent("notification_received", parameters: [
+            "feedback_id": feedbackId,
+            "type": "feedback"
+        ])
+    }
+    
+    static func notificationOpened(feedbackId: String) {
+        Analytics.logEvent("notification_opened", parameters: [
+            "feedback_id": feedbackId,
+            "type": "feedback"
+        ])
+    }
 }

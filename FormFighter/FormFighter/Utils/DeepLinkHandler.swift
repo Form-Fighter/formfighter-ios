@@ -4,6 +4,7 @@ enum DeepLinkType {
     case challenge(id: String, referrer: String?)
     case coach(id: String)
     case affiliate(code: String)
+    case feedback(id: String)
 }
 
 class DeepLinkHandler {

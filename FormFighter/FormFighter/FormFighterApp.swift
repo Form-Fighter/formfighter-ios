@@ -26,6 +26,7 @@ struct FormFighterApp: App {
     @State private var showCoachConfirmation = false
     @State private var showSplash = true
     @State private var selectedTab: TabIdentifier = .profile
+    @State private var pendingFeedbackId: String?
     
     let cameraManager = CameraManager() // Create an instance of CameraManager
     
@@ -209,6 +210,11 @@ struct FormFighterApp: App {
                         checkAndHandlePendingChallenge()
                     }
                 }
+                .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("OpenChallenge"))) { notification in
+                    if let challengeId = notification.userInfo?["challengeId"] as? String {
+                        selectedTab = .challenge
+                    }
+                }
             }
             .environment(\.tabSelection, $selectedTab)
         }
@@ -375,6 +381,12 @@ struct FormFighterApp: App {
             print("- Affiliate Code: \(code)")
             UserDefaults.standard.set(code, forKey: "affiliateID")
             print("✅ Affiliate code saved to UserDefaults")
+            
+        case .feedback(let id):
+            print("📝 Processing feedback deep link")
+            print("- Feedback ID: \(id)")
+            pendingFeedbackId = id
+            selectedTab = .profile  // Navigate to profile tab where feedback is shown
         }
     }
     
