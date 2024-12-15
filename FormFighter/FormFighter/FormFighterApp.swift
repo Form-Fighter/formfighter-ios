@@ -356,19 +356,12 @@ struct FormFighterApp: App {
             
             if !userManager.userId.isEmpty && purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed {
                 print("👤 User authenticated and premium, processing challenge...")
-                Task {
-                    do {
-                        print("📝 Attempting to handle challenge invite: \(id)")
-                        try await ChallengeViewModel().handleInvite(challengeId: id)
-                        print("✅ Challenge invite handled successfully")
-                        selectedTab = .challenge
-                    } catch {
-                        print("❌ Failed to handle challenge invite: \(error)")
-                    }
-                }
+                selectedTab = .challenge
+                savePendingChallenge(id: id, referrer: referrer)
             } else {
                 print("⚠️ User not logged in or not premium, saving challenge for later")
                 savePendingChallenge(id: id, referrer: referrer)
+
             }
             
         case .coach(let id):
@@ -507,21 +500,9 @@ struct FormFighterApp: App {
         
         // Only process if user is authenticated and has premium or elite subscription
         if !userManager.userId.isEmpty && (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
-            Task {
-                do {
-                    print("📝 Processing pending challenge...")
-                    try await ChallengeViewModel().handleInvite(challengeId: pendingChallenge.challengeId)
-                    print("✅ Pending challenge processed successfully")
-                    selectedTab = .challenge
-                    // Only clear the pending challenge after successful processing
-                    UserDefaults.standard.removeObject(forKey: "pendingChallenge")
-                    print("🗑️ Pending challenge removed from storage")
-                } catch {
-                    print("❌ Failed to process pending challenge: \(error)")
-                    // Don't remove the pending challenge if it fails
-                    // It will be retried next time conditions are met
-                }
-            }
+            // Just switch to challenge tab, the ChallengeView.onAppear will handle the pending challenge
+            selectedTab = .challenge
+            print("👤 User ready, switching to challenge tab")
         } else {
             print("⏳ User not ready to process challenge (Premium: \(purchasesManager.premiumSubscribed), Elite: \(purchasesManager.eliteSubscribed), Authenticated: \(!userManager.userId.isEmpty))")
         }

@@ -21,18 +21,18 @@ struct ChallengeView: View {
                                 .font(.system(size: 60))
                                 .foregroundColor(ThemeColors.primary)
                             
-                            Text("No Active Challenge")
+                            Text("No active challenge, start one!")
                                 .font(.title2)
                                 .fontWeight(.bold)
                             
-                            Text("Create a challenge or join one through an invitation link")
+                            Text("Create a challenge or join one via an invitation link")
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.secondary)
                             
                             Button {
                                 showCreateChallenge = true
                             } label: {
-                                Label("Create Challenge", systemImage: "plus.circle.fill")
+                                Label("Start Challenge", systemImage: "plus.circle.fill")
                                     .font(.headline)
                                     .foregroundColor(.white)
                                     .frame(maxWidth: .infinity)
@@ -58,6 +58,26 @@ struct ChallengeView: View {
             .navigationTitle("Challenge")
             .sheet(isPresented: $showCreateChallenge) {
                 CreateChallengeView(viewModel: viewModel)
+            }
+            .onAppear {
+                handlePendingChallenge()
+            }
+        }
+    }
+    
+    private func handlePendingChallenge() {
+        if let data = UserDefaults.standard.data(forKey: "pendingChallenge"),
+           let pendingChallenge = try? JSONDecoder().decode(PendingChallenge.self, from: data) {
+            Task {
+                do {
+                    try await viewModel.processInvite(
+                        challengeId: pendingChallenge.challengeId,
+                        referrerId: pendingChallenge.referrerId
+                    )
+                    UserDefaults.standard.removeObject(forKey: "pendingChallenge")
+                } catch {
+                    print("Failed to process pending challenge: \(error)")
+                }
             }
         }
     }

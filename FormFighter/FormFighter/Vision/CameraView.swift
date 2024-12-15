@@ -4,6 +4,7 @@ import Vision
 import Photos
 import AVKit
 
+// Modify CameraVisionView to include the new implementation
 struct CameraVisionView: View {
     @State private var detectedBodyPoints: [CGPoint] = []
     @State private var timer1: Int = 0
@@ -39,6 +40,11 @@ struct CameraVisionView: View {
     @State private var fullBodyPlayer: AVAudioPlayer?
     @State private var turnBodyPlayer: AVAudioPlayer?
     @State private var jabInstructionPlayer: AVAudioPlayer?
+    
+    // Add these to your existing state variables
+    @AppStorage("hasSeenInstructions") private var hasSeenInstructions = false
+    @State private var currentInstructionStep = 1
+    @State private var showInstructionsOverlay = false
     
     var cameraManager: CameraManager
     
@@ -116,67 +122,7 @@ struct CameraVisionView: View {
                 
              
                 
-                // New overlay instructions (shows only first time)
-                if showInstructions {
-                    VStack(spacing: 20) {
-                        Text("How to Record Your Form")
-                            .font(.title2.bold())
-                            .foregroundColor(.white)
-                        
-                        VStack(alignment: .leading, spacing: 15) {
-                            InstructionRow(number: 1, text: "Turn on audio for best experience 🔊", icon: "speaker.wave.2.fill")
-                            InstructionRow(number: 2, text: "Record in a well lit indoor room", icon: "light.min")
-                            InstructionRow(number: 3, text: "Stand 6-8 feet from camera", icon: "person.and.arrow.left.and.arrow.right")
-                            InstructionRow(number: 4, text: "Show your full body in frame", icon: "figure.stand")
-                            InstructionRow(number: 5, text: "Turn your body 7 degrees left or right to show your stance", icon: "arrow.triangle.2.circlepath")
-                            InstructionRow(number: 6, text: "Hold still for recording", icon: "video.fill")
-                            InstructionRow(number: 7, text: "Perform ONE jab in 2 seconds", icon: "figure.boxing")
-                        }
-                        
-                        Button("Got it! 👊") {
-                            withAnimation {
-                                showInstructions = false
-                            }
-                        }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(canDismissInstructions ? Color.red : Color.gray)
-                        .cornerRadius(10)
-                        .opacity(buttonOpacity)
-                        .scaleEffect(canDismissInstructions ? 1.0 : 0.95)
-                        .animation(
-                            Animation
-                                .easeInOut(duration: 1.0)
-                                .repeatForever(autoreverses: true),
-                            value: buttonOpacity
-                        )
-                        .disabled(!canDismissInstructions)
-                        .onAppear {
-                            // Start button animation
-                            withAnimation(
-                                Animation
-                                    .easeInOut(duration: 1.0)
-                                    .repeatForever(autoreverses: true)
-                            ) {
-                                buttonOpacity = 1.0
-                            }
-                            
-                            // Enable button after delay
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                                withAnimation {
-                                    canDismissInstructions = true
-                                    buttonOpacity = 1.0
-                                }
-                            }
-                        }
-                    }
-                    .padding()
-                    .background(Color.black.opacity(0.85))
-                    .cornerRadius(20)
-                    .padding()
-                }
-                
+               
                 // Visual Guide Overlay when body not detected
                 if !isBodyDetected || !isBodyComplete {
                     Rectangle()
@@ -263,6 +209,32 @@ struct CameraVisionView: View {
                     .onAppear {
                         turnBodyPlayer?.play()
                     }
+                }
+                
+                // Add the info button in the top right
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button {
+                            currentInstructionStep = 1
+                            showInstructionsOverlay = true
+                        } label: {
+                            Image(systemName: "info.circle")
+                                .font(.title2)
+                                .foregroundColor(.white)
+                        }
+                        .padding()
+                    }
+                    Spacer()
+                }
+                
+                // Instructions overlay
+                if !hasSeenInstructions || showInstructionsOverlay {
+                    InstructionsOverlay(
+                        currentStep: $currentInstructionStep,
+                        isShowing: $showInstructionsOverlay,
+                        hasSeenInstructions: $hasSeenInstructions
+                    )
                 }
             }
             .navigationDestination(isPresented: $navigateToPreview) {
@@ -846,5 +818,126 @@ extension CameraManager: AVCaptureFileOutputRecordingDelegate {
                 Logger.log(message: "Video file not created correctly", event: .error)
             }
         }
+    }
+}
+
+// Helper extension for safe array access
+extension Array {
+    subscript(safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}
+
+// First, create an instruction model to hold our data
+struct Instruction {
+    let number: Int
+    let text: String
+    let icon: String
+}
+
+// Create a separate InstructionsOverlay view
+struct InstructionsOverlay: View {
+    @Binding var currentStep: Int
+    @Binding var isShowing: Bool
+    @Binding var hasSeenInstructions: Bool
+    
+    let instructions = [
+        Instruction(number: 1, text: "Turn on audio for best experience 🔊", icon: "speaker.wave.2.fill"),
+        Instruction(number: 2, text: "Record in a well lit indoor room", icon: "light.min"),
+        Instruction(number: 3, text: "Stand 6-8 feet from camera", icon: "person.and.arrow.left.and.arrow.right"),
+        Instruction(number: 4, text: "Show your full body in frame", icon: "figure.stand"),
+        Instruction(number: 5, text: "Turn your body 7 degrees left or right to show your stance", icon: "arrow.triangle.2.circlepath"),
+        Instruction(number: 6, text: "Hold still for recording", icon: "video.fill"),
+        Instruction(number: 7, text: "Perform ONE jab in 2 seconds", icon: "figure.boxing")
+    ]
+    
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.85)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 20) {
+                // Header with close button
+                HStack {
+                    Text("How to Record Your Form")
+                        .font(.title2.bold())
+                        .foregroundColor(.white)
+                    
+                    Spacer()
+                    
+                    Button {
+                        withAnimation {
+                            isShowing = false
+                            hasSeenInstructions = true
+                        }
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.white)
+                            .font(.title2)
+                    }
+                }
+                .padding(.horizontal)
+                
+                Spacer()
+                
+                // Current instruction
+                if let instruction = instructions[safe: currentStep - 1] {
+                    VStack(spacing: 30) {
+                        Image(systemName: instruction.icon)
+                            .font(.system(size: 60))
+                            .foregroundColor(.red)
+                        
+                        Text(instruction.text)
+                            .font(.title3)
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding()
+                    .transition(.opacity)
+                }
+                
+                Spacer()
+                
+                // Progress indicators
+                HStack(spacing: 8) {
+                    ForEach(1...instructions.count, id: \.self) { step in
+                        Circle()
+                            .fill(step == currentStep ? Color.red : Color.gray)
+                            .frame(width: 8, height: 8)
+                    }
+                }
+                
+                // Navigation buttons
+                HStack(spacing: 20) {
+                    Button("Skip") {
+                        withAnimation {
+                            isShowing = false
+                            hasSeenInstructions = true
+                        }
+                    }
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.gray.opacity(0.5))
+                    .cornerRadius(10)
+                    
+                    Button(currentStep == instructions.count ? "Done" : "Next") {
+                        withAnimation {
+                            if currentStep == instructions.count {
+                                isShowing = false
+                                hasSeenInstructions = true
+                            } else {
+                                currentStep += 1
+                            }
+                        }
+                    }
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.red)
+                    .cornerRadius(10)
+                }
+            }
+            .padding()
+        }
+        .transition(.opacity)
     }
 }
