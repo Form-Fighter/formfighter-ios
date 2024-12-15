@@ -199,6 +199,7 @@
 		B2F447FD2D0827B60032E53C /* ChallengeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447FC2D0827B60032E53C /* ChallengeService.swift */; };
 		B2F447FF2D082ABB0032E53C /* ChallengeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447FE2D082ABB0032E53C /* ChallengeService.swift */; };
 		B2F448012D082BCC0032E53C /* ChallengeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F448002D082BCC0032E53C /* ChallengeError.swift */; };
+		B2F448032D0EFCE10032E53C /* DeepLinkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F448022D0EFCE10032E53C /* DeepLinkHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -383,6 +384,7 @@
 		B2F447FC2D0827B60032E53C /* ChallengeService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChallengeService.swift; path = Services/ChallengeService.swift; sourceTree = "<group>"; };
 		B2F447FE2D082ABB0032E53C /* ChallengeService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeService.swift; sourceTree = "<group>"; };
 		B2F448002D082BCC0032E53C /* ChallengeError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeError.swift; sourceTree = "<group>"; };
+		B2F448022D0EFCE10032E53C /* DeepLinkHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeepLinkHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -555,6 +557,7 @@
 		818D3FA42B700A2B00DF7299 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				B2F448022D0EFCE10032E53C /* DeepLinkHandler.swift */,
 				818D3FA92B700E7C00DF7299 /* Extensions */,
 				818D3FA52B700A3500DF7299 /* Constants.swift */,
 				818D3FBC2B700F6200DF7299 /* Logger.swift */,
@@ -1118,6 +1121,7 @@
 				81DE14E22B7546E200C41EA9 /* TermsAndPrivacyPolicyView.swift in Sources */,
 				B21411612CE530A100699B15 /* NotificationManager.swift in Sources */,
 				B2B9F0BA2CB0A8EF00D7CFC8 /* ProfileVM.swift in Sources */,
+				B2F448032D0EFCE10032E53C /* DeepLinkHandler.swift in Sources */,
 				81A02D422BA4C31200061567 /* CircularProgressView.swift in Sources */,
 				818D3FB52B700E9D00DF7299 /* +View.swift in Sources */,
 				814731F42B7D387900E223A7 /* DALLEService.swift in Sources */,

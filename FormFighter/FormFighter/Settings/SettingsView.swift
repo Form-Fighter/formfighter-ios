@@ -431,7 +431,7 @@ struct SettingsView: View {
             // Account Management Section
             Section("⚙️ Account Management") {
                 // Subscription Status & Management
-                if !purchasesManager.isPremiumActive {
+                if !purchasesManager.premiumSubscribed && !purchasesManager.eliteSubscribed {
                     Button {
                         isShowingPaywall.toggle()
                         Tracker.tappedUnlockPremium()
@@ -623,7 +623,7 @@ struct SettingsView: View {
         do {
             await purchasesManager.fetchCustomerInfo()
             
-            if purchasesManager.isPremiumActive {
+            if purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed {
                 vm.alertMessage = "Your subscription has been restored!"
             } else {
                 vm.alertMessage = "No active subscription found."
@@ -640,7 +640,7 @@ struct SettingsView: View {
     
 
 
-             if purchasesManager.isPremiumActive {
+             if purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed {
                 Button(role: .destructive) {
                     showCancelFeedbackModal = true
                 } label: {

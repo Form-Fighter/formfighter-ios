@@ -185,6 +185,9 @@ class PurchasesManager: ObservableObject {
         }
     }
     
+    var storedAffiliateID: String {
+        UserDefaults.standard.string(forKey: "affiliateID") ?? ""
+    }
     
     private init() {
 
@@ -288,14 +291,10 @@ class PurchasesManager: ObservableObject {
         trialStatus == .active
     }
     
-    var isPremiumActive: Bool {
-        entitlement?.isActive == true || isTrialActive
-    }
     
     // MARK: Use this function to purchase manually if you build a custom paywall or purcharse
     // buttons over your app.
     func purchaseSubscription(_ type: SubscriptionType) async throws {
-        
         if let currentOffering {
             guard let package = switch type {
             case .weekly:
@@ -317,11 +316,18 @@ class PurchasesManager: ObservableObject {
             if let entitlement = purchaseResultData.customerInfo.entitlements.all[Const.Purchases.premiumEntitlementIdentifier] {
                 Logger.log(message: "Premium purchased!", event: .info)
                 Tracker.purchasedPremium()
-                self.entitlement = entitlement
-                // update subscribe status
-                self.checkSubscribed()
-                // record sales data
-                self.recordSale(affiliateID: affiliateID, userID: UserManager.shared.userId, amount: package.localizedPriceString)
+                
+                // Wrap UI state updates in MainActor.run
+                await MainActor.run {
+                    self.entitlement = entitlement
+                    self.checkSubscribed()
+                }
+                
+                // Only record sale if we have both userId and affiliateId
+                let userId = UserManager.shared.userId
+                if !affiliateID.isEmpty && !userId.isEmpty {
+                    self.recordSale(affiliateID: affiliateID, userID: userId, amount: package.localizedPriceString)
+                }
             } else {
                 throw PurchasesError.noPremiumEntitlement
             }
@@ -461,4 +467,44 @@ class PurchasesManager: ObservableObject {
             }
         }
     }
+    
+    func checkExistingSale(userID: String) async -> Bool {
+        guard !storedAffiliateID.isEmpty else { return false }
+        
+        let db = Firestore.firestore()
+        do {
+            let snapshot = try await db.collection("affiliates")
+                .document(storedAffiliateID)
+                .collection("sales")
+                .whereField("userID", isEqualTo: userID)
+                .getDocuments()
+            
+            return !snapshot.documents.isEmpty
+        } catch {
+            Logger.log(message: "Error checking existing sale: \(error.localizedDescription)", event: .error)
+            return false
+        }
+    }
+    
+   func checkAndRecordSaleForNewLogin(userId: String) async {
+    // Check if sale already recorded
+    let saleExists = await checkExistingSale(userID: userId)
+    guard !saleExists else { return }
+    
+    // Use existing customerInfo check
+    Purchases.shared.getCustomerInfo { [weak self] customerInfo, error in
+        guard let self = self,
+              let info = customerInfo,
+              info.entitlements[Const.Purchases.premiumEntitlementIdentifier]?.isActive == true else {
+            return
+        }
+        
+        if let package = self.currentOffering?.monthly {
+            // Pass the stored affiliateID here
+            self.recordSale(affiliateID: self.storedAffiliateID, 
+                          userID: userId, 
+                          amount: package.localizedPriceString)
+        }
+    }
+}
 }

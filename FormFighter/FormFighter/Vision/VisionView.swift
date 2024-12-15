@@ -15,7 +15,7 @@ struct VisionView: View {
             Color.black.ignoresSafeArea()
             ThemeColors.background.ignoresSafeArea()
             
-            if !purchasesManager.isPremiumActive {
+            if !purchasesManager.premiumSubscribed && !purchasesManager.eliteSubscribed {
                 PaywallView()
             } else if showCameraView {
                 CameraVisionView(cameraManager: cameraManager)
@@ -56,7 +56,7 @@ struct VisionView: View {
                         .shadow(radius: 5)
                 )
                 .onTapGesture {
-                    if !purchasesManager.isPremiumActive {
+                    if !purchasesManager.premiumSubscribed && !purchasesManager.eliteSubscribed {
                         showPaywall = true
                     }
                 }
@@ -67,7 +67,7 @@ struct VisionView: View {
             PaywallView()
         }
         .onAppear {
-            if !purchasesManager.isPremiumActive {
+            if !purchasesManager.premiumSubscribed && !purchasesManager.eliteSubscribed  {
                 showPaywall = true
             }
             checkPermissions()

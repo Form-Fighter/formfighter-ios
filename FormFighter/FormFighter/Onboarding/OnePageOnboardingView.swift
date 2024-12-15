@@ -132,9 +132,6 @@ struct OnePageOnboardingView: View {
             }
         }
         .ignoresSafeArea()
-        .sheet(isPresented: $showPaywall) {
-            PaywallView() // Make sure this view exists
-        }
     }
     
     private var welcomeView: some View {
@@ -151,7 +148,7 @@ struct OnePageOnboardingView: View {
                 })
                 
                 Button("Skip") {
-                    showPaywall = true
+                    hasCompletedOnboarding = true 
                 }
                 .foregroundColor(.white.opacity(0.6))
                 .padding(.top, 8)
@@ -290,6 +287,7 @@ struct OnePageOnboardingView: View {
                 withAnimation {
                     if step.stepNumber == surveySteps.count {
                         currentStep = surveySteps.count + 1 // Show insights
+                        hasCompletedOnboarding = true // Set onboarding as completed
                     } else {
                         currentStep += 1
                     }
@@ -328,7 +326,7 @@ struct OnePageOnboardingView: View {
                 
                 // CTA Button
                 RoundedButton(title: "Get Started Now") {
-                    showPaywall = true
+                    hasCompletedOnboarding = true
                 }
                 .buttonStyle(PremiumButtonStyle())
                 .padding(.horizontal)

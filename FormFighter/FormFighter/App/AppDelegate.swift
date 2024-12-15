@@ -82,4 +82,19 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         }
         return true
     }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        if url.scheme == "formfighter" && url.host == "join" {
+            if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+               let queryItems = components.queryItems {
+                for item in queryItems {
+                    if item.name == "affiliateCode", let itemValue = item.value {
+                        print("Affiliate Code: \(itemValue)")
+                        UserDefaults.standard.set(itemValue, forKey: "affiliateID")
+                    }
+                }
+            }
+        }
+        return true
+    }
 }

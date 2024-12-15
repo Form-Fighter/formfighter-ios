@@ -224,7 +224,11 @@ class UserManager: ObservableObject {
     // Start listening when user logs in
     func signIn(userId: String) {
         badgeService.startListening(userId: userId)
+        Task {
+            await purchasesManager.checkAndRecordSaleForNewLogin(userId: userId)
+        }
     }
+    
     
     // Stop listening when user logs out
     func signOut() {

@@ -100,11 +100,11 @@ struct FormFighterApp: App {
                 ZStack {
                     Group {
                         // TODO: Remove this once we have a proper onboarding
-                        if false {
+                        if !hasCompletedOnboarding {
                             onboarding
-                        } else if purchasesManager.isPremiumActive && !userManager.isAuthenticated {
+                        } else if (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) && !userManager.isAuthenticated {
                             LoginView(showPaywallInTheOnboarding: false)
-                        } else if userManager.isAuthenticated && purchasesManager.isPremiumActive {
+                        } else if userManager.isAuthenticated && (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
                             TabView(selection: $selectedTab) {
                                 VisionView()
                                     .tabItem { 
@@ -150,10 +150,6 @@ struct FormFighterApp: App {
                             .toolbarBackground(ThemeColors.background, for: .tabBar)
                         } else {
                             PaywallView()
-                        } else if !userManager.isAuthenticated {
-                            LoginView(showPaywallInTheOnboarding: false)
-                        } else {
-                            normalUI
                         }
                     }
                     .opacity(showSplash ? 0 : 1)
@@ -208,6 +204,11 @@ struct FormFighterApp: App {
                         Tracker.appSessionEnded()
                     }
                 }
+                .onChange(of: userManager.isAuthenticated) { isAuth in
+                    if isAuth && (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
+                        checkAndHandlePendingChallenge()
+                    }
+                }
             }
             .environment(\.tabSelection, $selectedTab)
         }
@@ -259,10 +260,10 @@ struct FormFighterApp: App {
             // Configure analytics and crashlytics
             #if DEBUG
                 Analytics.setAnalyticsCollectionEnabled(false)
-                Logger.log(message: "Analytics disabled in DEBUG mode", event: .debug)
+                print("Analytics disabled in DEBUG mode")
             #else
                 Analytics.setAnalyticsCollectionEnabled(!isTestFlight())
-                Logger.log(message: "Analytics enabled in RELEASE mode", event: .debug)
+                print("Analytics enabled in RELEASE mode")
             #endif
             
             // Configure Crashlytics
@@ -334,42 +335,94 @@ struct FormFighterApp: App {
     }
     
     private func handleDeepLink(_ url: URL) {
-        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
-              let queryItems = components.queryItems,
-              let coachId = queryItems.first(where: { $0.name == "coach" })?.value else { 
-            return 
+        print("🔗 Received deep link: \(url)")
+        
+        guard let linkType = DeepLinkHandler.handle(url: url) else {
+            print("❌ Failed to handle deep link")
+            return
         }
         
-        checkAndPromptForCoach(coachId: coachId)
+        switch linkType {
+        case .challenge(let id, let referrer):
+            print("🎯 Processing challenge deep link")
+            print("- Challenge ID: \(id)")
+            print("- Referrer: \(referrer ?? "none")")
+            
+            if !userManager.userId.isEmpty && purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed {
+                print("👤 User authenticated and premium, processing challenge...")
+                Task {
+                    do {
+                        print("📝 Attempting to handle challenge invite: \(id)")
+                        try await ChallengeViewModel().handleInvite(challengeId: id)
+                        print("✅ Challenge invite handled successfully")
+                        selectedTab = .challenge
+                    } catch {
+                        print("❌ Failed to handle challenge invite: \(error)")
+                    }
+                }
+            } else {
+                print("⚠️ User not logged in or not premium, saving challenge for later")
+                savePendingChallenge(id: id, referrer: referrer)
+            }
+            
+        case .coach(let id):
+            print("👥 Processing coach deep link")
+            print("- Coach ID: \(id)")
+            checkAndPromptForCoach(coachId: id)
+            
+        case .affiliate(let code):
+            print("🤝 Processing affiliate deep link")
+            print("- Affiliate Code: \(code)")
+            UserDefaults.standard.set(code, forKey: "affiliateID")
+            print("✅ Affiliate code saved to UserDefaults")
+        }
     }
     
     private func checkAndPromptForCoach(coachId: String) {
-        var userId = ""
-        if userManager.userId.isEmpty { return } else {
-            userId = userManager.userId
-        }
+        if userManager.userId.isEmpty { return }
+        let userId = userManager.userId
+        
+        print("🔍 Checking coach status for user: \(userId)")
         
         db.collection("users").document(userId).getDocument { document, error in
+            if let error = error {
+                print("❌ Error fetching user document: \(error.localizedDescription)")
+                return
+            }
+            
             guard let document = document,
-                  document.exists,
-                  let data = document.data(),
-                  let existingCoach = data["myCoach"] as? String? else {
+                  document.exists else {
+                print("❌ User document doesn't exist")
                 return
             }
             
-            if let existingCoach = existingCoach {
-                print("User already has a coach: \(existingCoach)")
+            let data = document.data() ?? [:]
+            print("📄 User data: \(data)")
+            
+            // Check if myCoach field exists and has a non-nil value
+            if let existingCoach = data["myCoach"] as? String,
+               !existingCoach.isEmpty {
+                print("👥 User already has a coach: \(existingCoach)")
                 return
             }
             
+            print("🔍 Checking if coach exists: \(coachId)")
+            
+            // Now check if the coach exists
             db.collection("users").document(coachId).getDocument { coachDoc, error in
-                guard let coachDoc = coachDoc,
-                      coachDoc.exists,
-                      let _ = coachDoc.data() else {
-                    print("Coach not found or error: \(error?.localizedDescription ?? "unknown error")")
+                if let error = error {
+                    print("❌ Error fetching coach document: \(error.localizedDescription)")
                     return
                 }
                 
+                guard let coachDoc = coachDoc,
+                      coachDoc.exists,
+                      let coachData = coachDoc.data() else {
+                    print("❌ Coach not found: \(coachId)")
+                    return
+                }
+                
+                print("✅ Coach found, showing confirmation")
                 pendingCoachId = coachId
                 showCoachConfirmation = true
             }
@@ -408,5 +461,57 @@ struct FormFighterApp: App {
     func setupCrashlytics() {
         Crashlytics.crashlytics().setCustomValue(UIDevice.current.systemVersion, forKey: "ios_version")
         Crashlytics.crashlytics().setCustomValue(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "", forKey: "app_version")
+    }
+    
+    // Add these properties at the top of FormFighterApp
+    struct PendingChallenge: Codable {
+        let challengeId: String
+        let referrerId: String?
+        let timestamp: Date
+    }
+    
+    // Add this helper method
+    private func savePendingChallenge(id: String, referrer: String?) {
+        let pendingChallenge = PendingChallenge(
+            challengeId: id,
+            referrerId: referrer,
+            timestamp: Date()
+        )
+        
+        if let encoded = try? JSONEncoder().encode(pendingChallenge) {
+            UserDefaults.standard.set(encoded, forKey: "pendingChallenge")
+            print("💾 Saved pending challenge: \(id)")
+        }
+    }
+    
+    // Add this helper method
+    private func checkAndHandlePendingChallenge() {
+        guard let data = UserDefaults.standard.data(forKey: "pendingChallenge"),
+              let pendingChallenge = try? JSONDecoder().decode(PendingChallenge.self, from: data) else {
+            return
+        }
+        
+        print("🔄 Found pending challenge: \(pendingChallenge.challengeId)")
+        
+        // Only process if user is authenticated and has premium or elite subscription
+        if !userManager.userId.isEmpty && (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
+            Task {
+                do {
+                    print("📝 Processing pending challenge...")
+                    try await ChallengeViewModel().handleInvite(challengeId: pendingChallenge.challengeId)
+                    print("✅ Pending challenge processed successfully")
+                    selectedTab = .challenge
+                    // Only clear the pending challenge after successful processing
+                    UserDefaults.standard.removeObject(forKey: "pendingChallenge")
+                    print("🗑️ Pending challenge removed from storage")
+                } catch {
+                    print("❌ Failed to process pending challenge: \(error)")
+                    // Don't remove the pending challenge if it fails
+                    // It will be retried next time conditions are met
+                }
+            }
+        } else {
+            print("⏳ User not ready to process challenge (Premium: \(purchasesManager.premiumSubscribed), Elite: \(purchasesManager.eliteSubscribed), Authenticated: \(!userManager.userId.isEmpty))")
+        }
     }
 }
