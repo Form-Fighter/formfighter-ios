@@ -857,6 +857,9 @@ struct InstructionsOverlay: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 20) {
+                // Add some top spacing
+                Spacer().frame(height: 100)  // Adjust this value to move the title lower
+                
                 // Header with close button
                 HStack {
                     Text("How to Record Your Form")

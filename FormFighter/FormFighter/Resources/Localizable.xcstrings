@@ -386,6 +386,9 @@
     "%lld day streak" : {
 
     },
+    "%lld jabs" : {
+
+    },
     "%lld kcal" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2715,7 +2718,7 @@
         }
       }
     },
-    "Create a challenge or join one through an invitation link" : {
+    "Create a challenge and invite friends to compete!" : {
 
     },
     "Create Challenge" : {
@@ -3265,9 +3268,6 @@
 
     },
     "Get Started Now" : {
-
-    },
-    "Got it! 👊" : {
 
     },
     "Guard" : {
@@ -4144,6 +4144,9 @@
     "No data available for this time period" : {
 
     },
+    "No events yet" : {
+
+    },
     "No training sessions yet" : {
 
     },
@@ -4379,6 +4382,9 @@
           }
         }
       }
+    },
+    "Participants" : {
+
     },
     "per week" : {
 
@@ -5219,9 +5225,6 @@
       }
     },
     "Share" : {
-
-    },
-    "Share Challenge" : {
 
     },
     "Share your experience (optional)" : {

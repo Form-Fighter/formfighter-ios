@@ -4,24 +4,51 @@ import FirebaseAuth
 import Combine
 
 class ChallengeViewModel: ObservableObject {
-    @Published var activeChallenge: Challenge?
+    @Published var activeChallenge: Challenge? {
+        didSet {
+            print("DEBUG: activeChallenge set to: \(activeChallenge?.name ?? "nil")")
+            if let challenge = activeChallenge {
+                print("DEBUG: Challenge details:")
+                print("  - ID: \(challenge.id)")
+                print("  - Name: \(challenge.name)")
+                print("  - Creator: \(challenge.creatorId)")
+                print("  - Start: \(challenge.startTime)")
+                print("  - End: \(challenge.endTime)")
+                print("  - Participants: \(challenge.participants.count)")
+                print("  - Events: \(challenge.recentEvents.count)")
+            }
+        }
+    }
     @Published var completedChallenges: [Challenge] = []
     @Published var isLoading = false
     @Published var error: Error?
     @Published var showFeedbackToast = false
     @Published var toastMessage = ""
+    @Published var isLoadingMoreEvents = false
+    @Published var hasMoreEvents = true
     
     private let challengeService = ChallengeService.shared
     private let userManager = UserManager.shared
     private var cancellables = Set<AnyCancellable>()
     
     init() {
-        // Subscribe to challenge service updates
+        print("DEBUG: ChallengeViewModel initialized")
         challengeService.$activeChallenge
-            .assign(to: &$activeChallenge)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] challenge in
+                print("🔄 ChallengeViewModel received challenge update: \(challenge?.name ?? "nil")")
+                print("   Participants: \(challenge?.participants.count ?? 0)")
+                print("   Events: \(challenge?.recentEvents.count ?? 0)")
+                self?.activeChallenge = challenge
+            }
+            .store(in: &cancellables)
         
         challengeService.$completedChallenges
-            .assign(to: &$completedChallenges)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] challenges in
+                self?.completedChallenges = challenges
+            }
+            .store(in: &cancellables)
             
         if let userId = Auth.auth().currentUser?.uid {
             challengeService.startListening(userId: userId)
@@ -29,13 +56,25 @@ class ChallengeViewModel: ObservableObject {
     }
     
     func createChallenge(name: String, description: String) async throws {
-        isLoading = true
-        defer { isLoading = false }
+        print("📝 Starting challenge creation...")
+        
+        await MainActor.run {
+            isLoading = true
+        }
+        
+        defer {
+            Task { @MainActor in
+                isLoading = false
+            }
+        }
         
         guard let userId = Auth.auth().currentUser?.uid,
               activeChallenge == nil else {
+            print("❌ Challenge creation failed: \(activeChallenge == nil ? "active challenge exists" : "no user ID")")
             throw ChallengeError.alreadyInChallenge
         }
+        
+        print("👤 Creating challenge for user: \(userId)")
         
         let challenge = Challenge(
             id: UUID().uuidString,
@@ -43,60 +82,67 @@ class ChallengeViewModel: ObservableObject {
             description: description,
             creatorId: userId,
             startTime: Date(),
-            endTime: Date().addingTimeInterval(7200),
-            participants: [
-                Challenge.Participant(
-                    id: userId,
-                    name: userManager.user?.firstName ?? "Unknown",
-                    inviteCount: 0,
-                    totalJabs: 0,
-                    averageScore: 0
-                )
-            ],
-            events: []
+            endTime: Date().addingTimeInterval(7200)
         )
         
         do {
-            try await Firestore.firestore()
-                .collection("challenges")
-                .document(challenge.id)
-                .setData(from: challenge)
-                
-            showToast(message: "Challenge created! Share with friends to start competing.")
+            try await challengeService.createChallenge(challenge)
+            
+            await MainActor.run {
+                showToast(message: "Challenge created! Share with friends to start competing.")
+            }
         } catch {
-            self.error = error
+            print("❌ Challenge creation error: \(error.localizedDescription)")
+            await MainActor.run {
+                self.error = error
+            }
             throw error
         }
     }
     
+    @MainActor
     private func showToast(message: String) {
         toastMessage = message
         showFeedbackToast = true
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.showFeedbackToast = false
+        Task {
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            showFeedbackToast = false
         }
     }
     
     func processInvite(challengeId: String, referrerId: String?) async throws {
         guard let userId = Auth.auth().currentUser?.uid,
               let userName = userManager.user?.firstName else {
+            challengeService.clearPendingChallenge()
             throw ChallengeError.invalidChallenge
         }
         
-        isLoading = true
-        defer { isLoading = false }
+        await MainActor.run {
+            isLoading = true
+        }
+        
+        defer {
+            Task { @MainActor in
+                isLoading = false
+            }
+        }
         
         do {
-            try await challengeService.processEvent(.invite(
+            try await challengeService.handleInvite(
+                challengeId: challengeId,
                 userId: userId,
                 userName: userName,
-                referrerId: referrerId,
-                challengeId: challengeId
-            ))
-            showToast(message: "Successfully joined challenge!")
+                referrerId: referrerId
+            )
+            await MainActor.run {
+                showToast(message: "Successfully joined challenge!")
+            }
         } catch {
-            self.error = error
+            challengeService.clearPendingChallenge()
+            await MainActor.run {
+                self.error = error
+            }
             throw error
         }
     }
@@ -110,5 +156,57 @@ class ChallengeViewModel: ObservableObject {
         self.error = error
         showFeedbackToast = true
         toastMessage = error.localizedDescription
+    }
+    
+    func debugFetchChallenge(id: String) async {
+        do {
+            if let challenge = try await challengeService.fetchChallenge(id: id) {
+                print("🔍 Debug - Found challenge:")
+                print("Name: \(challenge.name)")
+                print("Creator: \(challenge.creatorId)")
+                print("Participants: \(challenge.participants)")
+                print("Events: \(challenge.recentEvents)")
+            } else {
+                print("🔍 Debug - No challenge found with ID: \(id)")
+            }
+        } catch {
+            print("🔍 Debug - Error fetching challenge: \(error)")
+        }
+    }
+    
+    func loadMoreEvents() async {
+        guard !isLoadingMoreEvents,
+              hasMoreEvents,
+              let challenge = activeChallenge,
+              let lastEventDate = challenge.recentEvents.last?.timestamp else { return }
+        
+        await MainActor.run { isLoadingMoreEvents = true }
+        
+        do {
+            let newEvents = try await challengeService.loadMoreEvents(
+                fromTimestamp: lastEventDate
+            )
+            
+            await MainActor.run {
+                if var updatedChallenge = activeChallenge {
+                    updatedChallenge.recentEvents.append(contentsOf: newEvents)
+                    activeChallenge = updatedChallenge
+                    hasMoreEvents = newEvents.count >= 15
+                }
+                isLoadingMoreEvents = false
+            }
+        } catch {
+            print("❌ Error loading more events: \(error)")
+            await MainActor.run {
+                isLoadingMoreEvents = false
+                hasMoreEvents = false
+            }
+        }
+    }
+    
+    func refreshChallenge(userId: String) async {
+        await MainActor.run { isLoading = true }
+        challengeService.startListening(userId: userId)
+        await MainActor.run { isLoading = false }
     }
 } 

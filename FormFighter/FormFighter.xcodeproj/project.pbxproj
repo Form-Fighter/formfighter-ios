@@ -200,6 +200,7 @@
 		B2F447FF2D082ABB0032E53C /* ChallengeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447FE2D082ABB0032E53C /* ChallengeService.swift */; };
 		B2F448012D082BCC0032E53C /* ChallengeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F448002D082BCC0032E53C /* ChallengeError.swift */; };
 		B2F448032D0EFCE10032E53C /* DeepLinkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F448022D0EFCE10032E53C /* DeepLinkHandler.swift */; };
+		B2F448052D0FDF710032E53C /* ChallengeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F448042D0FDF710032E53C /* ChallengeHeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -385,6 +386,7 @@
 		B2F447FE2D082ABB0032E53C /* ChallengeService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeService.swift; sourceTree = "<group>"; };
 		B2F448002D082BCC0032E53C /* ChallengeError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeError.swift; sourceTree = "<group>"; };
 		B2F448022D0EFCE10032E53C /* DeepLinkHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeepLinkHandler.swift; sourceTree = "<group>"; };
+		B2F448042D0FDF710032E53C /* ChallengeHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeHeaderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -868,6 +870,7 @@
 		B2F447EE2D081AE20032E53C /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				B2F448042D0FDF710032E53C /* ChallengeHeaderView.swift */,
 				B2F447EA2D081AE20032E53C /* ActiveChallengeView.swift */,
 				B2F447EB2D081AE20032E53C /* ChallengeHistoryView.swift */,
 				B2F447EC2D081AE20032E53C /* CreateChallengeView.swift */,
@@ -1075,6 +1078,7 @@
 				81DE14F42B76352200C41EA9 /* AuthBackendService.swift in Sources */,
 				B214116D2CE5324500699B15 /* NotificationPermissionView.swift in Sources */,
 				818D3FB82B700E9D00DF7299 /* +Array.swift in Sources */,
+				B2F448052D0FDF710032E53C /* ChallengeHeaderView.swift in Sources */,
 				B252ED672D06D41800013524 /* FeedbackManager.swift in Sources */,
 				81DE14F22B76303200C41EA9 /* Meal.swift in Sources */,
 				81A02D3A2BA333CC00061567 /* BrutoButton.swift in Sources */,

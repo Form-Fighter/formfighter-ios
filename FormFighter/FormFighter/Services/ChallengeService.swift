@@ -4,6 +4,7 @@ import FirebaseAuth
 import Combine
 import OSLog
 
+
 class ChallengeService: ObservableObject {
     static let shared = ChallengeService()
     
@@ -12,60 +13,80 @@ class ChallengeService: ObservableObject {
     
     private let db = Firestore.firestore()
     private var listeners: [ListenerRegistration] = []
-    private let logger = OSLog(subsystem: Bundle.main.bundleIdentifier ?? "com.formfighter.app", category: "ChallengeService")
-    
-    private init() {}
+    private let userManager = UserManager.shared
     
     func startListening(userId: String) {
-        // Listen for active challenge
-        let activeChallengeListener = db.collection("challenges")
-            .whereField("participants", arrayContains: userId)
-            .addSnapshotListener { [weak self] querySnapshot, error in
-                guard let self = self else { return }
-                
-                if let error = error {
-                    os_log("Error listening for active challenge: %@", log: self.logger, type: .error, error.localizedDescription)
+        stopListening()
+        
+        // Use collectionGroup to search across all participant subcollections
+        let participantListener = db.collectionGroup("participants")
+            .whereField("id", isEqualTo: userId)
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self = self,
+                      let participantDocs = snapshot?.documents else {
+                    print("❌ No participant documents found")
+                    self?.activeChallenge = nil
                     return
                 }
                 
-                if let document = querySnapshot?.documents.first {
+                // Get parent challenges for all participant documents
+                Task {
                     do {
-                        let challenge = try document.data(as: Challenge.self)
-                        Task { @MainActor [weak self] in
-                            self?.activeChallenge = challenge
+                        var challenges: [Challenge] = []
+                        
+                        for participantDoc in participantDocs {
+                            let challengeRef = participantDoc.reference.parent.parent!
+                            if let challengeDoc = try? await challengeRef.getDocument(),
+                               var challenge = try? challengeDoc.data(as: Challenge.self) {
+                                
+                                // Fetch participants
+                                let participants = try await challengeRef
+                                    .collection("participants")
+                                    .getDocuments()
+                                    .documents
+                                    .compactMap { try? $0.data(as: Challenge.Participant.self) }
+                                
+                                challenge.participants = participants
+                                
+                                // Fetch recent events
+                                let events = try await challengeRef
+                                    .collection("events")
+                                    .order(by: "timestamp", descending: true)
+                                    .limit(to: 15)
+                                    .getDocuments()
+                                    .documents
+                                    .compactMap { try? $0.data(as: Challenge.ChallengeEvent.self) }
+                                
+                                challenge.recentEvents = events
+                                challenges.append(challenge)
+                            }
                         }
+                        
+                        // Filter and sort challenges
+                        let now = Date()
+                        let activeChallenges = challenges
+                            .filter { $0.startTime <= now && $0.endTime > now }
+                            .sorted { $0.startTime > $1.startTime }
+                        
+                        let completedChallenges = challenges
+                            .filter { $0.endTime <= now }
+                            .sorted { $0.endTime > $1.endTime }
+                        
+                        await MainActor.run {
+                            print("📱 Updating challenges:")
+                            print("   Active: \(activeChallenges.first?.name ?? "none")")
+                            print("   Completed: \(completedChallenges.count)")
+                            self.activeChallenge = activeChallenges.first
+                            self.completedChallenges = completedChallenges
+                        }
+                        
                     } catch {
-                        print("Error decoding challenge: \(error)")
-                    }
-                } else {
-                    Task { @MainActor [weak self] in
-                        self?.activeChallenge = nil
+                        print("❌ Error fetching challenges: \(error)")
                     }
                 }
             }
         
-        // Listen for completed challenges
-        let completedChallengesListener = db.collection("completedChallenges")
-            .whereField("participants", arrayContains: userId)
-            .order(by: "endTime", descending: true)
-            .addSnapshotListener { [weak self] querySnapshot, error in
-                guard let self = self else { return }
-                
-                if let error = error {
-                    os_log("Error listening for completed challenges: %@", log: self.logger, type: .error, error.localizedDescription)
-                    return
-                }
-                
-                let challenges = querySnapshot?.documents.compactMap { document in
-                    try? document.data(as: Challenge.self)
-                } ?? []
-                
-                Task { @MainActor [weak self] in
-                    self?.completedChallenges = challenges
-                }
-            }
-        
-        listeners.append(contentsOf: [activeChallengeListener, completedChallengesListener])
+        listeners.append(participantListener)
     }
     
     func stopListening() {
@@ -73,27 +94,52 @@ class ChallengeService: ObservableObject {
         listeners.removeAll()
     }
     
-    func handleInvite(challengeId: String, referrerId: String? = nil) async throws {
-        guard let userId = Auth.auth().currentUser?.uid,
-              let userName = userManager.user?.firstName else {
+    func handleInvite(challengeId: String, userId: String, userName: String, referrerId: String?) async throws {
+        let challengeRef = db.collection("challenges").document(challengeId)
+        
+        // Check if challenge exists and is valid
+        guard let challengeDoc = try? await challengeRef.getDocument(),
+              challengeDoc.exists,
+              var challenge = try? challengeDoc.data(as: Challenge.self) else {
             throw ChallengeError.invalidChallenge
         }
         
-        isLoading = true
-        defer { isLoading = false }
-        
-        do {
-            try await handleInvite(
-                challengeId: challengeId,
-                userId: userId,
-                userName: userName,
-                referrerId: referrerId
-            )
-            showToast(message: "Successfully joined challenge!")
-        } catch {
-            self.error = error
-            throw error
+        // Check if challenge hasn't ended
+        guard challenge.endTime > Date() else {
+            throw ChallengeError.challengeEnded
         }
+        
+        // Create new participant
+        let newParticipant = Challenge.Participant(
+            id: userId,
+            name: userName,
+            inviteCount: 0,
+            totalJabs: 0,
+            averageScore: 0
+        )
+        
+        // Create the invite event
+        let event = Challenge.ChallengeEvent(
+            id: UUID().uuidString,
+            timestamp: Date(),
+            type: .invite,
+            userId: userId,
+            userName: userName,
+            details: "Joined the challenge"
+        )
+        
+        try await challengeRef.updateData([
+            "participants": FieldValue.arrayUnion([try Firestore.Encoder().encode(newParticipant)]),
+            "events": FieldValue.arrayUnion([try Firestore.Encoder().encode(event)])
+        ])
+        
+        // Notify other participants
+        await notifyParticipants(
+            challenge: challenge,
+            title: "New Challenger! 🥊",
+            body: "\(userName) joined the challenge!",
+            excludeUserId: userId
+        )
     }
     
     func checkAndHandleChallengeCompletion() async {
@@ -115,7 +161,7 @@ class ChallengeService: ObservableObject {
             activeChallenge = nil
             completedChallenges.insert(challenge, at: 0)
         } catch {
-            os_log("Error handling challenge completion: %@", log: logger, type: .error, error.localizedDescription)
+            print("❌ Error handling challenge completion: \(error)")
         }
     }
     
@@ -124,85 +170,6 @@ class ChallengeService: ObservableObject {
         case invite(userId: String, userName: String)
     }
     
-    func processEvent(_ event: ChallengeEvent) async throws {
-        switch event {
-        case .feedbackViewed(let feedbackId, let score):
-            guard let userId = Auth.auth().currentUser?.uid else { return }
-            let challengeRef = db.collection("challenges").document(activeChallenge?.id ?? "")
-            
-            // Handle DocumentSnapshot as optional
-            guard let challengeDoc = try? await challengeRef.getDocument(),
-                  challengeDoc.exists else {
-                throw ChallengeError.invalidChallenge
-            }
-            
-            // Handle Challenge as optional
-            guard let challenge = try? challengeDoc.data(as: Challenge.self),
-                  var participant = challenge.participants.first(where: { $0.id == userId }) else {
-                throw ChallengeError.invalidChallenge
-            }
-            
-            // Update participant stats
-            participant.totalJabs += 1
-            let oldAverage = participant.averageScore
-            participant.averageScore = ((oldAverage * Double(participant.totalJabs - 1)) + score) / Double(participant.totalJabs)
-            
-            let event = Challenge.ChallengeEvent(
-                id: UUID().uuidString,
-                timestamp: Date(),
-                type: .score,
-                userId: userId,
-                userName: participant.name,
-                details: String(format: "Scored %.1f on their jab", score)
-            )
-            
-            try await challengeRef.updateData([
-                "participants": challenge.participants.map { $0.id == userId ? participant : $0 },
-                "events": FieldValue.arrayUnion([try Firestore.Encoder().encode(event)])
-            ])
-            
-        case .invite(let userId, let userName):
-            let challengeRef = db.collection("challenges").document(activeChallenge?.id ?? "")
-            
-            guard let challengeDoc = try? await challengeRef.getDocument(),
-                  challengeDoc.exists,
-                  var challenge = try? challengeDoc.data(as: Challenge.self) else {
-                throw ChallengeError.invalidChallenge
-            }
-            
-            // Create new participant
-            let newParticipant = Challenge.Participant(
-                id: userId,
-                name: userName,
-                inviteCount: 0,
-                totalJabs: 0,
-                averageScore: 0
-            )
-            
-            // Create the invite event
-            let event = Challenge.ChallengeEvent(
-                id: UUID().uuidString,
-                timestamp: Date(),
-                type: .invite,
-                userId: userId,
-                userName: userName,
-                details: "Joined the challenge"
-            )
-            
-            try await challengeRef.updateData([
-                "participants": FieldValue.arrayUnion([try Firestore.Encoder().encode(newParticipant)]),
-                "events": FieldValue.arrayUnion([try Firestore.Encoder().encode(event)])
-            ])
-            
-            // Notify other participants
-            await notifyParticipants(
-                challenge: challenge,
-                title: "New Challenger! 🥊",
-                body: "\(userName) joined the challenge!",
-                excludeUserId: userId
-            )
-        }
-    }
     
     private func notifyParticipants(challenge: Challenge, title: String, body: String, excludeUserId: String? = nil) async {
         NotificationManager.shared.sendChallengeNotification(
@@ -210,4 +177,130 @@ class ChallengeService: ObservableObject {
             challengeId: challenge.id
         )
     }
+    
+   func createChallenge(_ challenge: Challenge) async throws {
+        let ref = db.collection("challenges").document(challenge.id)
+        
+        // Create main challenge document
+        try await ref.setData(from: challenge)
+        
+        // Create initial participant
+        let initialParticipant = Challenge.Participant(
+            id: challenge.creatorId,
+            name: userManager.user?.firstName ?? "Unknown",
+            inviteCount: 0,
+            totalJabs: 0,
+            averageScore: 0
+        )
+        
+        // Create participant in subcollection
+        try await ref.collection("participants")
+            .document(challenge.creatorId)
+            .setData(from: initialParticipant)
+        
+        // Create initial event
+        let event = Challenge.ChallengeEvent(
+            id: UUID().uuidString,
+            timestamp: Date(),
+            type: .invite,
+            userId: challenge.creatorId,
+            userName: initialParticipant.name,
+            details: "Created the challenge"
+        )
+        
+        try await ref.collection("events")
+            .document(event.id)
+            .setData(from: event)
+        
+        // Create a new challenge instance with the initial data
+        let newChallenge = Challenge(
+            id: challenge.id,
+            name: challenge.name,
+            description: challenge.description,
+            creatorId: challenge.creatorId,
+            startTime: challenge.startTime,
+            endTime: challenge.endTime
+        )
+        
+        // Set the collections data
+        await MainActor.run {
+            var updatedChallenge = newChallenge
+            updatedChallenge.participants = [initialParticipant]
+            updatedChallenge.recentEvents = [event]
+            self.activeChallenge = updatedChallenge
+        }
+    }
+
+func processEvent(_ event: ChallengeEvent) async throws {
+    switch event {
+    case .feedbackViewed(let feedbackId, let score):
+        guard let userId = Auth.auth().currentUser?.uid,
+              let challengeId = activeChallenge?.id else { return }
+              
+        let challengeRef = db.collection("challenges").document(challengeId)
+        let participantRef = challengeRef.collection("participants").document(userId)
+        
+        // Update participant stats
+        try await participantRef.updateData([
+            "totalJabs": FieldValue.increment(Int64(1)),
+            "averageScore": score  // Simple assignment for now
+        ])
+        
+        // Create and add event
+        let challengeEvent = Challenge.ChallengeEvent(
+            id: UUID().uuidString,
+            timestamp: Date(),
+            type: .score,
+            userId: userId,
+            userName: userManager.user?.firstName ?? "Unknown",
+            details: "Scored \(score) points"
+        )
+        
+        let eventRef = challengeRef.collection("events").document(challengeEvent.id)
+        try await eventRef.setData(from: challengeEvent)
+        
+    case .invite(let userId, let userName):
+        try await handleInvite(challengeId: activeChallenge?.id ?? "", userId: userId, userName: userName, referrerId: nil)
+    }
+}
+    
+    func clearPendingChallenge() {
+        UserDefaults.standard.removeObject(forKey: "pendingChallenge")
+        print("🧹 Cleared pending challenge data")
+    }
+    
+    func fetchChallenge(id: String) async throws -> Challenge? {
+        print("🔍 Fetching challenge with ID: \(id)")
+        
+        let doc = try await db.collection("challenges").document(id).getDocument()
+        
+        if doc.exists {
+            print("📄 Found document")
+            print("📄 Raw data: \(doc.data() ?? [:])")
+            return try doc.data(as: Challenge.self)
+        } else {
+            print("❌ No document found with ID: \(id)")
+            return nil
+        }
+    }
+    
+    // Add method to load more events
+    func loadMoreEvents(fromTimestamp: Date) async throws -> [Challenge.ChallengeEvent] {
+        guard let challengeId = activeChallenge?.id else { return [] }
+        
+        return try await db.collection("challenges")
+            .document(challengeId)
+            .collection("events")
+            .order(by: "timestamp", descending: true)
+            .whereField("timestamp", isLessThan: fromTimestamp)
+            .limit(to: 15)
+            .getDocuments()
+            .documents
+            .compactMap { try? $0.data(as: Challenge.ChallengeEvent.self) }
+    }
 } 
+
+struct PendingChallenge: Codable {
+    let challengeId: String
+    let referrerId: String?
+}
