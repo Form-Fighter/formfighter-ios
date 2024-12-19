@@ -6,13 +6,15 @@ struct ChallengeView: View {
     @StateObject private var viewModel = ChallengeViewModel()
     @State private var showCreateChallenge = false
     @State private var showInviteSheet = false
+    @Environment(\.tabSelection) private var tabSelection
     
     var body: some View {
         Group {
             if viewModel.isLoading {
                 ProgressView()
             } else if let challenge = viewModel.activeChallenge {
-                ActiveChallengeView(challenge: challenge, viewModel: viewModel)
+                ActiveChallengeView(challenge: challenge)
+                    .environment(\.tabSelection, tabSelection)
             } else {
                 NoChallengeView(showCreateChallenge: $showCreateChallenge)
             }

@@ -48,6 +48,8 @@ struct Challenge: Identifiable, Codable {
         var inviteCount: Int
         var totalJabs: Int
         var averageScore: Double
+        let fcmToken: String?
+        
         var finalScore: Double {
             let baseScore = (Double(inviteCount) * 50.0 * 0.5) + (Double(totalJabs) * 0.2)
             let multiplier = min(max(averageScore / 10.0, 0.1), 2.0)
@@ -61,12 +63,12 @@ struct Challenge: Identifiable, Codable {
         let type: EventType
         let userId: String
         let userName: String
-        var details: String
+        let details: String
+        let feedbackId: String?
         
         enum EventType: String, Codable {
             case invite
             case score
-            case volume
         }
     }
 } 

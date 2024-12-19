@@ -53,6 +53,8 @@ struct ResultsView: View {
         "Keep your elbows close to protect your body"
     ]
     
+    private let challengeService = ChallengeService.shared
+    
     init(videoURL: URL) {
         self.videoURL = videoURL
         let playerItem = AVPlayerItem(url: videoURL)
@@ -170,7 +172,8 @@ struct ResultsView: View {
                 "coachId": coachId as Any,
                 "createdAt": Timestamp(date: Date()),
                 "status": "pending",
-                "fileName": videoURL.lastPathComponent
+                "fileName": videoURL.lastPathComponent,
+                "challengeId": challengeService.activeChallenge?.id
             ])
             
             // Upload video immediately after creating feedback document
@@ -369,7 +372,7 @@ struct ResultsView: View {
             let currentStreak = document.data()?["currentStreak"] as? Int ?? 0
             
             print("📊 Current streak: \(currentStreak)")
-            print("���� Last training date: \(String(describing: lastTrainingDate))")
+            print(" Last training date: \(String(describing: lastTrainingDate))")
             
             var newStreak = currentStreak
             

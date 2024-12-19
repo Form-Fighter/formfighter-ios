@@ -9,6 +9,10 @@ struct CreateChallengeView: View {
     @State private var error: Error?
     @State private var showError = false
     
+    // Add debounced properties
+    @State private var debouncedName = ""
+    @State private var debouncedDescription = ""
+    
     private let suggestions = [
         "Winner gets bragging rights 👑",
         "Loser buys coffee ☕️",
@@ -22,9 +26,29 @@ struct CreateChallengeView: View {
                 Section {
                     TextField("Challenge Name", text: $name)
                         .textInputAutocapitalization(.words)
+                        .onChange(of: name) { newValue in
+                            Task {
+                                try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 seconds
+                                if !Task.isCancelled {
+                                    await MainActor.run {
+                                        debouncedName = newValue
+                                    }
+                                }
+                            }
+                        }
                     
                     TextField("Description", text: $description, axis: .vertical)
                         .lineLimit(3...6)
+                        .onChange(of: description) { newValue in
+                            Task {
+                                try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 seconds
+                                if !Task.isCancelled {
+                                    await MainActor.run {
+                                        debouncedDescription = newValue
+                                    }
+                                }
+                            }
+                        }
                 } header: {
                     Text("Challenge Details")
                 } footer: {
@@ -87,7 +111,7 @@ struct CreateChallengeView: View {
         }
         
         do {
-            try await viewModel.createChallenge(name: name, description: description)
+            try await viewModel.createChallenge(name: debouncedName, description: debouncedDescription)
             await MainActor.run {
                 dismiss()
             }

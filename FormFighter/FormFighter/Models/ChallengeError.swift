@@ -5,6 +5,7 @@ enum ChallengeError: Error, LocalizedError {
     case alreadyInChallenge
     case challengeEnded
     case participantUpdateFailed
+    case duplicateEvent
     
     var errorDescription: String? {
         switch self {
@@ -16,6 +17,8 @@ enum ChallengeError: Error, LocalizedError {
             return "This challenge has ended"
         case .participantUpdateFailed:
             return "Failed to update participant data"
+        case .duplicateEvent:
+            return "Score already added to challenge"
         }
     }
 } 

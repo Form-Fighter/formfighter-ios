@@ -39,6 +39,9 @@ class ChallengeViewModel: ObservableObject {
                 print("🔄 ChallengeViewModel received challenge update: \(challenge?.name ?? "nil")")
                 print("   Participants: \(challenge?.participants.count ?? 0)")
                 print("   Events: \(challenge?.recentEvents.count ?? 0)")
+                if challenge == nil {
+                    print("📱 Challenge was removed or set to nil")
+                }
                 self?.activeChallenge = challenge
             }
             .store(in: &cancellables)
@@ -76,8 +79,10 @@ class ChallengeViewModel: ObservableObject {
         
         print("👤 Creating challenge for user: \(userId)")
         
+        let challengeId = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
+        
         let challenge = Challenge(
-            id: UUID().uuidString,
+            id: challengeId,
             name: name,
             description: description,
             creatorId: userId,

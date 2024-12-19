@@ -60,7 +60,6 @@ private struct EventRow: View {
         switch event.type {
         case .invite: return "person.2.fill"
         case .score: return "star.fill"
-        case .volume: return "figure.boxing"
         }
     }
     
@@ -68,7 +67,6 @@ private struct EventRow: View {
         switch event.type {
         case .invite: return .blue
         case .score: return .yellow
-        case .volume: return .green
         }
     }
     

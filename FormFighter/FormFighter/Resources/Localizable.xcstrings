@@ -386,9 +386,6 @@
     "%lld day streak" : {
 
     },
-    "%lld jabs" : {
-
-    },
     "%lld kcal" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -6086,6 +6083,9 @@
       }
     },
     "Train" : {
+
+    },
+    "Train Now" : {
 
     },
     "Training Session" : {
