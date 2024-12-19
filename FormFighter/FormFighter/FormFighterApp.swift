@@ -215,6 +215,9 @@ struct FormFighterApp: App {
                         selectedTab = .challenge
                     }
                 }
+                .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("SwitchToProfile"))) { _ in
+                    selectedTab = .profile
+                }
             }
             .environment(\.tabSelection, $selectedTab)
         }

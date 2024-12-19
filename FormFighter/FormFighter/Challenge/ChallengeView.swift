@@ -32,6 +32,16 @@ struct ChallengeView: View {
                 }
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("OpenChallenge"))) { notification in
+            if let challengeId = notification.userInfo?["challengeId"] as? String {
+                // Refresh the challenge view with this specific challenge
+                if let userId = Auth.auth().currentUser?.uid {
+                    Task {
+                        await viewModel.refreshChallenge(userId: userId)
+                    }
+                }
+            }
+        }
     }
 }
 

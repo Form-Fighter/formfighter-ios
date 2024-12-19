@@ -304,4 +304,18 @@ final class Tracker {
             "type": "feedback"
         ])
     }
+    
+    static func notificationReceived(challengeId: String) {
+        Analytics.logEvent("notification_received", parameters: [
+            "challenge_id": challengeId,
+            "type": "challenge"
+        ])
+    }
+    
+    static func notificationOpened(challengeId: String) {
+        Analytics.logEvent("notification_opened", parameters: [
+            "challenge_id": challengeId,
+            "type": "challenge"
+        ])
+    }
 }

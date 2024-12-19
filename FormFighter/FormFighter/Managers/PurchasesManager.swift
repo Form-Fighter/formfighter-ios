@@ -49,6 +49,13 @@ class PurchasesManager: ObservableObject {
         }
     }
     
+    enum TrialStatus {
+        case eligible
+        case active
+        case expired
+        case unknown
+    }
+    
     static let shared = PurchasesManager()
     
     @Published var currentOffering: Offering?
@@ -62,13 +69,6 @@ class PurchasesManager: ObservableObject {
     @Published var premiumSubscribed: Bool = false
     @Published var eliteSubscribed: Bool = false
     @AppStorage("affiliateID") private var affiliateID: String = ""
-    
-    enum TrialStatus {
-        case eligible
-        case active
-        case expired
-        case unknown
-    }
     
     // MARK: Useful for changing remotely the amount of free credits you give to users to try your app,
     // without having to create a new app version and pass a new review.
@@ -190,9 +190,7 @@ class PurchasesManager: ObservableObject {
     }
     
     private init() {
-
         setupDebugLogging()
-      
         setupRevenueCat()
         fetchOfferings()
         fetchCustomerInfo()
@@ -202,28 +200,65 @@ class PurchasesManager: ObservableObject {
     private func setupRevenueCat() {
         Purchases.logLevel = .error
         Purchases.configure(withAPIKey: Const.Purchases.key)
-        //checkTrialStatus()
         checkSubscribed()
+        setAffiliateAttribution()
+    }
+    
+    private func setupDebugLogging() {
+        Purchases.logLevel = .debug
+        Logger.log(message: "RevenueCat debug logging enabled", event: .debug)
+    }
+    
+    func setAffiliateAttribution() {
+        guard !storedAffiliateID.isEmpty else { return }
+        
+        let attributes = [
+            "affiliate_id": storedAffiliateID
+        ]
+        
+        print("🔍 Setting RevenueCat attributes: \(attributes)")
+        Purchases.shared.setAttributes(attributes)
+        
+        // Get current subscriber info to verify
+        Purchases.shared.getCustomerInfo { customerInfo, error in
+            if let error = error {
+                print("❌ Error getting customer info: \(error.localizedDescription)")
+            } else {
+                print("✅ RevenueCat attributes set successfully")
+            }
+        }
+    }
+    
+    func debugPrintCustomerInfo() {
+        Purchases.shared.getCustomerInfo { customerInfo, error in
+            if let error = error {
+                print("🔴 RevenueCat Error: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let info = customerInfo else {
+                print("🔴 RevenueCat: No customer info available")
+                return
+            }
+            
+            print("📱 RevenueCat Debug Info:")
+            print("└── Original App User ID: \(info.originalAppUserId)")
+            print("└── First Seen: \(Date(timeIntervalSince1970: TimeInterval(info.originalAppUserId) ?? 0))")
+            print("└── Latest Expiration Date: \(info.latestExpirationDate?.description ?? "None")")
+            print("└── Active Subscriptions: \(info.activeSubscriptions)")
+            print("└── All Purchased Product IDs: \(info.allPurchasedProductIdentifiers)")
+            print("└── Non Subscriptions: \(info.nonSubscriptionTransactions)")
+            print("└── Trial Status: \(self.trialStatus)")
+        }
     }
     
     func fetchOfferings() {
         Purchases.shared.getOfferings { [weak self] (offerings, error) in
-            if let error {
+            if let error = error {
                 Logger.log(message: error.localizedDescription, event: .error)
             } else {
                 if let current = offerings?.current {
                     self?.currentOffering = current
-                    Logger.log(message: "Current Offering '\(current.identifier)' fetched", event: .debug)
-                } else {
-                    Logger.log(message: "Cannot find current offering", event: .error)
-                }
-                
-                if let eliteOffering = offerings?.currentOffering(forPlacement: Const.Purchases.eliteEntitlementIdentifier){
-                    self?.eliteOffering = eliteOffering
-                    Logger.log(message: "Elite Offering '\(eliteOffering.identifier)' fetched", event: .debug)
-                } else {
-                    Logger.log(message: "Cannot find elite offering", event: .error)
-                    print(offerings?.all)
                 }
             }
         }
@@ -231,12 +266,12 @@ class PurchasesManager: ObservableObject {
     
     func fetchCustomerInfo() {
         Purchases.shared.getCustomerInfo { [weak self] (customerInfo, error) in
-            if let error {
+            if let error = error {
                 Logger.log(message: error.localizedDescription, event: .error)
                 return
             }
             
-            if let customerInfo {
+            if let customerInfo = customerInfo {
                 self?.entitlement = customerInfo.entitlements.all[Const.Purchases.premiumEntitlementIdentifier]
             }
         }
@@ -271,18 +306,14 @@ class PurchasesManager: ObservableObject {
     
     func checkSubscribed() {
         Purchases.shared.getCustomerInfo { [weak self] customerInfo, error in
-            guard let self = self, let info = customerInfo else {
-                Logger.log(message: "checkSubscribed returns without a info", event: .debug)
-                return
-            }
-            Logger.log(message: "Active subscriptions count is \(info.activeSubscriptions.count)", event: .info)
+            guard let self = self, let info = customerInfo else { return }
             
             if info.entitlements[Const.Purchases.premiumEntitlementIdentifier]?.isActive == true {
-                premiumSubscribed = true
+                self.premiumSubscribed = true
             }
             
             if info.entitlements[Const.Purchases.eliteEntitlementIdentifier]?.isActive == true {
-                eliteSubscribed = true
+                self.eliteSubscribed = true
             }
         }
     }
@@ -323,18 +354,12 @@ class PurchasesManager: ObservableObject {
                     self.checkSubscribed()
                 }
                 
-                // Only record sale if we have both userId and affiliateId
-                let userId = UserManager.shared.userId
-                if !affiliateID.isEmpty && !userId.isEmpty {
-                    self.recordSale(affiliateID: affiliateID, userID: userId, amount: package.localizedPriceString)
-                }
-            } else {
-                throw PurchasesError.noPremiumEntitlement
-            }
+                
             
         } else {
             throw PurchasesError.noCurrentOffering
         }
+    }
     }
     
     func cancelSubscription() async throws {
@@ -422,89 +447,4 @@ class PurchasesManager: ObservableObject {
             }
         }
     }
-
-    func debugPrintCustomerInfo() {
-        Purchases.shared.getCustomerInfo { customerInfo, error in
-            if let error = error {
-                print("🔴 RevenueCat Error: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let info = customerInfo else {
-                print("🔴 RevenueCat: No customer info available")
-                return
-            }
-            
-            print("📱 RevenueCat Debug Info:")
-            print("└── Original App User ID: \(info.originalAppUserId)")
-            print("└── First Seen: \(Date(timeIntervalSince1970: TimeInterval(info.originalAppUserId) ?? 0))")
-            print("└── Latest Expiration Date: \(info.latestExpirationDate?.description ?? "None")")
-            print("└── Active Subscriptions: \(info.activeSubscriptions)")
-            print("└── All Purchased Product IDs: \(info.allPurchasedProductIdentifiers)")
-            print("└── Non Subscriptions: \(info.nonSubscriptionTransactions)")
-            print("└── Trial Status: \(self.trialStatus)")
-        }
-    }
-
-    private func setupDebugLogging() {
-        Purchases.logLevel = .debug
-        Logger.log(message: "RevenueCat debug logging enabled", event: .debug)
-    }
- 
-    func recordSale(affiliateID: String, userID: String, amount: String) {
-        let db = Firestore.firestore()
-        let saleData: [String: Any] = [
-            "userID": userID,
-            "amount": amount,
-            "timestamp": ISO8601DateFormatter().string(from: Date())
-        ]
-        
-        db.collection("affiliates").document(affiliateID).collection("sales").addDocument(data: saleData) { error in
-            if let error = error {
-                print("Error adding document: \(error)")
-            } else {
-                print("Sale recorded successfully.")
-            }
-        }
-    }
-    
-    func checkExistingSale(userID: String) async -> Bool {
-        guard !storedAffiliateID.isEmpty else { return false }
-        
-        let db = Firestore.firestore()
-        do {
-            let snapshot = try await db.collection("affiliates")
-                .document(storedAffiliateID)
-                .collection("sales")
-                .whereField("userID", isEqualTo: userID)
-                .getDocuments()
-            
-            return !snapshot.documents.isEmpty
-        } catch {
-            Logger.log(message: "Error checking existing sale: \(error.localizedDescription)", event: .error)
-            return false
-        }
-    }
-    
-   func checkAndRecordSaleForNewLogin(userId: String) async {
-    // Check if sale already recorded
-    let saleExists = await checkExistingSale(userID: userId)
-    guard !saleExists else { return }
-    
-    // Use existing customerInfo check
-    Purchases.shared.getCustomerInfo { [weak self] customerInfo, error in
-        guard let self = self,
-              let info = customerInfo,
-              info.entitlements[Const.Purchases.premiumEntitlementIdentifier]?.isActive == true else {
-            return
-        }
-        
-        if let package = self.currentOffering?.monthly {
-            // Pass the stored affiliateID here
-            self.recordSale(affiliateID: self.storedAffiliateID, 
-                          userID: userId, 
-                          amount: package.localizedPriceString)
-        }
-    }
-}
 }

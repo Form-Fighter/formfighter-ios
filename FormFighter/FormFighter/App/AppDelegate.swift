@@ -87,6 +87,13 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                 userInfo: ["challengeId": challengeId]
             )
         } else if let feedbackId = userInfo["feedbackId"] as? String {
+            // First switch to profile tab
+            NotificationCenter.default.post(
+                name: NSNotification.Name("SwitchToProfile"),
+                object: nil
+            )
+            
+            // Then open feedback
             NotificationCenter.default.post(
                 name: NSNotification.Name("OpenFeedback"),
                 object: nil,

@@ -107,14 +107,28 @@ class NotificationManager: NSObject, ObservableObject {
         
         print("Saving FCM token for user: \(userId)")
         let db = Firestore.firestore()
+        
+        // Save to user document
         db.collection("users").document(userId).setData([
             "fcmToken": token,
             "lastTokenUpdate": FieldValue.serverTimestamp()
-        ], merge: true) { error in
-            if let error = error {
-                print("Error saving FCM token: \(error.localizedDescription)")
-            } else {
-                print("FCM token successfully saved to Firestore")
+        ], merge: true)
+        
+        // Update token in active challenge if exists
+        if let activeChallenge = ChallengeService.shared.activeChallenge {
+            let challengeRef = db.collection("challenges")
+                .document(activeChallenge.id)
+                .collection("participants")
+                .document(userId)
+            
+            challengeRef.updateData([
+                "fcmToken": token
+            ]) { error in
+                if let error = error {
+                    print("❌ Error updating challenge participant token: \(error)")
+                } else {
+                    print("✅ Updated FCM token in active challenge")
+                }
             }
         }
     }

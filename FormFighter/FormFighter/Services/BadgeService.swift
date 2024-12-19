@@ -122,6 +122,32 @@ class BadgeService: ObservableObject {
     }
     
     private func checkTrainingBadges(userId: String, feedback: FeedbackModels.FeedbackData) async {
+        guard let feedbackId = feedback.runpodRequestId else { return }
+        
+        // Check for duplicate feedback
+        let db = Firestore.firestore()
+        let existingEvents = try? await db.collection("users")
+            .document(userId)
+            .collection("badgeEvents")
+            .whereField("feedbackId", isEqualTo: feedbackId)
+            .getDocuments()
+        
+        if let existingEvents = existingEvents, !existingEvents.documents.isEmpty {
+            print("⚠️ Badge progress already processed for feedback: \(feedbackId)")
+            return
+        }
+        
+        // Record this feedback processing
+        try? await db.collection("users")
+            .document(userId)
+            .collection("badgeEvents")
+            .document(feedbackId)
+            .setData([
+                "feedbackId": feedbackId,
+                "processedAt": FieldValue.serverTimestamp()
+            ])
+        
+        // Continue with existing badge logic
         guard let jabScore = feedback.modelFeedback?.body?.jab_score else { return }
         
         // Check Perfect Score Badge

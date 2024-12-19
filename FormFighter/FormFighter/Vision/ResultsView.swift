@@ -335,28 +335,6 @@ struct ResultsView: View {
         
         print("🎯 Starting streak update for user: \(userId)")
         
-        // MARK: - DEBUG ONLY - Comment out for production
-        #if DEBUG
-        let debugResetStreak = true // Set to true to force streak update
-        if debugResetStreak {
-            // Set last training date to yesterday to force streak increment
-            let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
-            userRef.updateData([
-                "lastTrainingDate": Timestamp(date: yesterday),
-                "currentStreak": 0
-            ]) { error in
-                if let error = error {
-                    print("❌ Debug reset failed: \(error.localizedDescription)")
-                } else {
-                    print("✅ Debug reset successful")
-                    // Remove the recursive call and instead proceed with the normal streak update
-                    self.performStreak(userRef: userRef, today: today, calendar: calendar)
-                }
-            }
-            return
-        }
-        #endif
-        
         performStreak(userRef: userRef, today: today, calendar: calendar)
     }
     
@@ -371,33 +349,36 @@ struct ResultsView: View {
             let lastTrainingDate = (document.data()?["lastTrainingDate"] as? Timestamp)?.dateValue()
             let currentStreak = document.data()?["currentStreak"] as? Int ?? 0
             
-            print("📊 Current streak: \(currentStreak)")
-            print(" Last training date: \(String(describing: lastTrainingDate))")
+            print("📊 Streak check - Current: \(currentStreak), Last training: \(String(describing: lastTrainingDate))")
             
             var newStreak = currentStreak
+            var shouldShowCelebration = false
             
             if let lastTrainingDate = lastTrainingDate {
                 let lastTrainingDay = calendar.startOfDay(for: lastTrainingDate)
                 let daysBetween = calendar.dateComponents([.day], from: lastTrainingDay, to: today).day ?? 0
                 
-                print("📍 Days between: \(daysBetween)")
+                print("📍 Days between trainings: \(daysBetween)")
                 
                 if daysBetween == 1 {
-                    // Consecutive day
+                    // Consecutive day - increment and celebrate
                     newStreak += 1
+                    shouldShowCelebration = true
                 } else if daysBetween == 0 {
-                    // Same day, don't increment
+                    // Same day, don't increment or celebrate
                     return
                 } else {
                     // Streak broken
                     newStreak = 1
+                    shouldShowCelebration = false
                 }
             } else {
                 // First training session
                 newStreak = 1
+                shouldShowCelebration = true
             }
             
-            print("🔥 New streak: \(newStreak)")
+            print("🔥 Streak update - New: \(newStreak), Show celebration: \(shouldShowCelebration)")
             
             // Update Firestore
             userRef.updateData([
@@ -408,9 +389,13 @@ struct ResultsView: View {
                     print("❌ Error updating streak: \(error.localizedDescription)")
                 } else {
                     print("✅ Streak updated successfully to: \(newStreak)")
+                    if shouldShowCelebration {
+                        UserManager.shared.shouldShowCelebration = true
+                    }
                 }
             }
             
+            // Schedule next notification only if streak increased
             if newStreak > currentStreak {
                 NotificationManager.shared.scheduleStreakNotification(
                     streak: newStreak,
