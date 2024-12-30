@@ -23,7 +23,7 @@ struct ActiveChallengeView: View {
                 // Action Buttons
                 HStack(spacing: 16) {
                     Button(action: { tabSelection.wrappedValue = .vision }) {
-                        Label("Train Now", systemImage: "figure.boxing")
+                        Label("Train", systemImage: "figure.boxing")
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(ThemeColors.primary)
@@ -46,16 +46,8 @@ struct ActiveChallengeView: View {
                     ParticipantsListView(participants: challenge.participants)
                 }
                 
-                if !challenge.recentEvents.isEmpty {
-                    LazyVStack {
-                        ForEach(challenge.recentEvents) { event in
-                            EventRowView(event: event)
-                        }
-                    }
-                } else {
-                    Text("No events yet")
-                        .foregroundColor(.secondary)
-                }
+                EventFeedView(events: challenge.recentEvents)
+                    .padding(.top)
             }
             .padding()
         }
@@ -153,17 +145,41 @@ struct ParticipantsListView: View {
 struct ParticipantRowView: View {
     let participant: Challenge.Participant
     
+    private var scoreMultiplier: Double {
+        min(max(participant.averageScore / 10.0, 0.1), 2.0)
+    }
+    
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
+        HStack(spacing: 16) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text(participant.name)
                     .font(.subheadline)
                     .fontWeight(.medium)
                 
-                HStack(spacing: 12) {
-                    Label("\(participant.inviteCount)", systemImage: "person.2.fill")
-                    Label("\(participant.totalJabs)", systemImage: "figure.boxing")
-                    Label(String(format: "%.1f", participant.averageScore), systemImage: "star.fill")
+                HStack(spacing: 16) {
+                    Label {
+                        Text("\(participant.inviteCount)")
+                            .frame(minWidth: 20)
+                    } icon: {
+                        Image(systemName: "person.2.fill")
+                    }
+                    .help("Invites: \(participant.inviteCount) × 25 points")
+                    
+                    Label {
+                        Text("\(participant.totalJabs)")
+                            .frame(minWidth: 20)
+                    } icon: {
+                        Image(systemName: "figure.boxing")
+                    }
+                    .help("Jabs: \(participant.totalJabs) × 0.2 points")
+                    
+                    Label {
+                        Text(String(format: "%.1f", participant.averageScore))
+                            .frame(minWidth: 30)
+                    } icon: {
+                        Image(systemName: "star.fill")
+                    }
+                    .help("Score multiplier: \(String(format: "%.1fx", scoreMultiplier))")
                 }
                 .font(.caption)
                 .foregroundColor(.secondary)
@@ -171,9 +187,14 @@ struct ParticipantRowView: View {
             
             Spacer()
             
-            Text(String(format: "%.0f", participant.finalScore))
-                .font(.headline)
-                .foregroundColor(ThemeColors.primary)
+            VStack(alignment: .trailing) {
+                Text(String(format: "%.0f", participant.finalScore))
+                    .font(.headline)
+                    .foregroundColor(ThemeColors.primary)
+                Text("points")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
         }
         .padding()
         .background(Color(.systemBackground))
@@ -183,6 +204,8 @@ struct ParticipantRowView: View {
 
 struct NoChallengeView: View {
     @Binding var showCreateChallenge: Bool
+    @State private var showChallengeHistory = false
+    @ObservedObject var viewModel: ChallengeViewModel
     
     var body: some View {
         VStack(spacing: 20) {
@@ -198,21 +221,46 @@ struct NoChallengeView: View {
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
             
-            Button {
-                showCreateChallenge = true
-            } label: {
-                HStack {
-                    Image(systemName: "plus.circle.fill")
-                    Text("Create Challenge")
+            VStack(spacing: 12) {
+                Button {
+                    showCreateChallenge = true
+                } label: {
+                    HStack {
+                        Image(systemName: "plus.circle.fill")
+                        Text("Create Challenge")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(ThemeColors.primary)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
                 }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(ThemeColors.primary)
-                .foregroundColor(.white)
-                .cornerRadius(12)
+                
+                Button {
+                    showChallengeHistory = true
+                } label: {
+                    HStack {
+                        Image(systemName: "clock.arrow.circlepath")
+                        Text("View Challenge History")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color(.systemBackground))
+                    .foregroundColor(ThemeColors.primary)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(ThemeColors.primary, lineWidth: 1)
+                    )
+                    .cornerRadius(12)
+                }
             }
             .padding(.horizontal)
         }
         .padding()
+        .sheet(isPresented: $showChallengeHistory) {
+            ChallengeHistoryView(challenges: viewModel.completedChallenges)
+        }
     }
 }
+
+

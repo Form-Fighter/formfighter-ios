@@ -51,9 +51,20 @@ struct Challenge: Identifiable, Codable {
         let fcmToken: String?
         
         var finalScore: Double {
-            let baseScore = (Double(inviteCount) * 50.0 * 0.5) + (Double(totalJabs) * 0.2)
+            // Base score from invites: each invite worth 25 points
+            let inviteScore = Double(inviteCount) * 25.0
+            
+            // Base score from jabs: each jab worth 20 points (scaled up from 0.2)
+            let jabScore = Double(totalJabs) * 20.0
+            
+            // Score multiplier based on average score (between 0.1x and 2.0x)
             let multiplier = min(max(averageScore / 10.0, 0.1), 2.0)
-            return baseScore * multiplier
+            
+            // Final calculation
+            let score = (inviteScore + jabScore) * multiplier
+            
+            // Round to nearest whole number
+            return round(score)
         }
     }
     

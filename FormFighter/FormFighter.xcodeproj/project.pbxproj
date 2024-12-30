@@ -201,6 +201,8 @@
 		B2F448012D082BCC0032E53C /* ChallengeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F448002D082BCC0032E53C /* ChallengeError.swift */; };
 		B2F448032D0EFCE10032E53C /* DeepLinkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F448022D0EFCE10032E53C /* DeepLinkHandler.swift */; };
 		B2F448052D0FDF710032E53C /* ChallengeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F448042D0FDF710032E53C /* ChallengeHeaderView.swift */; };
+		B2F4480A2D215E970032E53C /* MetricCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F448082D215E970032E53C /* MetricCardView.swift */; };
+		B2F4480B2D215E970032E53C /* DetailedAnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F448092D215E970032E53C /* DetailedAnalysisView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -387,6 +389,8 @@
 		B2F448002D082BCC0032E53C /* ChallengeError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeError.swift; sourceTree = "<group>"; };
 		B2F448022D0EFCE10032E53C /* DeepLinkHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeepLinkHandler.swift; sourceTree = "<group>"; };
 		B2F448042D0FDF710032E53C /* ChallengeHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeHeaderView.swift; sourceTree = "<group>"; };
+		B2F448082D215E970032E53C /* MetricCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetricCardView.swift; sourceTree = "<group>"; };
+		B2F448092D215E970032E53C /* DetailedAnalysisView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedAnalysisView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -773,6 +777,8 @@
 		B214115A2CCF128600699B15 /* FeedbackPage */ = {
 			isa = PBXGroup;
 			children = (
+				B2F448092D215E970032E53C /* DetailedAnalysisView.swift */,
+				B2F448082D215E970032E53C /* MetricCardView.swift */,
 				B21411EF2CE92D7F00699B15 /* VideoPlayerObserver.swift */,
 				B21411822CE63BED00699B15 /* Components */,
 				B21411792CE54D1700699B15 /* FeedbackViewModel.swift */,
@@ -1100,6 +1106,7 @@
 				818D3F832B6FA3F100DF7299 /* GPTLanguage.swift in Sources */,
 				B214115C2CCF151B00699B15 /* FeedbackView.swift in Sources */,
 				B214117C2CE6247300699B15 /* MuayThaiButtonStyle.swift in Sources */,
+				B2F4480A2D215E970032E53C /* MetricCardView.swift in Sources */,
 				81E98B0D2B72AC81000E8996 /* KeychainManager.swift in Sources */,
 				B20242A12C6C5A8500256733 /* FormFighterApp.swift in Sources */,
 				B252ED6E2D076D1800013524 /* Badge.swift in Sources */,
@@ -1131,6 +1138,7 @@
 				814731F42B7D387900E223A7 /* DALLEService.swift in Sources */,
 				81DE14E82B75510700C41EA9 /* CopiedToClipboardView.swift in Sources */,
 				81A02D462BA4C67900061567 /* +Double.swift in Sources */,
+				B2F4480B2D215E970032E53C /* DetailedAnalysisView.swift in Sources */,
 				818D3FB62B700E9D00DF7299 /* +UIScreen.swift in Sources */,
 				B252ED692D06D43B00013524 /* FeedbackListItem.swift in Sources */,
 				81DE14F02B762F2D00C41EA9 /* MealVisionResponse.swift in Sources */,

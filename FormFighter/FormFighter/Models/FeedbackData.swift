@@ -25,6 +25,7 @@ enum FeedbackModels {
         let coachComment: String?
         let coachId: String?
         let commentUpdatedAt: Date?
+        let challengeId: String?
     }
     
     struct UserFeedback: Codable {
@@ -41,9 +42,154 @@ enum FeedbackModels {
         let statusCode: Int?
     }
     
+    struct MetricDetails: Codable {
+        let metric_score: Double?
+        let metric_values: String?
+        let pros: [String]?
+        let cons: [String]?
+        let tactical_advantages: [String]?
+        let strategic_advantages: [String]?
+        let biomechanical_efficiency: [String]?
+        let counter_opportunities: [String]?
+        let description: [String]?
+        let velocity: String?
+        let tier: String?
+        let ko: String?
+        let optimal_followups: [String]?
+        let strategic_applications: [String]?
+        let ordered_sequence: String?
+        let sequence_correct: Bool?
+        let timing_differences: String?
+        let buffer_zone: String?
+        let biomechanical_advantages: [String]?
+        let counter_vulnerabilities: [String]?
+        let strategic_implications: [String]?
+        
+        enum CodingKeys: String, CodingKey {
+            case metric_score, metric_values, pros, cons
+            case tactical_advantages = "tactical advantages"
+            case strategic_advantages = "strategic advantages"
+            case biomechanical_efficiency = "biomechanical efficiency"
+            case counter_opportunities = "counter opportunities"
+            case description, velocity, tier
+            case ko = "K.O."
+            case optimal_followups = "optimal follow-ups"
+            case strategic_applications = "strategic applications"
+            case ordered_sequence = "ordered_sequence"
+            case sequence_correct = "sequence_correct"
+            case timing_differences = "timing_differences"
+            case buffer_zone = "buffer_zone"
+            case biomechanical_advantages = "biomechanical advantages"
+            case counter_vulnerabilities = "counter vulnerabilities"
+            case strategic_implications = "strategic implications"
+        }
+    }
+    
     struct BodyFeedback: Codable {
         let feedback: FeedbackCategories?
         let jab_score: Double?
+        
+        // All metrics
+        let chin_tucked_extension: MetricDetails?
+        let torso_rotation_extension: MetricDetails?
+        let shoulder_rotation_retraction: MetricDetails?
+        let hip_rotation_extension: MetricDetails?
+        let hip_velocity_retraction: MetricDetails?
+        let elbow_velocity_extension: MetricDetails?
+        let motion_sequence: MetricDetails?
+        let hip_velocity_extension: MetricDetails?
+        let foot_placement_retraction: MetricDetails?
+        let foot_stepping_direction_extension: MetricDetails?
+        let leg_to_shoulder_width_guard: MetricDetails?
+        let jab_straight_line_extension: MetricDetails?
+        let return_position_difference_retraction: MetricDetails?
+        let foot_placement_guard: MetricDetails?
+        let rear_hand_in_guard_extension: MetricDetails?
+        let overall_velocity_extension: MetricDetails?
+        let foot_velocity_extension: MetricDetails?
+        let elbow_straight_line_extension: MetricDetails?
+        let force_generation_extension: MetricDetails?
+        let mean_back_leg_angle_extension: MetricDetails?
+        let head_stability_guard: MetricDetails?
+        let foot_steps_with_punch_diff_extension: MetricDetails?
+        let shoulder_velocity_extension: MetricDetails?
+        let elbow_protection_extension: MetricDetails?
+        let chin_lift_extension: MetricDetails?
+        let shoulder_velocity_retraction: MetricDetails?
+        let wrist_angle_extension: MetricDetails?
+        let foot_velocity_retraction: MetricDetails?
+        let jab_arm_extension: MetricDetails?
+        let elbow_flare_extension: MetricDetails?
+        let elbow_velocity_retraction: MetricDetails?
+        let step_distance_extension: MetricDetails?
+        let mean_back_leg_angle_guard: MetricDetails?
+        let overall_velocity_retraction: MetricDetails?
+        let head_stability_extension: MetricDetails?
+        let foot_placement_extension: MetricDetails?
+        let chin_tucked_guard: MetricDetails?
+        let chin_tucked_retraction: MetricDetails?
+        let hand_velocity_extension: MetricDetails?
+        let hand_velocity_retraction: MetricDetails?
+        let hands_above_shoulders_guard: MetricDetails?
+        let hip_rotation_retraction: MetricDetails?
+        let torso_rotation_retraction: MetricDetails?
+        let hand_drop_before_extension: MetricDetails?
+        let whip_effect_extension: MetricDetails?
+        let shoulder_rotation_extension: MetricDetails?
+        let head_stability_retraction: MetricDetails?
+        let mean_back_leg_angle_retraction: MetricDetails?
+
+        enum CodingKeys: String, CodingKey {
+            case feedback, jab_score
+            case chin_tucked_extension = "Chin_Tucked_Extension"
+            case torso_rotation_extension = "Torso_Rotation_Extension"
+            case shoulder_rotation_retraction = "Shoulder_Rotation_Retraction"
+            case hip_rotation_extension = "Hip_Rotation_Extension"
+            case hip_velocity_retraction = "Hip_Velocity_Retraction"
+            case elbow_velocity_extension = "Elbow_Velocity_Extension"
+            case motion_sequence = "Motion_Sequence"
+            case hip_velocity_extension = "Hip_Velocity_Extension"
+            case foot_placement_retraction = "Foot_Placement_Retraction"
+            case foot_stepping_direction_extension = "Foot_Stepping_Direction_Extension"
+            case leg_to_shoulder_width_guard = "Leg_To_Shoulder_Width_Guard"
+            case jab_straight_line_extension = "Jab_Straight_Line_Extension"
+            case return_position_difference_retraction = "Return_Position_Difference_Retraction"
+            case foot_placement_guard = "Foot_Placement_Guard"
+            case rear_hand_in_guard_extension = "Rear_Hand_In_Guard_Extension"
+            case overall_velocity_extension = "Overall_Velocity_Extension"
+            case foot_velocity_extension = "Foot_Velocity_Extension"
+            case elbow_straight_line_extension = "Elbow_Straight_Line_Extension"
+            case force_generation_extension = "Force_Generation_Extension"
+            case mean_back_leg_angle_extension = "Mean_Back_Leg_Angle_Extension"
+            case head_stability_guard = "Head_Stability_Guard"
+            case foot_steps_with_punch_diff_extension = "Foot_Steps_With_Punch_Diff_Extension"
+            case shoulder_velocity_extension = "Shoulder_Velocity_Extension"
+            case elbow_protection_extension = "Elbow_Protection_Extension"
+            case chin_lift_extension = "Chin_Lift_Extension"
+            case shoulder_velocity_retraction = "Shoulder_Velocity_Retraction"
+            case wrist_angle_extension = "Wrist_Angle_Extension"
+            case foot_velocity_retraction = "Foot_Velocity_Retraction"
+            case jab_arm_extension = "Jab_Arm_Extension"
+            case elbow_flare_extension = "Elbow_Flare_Extension"
+            case elbow_velocity_retraction = "Elbow_Velocity_Retraction"
+            case step_distance_extension = "Step_Distance_Extension"
+            case mean_back_leg_angle_guard = "Mean_Back_Leg_Angle_Guard"
+            case overall_velocity_retraction = "Overall_Velocity_Retraction"
+            case head_stability_extension = "Head_Stability_Extension"
+            case foot_placement_extension = "Foot_Placement_Extension"
+            case chin_tucked_guard = "Chin_Tucked_Guard"
+            case chin_tucked_retraction = "Chin_Tucked_Retraction"
+            case hand_velocity_extension = "Hand_Velocity_Extension"
+            case hand_velocity_retraction = "Hand_Velocity_Retraction"
+            case hands_above_shoulders_guard = "Hands_Above_Shoulders_Guard"
+            case hip_rotation_retraction = "Hip_Rotation_Retraction"
+            case torso_rotation_retraction = "Torso_Rotation_Retraction"
+            case hand_drop_before_extension = "Hand_Drop_Before_Extension"
+            case whip_effect_extension = "Whip_Effect_Extension"
+            case shoulder_rotation_extension = "Shoulder_Rotation_Extension"
+            case head_stability_retraction = "Head_Stability_Retraction"
+            case mean_back_leg_angle_retraction = "Mean_Back_Leg_Angle_Retraction"
+        }
     }
     
     struct FeedbackCategories: Codable {

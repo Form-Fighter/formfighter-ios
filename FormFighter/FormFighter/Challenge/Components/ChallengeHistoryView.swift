@@ -1,16 +1,41 @@
 import SwiftUI
 
 struct ChallengeHistoryView: View {
+    @Environment(\.dismiss) private var dismiss
     let challenges: [Challenge]
     
     var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 16) {
-                ForEach(challenges) { challenge in
-                    ChallengeHistoryCard(challenge: challenge)
+        NavigationView {
+            List {
+                ForEach(challenges.sorted(by: { $0.endTime > $1.endTime })) { challenge in
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(challenge.name)
+                            .font(.headline)
+                        
+                        Text(challenge.description)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        
+                        HStack {
+                            Label("\(challenge.participants.count)", systemImage: "person.2")
+                            Spacer()
+                            Text(challenge.endTime.formatted(date: .abbreviated, time: .shortened))
+                        }
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    }
+                    .padding(.vertical, 4)
                 }
             }
-            .padding()
+            .navigationTitle("Challenge History")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }

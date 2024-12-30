@@ -380,6 +380,9 @@
     "%@'s World!" : {
 
     },
+    "%@/10" : {
+
+    },
     "%lld" : {
 
     },
@@ -552,6 +555,9 @@
           }
         }
       }
+    },
+    "•" : {
+
     },
     "×%lld" : {
 
@@ -2124,6 +2130,9 @@
     "Challenge Details" : {
 
     },
+    "Challenge History" : {
+
+    },
     "Challenge Name" : {
 
     },
@@ -2645,6 +2654,9 @@
         }
       }
     },
+    "Correct Sequence" : {
+
+    },
     "Crash" : {
       "localizations" : {
         "de" : {
@@ -3008,6 +3020,9 @@
         }
       }
     },
+    "Detected Sequence:" : {
+
+    },
     "Diff" : {
 
     },
@@ -3346,6 +3361,9 @@
         }
       }
     },
+    "Help us make Form Fighter better for you." : {
+
+    },
     "Hi, I will be your assistant. Please make your requests." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3500,9 +3518,6 @@
     "How to Record Your Form" : {
 
     },
-    "How was this feedback?" : {
-
-    },
     "How was your boxing feedback?" : {
 
     },
@@ -3585,6 +3600,9 @@
     "in" : {
 
     },
+    "Incorrect Sequence" : {
+
+    },
     "Info" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3656,10 +3674,16 @@
         }
       }
     },
+    "Invites: %lld × 25 points" : {
+
+    },
     "Is this the feedback you expected?" : {
 
     },
     "Jab Score" : {
+
+    },
+    "Jabs: %lld × 0.2 points" : {
 
     },
     "Join" : {
@@ -4049,6 +4073,9 @@
     "Month" : {
 
     },
+    "Motion Sequence Analysis" : {
+
+    },
     "Muay Thai Tip:" : {
 
     },
@@ -4139,9 +4166,6 @@
 
     },
     "No data available for this time period" : {
-
-    },
-    "No events yet" : {
 
     },
     "No training sessions yet" : {
@@ -4390,6 +4414,9 @@
 
     },
     "Perfect Your Jab" : {
+
+    },
+    "Performance Tier: %@" : {
 
     },
     "Photo Library" : {
@@ -4679,6 +4706,9 @@
           }
         }
       }
+    },
+    "points" : {
+
     },
     "Premium" : {
       "localizations" : {
@@ -5072,6 +5102,9 @@
 
     },
     "Score" : {
+
+    },
+    "Score multiplier: %@" : {
 
     },
     "Score: %@" : {
@@ -6009,7 +6042,13 @@
         }
       }
     },
+    "Tier: %@" : {
+
+    },
     "Time" : {
+
+    },
+    "Timing Analysis:" : {
 
     },
     "Title" : {
@@ -6083,9 +6122,6 @@
       }
     },
     "Train" : {
-
-    },
-    "Train Now" : {
 
     },
     "Training Session" : {
@@ -6607,6 +6643,9 @@
           }
         }
       }
+    },
+    "View Challenge History" : {
+
     },
     "Vision" : {
       "extractionState" : "stale",

@@ -23,10 +23,24 @@ class ChallengeService: ObservableObject {
         let participantListener = db.collectionGroup("participants")
             .whereField("id", isEqualTo: userId)
             .addSnapshotListener { [weak self] snapshot, error in
-                guard let self = self,
-                      let participantDocs = snapshot?.documents else {
-                    print("❌ No participant documents found")
-                    self?.activeChallenge = nil
+                guard let self = self else { return }
+                
+                if let error = error {
+                    print("❌ Participant listener error: \(error)")
+                    return
+                }
+                
+                // Don't clear active challenge if we just haven't received data yet
+                if snapshot?.metadata.isFromCache == false && snapshot?.documents.isEmpty == true {
+                    print("❌ No active challenges found for user")
+                    Task { @MainActor in
+                        self.activeChallenge = nil
+                    }
+                    return
+                }
+                
+                guard let participantDocs = snapshot?.documents else {
+                    print("⚠️ Waiting for participant documents...")
                     return
                 }
                 
@@ -35,7 +49,7 @@ class ChallengeService: ObservableObject {
                     do {
                         var challenges: [Challenge] = []
                         var activeChallenge: Challenge? = nil
-                        var hasSetupActiveListener = false  // Flag to ensure only one active listener
+                        var hasSetupActiveListener = false
                         
                         for participantDoc in participantDocs {
                             let challengeRef = participantDoc.reference.parent.parent!
@@ -102,7 +116,17 @@ class ChallengeService: ObservableObject {
                                                                 .documents
                                                                 .compactMap { try? $0.data(as: Challenge.Participant.self) }
                                                             
+                                                            // Fetch latest events
+                                                            let events = try await challengeRef
+                                                                .collection("events")
+                                                                .order(by: "timestamp", descending: true)
+                                                                .limit(to: 15)
+                                                                .getDocuments()
+                                                                .documents
+                                                                .compactMap { try? $0.data(as: Challenge.ChallengeEvent.self) }
+                                                            
                                                             updatedChallenge.participants = participants
+                                                            updatedChallenge.recentEvents = events
                                                             
                                                             // Create local copy before async context
                                                             let finalChallenge = updatedChallenge
@@ -110,7 +134,7 @@ class ChallengeService: ObservableObject {
                                                             // Update active challenge if this is the current one
                                                             await MainActor.run {
                                                                 if self.activeChallenge?.id == challengeRef.documentID {
-                                                                    print("📝 Updating active challenge data")
+                                                                    print("📝 Updating active challenge data with \(events.count) events")
                                                                     self.activeChallenge = finalChallenge
                                                                 }
                                                             }
@@ -129,18 +153,40 @@ class ChallengeService: ObservableObject {
                                         .order(by: "timestamp", descending: true)
                                         .limit(to: 15)
                                         .addSnapshotListener { [weak self] eventsSnapshot, error in
-                                            guard let self = self,
-                                                  let documents = eventsSnapshot?.documents else { return }
+                                            guard let self = self else { return }
                                             
-                                            print("📊 Received events update")
-                                            let events = documents.compactMap { try? $0.data(as: Challenge.ChallengeEvent.self) }
+                                            if let error = error {
+                                                print("❌ Events listener error: \(error)")
+                                                return
+                                            }
+                                            
+                                            // Check for changes in the snapshot
+                                            guard let snapshot = eventsSnapshot,
+                                                  !snapshot.documentChanges.isEmpty else {
+                                                print("📊 No event changes detected")
+                                                return
+                                            }
+                                            
+                                            print("📊 Received events update with \(snapshot.documentChanges.count) changes")
+                                            
+                                            // Get all events from the snapshot
+                                            let events = snapshot.documents.compactMap { document -> Challenge.ChallengeEvent? in
+                                                do {
+                                                    let event = try document.data(as: Challenge.ChallengeEvent.self)
+                                                    print("📊 Parsed event: \(event.type) by \(event.userName)")
+                                                    return event
+                                                } catch {
+                                                    print("❌ Error parsing event document: \(error)")
+                                                    return nil
+                                                }
+                                            }
                                             
                                             Task { @MainActor in
-                                                // Create local copy before using in async context
-                                                if let currentChallenge = self.activeChallenge {
-                                                    var updatedChallenge = currentChallenge
-                                                    updatedChallenge.recentEvents = events
-                                                    self.activeChallenge = updatedChallenge
+                                                if var currentChallenge = self.activeChallenge,
+                                                   currentChallenge.id == challengeRef.documentID {
+                                                    print("📊 Updating challenge \(currentChallenge.name) with \(events.count) events")
+                                                    currentChallenge.recentEvents = events
+                                                    self.activeChallenge = currentChallenge
                                                     print("📊 Updated active challenge events: \(events.count)")
                                                 }
                                             }
@@ -345,10 +391,13 @@ class ChallengeService: ObservableObject {
         print("🎯 Processing feedback event with score: \(score)")
         guard let userId = Auth.auth().currentUser?.uid,
               let challengeId = activeChallenge?.id,
-              var challenge = activeChallenge else {
-            print("❌ Missing required data for challenge event:")
+              var challenge = activeChallenge,
+              challenge.startTime <= Date(),
+              challenge.endTime > Date() else {
+            print("❌ Missing required data or challenge timing invalid:")
             print("   userId: \(Auth.auth().currentUser?.uid ?? "nil")")
             print("   challengeId: \(activeChallenge?.id ?? "nil")")
+            print("   challenge timing valid: \(activeChallenge?.startTime ?? Date() <= Date() && activeChallenge?.endTime ?? Date() > Date())")
             return
         }
         
@@ -405,7 +454,7 @@ class ChallengeService: ObservableObject {
             .document(challengeEvent.id)
             .setData(from: challengeEvent)
         
-        print("✅ Updated all participant stats and created event")
+        print("✅ Added new event to challenge: \(challengeEvent.type) by \(challengeEvent.userName)")
         
         // Notify other participants about the score
         await notifyParticipants(

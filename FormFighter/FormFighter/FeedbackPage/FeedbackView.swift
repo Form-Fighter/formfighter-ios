@@ -74,12 +74,12 @@ struct FeedbackView: View {
                         completedFeedbackView
                         
                         // Challenge Indicator (if in active challenge)
-                        if let challenge = ChallengeService.shared.activeChallenge,
-                           challenge.endTime > Date() {
+                        if viewModel.shouldShowChallengeIndicator,
+                           let challengeInfo = viewModel.activeChallengeInfo {
                             HStack {
                                 Image(systemName: "trophy.fill")
                                     .foregroundColor(ThemeColors.primary)
-                                Text("This jab will count towards '\(challenge.name)'")
+                                Text("This jab will count towards '\(challengeInfo.name)'")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
@@ -346,20 +346,25 @@ struct FeedbackView: View {
                         }
                     }
                     
-                    // Feedback Sections
-                    if let feedbackDetails = feedback.modelFeedback?.body?.feedback {
-                        Group {
-                            if let extensionFeedback = feedbackDetails.extensionFeedback {
-                                FeedbackSection(title: "Extension", feedback: extensionFeedback)
-                            }
-                            if let guardFeedback = feedbackDetails.guardPosition {
-                                FeedbackSection(title: "Guard", feedback: guardFeedback)
-                            }
-                            if let retractionFeedback = feedbackDetails.retraction {
-                                FeedbackSection(title: "Retraction", feedback: retractionFeedback)
-                            }
-                        }
-                        .padding(.horizontal)
+                    // // Feedback Sections
+                    // if let feedbackDetails = feedback.modelFeedback?.body?.feedback {
+                    //     Group {
+                    //         if let extensionFeedback = feedbackDetails.extensionFeedback {
+                    //             FeedbackSection(title: "Extension", feedback: extensionFeedback)
+                    //         }
+                    //         if let guardFeedback = feedbackDetails.guardPosition {
+                    //             FeedbackSection(title: "Guard", feedback: guardFeedback)
+                    //         }
+                    //         if let retractionFeedback = feedbackDetails.retraction {
+                    //             FeedbackSection(title: "Retraction", feedback: retractionFeedback)
+                    //         }
+                    //     }
+                    //     .padding(.horizontal)
+                    // }
+                    
+                     // Add Detailed Analysis View
+                    if let modelFeedback = feedback.modelFeedback?.body {
+                        DetailedAnalysisView(viewModel: viewModel)
                     }
                     
                     // Comparison View (at the bottom)
@@ -382,6 +387,8 @@ struct FeedbackView: View {
                             .padding(.horizontal)
                         }
                     }
+                    
+                
                 }
             }
             .padding()
@@ -1074,7 +1081,7 @@ struct FeedbackPromptButton: View {
                 Text("🥊")
                     .font(.title2)
                     .rotationEffect(.degrees(gloveRotation))
-                Text("How was this feedback?")
+                Text("Help us make Form Fighter better for you.")
                     .foregroundColor(ThemeColors.primary)
                 Spacer()
                 Image(systemName: "chevron.right")

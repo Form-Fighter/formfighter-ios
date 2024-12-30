@@ -16,7 +16,7 @@ struct ChallengeView: View {
                 ActiveChallengeView(challenge: challenge)
                     .environment(\.tabSelection, tabSelection)
             } else {
-                NoChallengeView(showCreateChallenge: $showCreateChallenge)
+                NoChallengeView(showCreateChallenge: $showCreateChallenge, viewModel: viewModel)
             }
         }
         .sheet(isPresented: $showCreateChallenge) {

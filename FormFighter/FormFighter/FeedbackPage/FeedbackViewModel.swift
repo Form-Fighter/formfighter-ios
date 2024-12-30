@@ -2,6 +2,7 @@ import Firebase
 import FirebaseFirestore
 import Combine
 import os.log
+import SwiftUI
 
 class FeedbackViewModel: ObservableObject {
     @Published var feedback: FeedbackModels.FeedbackData?
@@ -13,6 +14,24 @@ class FeedbackViewModel: ObservableObject {
     
     @Published var challengeToast: String?
     private let challengeService = ChallengeService.shared
+    private var toastTimer: Timer?
+    
+    var shouldShowChallengeIndicator: Bool {
+        guard let challenge = ChallengeService.shared.activeChallenge,
+              challenge.endTime > Date(),
+              let feedback = feedback,
+              let feedbackChallengeId = feedback.challengeId else {
+            return false
+        }
+        return feedbackChallengeId == challenge.id
+    }
+    
+    var activeChallengeInfo: (name: String, id: String)? {
+        guard let challenge = ChallengeService.shared.activeChallenge else {
+            return nil
+        }
+        return (challenge.name, challenge.id)
+    }
     
     func setupFirestoreListener(feedbackId: String) {
         print("⚡️ Setting up listener for feedback: \(feedbackId)")
@@ -165,38 +184,45 @@ class FeedbackViewModel: ObservableObject {
         // Get the feedback document to check for challengeId
         let feedbackDoc = try await db.collection("feedback").document(documentId).getDocument()
         let feedbackChallengeId = feedbackDoc.data()?["challengeId"] as? String
+        print("📝 Feedback challenge ID: \(feedbackChallengeId ?? "nil")")
         
         // Process challenge if active and matches the feedback's challengeId
-        if let activeChallenge = challengeService.activeChallenge,
-           let feedbackChallengeId = feedbackChallengeId,
-           feedbackChallengeId == activeChallenge.id,
-           activeChallenge.endTime > Date() {
-            print("🎯 Found matching active challenge: \(activeChallenge.name)")
-            print("🎯 Challenge is still active, processing event")
-            do {
-                try await challengeService.processEvent(.feedbackViewed(
-                    feedbackId: documentId,
-                    score: score
-                ))
-                print("✅ Successfully processed challenge event")
-                
-                DispatchQueue.main.async {
-                    self.challengeToast = "Score added to challenge!"
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        self.challengeToast = nil
+        if let activeChallenge = challengeService.activeChallenge {
+            print("🎯 Active challenge found: \(activeChallenge.name)")
+            print("🎯 Active challenge ID: \(activeChallenge.id)")
+            print("🎯 Challenge end time: \(activeChallenge.endTime)")
+            print("🎯 Current time: \(Date())")
+            
+            if let feedbackChallengeId = feedbackChallengeId,
+               feedbackChallengeId == activeChallenge.id,
+               activeChallenge.endTime > Date() {
+                print("🎯 Found matching active challenge: \(activeChallenge.name)")
+                print("🎯 Challenge is still active, processing event")
+                do {
+                    try await challengeService.processEvent(.feedbackViewed(
+                        feedbackId: documentId,
+                        score: score
+                    ))
+                    print("✅ Successfully processed challenge event")
+                    
+                    showToast("Score added to challenge!")
+                } catch {
+                    print("❌ Failed to process challenge event: \(error)")
+                    if let challengeError = error as? ChallengeError, 
+                       challengeError == .duplicateEvent {
+                        print("⚠️ Duplicate event detected")
+                        showToast("Score already added to challenge!")
+                    } else {
+                        self.error = error.localizedDescription
                     }
                 }
-            } catch {
-                print("❌ Failed to process challenge event: \(error)")
-                if let challengeError = error as? ChallengeError, 
-                   challengeError == .duplicateEvent {
-                    DispatchQueue.main.async {
-                        self.challengeToast = "Score already added to challenge!"
-                    }
-                } else {
-                    self.error = error.localizedDescription
-                }
+            } else {
+                print("❌ Challenge validation failed:")
+                print("   - IDs match: \(feedbackChallengeId == activeChallenge.id)")
+                print("   - Challenge active: \(activeChallenge.endTime > Date())")
             }
+        } else {
+            print("❌ No active challenge found")
         }
     }
     
@@ -205,7 +231,26 @@ class FeedbackViewModel: ObservableObject {
         listener = nil
     }
     
+    private func showToast(_ message: String, duration: TimeInterval = 3.0) {
+        // Cancel any existing timer
+        toastTimer?.invalidate()
+        
+        DispatchQueue.main.async {
+            self.challengeToast = message
+            
+            // Set up new timer to clear the toast
+            self.toastTimer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { [weak self] _ in
+                DispatchQueue.main.async {
+                    withAnimation(.easeOut) {
+                        self?.challengeToast = nil
+                    }
+                }
+            }
+        }
+    }
+    
     deinit {
         cleanup()
+        toastTimer?.invalidate()
     }
 } 
