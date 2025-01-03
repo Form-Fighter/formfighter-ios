@@ -45,6 +45,7 @@ enum FeedbackModels {
     struct MetricDetails: Codable {
         let metric_score: Double?
         let metric_values: String?
+        let knockout_potential: String?
         let pros: [String]?
         let cons: [String]?
         let tactical_advantages: [String]?
@@ -59,20 +60,26 @@ enum FeedbackModels {
         let strategic_applications: [String]?
         let ordered_sequence: String?
         let sequence_correct: Bool?
-        let timing_differences: String?
+        let timing_differences: [Int]?
         let buffer_zone: String?
         let biomechanical_advantages: [String]?
         let counter_vulnerabilities: [String]?
         let strategic_implications: [String]?
         
         enum CodingKeys: String, CodingKey {
-            case metric_score, metric_values, pros, cons
+            case metric_score
+            case metric_values
+            case knockout_potential = "K.O. Potential"
+            case pros
+            case cons
             case tactical_advantages = "tactical advantages"
             case strategic_advantages = "strategic advantages"
             case biomechanical_efficiency = "biomechanical efficiency"
             case counter_opportunities = "counter opportunities"
-            case description, velocity, tier
-            case ko = "K.O."
+            case description
+            case velocity
+            case tier
+            case ko
             case optimal_followups = "optimal follow-ups"
             case strategic_applications = "strategic applications"
             case ordered_sequence = "ordered_sequence"
@@ -82,6 +89,58 @@ enum FeedbackModels {
             case biomechanical_advantages = "biomechanical advantages"
             case counter_vulnerabilities = "counter vulnerabilities"
             case strategic_implications = "strategic implications"
+        }
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            // Handle metric_score that might come as different number types
+            if let intScore = try? container.decode(Int.self, forKey: .metric_score) {
+                metric_score = Double(intScore)
+            } else {
+                metric_score = try? container.decode(Double.self, forKey: .metric_score)
+            }
+            
+            // Handle sequence_correct that might come as different types
+            if let boolValue = try? container.decode(Bool.self, forKey: .sequence_correct) {
+                sequence_correct = boolValue
+            } else if let intValue = try? container.decode(Int.self, forKey: .sequence_correct) {
+                sequence_correct = intValue != 0
+            } else if let stringValue = try? container.decode(String.self, forKey: .sequence_correct) {
+                sequence_correct = stringValue.lowercased() == "true"
+            } else {
+                sequence_correct = nil
+            }
+            
+            // Handle metric_values that might be number or string
+            if let numberValue = try? container.decode(Double.self, forKey: .metric_values) {
+                metric_values = String(numberValue)
+            } else if let intValue = try? container.decode(Int.self, forKey: .metric_values) {
+                metric_values = String(intValue)
+            } else {
+                metric_values = try? container.decode(String.self, forKey: .metric_values)
+            }
+            
+            // Decode remaining properties
+            knockout_potential = try? container.decode(String.self, forKey: .knockout_potential)
+            pros = try? container.decode([String].self, forKey: .pros)
+            cons = try? container.decode([String].self, forKey: .cons)
+            tactical_advantages = try? container.decode([String].self, forKey: .tactical_advantages)
+            strategic_advantages = try? container.decode([String].self, forKey: .strategic_advantages)
+            biomechanical_efficiency = try? container.decode([String].self, forKey: .biomechanical_efficiency)
+            counter_opportunities = try? container.decode([String].self, forKey: .counter_opportunities)
+            description = try? container.decode([String].self, forKey: .description)
+            velocity = try? container.decode(String.self, forKey: .velocity)
+            tier = try? container.decode(String.self, forKey: .tier)
+            optimal_followups = try? container.decode([String].self, forKey: .optimal_followups)
+            strategic_applications = try? container.decode([String].self, forKey: .strategic_applications)
+            ordered_sequence = try? container.decode(String.self, forKey: .ordered_sequence)
+            timing_differences = try? container.decode([Int].self, forKey: .timing_differences)
+            buffer_zone = try? container.decode(String.self, forKey: .buffer_zone)
+            biomechanical_advantages = try? container.decode([String].self, forKey: .biomechanical_advantages)
+            counter_vulnerabilities = try? container.decode([String].self, forKey: .counter_vulnerabilities)
+            strategic_implications = try? container.decode([String].self, forKey: .strategic_implications)
+            ko = try? container.decode(String.self, forKey: .ko)
         }
     }
     

@@ -4,66 +4,123 @@ struct MetricCardView: View {
     let title: String
     let metric: FeedbackModels.MetricDetails
     
+    private var isBooleanMetric: Bool {
+        if let value = metric.metric_values?.lowercased() {
+            return value == "true" || value == "false"
+        }
+        return false
+    }
+    
+    private var booleanValue: Bool {
+        return metric.metric_values?.lowercased() == "true"
+    }
+    
+    private var isVelocityMetric: Bool {
+        return title.lowercased().contains("velocity")
+    }
+    
+    private var shouldHideScore: Bool {
+        let hideScoreMetrics = [
+            "Motion_Sequence",
+            "Whip_Effect_Extension",
+            "Return_Position_Difference_Retraction",
+            "Rear_Hand_In_Guard_Extension",
+            "Hands_Above_Shoulders_Guard",
+            "Foot_Steps_With_Punch_Diff_Extension"
+        ]
+        return hideScoreMetrics.contains(title)
+    }
+    
+    private func tierColor(_ tier: String) -> Color {
+        switch tier.lowercased() {
+        case "elite": return .purple
+        case "professional": return .blue
+        case "advanced": return .green
+        case "intermediate": return .yellow
+        case "fitness": return .orange
+        default: return .gray
+        }
+    }
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            // Header with Score and Tier
-            HStack {
-                Text(title.replacingOccurrences(of: "_", with: " "))
+        VStack(alignment: .leading, spacing: 8) {
+            // Special title for Force Generation
+            if title == "Force_Generation_Extension" {
+                Text("Knock Out Power")
                     .font(.title3)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+            } else {
+                Text(formatTitle(title))
+                    .font(.headline)
+                    .foregroundColor(.primary)
+            }
+            
+            // Special handling for Force Generation
+            if title == "Force_Generation_Extension" {
+                if let koPotential = metric.knockout_potential?.replacingOccurrences(of: " %", with: ""),
+                   let koValue = Double(koPotential) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        // K.O. Potential Progress Bar
+                        ProgressView(value: koValue, total: 100)
+                            .tint(.red)
+                            .scaleEffect(x: 1, y: 2, anchor: .center)
+                        
+                        // Percentage text
+                        Text("\(Int(koValue))% K.O. Potential")
+                            .font(.headline)
+                            .foregroundColor(.red)
+                    }
+                    .padding(.vertical, 4)
+                    
+                    // Force value
+                    if let force = metric.metric_values {
+                        Text("Approximately \(force)")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                }
+            } else if isBooleanMetric {
+                // Boolean indicator
+                HStack {
+                    Image(systemName: booleanValue ? "checkmark.circle.fill" : "x.circle.fill")
+                        .foregroundColor(booleanValue ? .green : .red)
+                        .font(.title)
+                    Text(booleanValue ? "Correct" : "Incorrect")
+                        .foregroundColor(booleanValue ? .green : .red)
+                        .font(.headline)
+                }
+                .padding(.vertical, 4)
+            } else if isVelocityMetric {
+                if !shouldHideScore, let score = metric.metric_score {
+                    Text("Score: \(String(format: "%.2f", score))")
+                        .font(.subheadline)
+                }
                 
-                Spacer()
-                
-                VStack(alignment: .trailing) {
+                if let velocity = metric.metric_values, let tier = metric.tier {
+                    HStack(spacing: 4) {
+                        Text(velocity)
+                            .font(.subheadline)
+                        Text("•")
+                            .foregroundColor(.gray)
+                        Text(tier + " Tier")
+                            .font(.subheadline)
+                            .foregroundColor(tierColor(tier))
+                    }
+                }
+            } else {
+                // Regular metrics
+                if !shouldHideScore {
                     if let score = metric.metric_score {
-                        Text("\(String(format: "%.2f", score))/10")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(ThemeColors.primary)
+                        Text("Score: \(String(format: "%.2f", score))")
+                            .font(.subheadline)
                     }
                     
-                    if let tier = metric.tier {
-                        Text("Tier: \(tier)")
+                    if let values = metric.metric_values {
+                        Text("Value: \(values)")
                             .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.yellow)
                     }
                 }
-            }
-            
-            // Motion Sequence Section
-            if let sequence = metric.ordered_sequence {
-                MotionSequenceView(
-                    sequence: sequence,
-                    isCorrect: metric.sequence_correct ?? false,
-                    timingDifferences: metric.timing_differences
-                )
-            }
-            
-            // Metric Values
-            if let values = metric.metric_values, !values.isEmpty {
-                Text(values)
-                    .foregroundColor(.gray)
-            }
-            
-            // Velocity with Tier
-            if let velocity = metric.velocity {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text(velocity)
-                            .foregroundColor(.blue)
-                        Spacer()
-                        if let tier = metric.tier {
-                            Text("Performance Tier: \(tier)")
-                                .font(.subheadline)
-                                .foregroundColor(.yellow)
-                        }
-                    }
-                }
-                .padding()
-                .background(Color.blue.opacity(0.1))
-                .cornerRadius(8)
             }
             
             // Description
@@ -105,12 +162,13 @@ struct MetricCardView: View {
             MetricSectionView(title: "Strategic Applications", items: metric.strategic_applications, color: .cyan)
         }
         .padding()
-        .background(Color(.systemGray6).opacity(0.3))
+        .background(Color(.systemBackground))
         .cornerRadius(12)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(ThemeColors.primary.opacity(0.2), lineWidth: 1)
-        )
+        .shadow(radius: 2)
+    }
+    
+    private func formatTitle(_ title: String) -> String {
+        return title.replacingOccurrences(of: "_", with: " ")
     }
 }
 
@@ -143,7 +201,7 @@ struct MetricSectionView: View {
 struct MotionSequenceView: View {
     let sequence: String
     let isCorrect: Bool
-    let timingDifferences: String?
+    let timingDifferences: [Int]?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -168,7 +226,8 @@ struct MotionSequenceView: View {
                     .foregroundColor(.gray)
                 
                 VStack(spacing: 12) {
-                    ForEach(sequence.components(separatedBy: "->"), id: \.self) { part in
+                    let parts = sequence.components(separatedBy: "->")
+                    ForEach(Array(parts.enumerated()), id: \.element) { index, part in
                         VStack(spacing: 4) {
                             Text(part.trimmingCharacters(in: .whitespaces))
                                 .padding(.horizontal, 12)
@@ -176,32 +235,23 @@ struct MotionSequenceView: View {
                                 .background(Color(.systemGray5))
                                 .cornerRadius(8)
                             
-                            if part != sequence.components(separatedBy: "->").last {
-                                Image(systemName: "arrow.down")
-                                    .foregroundColor(.red)
-                                    .padding(.vertical, 4)
+                            if index < parts.count - 1, let timingDifferences = timingDifferences, index < timingDifferences.count {
+                                VStack(spacing: 2) {
+                                    Image(systemName: "arrow.down")
+                                        .foregroundColor(.red)
+                                    Text("\(timingDifferences[index]) frames")
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                }
+                                .padding(.vertical, 2)
                             }
                         }
                     }
                 }
-            }
-            
-            // Timing Differences
-            if let timingDifferences = timingDifferences {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Timing Analysis:")
-                        .font(.headline)
-                        .foregroundColor(.yellow)
-                    Text(timingDifferences)
-                        .foregroundColor(.gray)
-                }
-                .padding()
-                .background(Color.yellow.opacity(0.1))
-                .cornerRadius(8)
             }
         }
         .padding()
         .background(Color.blue.opacity(0.1))
         .cornerRadius(12)
     }
-} 
+}
