@@ -44,122 +44,141 @@ struct MetricCardView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            // Special title for Force Generation
-            if title == "Force_Generation_Extension" {
-                Text("Knock Out Power")
+            // Title handling
+            if title == "Motion_Sequence" {
+                Text("Motion Sequence Analysis")
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
+                
+                // Special handling for Motion Sequence
+                if let sequence = metric.metric_values,
+                   let isCorrect = metric.metric_score.map({ $0 > 0.5 }),
+                   let timingDiffs = metric.timing_differences {
+                    MotionSequenceView(
+                        sequence: sequence,
+                        isCorrect: isCorrect,
+                        timingDifferences: timingDiffs
+                    )
+                }
             } else {
-                Text(formatTitle(title))
-                    .font(.headline)
-                    .foregroundColor(.primary)
-            }
-            
-            // Special handling for Force Generation
-            if title == "Force_Generation_Extension" {
-                if let koPotential = metric.knockout_potential?.replacingOccurrences(of: " %", with: ""),
-                   let koValue = Double(koPotential) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        // K.O. Potential Progress Bar
-                        ProgressView(value: koValue, total: 100)
-                            .tint(.red)
-                            .scaleEffect(x: 1, y: 2, anchor: .center)
-                        
-                        // Percentage text
-                        Text("\(Int(koValue))% K.O. Potential")
-                            .font(.headline)
-                            .foregroundColor(.red)
-                    }
-                    .padding(.vertical, 4)
-                    
-                    // Force value
-                    if let force = metric.metric_values {
-                        Text("Approximately \(force)")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                    }
-                }
-            } else if isBooleanMetric {
-                // Boolean indicator
-                HStack {
-                    Image(systemName: booleanValue ? "checkmark.circle.fill" : "x.circle.fill")
-                        .foregroundColor(booleanValue ? .green : .red)
-                        .font(.title)
-                    Text(booleanValue ? "Correct" : "Incorrect")
-                        .foregroundColor(booleanValue ? .green : .red)
+                // Special title for Force Generation
+                if title == "Force_Generation_Extension" {
+                    Text("Knock Out Power")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                } else {
+                    Text(formatTitle(title))
                         .font(.headline)
-                }
-                .padding(.vertical, 4)
-            } else if isVelocityMetric {
-                if !shouldHideScore, let score = metric.metric_score {
-                    Text("Score: \(String(format: "%.2f", score))")
-                        .font(.subheadline)
+                        .foregroundColor(.primary)
                 }
                 
-                if let velocity = metric.metric_values, let tier = metric.tier {
-                    HStack(spacing: 4) {
-                        Text(velocity)
-                            .font(.subheadline)
-                        Text("•")
-                            .foregroundColor(.gray)
-                        Text(tier + " Tier")
-                            .font(.subheadline)
-                            .foregroundColor(tierColor(tier))
+                // Special handling for Force Generation
+                if title == "Force_Generation_Extension" {
+                    if let koPotential = metric.knockout_potential?.replacingOccurrences(of: " %", with: ""),
+                       let koValue = Double(koPotential) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            // K.O. Potential Progress Bar
+                            ProgressView(value: koValue, total: 100)
+                                .tint(.red)
+                                .scaleEffect(x: 1, y: 2, anchor: .center)
+                            
+                            // Percentage text
+                            Text("\(Int(koValue))% K.O. Potential")
+                                .font(.headline)
+                                .foregroundColor(.red)
+                        }
+                        .padding(.vertical, 4)
+                        
+                        // Force value
+                        if let force = metric.metric_values {
+                            Text("Approximately \(force)")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                        }
                     }
-                }
-            } else {
-                // Regular metrics
-                if !shouldHideScore {
-                    if let score = metric.metric_score {
+                } else if isBooleanMetric {
+                    // Boolean indicator
+                    HStack {
+                        Image(systemName: booleanValue ? "checkmark.circle.fill" : "x.circle.fill")
+                            .foregroundColor(booleanValue ? .green : .red)
+                            .font(.title)
+                        Text(booleanValue ? "Correct" : "Incorrect")
+                            .foregroundColor(booleanValue ? .green : .red)
+                            .font(.headline)
+                    }
+                    .padding(.vertical, 4)
+                } else if isVelocityMetric {
+                    if !shouldHideScore, let score = metric.metric_score {
                         Text("Score: \(String(format: "%.2f", score))")
                             .font(.subheadline)
                     }
                     
-                    if let values = metric.metric_values {
-                        Text("Value: \(values)")
-                            .font(.subheadline)
+                    if let velocity = metric.metric_values, let tier = metric.tier {
+                        HStack(spacing: 4) {
+                            Text(velocity)
+                                .font(.subheadline)
+                            Text("•")
+                                .foregroundColor(.gray)
+                            Text(tier + " Tier")
+                                .font(.subheadline)
+                                .foregroundColor(tierColor(tier))
+                        }
+                    }
+                } else {
+                    // Regular metrics
+                    if !shouldHideScore {
+                        if let score = metric.metric_score {
+                            Text("Score: \(String(format: "%.2f", score))")
+                                .font(.subheadline)
+                        }
+                        
+                        if let values = metric.metric_values {
+                            Text("Value: \(values)")
+                                .font(.subheadline)
+                        }
                     }
                 }
-            }
-            
-            // Description
-            if let description = metric.description {
-                ForEach(description, id: \.self) { desc in
-                    Text(desc)
-                        .italic()
-                        .foregroundColor(.gray)
+                
+                // Description
+                if let description = metric.description {
+                    ForEach(description, id: \.self) { desc in
+                        Text(desc)
+                            .italic()
+                            .foregroundColor(.gray)
+                    }
                 }
+                
+                // Buffer Zone Warning
+                if let bufferZone = metric.buffer_zone {
+                    Text(bufferZone)
+                        .fontWeight(.medium)
+                        .foregroundColor(.yellow)
+                }
+                
+                // K.O. Warning
+                if let ko = metric.ko {
+                    Text(ko)
+                        .fontWeight(.bold)
+                        .foregroundColor(.red)
+                }
+                
+                // Main Sections
+                MetricSectionView(title: "Pros", items: metric.pros, color: .green)
+                MetricSectionView(title: "Cons", items: metric.cons, color: .red)
+                
+                // Strategic Section
+                Divider()
+                    .background(ThemeColors.primary.opacity(0.2))
+                
+                MetricSectionView(title: "Tactical Advantages", items: metric.tactical_advantages, color: .yellow)
+                MetricSectionView(title: "Strategic Advantages", items: metric.strategic_advantages, color: .blue)
+                MetricSectionView(title: "Biomechanical Efficiency", items: metric.biomechanical_efficiency, color: .purple)
+                MetricSectionView(title: "Counter Opportunities", items: metric.counter_opportunities, color: .red)
+                MetricSectionView(title: "Optimal Follow-ups", items: metric.optimal_followups, color: .green)
+                MetricSectionView(title: "Strategic Applications", items: metric.strategic_applications, color: .cyan)
             }
-            
-            // Buffer Zone Warning
-            if let bufferZone = metric.buffer_zone {
-                Text(bufferZone)
-                    .fontWeight(.medium)
-                    .foregroundColor(.yellow)
-            }
-            
-            // K.O. Warning
-            if let ko = metric.ko {
-                Text(ko)
-                    .fontWeight(.bold)
-                    .foregroundColor(.red)
-            }
-            
-            // Main Sections
-            MetricSectionView(title: "Pros", items: metric.pros, color: .green)
-            MetricSectionView(title: "Cons", items: metric.cons, color: .red)
-            
-            // Strategic Section
-            Divider()
-                .background(ThemeColors.primary.opacity(0.2))
-            
-            MetricSectionView(title: "Tactical Advantages", items: metric.tactical_advantages, color: .yellow)
-            MetricSectionView(title: "Strategic Advantages", items: metric.strategic_advantages, color: .blue)
-            MetricSectionView(title: "Biomechanical Efficiency", items: metric.biomechanical_efficiency, color: .purple)
-            MetricSectionView(title: "Counter Opportunities", items: metric.counter_opportunities, color: .red)
-            MetricSectionView(title: "Optimal Follow-ups", items: metric.optimal_followups, color: .green)
-            MetricSectionView(title: "Strategic Applications", items: metric.strategic_applications, color: .cyan)
         }
         .padding()
         .background(Color(.systemBackground))

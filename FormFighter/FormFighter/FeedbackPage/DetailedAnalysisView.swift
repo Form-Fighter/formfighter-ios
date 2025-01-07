@@ -170,6 +170,9 @@ struct DetailedAnalysisView: View {
             case "Hand_Velocity_Retraction": return feedback.hand_velocity_retraction
             case "Hands_Above_Shoulders_Guard": return feedback.hands_above_shoulders_guard
             case "Whip_Effect_Extension": return feedback.whip_effect_extension
+            case "Elbow_Velocity_Retraction": return feedback.elbow_velocity_retraction
+            case "Shoulder_Velocity_Extension": return feedback.shoulder_velocity_extension
+            case "Shoulder_Velocity_Retraction": return feedback.shoulder_velocity_retraction
             default: return nil
         }
     }
