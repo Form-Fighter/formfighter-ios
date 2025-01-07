@@ -225,6 +225,7 @@ struct CameraVisionView: View {
                         }
                         .padding()
                     }
+                    .padding(.top, 50)
                     Spacer()
                 }
                 
