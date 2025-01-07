@@ -51,16 +51,19 @@ struct MetricCardView: View {
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
                 
-                // Special handling for Motion Sequence
-                if let sequence = metric.metric_values,
-                   let isCorrect = metric.metric_score.map({ $0 > 0.5 }),
-                   let timingDiffs = metric.timing_differences {
+                if let orderedSequence = metric.ordered_sequence {
                     MotionSequenceView(
-                        sequence: sequence,
-                        isCorrect: isCorrect,
-                        timingDifferences: timingDiffs
+                        sequence: orderedSequence,
+                        isCorrect: metric.sequence_correct ?? false,
+                        timingDifferences: metric.timing_differences ?? []
                     )
                 }
+                
+                // Pros and Cons sections
+                MetricSectionView(title: "Pros", items: metric.pros, color: .green)
+                MetricSectionView(title: "Cons", items: metric.cons, color: .red)
+                
+           
             } else {
                 // Special title for Force Generation
                 if title == "Force_Generation_Extension" {
