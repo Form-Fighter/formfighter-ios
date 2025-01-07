@@ -482,6 +482,25 @@ struct CameraVisionView: View {
             turnBodyPlayer?.play()
         }
     }
+    
+    private func resetForNextRecording() {
+        // Reset all states
+        isRecording = false
+        isCounting = false
+        timer1 = 0
+        timer2 = 0
+        hasTurnedBody = false
+        isCountingDown = false
+        recordingProgress = 0
+        
+        // Stop and reset camera
+        cameraManager.cleanup()
+       
+        cameraManager.startSession()
+        
+        // Reset audio players
+        setupAudioPlayers()
+    }
 }
 
 struct CameraPreviewView: UIViewControllerRepresentable {
@@ -685,21 +704,34 @@ class CameraManager: NSObject, ObservableObject {
     var captureSession: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
     var movieOutput = AVCaptureMovieFileOutput()
-    @Published var isActive = false  // Changed to false by default
+    
+    @Published var isActive = false
+    @Published var setupError: Error?
+    private let sessionQueue = DispatchQueue(label: "com.formfighter.sessionQueue")
     
     func stopSession() {
-        captureSession?.stopRunning()
-        isActive = false
+        sessionQueue.async { [weak self] in
+            self?.captureSession?.stopRunning()
+            DispatchQueue.main.async {
+                self?.isActive = false
+            }
+        }
     }
     
     func startSession() {
         guard !isActive else { return }
-        DispatchQueue.global(qos: .background).async { [weak self] in
+        sessionQueue.async { [weak self] in
             self?.captureSession?.startRunning()
             DispatchQueue.main.async {
                 self?.isActive = true
             }
         }
+    }
+    
+    func cleanup() {
+        stopSession()
+        captureSession = nil
+        previewLayer = nil
     }
     
     func setupCamera(in view: UIView, delegate: AVCaptureVideoDataOutputSampleBufferDelegate) {
@@ -813,6 +845,8 @@ extension CameraManager: AVCaptureFileOutputRecordingDelegate {
                 // Post notification with the URL
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: NSNotification.Name("VideoRecorded"), object: outputFileURL)
+                    self.stopSession()  // Stop the current session
+                    self.startSession() // Restart for next recording
                 }
             } else {
                 Logger.log(message: "Video file not created correctly", event: .error)
