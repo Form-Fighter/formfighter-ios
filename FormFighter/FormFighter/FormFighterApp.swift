@@ -82,6 +82,13 @@ struct FormFighterApp: App {
                 }
                 .tag(TabIdentifier.profile)
 
+            ChallengeView()
+                .tabItem { 
+                    Label("Challenge", systemImage: "trophy.fill")
+                        .foregroundStyle(ThemeColors.primary)
+                }
+                .tag(TabIdentifier.challenge)
+
             SettingsView(vm: SettingsVM())
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
@@ -106,51 +113,13 @@ struct FormFighterApp: App {
                         } else if (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) && !userManager.isAuthenticated {
                             LoginView(showPaywallInTheOnboarding: false)
                         } else if userManager.isAuthenticated && (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
-                            TabView(selection: $selectedTab) {
-                                VisionView()
-                                    .tabItem { 
-                                        Label("Train", systemImage: "figure.boxing")
-                                            .foregroundStyle(ThemeColors.primary)
-                                    }
-                                    .toolbarBackground(.visible, for: .navigationBar)
-                                    .toolbarBackground(ThemeColors.background, for: .navigationBar)
-                                    .navigationBarTitleDisplayMode(.inline)
-                                    .toolbar {
-                                        ToolbarItem(placement: .principal) {
-                                            Text("Train")
-                                                .font(.headline)
-                                                .foregroundColor(ThemeColors.primary)
-                                        }
-                                    }
-                                    .tag(TabIdentifier.vision)
-                               
-                                ProfileView()
-                                    .tabItem { 
-                                        Label("Progress", systemImage: "chart.line.uptrend.xyaxis")
-                                            .foregroundStyle(ThemeColors.primary)
-                                    }
-                                    .tag(TabIdentifier.profile)
-
-                                ChallengeView()
-                                    .tabItem { 
-                                        Label("Challenge", systemImage: "trophy.fill")
-                                            .foregroundStyle(ThemeColors.primary)
-                                    }
-                                    .tag(TabIdentifier.challenge)
-
-                                SettingsView(vm: SettingsVM())
-                                    .tabItem { 
-                                        Label("Settings", systemImage: "gearshape.fill")
-                                            .foregroundStyle(ThemeColors.primary)
-                                    }
-                                    .tag(TabIdentifier.settings)
-                            }
-                            .tint(ThemeColors.primary)
-                            .background(ThemeColors.background)
-                            .toolbarBackground(.visible, for: .tabBar)
-                            .toolbarBackground(ThemeColors.background, for: .tabBar)
+                            normalUI
                         } else {
-                            PaywallView()
+                            if isTestFlight() {
+                                normalUI
+                            } else {
+                                PaywallView()
+                            }
                         }
                     }
                     .opacity(showSplash ? 0 : 1)
@@ -337,10 +306,13 @@ struct FormFighterApp: App {
     
     private func isTestFlight() -> Bool {
         guard let appStoreReceiptURL = Bundle.main.appStoreReceiptURL else {
+            print("🧪 TestFlight check: No receipt URL found")
             return false
         }
         
-        return appStoreReceiptURL.lastPathComponent == "sandboxReceipt"
+        let isTestFlight = appStoreReceiptURL.lastPathComponent == "sandboxReceipt"
+        print("🧪 TestFlight check: \(isTestFlight ? "Is TestFlight build" : "Is App Store build")")
+        return isTestFlight
     }
     
     private func handleDeepLink(_ url: URL) {
