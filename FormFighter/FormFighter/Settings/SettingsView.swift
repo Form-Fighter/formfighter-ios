@@ -243,18 +243,14 @@ struct SettingsView: View {
                 LabeledContent {
                     TextField("Type your first name", 
                              text: Binding(
-                                get: { 
-                                    print("Getting firstName: \(userManager.firstName)")
-                                    return userManager.firstName 
-                                },
-                                set: { newValue in
-                                    print("Setting firstName to: \(newValue)")
-                                    userManager.firstName = newValue
-                                    vm.updateUserInfo(
-                                        firstName: newValue,
-                                        lastName: userManager.lastName
-                                    )
-                                }
+                                 get: { userManager.firstName },
+                                 set: { newValue in
+                                     userManager.firstName = newValue
+                                     vm.updateUserInfo(
+                                         firstName: newValue,
+                                         lastName: userManager.lastName
+                                     )
+                                 }
                              ))
                         .multilineTextAlignment(.trailing)
                         .fontWeight(.medium)

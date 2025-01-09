@@ -106,30 +106,17 @@ struct LoginView: View {
         Task {
             do {
                 let user = try await authManager.signInWithApple()
-                print( "Signed in with Apple with user: \(user.email)")
+                print("Signed in with Apple with user: \(user.email)")
                 
-                // Set authentication state first
-                userManager.setFirebaseAuthUser()
-                userManager.setAuthenticationState()
-                
-                // Then handle other operations
+                // This will handle both new and existing users
                 try await userManager.fetchAllData()
-                Tracker.loggedIn()
-                hasCompletedOnboarding = true
-            } catch UserManagerError.notExists {
-                print( "There is no user in the database, creating a new one...")
                 
-                // Set authentication state first for new users too
-                userManager.setFirebaseAuthUser()
+                // Set authentication state after data is loaded
                 userManager.setAuthenticationState()
-                
-                try await userManager.createNewUserInDatabase()
-                try await userManager.fetchAllData()
-                storeFreeCreditsIfNeeded()
-                Tracker.signedUp()
                 hasCompletedOnboarding = true
+                
             } catch {
-                print( error.localizedDescription)
+                print(error.localizedDescription)
             }
             
             isSigningIn = false

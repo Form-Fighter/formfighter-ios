@@ -9,6 +9,7 @@ class SettingsVM: ObservableObject {
     @Published var isShowingDeleteUserAlert = false
     @Published var isShowingDeleteSignIn = false
     var userTip: TipShim? = nil
+    private var updateTask: Task<Void, Never>?
     
     init(firestoreService: DatabaseServiceProtocol = FirestoreService(),
          authManager: AuthManager = AuthManager()) {
@@ -71,7 +72,7 @@ class SettingsVM: ObservableObject {
         }
     }
     
-    func updateUserInfo(
+    @MainActor func updateUserInfo(
         firstName: String,
         lastName: String,
         height: String? = nil,
@@ -82,40 +83,35 @@ class SettingsVM: ObservableObject {
     ) {
         guard let currentUser = userManager.user else { return }
         
-        let userId = currentUser.id
-        let fullName = "\(firstName) \(lastName)"
+        // Cancel any pending update
+        updateTask?.cancel()
         
         let updatedUser = User(
-            id: userId,
-            name: fullName,
+            id: currentUser.id,
+            name: "\(firstName) \(lastName)",
             firstName: firstName,
             lastName: lastName,
             coachID: currentUser.coachID,
             myCoach: currentUser.myCoach,
-            height: height ?? currentUser.height,
-            weight: weight ?? currentUser.weight,
-            reach: reach ?? currentUser.reach,
-            preferredStance: preferredStance ?? currentUser.preferredStance,
+            height: height ?? currentUser.height ?? "",
+            weight: weight ?? currentUser.weight ?? "",
+            reach: reach ?? currentUser.reach ?? "",
+            preferredStance: preferredStance ?? currentUser.preferredStance ?? "",
             email: email ?? currentUser.email,
             currentStreak: currentUser.currentStreak,
             lastTrainingDate: currentUser.lastTrainingDate
         )
         
-        Task {
+        // Update local state immediately
+        userManager.updateUserOnMainThread(updatedUser)
+        
+        // Create new debounced update task for Firestore
+        updateTask = Task {
             do {
-                try await firestoreService.updateUser(userID: userId, with: updatedUser)
-                
-                await MainActor.run {
-                    userManager.user = updatedUser
-                }
-                
-                Logger.log(message: "User info updated successfully", event: .debug)
+                try await Task.sleep(nanoseconds: 500_000_000) // 0.5 second debounce
+                try await firestoreService.updateUser(userID: currentUser.id, with: updatedUser)
             } catch {
-                await MainActor.run {
-                    showAlert = true
-                    alertMessage = "Failed to update user info"
-                }
-                Logger.log(message: error.localizedDescription, event: .error)
+                Logger.log(message: "Failed to update user: \(error.localizedDescription)", event: .error)
             }
         }
     }

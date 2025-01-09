@@ -48,22 +48,55 @@ class UserManager: ObservableObject {
         self.purchasesManager = purchasesManager
         
         setAuthenticationState()
-        setFirebaseAuthUser()
         subscribeToCurrentEntitlement()
         
-        Task {
-            try? await fetchAllData()
+        // Only fetch data if we're authenticated
+        if Auth.auth().currentUser != nil {
+            Task {
+                try? await fetchAllData()
+            }
         }
     }
     
     func fetchAllData() async throws {
-        try await fetchUserInfo()
+        guard let currentUser = Auth.auth().currentUser else { return }
         
-        // Only request notification permissions if user is authenticated
-        if Auth.auth().currentUser != nil {
+        do {
+            // Try to fetch existing user data
+            if let fetchedUser = try await firestoreService.fetchUser(userID: currentUser.uid) {
+                // User exists, update local user object
+                self.user = fetchedUser
+                Logger.log(message: "Existing user data fetched successfully", event: .debug)
+            } else {
+                // User doesn't exist in database, create new one
+                Logger.log(message: "User not found in database, creating new", event: .debug)
+                let newUser = User(
+                    id: currentUser.uid,
+                    name: currentUser.displayName ?? "",
+                    firstName: "",
+                    lastName: "",
+                    coachID: "",
+                    myCoach: "",
+                    height: "",
+                    weight: "",
+                    reach: "",
+                    preferredStance: nil,
+                    email: currentUser.email ?? "",
+                    currentStreak: 0,
+                    lastTrainingDate: nil
+                )
+                
+                try await firestoreService.createUser(userID: newUser.id, with: newUser)
+                self.user = newUser
+            }
+            
+            // Only request notification permissions if user is authenticated
             DispatchQueue.main.async {
                 NotificationManager.shared.requestNotificationPermission()
             }
+        } catch {
+            Logger.log(message: "Error fetching/creating user: \(error.localizedDescription)", event: .error)
+            throw error
         }
     }
     
@@ -71,7 +104,21 @@ class UserManager: ObservableObject {
         guard let currentUser = Auth.auth().currentUser else { return }
 //        let newUser = User(id: currentUser.uid, name: currentUser.displayName ?? "", firstName: "", lastName: "", weight: "", height: "", wingSpan: "", preferredStance: "", email: currentUser.email ?? "")
         
-        let newUser = User(id: currentUser.uid, name: currentUser.displayName ?? "", firstName: "", lastName: "", coachID: "", myCoach: "", email: currentUser.email ?? "")
+        let newUser = User(
+            id: currentUser.uid,
+            name: currentUser.displayName ?? "",
+            firstName: "",
+            lastName: "",
+            coachID: "",
+            myCoach: "",
+            height: "",
+            weight: "",
+            reach: "",
+            preferredStance: nil,
+            email: currentUser.email ?? "",
+            currentStreak: 0,
+            lastTrainingDate: nil
+        )
         
         try await firestoreService.createUser(userID: newUser.id, with: newUser)
     }
@@ -197,6 +244,13 @@ class UserManager: ObservableObject {
                     return
                 }
                 
+                // Skip processing if this is a local change
+                if document.metadata.hasPendingWrites {
+                    print("📝 Skipping local change update")
+                    return
+                }
+                
+                // Process streak updates
                 if let newStreak = document.data()?["currentStreak"] as? Int {
                     print("🔥 Received streak update: \(newStreak)")
                     DispatchQueue.main.async {
@@ -208,8 +262,10 @@ class UserManager: ObservableObject {
                     }
                 }
                 
-                // Update other user properties as needed
-                if let userData = try? document.data(as: User.self) {
+                // Only update user data if there are actual changes
+                if let userData = try? document.data(as: User.self),
+                   userData != self?.user {  // Add Equatable conformance to User
+                    print("👤 Received user data update")
                     DispatchQueue.main.async {
                         self?.user = userData
                     }
@@ -237,6 +293,11 @@ class UserManager: ObservableObject {
         Task {
             await badgeService.processEvent(.streakUpdated(days: newStreak))
         }
+    }
+    
+    @MainActor
+    func updateUserOnMainThread(_ newUser: User) {
+        self.user = newUser
     }
 }
 

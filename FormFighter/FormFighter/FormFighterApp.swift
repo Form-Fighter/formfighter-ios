@@ -107,19 +107,14 @@ struct FormFighterApp: App {
             NavigationStack {
                 ZStack {
                     Group {
-                        // TODO: Remove this once we have a proper onboarding
                         if !hasCompletedOnboarding {
                             onboarding
-                        } else if (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) && !userManager.isAuthenticated {
+                        } else if !userManager.isAuthenticated {
                             LoginView(showPaywallInTheOnboarding: false)
-                        } else if userManager.isAuthenticated && (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
+                        } else if isTestFlight() || (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
                             normalUI
                         } else {
-                            if isTestFlight() {
-                                normalUI
-                            } else {
-                                PaywallView()
-                            }
+                            PaywallView()
                         }
                     }
                     .opacity(showSplash ? 0 : 1)
@@ -305,14 +300,37 @@ struct FormFighterApp: App {
     }
     
     private func isTestFlight() -> Bool {
-        guard let appStoreReceiptURL = Bundle.main.appStoreReceiptURL else {
-            print("🧪 TestFlight check: No receipt URL found")
-            return false
+        #if DEBUG
+            print("🧪 Debug build (running from Xcode)")
+            return true
+        #else
+            // For TestFlight and App Store builds (Release mode)
+            let isTestFlight = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+                || Bundle.main.appStoreReceiptURL?.path.contains("sandboxReceipt") == true 
+                || Bundle.main.path(forResource: "embedded", ofType: "mobileprovision") != nil
+                || Bundle.main.bundleIdentifier?.hasSuffix(".dev") == true
+                || Bundle.main.bundleIdentifier?.hasSuffix(".beta") == true
+                || (Bundle.main.infoDictionary?["ProvisioningStyle"] as? String) == "Development"
+                || isRunningInTestFlight()
+            
+            print("🧪 Release build - Environment checks:")
+            print("- Receipt path: \(Bundle.main.appStoreReceiptURL?.path ?? "nil")")
+            print("- Has provisioning profile: \(Bundle.main.path(forResource: "embedded", ofType: "mobileprovision") != nil)")
+            print("- Bundle ID: \(Bundle.main.bundleIdentifier ?? "nil")")
+            print("- Final determination: \(isTestFlight ? "TestFlight" : "App Store")")
+            
+            return isTestFlight
+        #endif
+    }
+    
+    private func isRunningInTestFlight() -> Bool {
+        if let receiptUrl = Bundle.main.appStoreReceiptURL {
+            return receiptUrl.path.contains("sandboxReceipt")
         }
         
-        let isTestFlight = appStoreReceiptURL.lastPathComponent == "sandboxReceipt"
-        print("🧪 TestFlight check: \(isTestFlight ? "Is TestFlight build" : "Is App Store build")")
-        return isTestFlight
+        // Check for TestFlight environment variable
+        return ProcessInfo.processInfo.environment["SIMULATOR_RUNTIME_VERSION"] == nil 
+            && ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil
     }
     
     private func handleDeepLink(_ url: URL) {

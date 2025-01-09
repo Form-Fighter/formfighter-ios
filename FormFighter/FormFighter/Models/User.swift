@@ -1,6 +1,6 @@
 import Foundation
 
-struct User: Codable {
+struct User: Codable, Equatable {
     let id: String
     var name: String
     var firstName: String
@@ -14,6 +14,22 @@ struct User: Codable {
     let email: String
     var currentStreak: Int?
     var lastTrainingDate: Date?
+    
+    static func == (lhs: User, rhs: User) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.name == rhs.name &&
+        lhs.firstName == rhs.firstName &&
+        lhs.lastName == rhs.lastName &&
+        lhs.coachID == rhs.coachID &&
+        lhs.myCoach == rhs.myCoach &&
+        lhs.height == rhs.height &&
+        lhs.weight == rhs.weight &&
+        lhs.reach == rhs.reach &&
+        lhs.preferredStance == rhs.preferredStance &&
+        lhs.email == rhs.email &&
+        lhs.currentStreak == rhs.currentStreak &&
+        lhs.lastTrainingDate == rhs.lastTrainingDate
+    }
 }
 
 extension User {
