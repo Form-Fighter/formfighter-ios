@@ -99,7 +99,7 @@ struct DetailedAnalysisView: View {
             // Metrics Display
             ScrollView {
                 LazyVStack(spacing: 16) {
-                    ForEach(Array(filteredMetrics.enumerated()), id: \.1) { index, metricKey in
+                    ForEach(filteredMetrics, id: \.self) { metricKey in
                         if let feedback = viewModel.feedback?.modelFeedback,
                            let body = feedback.body {
                             if let metricData = self.getMetricData(for: metricKey, from: body) {

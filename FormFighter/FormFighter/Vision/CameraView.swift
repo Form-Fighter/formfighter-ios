@@ -71,12 +71,9 @@ struct CameraVisionView: View {
                     let point = smoothedBodyPoints[index]
                     Circle()
                         .fill(Color.red)
-                        .frame(width: 12, height: 12)
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white, lineWidth: 2)
-                        )
-                        .position(point)
+                        .frame(width: 15, height: 15)
+                        .position(x: point.x, y: point.y)
+                        .shadow(color: .black, radius: 2)
                 }
                 .ignoresSafeArea()
                 
@@ -519,7 +516,22 @@ struct CameraPreviewView: UIViewControllerRepresentable {
     class Coordinator: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         var parent: CameraPreviewView
         var hasTurnedBodyCompleted = false
-        let confidenceThreshold: VNConfidence = 0.3  // Increased from 0.00001
+        
+        // Update these values
+        private let confidenceThreshold: VNConfidence = 0.3  // Increased from 0.3
+        private let requiredConsecutiveFrames = 5  // Increased from 3
+        private let stateChangeDebounceInterval: TimeInterval = 1.0  // Increased from 0.5
+        
+        // Add this missing property
+        private var stableBodyDetection = false
+        
+        // Existing properties...
+        private var recentAngles: [Double] = []
+        private let angleHistoryCount = 5
+        private var lastBodyStateChange = Date()
+        private var consecutiveBodyDetections = 0
+        private var consecutiveBodyLosses = 0
+        private let requiredFramesForLoss = 10  // More frames required to lose detection than to gain it
         
         init(parent: CameraPreviewView) {
             self.parent = parent
@@ -534,15 +546,6 @@ struct CameraPreviewView: UIViewControllerRepresentable {
             .rightAnkle
         ]
         
-        // Add these properties
-        private var lastBodyStateChange = Date()
-        private var stateChangeDebounceInterval: TimeInterval = 0.5  // Half second minimum between changes
-        
-        // Add these state tracking variables
-        private var consecutiveBodyDetections = 0
-        private var consecutiveBodyLosses = 0
-        private let requiredConsecutiveFrames = 3  // Number of consistent frames needed
-        
         func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
             guard parent.cameraManager.isActive else { return }
             if parent.isCountingDown { return }
@@ -552,7 +555,6 @@ struct CameraPreviewView: UIViewControllerRepresentable {
             let request = VNDetectHumanBodyPoseRequest { [self] request, error in
                 guard let results = request.results as? [VNHumanBodyPoseObservation], error == nil else { return }
                 
-                var newBodyPoints: [CGPoint] = []
                 var bodyDetected = false
                 var bodyComplete = true
                 
@@ -560,17 +562,23 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                     if let recognizedPoints = try? bodyObservation.recognizedPoints(.all) {
                         bodyDetected = !recognizedPoints.isEmpty
                         
-                        // First check all required points are present
+                        var newPoints: [CGPoint] = []
                         for pointName in requiredPoints {
                             if let point = recognizedPoints[pointName],
                                point.confidence > confidenceThreshold {
-                                let normalizedPoint = point.location
-                                let convertedPoint = convertVisionPoint(normalizedPoint, to: parent.cameraManager.previewLayer)
-                                newBodyPoints.append(convertedPoint)
+                                let convertedPoint = convertVisionPoint(point.location, to: parent.cameraManager.previewLayer)
+                                newPoints.append(convertedPoint)
                             } else {
                                 bodyComplete = false
                                 break
                             }
+                        }
+                        
+                        // Update points on main thread
+                        DispatchQueue.main.async {
+                            self.parent.detectedBodyPoints = newPoints
+                            // Use existing smoothing function
+                            self.parent.smoothedBodyPoints = self.parent.applySmoothing(to: newPoints)
                         }
                         
                         // Update consecutive frame counters
@@ -582,54 +590,55 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                             consecutiveBodyDetections = 0
                         }
                         
-                        // Then check shoulders and hips for turn if body is complete
-                        if bodyComplete,
-                           let leftShoulder = recognizedPoints[.leftShoulder],
-                           let rightShoulder = recognizedPoints[.rightShoulder],
-                           let leftHip = recognizedPoints[.leftHip],
-                           let rightHip = recognizedPoints[.rightHip],
-                           leftShoulder.confidence > confidenceThreshold,
-                           rightShoulder.confidence > confidenceThreshold,
-                           leftHip.confidence > confidenceThreshold,
-                           rightHip.confidence > confidenceThreshold {
-                            
-                            let shoulderAngle = calculateAngleBetweenPoints(
-                                left: leftShoulder.location,
-                                right: rightShoulder.location
-                            )
-                            let hipAngle = calculateAngleBetweenPoints(
-                                left: leftHip.location,
-                                right: rightHip.location
-                            )
-                            
-                            let shoulderAdjustedAngle = abs(shoulderAngle - 90)
-                            let hipAdjustedAngle = abs(hipAngle - 90)
-                            
-                            // Both shoulders and hips need to be turned
-                            if shoulderAdjustedAngle >= 3 && shoulderAdjustedAngle <= 10 &&
-                               hipAdjustedAngle >= 3 && hipAdjustedAngle <= 10 {
-                                DispatchQueue.main.async {
-                                    self.parent.hasTurnedBody = true
+                        // Body turn detection with smoothing
+                        if bodyComplete {
+                            if let leftShoulder = recognizedPoints[.leftShoulder],
+                               let rightShoulder = recognizedPoints[.rightShoulder],
+                               let leftHip = recognizedPoints[.leftHip],
+                               let rightHip = recognizedPoints[.rightHip] {
+                                
+                                let shoulderAngle = calculateAngleBetweenPoints(
+                                    left: leftShoulder.location,
+                                    right: rightShoulder.location
+                                )
+                                
+                                // Add to recent angles for smoothing
+                                recentAngles.append(shoulderAngle)
+                                if recentAngles.count > angleHistoryCount {
+                                    recentAngles.removeFirst()
                                 }
-                            }
-                        }
-                        
-                        // Only update UI state after meeting threshold and debounce time
-                        let now = Date()
-                        if now.timeIntervalSince(lastBodyStateChange) >= stateChangeDebounceInterval {
-                            print("About to change body detection state")
-                            DispatchQueue.main.async {
-                                if self.consecutiveBodyDetections >= self.requiredConsecutiveFrames {
-                                    self.parent.isBodyDetected = true
-                                    self.parent.isBodyComplete = true
-                                    self.lastBodyStateChange = now
-                                    print("Body Detection State: TRUE - consecutive detections: \(self.consecutiveBodyDetections)")
-                                } else if self.consecutiveBodyLosses >= self.requiredConsecutiveFrames {
-                                    self.parent.isBodyDetected = false
-                                    self.parent.isBodyComplete = false
-                                    self.lastBodyStateChange = now
-                                    print("Body Detection State: FALSE - consecutive losses: \(self.consecutiveBodyLosses)")
-                                   // self.parent.turnBodyPlayer?.play()
+                                
+                                let smoothedAngle = recentAngles.reduce(0.0, +) / Double(recentAngles.count)
+                                let smoothedAdjustedAngle = abs(smoothedAngle - 90)
+                                
+                                // Update current turn angle for progress display
+                                DispatchQueue.main.async {
+                                    self.parent.currentTurnAngle = smoothedAdjustedAngle
+                                }
+                                
+                                // Update UI with debouncing
+                                let now = Date()
+                                if now.timeIntervalSince(lastBodyStateChange) >= stateChangeDebounceInterval {
+                                    DispatchQueue.main.async {
+                                        // Update stable detection state
+                                        if self.consecutiveBodyDetections >= self.requiredConsecutiveFrames {
+                                            self.stableBodyDetection = true
+                                        } else if self.consecutiveBodyLosses >= self.requiredFramesForLoss {
+                                            self.stableBodyDetection = false
+                                        }
+                                        
+                                        // Only update UI based on stable detection
+                                        self.parent.isBodyDetected = self.stableBodyDetection
+                                        self.parent.isBodyComplete = self.stableBodyDetection
+                                        
+                                        // Keep the turn detection logic separate
+                                        if let smoothedAdjustedAngle = self.calculateSmoothedAngle(from: recognizedPoints),
+                                           smoothedAdjustedAngle >= 3 && smoothedAdjustedAngle <= 10 {
+                                            self.parent.hasTurnedBody = true
+                                        }
+                                        
+                                        self.lastBodyStateChange = now
+                                    }
                                 }
                             }
                         }
@@ -655,6 +664,18 @@ struct CameraPreviewView: UIViewControllerRepresentable {
             let reflectedX = layer.bounds.width - convertedPoint.x
             return CGPoint(x: reflectedX, y: convertedPoint.y)
         }
+        
+        private func calculateSmoothedAngle(from points: [VNHumanBodyPoseObservation.JointName: VNRecognizedPoint]) -> Double? {
+            if let leftShoulder = points[.leftShoulder],
+               let rightShoulder = points[.rightShoulder] {
+                let shoulderAngle = calculateAngleBetweenPoints(
+                    left: leftShoulder.location,
+                    right: rightShoulder.location
+                )
+                return abs(shoulderAngle - 90)
+            }
+            return nil
+        }
     }
     
     func makeCoordinator() -> Coordinator {
@@ -678,7 +699,7 @@ struct CameraPreviewView: UIViewControllerRepresentable {
         }
         
         // Stronger smoothing factor (increased from 0.7)
-        let smoothingFactor: CGFloat = 0.85
+        let smoothingFactor: CGFloat = 0.8
         
         return zip(smoothedBodyPoints, points).map { previous, current in
             // Only apply smoothing if points are within a reasonable distance
@@ -877,13 +898,14 @@ struct InstructionsOverlay: View {
     @Binding var hasSeenInstructions: Bool
     
     let instructions = [
-        Instruction(number: 1, text: "Turn on audio for best experience 🔊", icon: "speaker.wave.2.fill"),
-        Instruction(number: 2, text: "Record in a well lit indoor room", icon: "light.min"),
-        Instruction(number: 3, text: "Stand 6-8 feet from camera", icon: "person.and.arrow.left.and.arrow.right"),
-        Instruction(number: 4, text: "Show your full body in frame", icon: "figure.stand"),
-        Instruction(number: 5, text: "Turn your body 7 degrees left or right to show your stance", icon: "arrow.triangle.2.circlepath"),
-        Instruction(number: 6, text: "Hold still for recording", icon: "video.fill"),
-        Instruction(number: 7, text: "Perform ONE jab in 2 seconds", icon: "figure.boxing")
+        Instruction(number: 1, text: "Turn on audio on 🔊", icon: "speaker.wave.2.fill"),
+        Instruction(number: 2, text: "only one person in camera", icon: "person.fill"),
+        Instruction(number: 3, text: "Record in a well lit room", icon: "light.min"),
+        Instruction(number: 4, text: "Stand 6-8 feet from camera", icon: "person.and.arrow.left.and.arrow.right"),
+        Instruction(number: 5, text: "Show your full body in frame", icon: "figure.stand"),
+        Instruction(number: 6, text: "Turn your body 7 degrees stance", icon: "arrow.triangle.2.circlepath"),
+        Instruction(number: 7, text: "Hold still for recording", icon: "video.fill"),
+        Instruction(number: 8, text: "Perform ONE jab", icon: "figure.boxing")
     ]
     
     var body: some View {

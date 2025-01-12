@@ -4722,6 +4722,9 @@
     "points" : {
 
     },
+    "Power" : {
+
+    },
     "Premium" : {
       "localizations" : {
         "de" : {
@@ -5120,9 +5123,6 @@
 
     },
     "Score: %@" : {
-
-    },
-    "Score: %lld" : {
 
     },
     "Select Meal" : {
@@ -6651,6 +6651,9 @@
       }
     },
     "Value: %@" : {
+
+    },
+    "Velocity" : {
 
     },
     "View Challenge History" : {

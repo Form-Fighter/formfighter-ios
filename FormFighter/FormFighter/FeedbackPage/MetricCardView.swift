@@ -113,11 +113,6 @@ struct MetricCardView: View {
                     }
                     .padding(.vertical, 4)
                 } else if isVelocityMetric {
-                    if !shouldHideScore, let score = metric.metric_score {
-                        Text("Score: \(String(format: "%.2f", score))")
-                            .font(.subheadline)
-                    }
-                    
                     if let velocity = metric.metric_values, let tier = metric.tier {
                         HStack(spacing: 4) {
                             Text(velocity)
@@ -132,11 +127,6 @@ struct MetricCardView: View {
                 } else {
                     // Regular metrics
                     if !shouldHideScore {
-                        if let score = metric.metric_score {
-                            Text("Score: \(String(format: "%.2f", score))")
-                                .font(.subheadline)
-                        }
-                        
                         if let values = metric.metric_values {
                             Text("Value: \(values)")
                                 .font(.subheadline)

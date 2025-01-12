@@ -56,7 +56,7 @@ enum FeedbackStatus: String {
         case .buildingWhamNetwork: return "analyzing your skeleton..."
         case .dataPreprocessing: return "processing your technique..."
         case .performingSlam: return "extracting small movements..."
-        case .extractingImageFeatures: return "extracing smaller movements..."
+        case .extractingImageFeatures: return "extracting smaller movements..."
         case .runningWhamNetwork: return "analyzing all the movements together..."
         case .runningSmplify: return "running your technique through the algorithm..."
         case .creatingVisualization: return "creating a visual of your technique..."

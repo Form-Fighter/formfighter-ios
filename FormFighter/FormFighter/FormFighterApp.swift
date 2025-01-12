@@ -107,15 +107,22 @@ struct FormFighterApp: App {
             NavigationStack {
                 ZStack {
                     Group {
-                        if !hasCompletedOnboarding {
+                        // if !hasCompletedOnboarding {
+                        //     onboarding
+                        // } else if !userManager.isAuthenticated {
+                        //     LoginView(showPaywallInTheOnboarding: false)
+                        // } else if isTestFlight() || (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
+                        //     normalUI
+                        // } else {
+                        //     PaywallView()
+                        // }
+                         if !hasCompletedOnboarding {
                             onboarding
                         } else if !userManager.isAuthenticated {
                             LoginView(showPaywallInTheOnboarding: false)
-                        } else if isTestFlight() || (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
-                            normalUI
                         } else {
-                            PaywallView()
-                        }
+                            normalUI
+                        } 
                     }
                     .opacity(showSplash ? 0 : 1)
                     
@@ -170,7 +177,10 @@ struct FormFighterApp: App {
                     }
                 }
                 .onChange(of: userManager.isAuthenticated) { isAuth in
-                    if isAuth && (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
+                    // if isAuth && (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
+                    //     checkAndHandlePendingChallenge()
+                    // }
+                     if isAuth {
                         checkAndHandlePendingChallenge()
                     }
                 }
@@ -347,7 +357,17 @@ struct FormFighterApp: App {
             print("- Challenge ID: \(id)")
             print("- Referrer: \(referrer ?? "none")")
             
-            if !userManager.userId.isEmpty && purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed {
+            // if !userManager.userId.isEmpty && purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed {
+            //     print("👤 User authenticated and premium, processing challenge...")
+            //     selectedTab = .challenge
+            //     savePendingChallenge(id: id, referrer: referrer)
+            // } else {
+            //     print("⚠️ User not logged in or not premium, saving challenge for later")
+            //     savePendingChallenge(id: id, referrer: referrer)
+
+            // }
+
+              if !userManager.userId.isEmpty {
                 print("👤 User authenticated and premium, processing challenge...")
                 selectedTab = .challenge
                 savePendingChallenge(id: id, referrer: referrer)
@@ -492,7 +512,15 @@ struct FormFighterApp: App {
         print("🔄 Found pending challenge: \(pendingChallenge.challengeId)")
         
         // Only process if user is authenticated and has premium or elite subscription
-        if !userManager.userId.isEmpty && (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
+        // if !userManager.userId.isEmpty && (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
+        //     // Just switch to challenge tab, the ChallengeView.onAppear will handle the pending challenge
+        //     selectedTab = .challenge
+        //     print("👤 User ready, switching to challenge tab")
+        // } else {
+        //     print("⏳ User not ready to process challenge (Premium: \(purchasesManager.premiumSubscribed), Elite: \(purchasesManager.eliteSubscribed), Authenticated: \(!userManager.userId.isEmpty))")
+        // }
+
+         if !userManager.userId.isEmpty {
             // Just switch to challenge tab, the ChallengeView.onAppear will handle the pending challenge
             selectedTab = .challenge
             print("👤 User ready, switching to challenge tab")

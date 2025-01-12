@@ -14,10 +14,8 @@ struct VisionView: View {
         ZStack {
             Color.black.ignoresSafeArea()
             ThemeColors.background.ignoresSafeArea()
-            
-            if !purchasesManager.premiumSubscribed && !purchasesManager.eliteSubscribed {
-                PaywallView()
-            } else if showCameraView {
+
+              if showCameraView {
                 CameraVisionView(cameraManager: cameraManager)
                     .onAppear {
                         cameraManager.startSession()
@@ -55,12 +53,54 @@ struct VisionView: View {
                         .fill(Color.white)
                         .shadow(radius: 5)
                 )
-                .onTapGesture {
-                    if !purchasesManager.premiumSubscribed && !purchasesManager.eliteSubscribed {
-                        showPaywall = true
-                    }
-                }
             }
+            
+            // if !purchasesManager.premiumSubscribed && !purchasesManager.eliteSubscribed {
+            //     PaywallView()
+            // } else if showCameraView {
+            //     CameraVisionView(cameraManager: cameraManager)
+            //         .onAppear {
+            //             cameraManager.startSession()
+            //         }
+            //         .onDisappear {
+            //             cameraManager.stopSession()
+            //         }
+            //         .safeAreaInset(edge: .bottom) {
+            //             Color.clear.frame(height: 0)
+            //         }
+            // } else {
+            //     VStack {
+            //         Text("🥊 Muay Thai Vision Access 🥊")
+            //             .font(.title2)
+            //             .fontWeight(.bold)
+            //             .padding(.bottom, 5)
+                    
+            //         Text(missingPermissionsMessage)
+            //             .foregroundColor(.red)
+            //             .padding()
+            //             .multilineTextAlignment(.center)
+                    
+            //         Button(action: openSettings) {
+            //             Text("Enable Camera Access")
+            //                 .foregroundColor(.white)
+            //                 .padding()
+            //                 .background(Color.red)
+            //                 .cornerRadius(10)
+            //                 .shadow(radius: 3)
+            //         }
+            //     }
+            //     .padding()
+            //     .background(
+            //         RoundedRectangle(cornerRadius: 15)
+            //             .fill(Color.white)
+            //             .shadow(radius: 5)
+            //     )
+            //     .onTapGesture {
+            //         if !purchasesManager.premiumSubscribed && !purchasesManager.eliteSubscribed {
+            //             showPaywall = true
+            //         }
+            //     }
+            // }
         }
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showPaywall) {

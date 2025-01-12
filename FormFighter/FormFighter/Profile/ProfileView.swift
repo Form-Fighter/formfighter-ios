@@ -342,7 +342,7 @@ enum TimePeriod: String {
 }
 
 enum SortOption: String {
-    case date, score
+    case date, velocity, power
 }
 
 struct StatsView: View {
@@ -512,23 +512,66 @@ struct PunchListView: View {
         }
     }
     
-    // Keep existing sorting logic
+    // Helper function to extract number from strings like "1.16 meters/second" or "281.9 Newtons"
+    private func extractNumber(from string: String) -> Double {
+        let numbers = string.components(separatedBy: CharacterSet.decimalDigits.inverted)
+            .joined(separator: ".")
+            .components(separatedBy: ".")
+        if numbers.count >= 2 {
+            return Double("\(numbers[0]).\(numbers[1])") ?? 0.0
+        }
+        return Double(numbers[0]) ?? 0.0
+    }
+    
     private var sortedFeedbacks: [FeedbackListItem] {
         switch sortOption {
-        case .date: return viewModel.feedbacks.sorted(by: { $0.date > $1.date })
-        case .score: return viewModel.feedbacks.sorted(by: { $0.score > $1.score })
+        case .date:
+            return viewModel.feedbacks.sorted(by: { $0.date > $1.date })
+            
+        case .velocity:
+            return viewModel.feedbacks.compactMap { feedback in
+                // Only include feedbacks that have velocity data
+                guard let velocityMetric = feedback.modelFeedback?.body?.overall_velocity_extension?.metric_values else {
+                    return nil
+                }
+                return feedback
+            }.sorted { first, second in
+                guard let firstValue = first.modelFeedback?.body?.overall_velocity_extension?.metric_values,
+                      let secondValue = second.modelFeedback?.body?.overall_velocity_extension?.metric_values else {
+                    return false
+                }
+                return extractNumber(from: firstValue) > extractNumber(from: secondValue)
+            }
+            
+        case .power:
+            return viewModel.feedbacks.compactMap { feedback in
+                // Try KO potential first, then metric_values
+                guard let powerMetric = feedback.modelFeedback?.body?.force_generation_extension,
+                      let powerValue = powerMetric.knockout_potential ?? powerMetric.metric_values else {
+                    return nil
+                }
+                return feedback
+            }.sorted { first, second in
+                guard let firstMetric = first.modelFeedback?.body?.force_generation_extension,
+                      let secondMetric = second.modelFeedback?.body?.force_generation_extension else {
+                    return false
+                }
+                
+                // Get values, preferring KO potential over metric_values
+                let firstValue = firstMetric.knockout_potential ?? firstMetric.metric_values ?? "0"
+                let secondValue = secondMetric.knockout_potential ?? secondMetric.metric_values ?? "0"
+                
+                return extractNumber(from: firstValue) > extractNumber(from: secondValue)
+            }
         }
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            // Placeholders moved to top
-          
-            
-            // Sort picker
             Picker("Sort by", selection: $sortOption) {
                 Text("Date").tag(SortOption.date)
-                Text("Score").tag(SortOption.score)
+                Text("Velocity").tag(SortOption.velocity)
+                Text("Power").tag(SortOption.power)
             }
             .pickerStyle(SegmentedPickerStyle())
             
@@ -544,7 +587,7 @@ struct PunchListView: View {
                             
                             ForEach(group.1) { feedback in
                                 NavigationLink(destination: FeedbackView(feedbackId: feedback.id, videoURL: nil)) {
-                                    FeedbackRowView(feedback: feedback)
+                                    FeedbackRowView(feedback: feedback, sortOption: sortOption)
                                 }
                                 .buttonStyle(PlainButtonStyle())
                                 .transition(.opacity.combined(with: .offset(y: 5)))
@@ -628,6 +671,28 @@ struct PersonalBestView: View {
 // New helper views
 struct FeedbackRowView: View {
     let feedback: FeedbackListItem
+    let sortOption: SortOption
+    
+    private func getDisplayValue() -> String? {
+        switch sortOption {
+        case .date, .velocity:
+            guard let velocityValue = feedback.modelFeedback?.body?.overall_velocity_extension?.metric_values else {
+                return nil
+            }
+            return velocityValue
+            
+        case .power:
+            guard let powerMetric = feedback.modelFeedback?.body?.force_generation_extension,
+                  let koPotential = powerMetric.knockout_potential?.replacingOccurrences(of: " %", with: "") else {
+                return nil
+            }
+            // Convert to Double, round to nearest integer, and format with K.O. Potential label
+            if let koValue = Double(koPotential) {
+                return "\(Int(round(koValue)))% K.O."
+            }
+            return nil
+        }
+    }
     
     var body: some View {
         HStack {
@@ -654,8 +719,8 @@ struct FeedbackRowView: View {
                     .foregroundColor(.secondary)
             }
             Spacer()
-            if feedback.isCompleted {
-                Text("Score: \(Int(feedback.score))")
+            if feedback.isCompleted, let displayValue = getDisplayValue() {
+                Text(displayValue)
                     .foregroundColor(ThemeColors.primary)
                     .font(.system(.body, design: .rounded, weight: .semibold))
             }

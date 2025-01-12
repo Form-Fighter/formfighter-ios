@@ -305,9 +305,9 @@ struct FeedbackView: View {
                 
                 if let feedback = viewModel.feedback {
                     HStack {
-                        if let jabScore = feedback.modelFeedback?.body?.jab_score {
-                            ScoreCardView(jabScore: jabScore)
-                        }
+                        // if let jabScore = feedback.modelFeedback?.body?.jab_score {
+                        //     ScoreCardView(jabScore: jabScore)
+                        // }
                     }
                     .padding(.horizontal)
                     
@@ -368,25 +368,25 @@ struct FeedbackView: View {
                     }
                     
                     // Comparison View (at the bottom)
-                    if let feedbackDetails = feedback.modelFeedback?.body?.feedback,
-                       let currentScore = feedback.modelFeedback?.body?.jab_score {
+                    // if let feedbackDetails = feedback.modelFeedback?.body?.feedback,
+                    //    let currentScore = feedback.modelFeedback?.body?.jab_score {
                         
-                        let bestScores = FeedbackManager.shared.getBestScores()
+                    //     let bestScores = FeedbackManager.shared.getBestScores()
                         
-                        if bestScores.overall > 0 {  // Only show if there's a previous best
-                            JabComparisonView(
-                                currentScore: currentScore,
-                                currentExtension: feedbackDetails.extensionFeedback?.score ?? 0,
-                                currentGuard: feedbackDetails.guardPosition?.score ?? 0,
-                                currentRetraction: feedbackDetails.retraction?.score ?? 0,
-                                bestScore: bestScores.overall,
-                                bestExtension: bestScores.extension,
-                                bestGuard: bestScores.guardPosition,
-                                bestRetraction: bestScores.retraction
-                            )
-                            .padding(.horizontal)
-                        }
-                    }
+                    //     if bestScores.overall > 0 {  // Only show if there's a previous best
+                    //         JabComparisonView(
+                    //             currentScore: currentScore,
+                    //             currentExtension: feedbackDetails.extensionFeedback?.score ?? 0,
+                    //             currentGuard: feedbackDetails.guardPosition?.score ?? 0,
+                    //             currentRetraction: feedbackDetails.retraction?.score ?? 0,
+                    //             bestScore: bestScores.overall,
+                    //             bestExtension: bestScores.extension,
+                    //             bestGuard: bestScores.guardPosition,
+                    //             bestRetraction: bestScores.retraction
+                    //         )
+                    //         .padding(.horizontal)
+                    //     }
+                    // }
                     
                 
                 }
@@ -728,12 +728,12 @@ struct FeedbackView: View {
                 
                 // Create text layer for score
                 let textLayer = CATextLayer()
-                let overallScore: Double = viewModel.feedback?.modelFeedback?.body?.jab_score ?? 0
+               // let overallScore: Double = viewModel.feedback?.modelFeedback?.body?.jab_score ?? 0
                 
-                print("💬 Creating text layer with score: \(overallScore)")
+             //   print("💬 Creating text layer with score: \(overallScore)")
                 
                 // Configure text layer - MAKING IT RED AND BIGGER
-                textLayer.string = String(format: "Score: %.1f/10", overallScore)
+             //   textLayer.string = String(format: "Score: %.1f/10", overallScore)
                 textLayer.fontSize = cardHeight * 0.6  // Made it bigger!
                 textLayer.foregroundColor = CGColor(red: 1, green: 0, blue: 0, alpha: 1)  // BRIGHT RED
                 textLayer.alignmentMode = .center
