@@ -1,101 +1,150 @@
 import SwiftUI
 
 struct JabComparisonView: View {
-    let currentScore: Double
-    let currentExtension: Double
-    let currentGuard: Double
-    let currentRetraction: Double
+    @Binding var compareWithLastPunch: Bool
     
-    let bestScore: Double
-    let bestExtension: Double
-    let bestGuard: Double
-    let bestRetraction: Double
+    // Current punch metrics
+    let handVelocityExtension: Double
+    let handVelocityRetraction: Double
+    let footVelocityExtension: Double
+    let footVelocityRetraction: Double
+    let powerGeneration: Double
     
-    private func scoreColor(_ current: Double, _ best: Double) -> Color {
-        if current > best { return .green }
-        if current < best { return .red }
-        return .primary
+    // Comparison metrics (either last punch or average)
+    let comparisonHandVelocityExtension: Double
+    let comparisonHandVelocityRetraction: Double
+    let comparisonFootVelocityExtension: Double
+    let comparisonFootVelocityRetraction: Double
+    let comparisonPowerGeneration: Double
+    
+    private func calculatePercentageChange(_ current: Double, _ comparison: Double) -> Double {
+        guard comparison != 0 else { return 0 }
+        return ((current - comparison) / comparison) * 100
     }
     
-    private func differenceText(_ current: Double, _ best: Double) -> String {
-        let diff = current - best
-        if abs(diff) < 0.1 { return "=" }
-        return String(format: "%.1f", diff)
+    private func formatPercentage(_ value: Double) -> String {
+        if abs(value) < 0.1 { return "=" }
+        return String(format: "%+.1f%%", value)
+    }
+    
+    private var hasLastPunchData: Bool {
+        compareWithLastPunch && 
+        comparisonHandVelocityExtension == 0 && 
+        comparisonHandVelocityRetraction == 0 && 
+        comparisonFootVelocityExtension == 0 && 
+        comparisonFootVelocityRetraction == 0
+    }
+    
+    private func formatSpeed(_ speed: Double) -> String {
+        if speed == 0 { return "N/A" }
+        return String(format: "%.1f m/s", speed)
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Compared with Your Best")
-                .font(.headline)
-                .padding(.bottom, 4)
+            // Title and Toggle
+            HStack {
+                Text("Performance Comparison")
+                    .font(.headline)
+                Spacer()
+                VStack(alignment: .trailing) {
+                    Text(compareWithLastPunch ? "vs Last Punch" : "vs Average")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Toggle("Compare with last punch", isOn: $compareWithLastPunch)
+                        .labelsHidden()
+                }
+            }
+            .padding(.bottom, 4)
             
-            HStack(spacing: 20) {
-                // Labels Column
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Overall")
+            if hasLastPunchData {
+                Text("No previous punch data available")
+                    .foregroundColor(.secondary)
+                    .italic()
+                    .padding(.vertical)
+            } else {
+                // Hands Section
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Hands")
+                        .font(.subheadline)
                         .fontWeight(.medium)
-                    Text("Extension")
-                        .fontWeight(.medium)
-                        .font(.caption)
-                    Text("Guard")
-                        .fontWeight(.medium)
-                        .font(.caption)
-                    Text("Retraction")
-                        .fontWeight(.medium)
-                        .font(.caption)
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Extension")
+                                .font(.caption)
+                            Text(formatSpeed(handVelocityExtension))
+                                .fontWeight(.medium)
+                            Text(formatPercentage(calculatePercentageChange(
+                                handVelocityExtension,
+                                comparisonHandVelocityExtension
+                            )))
+                            .foregroundColor(handVelocityExtension >= comparisonHandVelocityExtension ? .green : .red)
+                        }
+                        Spacer()
+                        VStack(alignment: .trailing) {
+                            Text("Retraction")
+                                .font(.caption)
+                            Text(formatSpeed(handVelocityRetraction))
+                                .fontWeight(.medium)
+                            Text(formatPercentage(calculatePercentageChange(
+                                handVelocityRetraction,
+                                comparisonHandVelocityRetraction
+                            )))
+                            .foregroundColor(handVelocityRetraction >= comparisonHandVelocityRetraction ? .green : .red)
+                        }
+                    }
                 }
                 
-                // Current Scores Column
-                VStack(alignment: .trailing, spacing: 16) {
-                    Text("Current")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .padding(.bottom, 4)
-                    Text(String(format: "%.1f", currentScore))
-                    Text(String(format: "%.1f", currentExtension))
+                // Lead Foot Section
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Lead Foot")
                         .font(.subheadline)
-                    Text(String(format: "%.1f", currentGuard))
-                        .font(.subheadline)
-                    Text(String(format: "%.1f", currentRetraction))
-                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("Extension")
+                                .font(.caption)
+                            Text(formatSpeed(footVelocityExtension))
+                                .fontWeight(.medium)
+                            Text(formatPercentage(calculatePercentageChange(
+                                footVelocityExtension,
+                                comparisonFootVelocityExtension
+                            )))
+                            .foregroundColor(footVelocityExtension >= comparisonFootVelocityExtension ? .green : .red)
+                        }
+                        Spacer()
+                        VStack(alignment: .trailing) {
+                            Text("Retraction")
+                                .font(.caption)
+                            Text(formatSpeed(footVelocityRetraction))
+                                .fontWeight(.medium)
+                            Text(formatPercentage(calculatePercentageChange(
+                                footVelocityRetraction,
+                                comparisonFootVelocityRetraction
+                            )))
+                            .foregroundColor(footVelocityRetraction >= comparisonFootVelocityRetraction ? .green : .red)
+                        }
+                    }
                 }
-                .foregroundColor(.primary)
                 
-                // Best Scores Column
-                VStack(alignment: .trailing, spacing: 16) {
-                    Text("Best")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .padding(.bottom, 4)
-                    Text(String(format: "%.1f", bestScore))
-                    Text(String(format: "%.1f", bestExtension))
+                // Power Generation Section
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Power Generation")
                         .font(.subheadline)
-                    Text(String(format: "%.1f", bestGuard))
-                        .font(.subheadline)
-                    Text(String(format: "%.1f", bestRetraction))
-                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    
+                    HStack {
+                        Text(String(format: "%.1f N", powerGeneration))
+                            .fontWeight(.medium)
+                        Text(formatPercentage(calculatePercentageChange(
+                            powerGeneration,
+                            comparisonPowerGeneration
+                        )))
+                        .foregroundColor(powerGeneration >= comparisonPowerGeneration ? .green : .red)
+                    }
                 }
-                .foregroundColor(.secondary)
-                
-                // Difference Column
-                VStack(alignment: .center, spacing: 16) {
-                    Text("Diff")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .padding(.bottom, 4)
-                    Text(differenceText(currentScore, bestScore))
-                        .foregroundColor(scoreColor(currentScore, bestScore))
-                    Text(differenceText(currentExtension, bestExtension))
-                        .font(.subheadline)
-                        .foregroundColor(scoreColor(currentExtension, bestExtension))
-                    Text(differenceText(currentGuard, bestGuard))
-                        .font(.subheadline)
-                        .foregroundColor(scoreColor(currentGuard, bestGuard))
-                    Text(differenceText(currentRetraction, bestRetraction))
-                        .font(.subheadline)
-                        .foregroundColor(scoreColor(currentRetraction, bestRetraction))
-                }
-                .fontWeight(.bold)
             }
         }
         .padding()

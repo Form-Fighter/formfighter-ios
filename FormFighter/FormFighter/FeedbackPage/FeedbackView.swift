@@ -13,6 +13,7 @@ struct FeedbackView: View {
     
     @State private var isLoading = true
     @State private var hasAppeared = false
+    @State private var compareWithLastPunch = false
     
     init(feedbackId: String, videoURL: URL? = nil) {
         self.feedbackId = feedbackId
@@ -303,6 +304,67 @@ struct FeedbackView: View {
                         .animation(.spring(response: 0.5, dampingFraction: 0.6), value: hasSubmittedFeedback)
                 }
                 
+                // Add Speed Comparisons
+                if let feedback = viewModel.feedback,
+                   let metrics = feedback.modelFeedback?.body {
+                    
+                    // Extract current metrics
+                    let handExtension = FeedbackManager.shared.extractVelocity(from: metrics.hand_velocity_extension)
+                    let handRetraction = FeedbackManager.shared.extractVelocity(from: metrics.hand_velocity_retraction)
+                    let footExtension = FeedbackManager.shared.extractVelocity(from: metrics.foot_velocity_extension)
+                    let footRetraction = FeedbackManager.shared.extractVelocity(from: metrics.foot_velocity_retraction)
+                    let power = FeedbackManager.shared.extractPower(from: metrics.force_generation_extension)
+                    
+                    // Get comparison metrics (either last punch or average)
+                    let lastFeedback = FeedbackManager.shared.getLastFeedback(excluding: feedbackId)
+                    let averageMetrics = FeedbackManager.shared.getAverageMetrics()
+                    
+                    
+                    
+                    
+                    // Create the comparison view with the appropriate metrics
+                    JabComparisonView(
+                        compareWithLastPunch: $compareWithLastPunch,
+                        handVelocityExtension: handExtension,
+                        handVelocityRetraction: handRetraction,
+                        footVelocityExtension: footExtension,
+                        footVelocityRetraction: footRetraction,
+                        powerGeneration: power,
+                        comparisonHandVelocityExtension: compareWithLastPunch 
+                            ? (FeedbackManager.shared.extractVelocity(from: lastFeedback?.modelFeedback?.body?.hand_velocity_extension) ?? 0.0)
+                            : averageMetrics.handExtensionSpeed,
+                        comparisonHandVelocityRetraction: compareWithLastPunch 
+                            ? (FeedbackManager.shared.extractVelocity(from: lastFeedback?.modelFeedback?.body?.hand_velocity_retraction) ?? 0.0)
+                            : averageMetrics.handRetractionSpeed,
+                        comparisonFootVelocityExtension: compareWithLastPunch 
+                            ? (FeedbackManager.shared.extractVelocity(from: lastFeedback?.modelFeedback?.body?.foot_velocity_extension) ?? 0.0)
+                            : averageMetrics.footExtensionSpeed,
+                        comparisonFootVelocityRetraction: compareWithLastPunch 
+                            ? (FeedbackManager.shared.extractVelocity(from: lastFeedback?.modelFeedback?.body?.foot_velocity_retraction) ?? 0.0)
+                            : averageMetrics.footRetractionSpeed,
+                        comparisonPowerGeneration: compareWithLastPunch 
+                            ? (FeedbackManager.shared.extractPower(from: lastFeedback?.modelFeedback?.body?.force_generation_extension) ?? 0.0)
+                            : averageMetrics.power
+                    )
+                    .padding(.horizontal)
+                    
+                    // Speed Comparisons
+                    VStack(spacing: 16) {
+                        SpeedComparisonView(
+                            extensionSpeed: handExtension,
+                            retractionSpeed: handRetraction,
+                            title: "Lead Hand Speed"
+                        )
+                        
+                        SpeedComparisonView(
+                            extensionSpeed: footExtension,
+                            retractionSpeed: footRetraction,
+                            title: "Lead Foot Speed"
+                        )
+                    }
+                    .padding(.horizontal)
+                }
+                
                 if let feedback = viewModel.feedback {
                     HStack {
                         // if let jabScore = feedback.modelFeedback?.body?.jab_score {
@@ -367,26 +429,7 @@ struct FeedbackView: View {
                         DetailedAnalysisView(viewModel: viewModel)
                     }
                     
-                    // Comparison View (at the bottom)
-                    // if let feedbackDetails = feedback.modelFeedback?.body?.feedback,
-                    //    let currentScore = feedback.modelFeedback?.body?.jab_score {
-                        
-                    //     let bestScores = FeedbackManager.shared.getBestScores()
-                        
-                    //     if bestScores.overall > 0 {  // Only show if there's a previous best
-                    //         JabComparisonView(
-                    //             currentScore: currentScore,
-                    //             currentExtension: feedbackDetails.extensionFeedback?.score ?? 0,
-                    //             currentGuard: feedbackDetails.guardPosition?.score ?? 0,
-                    //             currentRetraction: feedbackDetails.retraction?.score ?? 0,
-                    //             bestScore: bestScores.overall,
-                    //             bestExtension: bestScores.extension,
-                    //             bestGuard: bestScores.guardPosition,
-                    //             bestRetraction: bestScores.retraction
-                    //         )
-                    //         .padding(.horizontal)
-                    //     }
-                    // }
+                  
                     
                 
                 }
@@ -1206,7 +1249,4 @@ struct ToastView: View {
             .padding(.bottom, 20)
     }
 }
-
-
-
 

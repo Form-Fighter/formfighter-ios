@@ -107,6 +107,8 @@ struct FormFighterApp: App {
             NavigationStack {
                 ZStack {
                     Group {
+
+                        // PRODUCTION VERSION
                         // if !hasCompletedOnboarding {
                         //     onboarding
                         // } else if !userManager.isAuthenticated {
@@ -116,6 +118,8 @@ struct FormFighterApp: App {
                         // } else {
                         //     PaywallView()
                         // }
+
+                        // TEST FLIGHT BETA   VERSION
                          if !hasCompletedOnboarding {
                             onboarding
                         } else if !userManager.isAuthenticated {

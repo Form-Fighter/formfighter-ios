@@ -79,7 +79,7 @@ struct PaywallView: View {
                                     .font(.special(.title2, weight: .bold))
                                     .foregroundColor(.white)
                                 
-                                 Text("Start with 3-day free trial")
+                                 Text("Start with 7-day free trial")
                                         .font(.special(.subheadline, weight: .medium))
                                         .foregroundColor(.white.opacity(0.7))
                                 

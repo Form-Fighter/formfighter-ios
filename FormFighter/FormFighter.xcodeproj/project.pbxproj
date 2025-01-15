@@ -187,6 +187,7 @@
 		B2B9F0BA2CB0A8EF00D7CFC8 /* ProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B92CB0A8EF00D7CFC8 /* ProfileVM.swift */; };
 		B2B9F0BC2CB0BA8000D7CFC8 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0BB2CB0BA8000D7CFC8 /* CameraView.swift */; };
 		B2C9DEED2C6AA65500508A59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */; };
+		B2D92D262D36E67700032377 /* SpeedComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D92D252D36E67700032377 /* SpeedComparisonView.swift */; };
 		B2F447E92D08062F0032E53C /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447E82D08062F0032E53C /* Challenge.swift */; };
 		B2F447F22D081AE20032E53C /* ActiveChallengeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447EA2D081AE20032E53C /* ActiveChallengeView.swift */; };
 		B2F447F32D081AE20032E53C /* ChallengeHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447EB2D081AE20032E53C /* ChallengeHistoryView.swift */; };
@@ -375,6 +376,7 @@
 		B2B9F0B92CB0A8EF00D7CFC8 /* ProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVM.swift; sourceTree = "<group>"; };
 		B2B9F0BB2CB0BA8000D7CFC8 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B2D92D252D36E67700032377 /* SpeedComparisonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeedComparisonView.swift; sourceTree = "<group>"; };
 		B2F447E82D08062F0032E53C /* Challenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 		B2F447EA2D081AE20032E53C /* ActiveChallengeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveChallengeView.swift; sourceTree = "<group>"; };
 		B2F447EB2D081AE20032E53C /* ChallengeHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeHistoryView.swift; sourceTree = "<group>"; };
@@ -817,6 +819,7 @@
 		B21411722CE537BB00699B15 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				B2D92D252D36E67700032377 /* SpeedComparisonView.swift */,
 				B2F447F82D0822800032E53C /* ShareSheet.swift */,
 				B252ED782D07A9FC00013524 /* JabComparisonView.swift */,
 				B252ED742D076DAB00013524 /* BadgeCelebrationView.swift */,
@@ -1187,6 +1190,7 @@
 				81D531F42B84A9160044D990 /* Tracker.swift in Sources */,
 				8125D5C42B7BFA16001A846B /* DALLERequestModel.swift in Sources */,
 				818D3F852B6FA53C00DF7299 /* OnePageOnboardingView.swift in Sources */,
+				B2D92D262D36E67700032377 /* SpeedComparisonView.swift in Sources */,
 				B21411862CE6478000699B15 /* LineChartView.swift in Sources */,
 				B2F447E92D08062F0032E53C /* Challenge.swift in Sources */,
 				818D3FE02B71413000DF7299 /* +String.swift in Sources */,

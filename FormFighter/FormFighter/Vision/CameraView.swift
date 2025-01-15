@@ -633,7 +633,7 @@ struct CameraPreviewView: UIViewControllerRepresentable {
                                         
                                         // Keep the turn detection logic separate
                                         if let smoothedAdjustedAngle = self.calculateSmoothedAngle(from: recognizedPoints),
-                                           smoothedAdjustedAngle >= 3 && smoothedAdjustedAngle <= 10 {
+                                           smoothedAdjustedAngle >= 2 && smoothedAdjustedAngle <= 12 {
                                             self.parent.hasTurnedBody = true
                                         }
                                         

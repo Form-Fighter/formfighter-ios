@@ -1514,6 +1514,9 @@
     "24h" : {
 
     },
+    "A slower retraction than extension speed may leave you vulnerable by creating gaps in your defense." : {
+
+    },
     "Accept" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1972,9 +1975,6 @@
 
     },
     "Before You Go..." : {
-
-    },
-    "Best" : {
 
     },
     "Best: %lld" : {
@@ -2511,7 +2511,7 @@
         }
       }
     },
-    "Compared with Your Best" : {
+    "Compare with last punch" : {
 
     },
     "Complete one training session every day to maintain your streak. Keep training to unlock special badges!" : {
@@ -2740,9 +2740,6 @@
 
     },
     "Create Challenge" : {
-
-    },
-    "Current" : {
 
     },
     "DALL·E" : {
@@ -3032,9 +3029,6 @@
     "Detected Sequence:" : {
 
     },
-    "Diff" : {
-
-    },
     "Discard" : {
 
     },
@@ -3291,7 +3285,7 @@
     "Get Started Now" : {
 
     },
-    "Guard" : {
+    "Hands" : {
 
     },
     "Height" : {
@@ -3787,6 +3781,9 @@
     "Last Name" : {
 
     },
+    "Lead Foot" : {
+
+    },
     "Leaderboard" : {
 
     },
@@ -4183,6 +4180,9 @@
     "No data available for this time period" : {
 
     },
+    "No previous punch data available" : {
+
+    },
     "No training sessions yet" : {
 
     },
@@ -4345,9 +4345,6 @@
     "Optional" : {
 
     },
-    "Overall" : {
-
-    },
     "P R E M I U M" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4429,6 +4426,9 @@
 
     },
     "Perfect Your Jab" : {
+
+    },
+    "Performance Comparison" : {
 
     },
     "Photo Library" : {
@@ -4723,6 +4723,9 @@
 
     },
     "Power" : {
+
+    },
+    "Power Generation" : {
 
     },
     "Premium" : {
@@ -5424,6 +5427,9 @@
     "Sort by" : {
 
     },
+    "Speed Comparison" : {
+
+    },
     "Stance" : {
 
     },
@@ -5504,7 +5510,7 @@
     "Start Subscription" : {
 
     },
-    "Start with 3-day free trial" : {
+    "Start with 7-day free trial" : {
 
     },
     "Start Your Journey" : {
@@ -6729,6 +6735,12 @@
           }
         }
       }
+    },
+    "vs Average" : {
+
+    },
+    "vs Last Punch" : {
+
     },
     "We'd love to know why you're considering cancelling:" : {
 

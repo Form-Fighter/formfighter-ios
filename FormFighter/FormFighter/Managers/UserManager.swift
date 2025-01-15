@@ -64,12 +64,24 @@ class UserManager: ObservableObject {
         do {
             // Try to fetch existing user data
             if let fetchedUser = try await firestoreService.fetchUser(userID: currentUser.uid) {
-                // User exists, update local user object
-                self.user = fetchedUser
+                // If user exists but has empty height/weight, set defaults
+                var updatedUser = fetchedUser
+                if fetchedUser.height?.isEmpty ?? true {
+                    updatedUser.height = .defaultHeight
+                }
+                if fetchedUser.weight?.isEmpty ?? true {
+                    updatedUser.weight = .defaultWeight
+                }
+                
+                // Only update in Firestore if we made changes
+                if updatedUser != fetchedUser {
+                    try await firestoreService.updateUser(userID: updatedUser.id, with: updatedUser)
+                }
+                
+                self.user = updatedUser
                 Logger.log(message: "Existing user data fetched successfully", event: .debug)
             } else {
-                // User doesn't exist in database, create new one
-                Logger.log(message: "User not found in database, creating new", event: .debug)
+                // User doesn't exist in database, create new one with defaults
                 let newUser = User(
                     id: currentUser.uid,
                     name: currentUser.displayName ?? "",
@@ -77,8 +89,8 @@ class UserManager: ObservableObject {
                     lastName: "",
                     coachID: "",
                     myCoach: "",
-                    height: "",
-                    weight: "",
+                    height: .defaultHeight,
+                    weight: .defaultWeight,
                     reach: "",
                     preferredStance: nil,
                     email: currentUser.email ?? "",
@@ -330,12 +342,18 @@ extension UserManager {
     }
     
     var weight: String {
-        get { user?.weight ?? "" }
+        get { 
+            let currentWeight = user?.weight ?? ""
+            return currentWeight.isEmpty ? .defaultWeight : currentWeight
+        }
         set { user?.weight = newValue }
     }
     
     var height: String {
-        get { user?.height ?? "" }
+        get {
+            let currentHeight = user?.height ?? ""
+            return currentHeight.isEmpty ? .defaultHeight : currentHeight
+        }
         set { user?.height = newValue }
     }
     

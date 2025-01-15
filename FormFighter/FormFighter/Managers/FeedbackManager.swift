@@ -140,4 +140,207 @@ class FeedbackManager: ObservableObject {
         
         return BestScores(overall: 0, extension: 0, guardPosition: 0, retraction: 0)
     }
+    
+    func getLastFeedback(excluding currentId: String) -> FeedbackListItem? {
+        return feedbacks
+            .filter { $0.id != currentId && $0.isCompleted }
+            .sorted { $0.date > $1.date }
+            .first
+    }
+    
+    func getAverageMetrics() -> AverageMetrics {
+        let completedFeedbacks = feedbacks.filter { $0.isCompleted }
+        print("📊 Found \(completedFeedbacks.count) completed feedbacks")
+        
+        var totalHandExtension = 0.0
+        var totalHandRetraction = 0.0
+        var totalFootExtension = 0.0
+        var totalFootRetraction = 0.0
+        var totalPower = 0.0
+        var count = 0
+        
+        for feedback in completedFeedbacks {
+            if let metrics = feedback.modelFeedback?.body {
+                print("📊 Processing feedback: \(feedback.id)")
+                
+                let handExt = extractVelocity(from: metrics.hand_velocity_extension)
+                let handRet = extractVelocity(from: metrics.hand_velocity_retraction)
+                let footExt = extractVelocity(from: metrics.foot_velocity_extension)
+                let footRet = extractVelocity(from: metrics.foot_velocity_retraction)
+                let power = extractPower(from: metrics.force_generation_extension)
+                
+                totalHandExtension += handExt
+                totalHandRetraction += handRet
+                totalFootExtension += footExt
+                totalFootRetraction += footRet
+                totalPower += power
+                count += 1
+            }
+        }
+        
+        // Avoid division by zero
+        guard count > 0 else {
+            print("⚠️ No valid feedbacks found for averaging")
+            return AverageMetrics(
+                handExtensionSpeed: 0.0,
+                handRetractionSpeed: 0.0,
+                footExtensionSpeed: 0.0,
+                footRetractionSpeed: 0.0,
+                power: 0.0
+            )
+        }
+        
+        let averages = AverageMetrics(
+            handExtensionSpeed: totalHandExtension / Double(count),
+            handRetractionSpeed: totalHandRetraction / Double(count),
+            footExtensionSpeed: totalFootExtension / Double(count),
+            footRetractionSpeed: totalFootRetraction / Double(count),
+            power: totalPower / Double(count)
+        )
+        
+        print("""
+            📊 Final averages:
+            - Hand Extension: \(averages.handExtensionSpeed)
+            - Hand Retraction: \(averages.handRetractionSpeed)
+            - Foot Extension: \(averages.footExtensionSpeed)
+            - Foot Retraction: \(averages.footRetractionSpeed)
+            - Power: \(averages.power)
+            """)
+        
+        return averages
+    }
+    
+     func createMetricDetails(value: Double, unit: String) -> [String: Any] {
+        return [
+            "metric_values": "\(String(format: "%.2f")) \(unit)"
+        ]
+    }
+    
+     func extractVelocity(from metric: FeedbackModels.MetricDetails?) -> Double {
+        guard let valueString = metric?.metric_values else {
+            print("⚠️ No metric_values found")
+            return 0.0
+        }
+        
+        print("📊 Raw velocity string: \(valueString)")
+        
+        // The format appears to be "0.54 meters/second " with a space at the end
+        let cleanedString = valueString.trimmingCharacters(in: .whitespaces)
+                                     .replacingOccurrences(of: " meters/second", with: "")
+        
+        print("📊 Cleaned velocity string: \(cleanedString)")
+        
+        guard let value = Double(cleanedString) else {
+            print("❌ Failed to convert to Double: \(cleanedString)")
+            return 0.0
+        }
+        
+        print("✅ Extracted velocity: \(value)")
+        return value
+    }
+    
+     func extractPower(from metric: FeedbackModels.MetricDetails?) -> Double {
+        guard let valueString = metric?.metric_values else {
+            print("⚠️ No metric_values found")
+            return 0.0
+        }
+        
+        print("📊 Raw power string: \(valueString)")
+        
+        // The format appears to be "130.16 Newtons " with a space at the end
+        let cleanedString = valueString.trimmingCharacters(in: .whitespaces)
+                                     .replacingOccurrences(of: " Newtons", with: "")
+        
+        print("📊 Cleaned power string: \(cleanedString)")
+        
+        guard let value = Double(cleanedString) else {
+            print("❌ Failed to convert to Double: \(cleanedString)")
+            return 0.0
+        }
+        
+        print("✅ Extracted power: \(value)")
+        return value
+    }
+}
+
+public struct AverageMetrics {
+    let handExtensionSpeed: Double
+    let handRetractionSpeed: Double
+    let footExtensionSpeed: Double
+    let footRetractionSpeed: Double
+    let power: Double
+}
+
+// Extension to make AverageMetrics compatible with BodyFeedback
+extension AverageMetrics {
+    var body: FeedbackModels.BodyFeedback? {
+        let metrics = createMetrics()
+        return FeedbackModels.BodyFeedback(
+            feedback: nil,
+            jab_score: nil,
+            chin_tucked_extension: nil,
+            torso_rotation_extension: nil,
+            shoulder_rotation_retraction: nil,
+            hip_rotation_extension: nil,
+            hip_velocity_retraction: nil,
+            elbow_velocity_extension: nil,
+            motion_sequence: nil,
+            hip_velocity_extension: nil,
+            foot_placement_retraction: nil,
+            foot_stepping_direction_extension: nil,
+            leg_to_shoulder_width_guard: nil,
+            jab_straight_line_extension: nil,
+            return_position_difference_retraction: nil,
+            foot_placement_guard: nil,
+            rear_hand_in_guard_extension: nil,
+            overall_velocity_extension: nil,
+            foot_velocity_extension: metrics.foot,
+            elbow_straight_line_extension: nil,
+            force_generation_extension: metrics.power,
+            mean_back_leg_angle_extension: nil,
+            head_stability_guard: nil,
+            foot_steps_with_punch_diff_extension: nil,
+            shoulder_velocity_extension: nil,
+            elbow_protection_extension: nil,
+            chin_lift_extension: nil,
+            shoulder_velocity_retraction: nil,
+            wrist_angle_extension: nil,
+            foot_velocity_retraction: metrics.footRet,
+            jab_arm_extension: nil,
+            elbow_flare_extension: nil,
+            elbow_velocity_retraction: nil,
+            step_distance_extension: nil,
+            mean_back_leg_angle_guard: nil,
+            overall_velocity_retraction: nil,
+            head_stability_extension: nil,
+            foot_placement_extension: nil,
+            chin_tucked_guard: nil,
+            chin_tucked_retraction: nil,
+            hand_velocity_extension: metrics.hand,
+            hand_velocity_retraction: metrics.handRet,
+            hands_above_shoulders_guard: nil,
+            hip_rotation_retraction: nil,
+            torso_rotation_retraction: nil,
+            hand_drop_before_extension: nil,
+            whip_effect_extension: nil,
+            shoulder_rotation_extension: nil,
+            head_stability_retraction: nil,
+            mean_back_leg_angle_retraction: nil
+        )
+    }
+    
+    private func createMetrics() -> (hand: FeedbackModels.MetricDetails?, handRet: FeedbackModels.MetricDetails?, foot: FeedbackModels.MetricDetails?, footRet: FeedbackModels.MetricDetails?, power: FeedbackModels.MetricDetails?) {
+        return (
+            hand: createMetricDetails(value: handExtensionSpeed, unit: "meters/second"),
+            handRet: createMetricDetails(value: handRetractionSpeed, unit: "meters/second"),
+            foot: createMetricDetails(value: footExtensionSpeed, unit: "meters/second"),
+            footRet: createMetricDetails(value: footRetractionSpeed, unit: "meters/second"),
+            power: createMetricDetails(value: power, unit: "Newtons")
+        )
+    }
+    
+    private func createMetricDetails(value: Double, unit: String) -> FeedbackModels.MetricDetails? {
+        let valueString = "\(String(format: "%.2f", value)) \(unit)"
+        return try? JSONDecoder().decode(FeedbackModels.MetricDetails.self, from: JSONSerialization.data(withJSONObject: ["metric_values": valueString]))
+    }
 }

@@ -35,6 +35,9 @@ extension String {
 }
 
 extension String {
+    static let defaultHeight = "69"  // 5'9" in inches
+    static let defaultWeight = "100" // 100 lbs
+    
     // Convert feet & inches strings to total inches
     static func heightInTotalInches(feet: String, inches: String) -> String {
         guard let ft = Int(feet), let inch = Int(inches) else { return "" }
