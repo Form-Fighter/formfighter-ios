@@ -118,6 +118,8 @@ struct ResultsView: View {
             if let feedbackId = feedbackId {
                 FeedbackView(feedbackId: feedbackId, videoURL: videoURL)
                     .environmentObject(UserManager.shared)
+                    .environmentObject(PurchasesManager.shared)
+                    .environmentObject(FeedbackManager.shared)
             }
         }
         .navigationBarBackButtonHidden(true)

@@ -65,12 +65,12 @@ struct LoginView: View {
         .task {
             if showPaywallInTheOnboarding {
                 Tracker.viewedPaywall(onboarding: true)
-                isShowingPaywall.toggle()
+             //   isShowingPaywall.toggle()
             }
         }
-        .fullScreenCover(isPresented: $isShowingPaywall, content: {
-            PaywallView()
-        })
+        // .fullScreenCover(isPresented: $isShowingPaywall, content: {
+        //    // PaywallView()
+        // })
         // MARK: Comment the line above and uncomment the line below if you prefer using the Image Paywall, like
         // in the RevenueCat Dashboard.
         //.presentPaywallIfNeeded(requiredEntitlementIdentifier: Const.Purchases.premiumEntitlementIdentifier)
@@ -110,6 +110,9 @@ struct LoginView: View {
                 
                 // This will handle both new and existing users
                 try await userManager.fetchAllData()
+                
+                // Sync email with RevenueCat
+                purchasesManager.updateRevenueCatEmail(user.email)
                 
                 // Set authentication state after data is loaded
                 userManager.setAuthenticationState()

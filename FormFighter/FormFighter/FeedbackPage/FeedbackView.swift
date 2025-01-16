@@ -4,6 +4,7 @@ import FirebaseFirestore
 import AVKit
 import AVFoundation
 import Photos  // Add this for PHPhotoLibrary
+import Alamofire
 
 
 struct FeedbackView: View {
@@ -57,6 +58,10 @@ struct FeedbackView: View {
     @StateObject private var sharingState = SharingState()
     
     @State private var showingSavedAlert = false
+    
+    @EnvironmentObject var purchasesManager: PurchasesManager
+    @EnvironmentObject var userManager: UserManager
+    @EnvironmentObject var feedbackManager: FeedbackManager
     
     var body: some View {
         Group {
@@ -169,6 +174,7 @@ struct FeedbackView: View {
     private func setupView() {
         print("⚡️ FeedbackView setting up listener for ID: \(feedbackId)")
         viewModel.setupFirestoreListener(feedbackId: feedbackId)
+        viewModel.fetchAnonymousComments(for: feedbackId)  // Add this line
         if videoURL == nil {
             print("⚡️ Checking existing user feedback")
             checkExistingUserFeedback()
@@ -297,144 +303,185 @@ struct FeedbackView: View {
     private var completedFeedbackView: some View {
         ScrollView {
             VStack(spacing: 24) {
-                // User Feedback Prompt (moved to top)
-                if !hasSubmittedFeedback {
-                    FeedbackPromptButton(action: { showFeedbackPrompt = true })
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                        .animation(.spring(response: 0.5, dampingFraction: 0.6), value: hasSubmittedFeedback)
-                }
-                
-                // Add Speed Comparisons
                 if let feedback = viewModel.feedback,
                    let metrics = feedback.modelFeedback?.body {
                     
-                    // Extract current metrics
-                    let handExtension = FeedbackManager.shared.extractVelocity(from: metrics.hand_velocity_extension)
-                    let handRetraction = FeedbackManager.shared.extractVelocity(from: metrics.hand_velocity_retraction)
-                    let footExtension = FeedbackManager.shared.extractVelocity(from: metrics.foot_velocity_extension)
-                    let footRetraction = FeedbackManager.shared.extractVelocity(from: metrics.foot_velocity_retraction)
-                    let power = FeedbackManager.shared.extractPower(from: metrics.force_generation_extension)
-                    
-                    // Get comparison metrics (either last punch or average)
-                    let lastFeedback = FeedbackManager.shared.getLastFeedback(excluding: feedbackId)
-                    let averageMetrics = FeedbackManager.shared.getAverageMetrics()
-                    
-                    
-                    
-                    
-                    // Create the comparison view with the appropriate metrics
-                    JabComparisonView(
-                        compareWithLastPunch: $compareWithLastPunch,
-                        handVelocityExtension: handExtension,
-                        handVelocityRetraction: handRetraction,
-                        footVelocityExtension: footExtension,
-                        footVelocityRetraction: footRetraction,
-                        powerGeneration: power,
-                        comparisonHandVelocityExtension: compareWithLastPunch 
-                            ? (FeedbackManager.shared.extractVelocity(from: lastFeedback?.modelFeedback?.body?.hand_velocity_extension) ?? 0.0)
-                            : averageMetrics.handExtensionSpeed,
-                        comparisonHandVelocityRetraction: compareWithLastPunch 
-                            ? (FeedbackManager.shared.extractVelocity(from: lastFeedback?.modelFeedback?.body?.hand_velocity_retraction) ?? 0.0)
-                            : averageMetrics.handRetractionSpeed,
-                        comparisonFootVelocityExtension: compareWithLastPunch 
-                            ? (FeedbackManager.shared.extractVelocity(from: lastFeedback?.modelFeedback?.body?.foot_velocity_extension) ?? 0.0)
-                            : averageMetrics.footExtensionSpeed,
-                        comparisonFootVelocityRetraction: compareWithLastPunch 
-                            ? (FeedbackManager.shared.extractVelocity(from: lastFeedback?.modelFeedback?.body?.foot_velocity_retraction) ?? 0.0)
-                            : averageMetrics.footRetractionSpeed,
-                        comparisonPowerGeneration: compareWithLastPunch 
-                            ? (FeedbackManager.shared.extractPower(from: lastFeedback?.modelFeedback?.body?.force_generation_extension) ?? 0.0)
-                            : averageMetrics.power
-                    )
-                    .padding(.horizontal)
-                    
-                    // Speed Comparisons
+                    // User Feedback and Share sections (not in drawers)
                     VStack(spacing: 16) {
-                        SpeedComparisonView(
-                            extensionSpeed: handExtension,
-                            retractionSpeed: handRetraction,
-                            title: "Lead Hand Speed"
-                        )
+                        // User Feedback Prompt
+                        if !hasSubmittedFeedback {
+                            FeedbackPromptButton(action: { showFeedbackPrompt = true })
+                                .transition(.move(edge: .top).combined(with: .opacity))
+                                .animation(.spring(response: 0.5, dampingFraction: 0.6), value: hasSubmittedFeedback)
+                        }
                         
-                        SpeedComparisonView(
-                            extensionSpeed: footExtension,
-                            retractionSpeed: footRetraction,
-                            title: "Lead Foot Speed"
-                        )
-                    }
-                    .padding(.horizontal)
-                }
-                
-                if let feedback = viewModel.feedback {
-                    HStack {
-                        // if let jabScore = feedback.modelFeedback?.body?.jab_score {
-                        //     ScoreCardView(jabScore: jabScore)
-                        // }
+                        // Share Options
+                        shareButtons
                     }
                     .padding(.horizontal)
                     
-                    shareButtons
-                    
-                    // Video Comparison (existing code)
-                    if let videoUrl = feedback.videoUrl,
-                       let overlayUrl = feedback.overlay_video_url,
-                       !videoUrl.isEmpty,
-                       !overlayUrl.isEmpty,
-                       let originalURL = URL(string: videoUrl),
-                       let overlayURL = URL(string: overlayUrl) {
-                        
-                        VStack {
-                            if let player2 = overlayPlayer {
-                                VideoPlayer(player: player2)
-                                    .frame(height: 200)
-                                    .cornerRadius(12)
-                            }
-                            
-                            if let player1 = originalPlayer {
-                                VideoPlayer(player: player1)
-                                    .frame(height: 200)
-                                    .cornerRadius(12)
-                            }
-                        }
-                        .padding(.horizontal)
-                        .onAppear {
-                            setupSyncedVideos(originalURL: originalURL, overlayURL: overlayURL)
-                        }
-                        .onDisappear {
-                            originalPlayer?.pause()
-                            overlayPlayer?.pause()
-                            originalPlayer = nil
-                            overlayPlayer = nil
-                        }
+                    // Speed Analysis Drawer
+                    DrawerSection(title: "Speed Analysis") {
+                        speedAnalysisSection(metrics: metrics)
                     }
                     
-                    // // Feedback Sections
-                    // if let feedbackDetails = feedback.modelFeedback?.body?.feedback {
-                    //     Group {
-                    //         if let extensionFeedback = feedbackDetails.extensionFeedback {
-                    //             FeedbackSection(title: "Extension", feedback: extensionFeedback)
-                    //         }
-                    //         if let guardFeedback = feedbackDetails.guardPosition {
-                    //             FeedbackSection(title: "Guard", feedback: guardFeedback)
-                    //         }
-                    //         if let retractionFeedback = feedbackDetails.retraction {
-                    //             FeedbackSection(title: "Retraction", feedback: retractionFeedback)
-                    //         }
-                    //     }
-                    //     .padding(.horizontal)
-                    // }
+                    // Video Comparison Drawer
+                    DrawerSection(title: "Video Analysis") {
+                        videoComparisonSection(feedback: feedback)
+                    }
                     
-                     // Add Detailed Analysis View
-                    if let modelFeedback = feedback.modelFeedback?.body {
+                    // Detailed Analysis Drawer
+                    DrawerSection(title: "Detailed Analysis") {
                         DetailedAnalysisView(viewModel: viewModel)
                     }
                     
-                  
+                    // Community Comments Drawer
+                    DrawerSection(title: "Community Feedback") {
+                        anonymousCommentsSection
+                    }
                     
-                
+                    // Coach Feedback (not in drawer, at bottom)
+                    VStack {
+                        Divider()
+                        SendToCoachButton(feedbackId: feedbackId)
+                            .padding()
+                    }
                 }
             }
-            .padding()
+        }
+    }
+    
+    // Helper view for speed analysis
+    private func speedAnalysisSection(metrics: FeedbackModels.BodyFeedback) -> some View {
+        VStack(spacing: 16) {
+            // Safely extract metrics with nil coalescing
+            let handExtension = metrics.hand_velocity_extension.flatMap { FeedbackManager.shared.extractVelocity(from: $0) } ?? 0.0
+            let handRetraction = metrics.hand_velocity_retraction.flatMap { FeedbackManager.shared.extractVelocity(from: $0) } ?? 0.0
+            let footExtension = metrics.foot_velocity_extension.flatMap { FeedbackManager.shared.extractVelocity(from: $0) } ?? 0.0
+            let footRetraction = metrics.foot_velocity_retraction.flatMap { FeedbackManager.shared.extractVelocity(from: $0) } ?? 0.0
+            let power = metrics.force_generation_extension.flatMap { FeedbackManager.shared.extractPower(from: $0) } ?? 0.0
+            
+            // Get comparison metrics safely
+            let averageMetrics = FeedbackManager.shared.getAverageMetrics()
+            let lastFeedback = FeedbackManager.shared.getLastFeedback(excluding: feedbackId)
+
+            // Lead Hand Speed
+            SpeedComparisonView(
+                extensionSpeed: handExtension,
+                retractionSpeed: handRetraction,
+                title: "Lead Hand Speed"
+            )
+            
+            // Lead Foot Speed
+            SpeedComparisonView(
+                extensionSpeed: footExtension,
+                retractionSpeed: footRetraction,
+                title: "Lead Foot Speed"
+            )
+            
+            JabComparisonView(
+                compareWithLastPunch: $compareWithLastPunch,
+                handVelocityExtension: handExtension,
+                handVelocityRetraction: handRetraction,
+                footVelocityExtension: footExtension,
+                footVelocityRetraction: footRetraction,
+                powerGeneration: power,
+                comparisonHandVelocityExtension: compareWithLastPunch 
+                    ? (lastFeedback?.modelFeedback?.body?.hand_velocity_extension.flatMap { 
+                        FeedbackManager.shared.extractVelocity(from: $0) 
+                      } ?? averageMetrics.handExtensionSpeed)
+                    : averageMetrics.handExtensionSpeed,
+                comparisonHandVelocityRetraction: compareWithLastPunch 
+                    ? (lastFeedback?.modelFeedback?.body?.hand_velocity_retraction.flatMap { 
+                        FeedbackManager.shared.extractVelocity(from: $0) 
+                      } ?? averageMetrics.handRetractionSpeed)
+                    : averageMetrics.handRetractionSpeed,
+                comparisonFootVelocityExtension: compareWithLastPunch 
+                    ? (lastFeedback?.modelFeedback?.body?.foot_velocity_extension.flatMap { 
+                        FeedbackManager.shared.extractVelocity(from: $0) 
+                      } ?? averageMetrics.footExtensionSpeed)
+                    : averageMetrics.footExtensionSpeed,
+                comparisonFootVelocityRetraction: compareWithLastPunch 
+                    ? (lastFeedback?.modelFeedback?.body?.foot_velocity_retraction.flatMap { 
+                        FeedbackManager.shared.extractVelocity(from: $0) 
+                      } ?? averageMetrics.footRetractionSpeed)
+                    : averageMetrics.footRetractionSpeed,
+                comparisonPowerGeneration: compareWithLastPunch 
+                    ? (lastFeedback?.modelFeedback?.body?.force_generation_extension.flatMap { 
+                        FeedbackManager.shared.extractPower(from: $0) 
+                      } ?? averageMetrics.power)
+                    : averageMetrics.power
+            )
+        }
+    }
+    
+    // Helper view for video comparison
+    private func videoComparisonSection(feedback: FeedbackModels.FeedbackData) -> some View {
+        Group {
+            if let videoUrl = feedback.videoUrl,
+               let overlayUrl = feedback.overlay_video_url,
+               !videoUrl.isEmpty,
+               !overlayUrl.isEmpty,
+               let originalURL = URL(string: videoUrl),
+               let overlayURL = URL(string: overlayUrl) {
+                
+                VStack {
+                    if let player2 = overlayPlayer {
+                        VideoPlayer(player: player2)
+                            .frame(height: 200)
+                            .cornerRadius(12)
+                    }
+                    
+                    if let player1 = originalPlayer {
+                        VideoPlayer(player: player1)
+                            .frame(height: 200)
+                            .cornerRadius(12)
+                    }
+                }
+                .onAppear { setupSyncedVideos(originalURL: originalURL, overlayURL: overlayURL) }
+                .onDisappear {
+                    originalPlayer?.pause()
+                    overlayPlayer?.pause()
+                    originalPlayer = nil
+                    overlayPlayer = nil
+                }
+            }
+        }
+    }
+    
+    private var anonymousCommentsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Anonymous Comments")
+                .font(.headline)
+                .padding(.horizontal)
+            
+            if viewModel.isLoadingComments {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+            } else if viewModel.anonymousComments.isEmpty {
+                Text("No comments yet")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity)
+            } else {
+                ForEach(viewModel.anonymousComments) { comment in
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(comment.comment)
+                            .font(.body)
+                        
+                        Text(comment.timestamp.formatted(date: .abbreviated, time: .shortened))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding()
+                    .background(ThemeColors.background)
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(ThemeColors.primary.opacity(0.2), lineWidth: 1)
+                    )
+                    .padding(.horizontal)
+                }
+            }
         }
     }
     
@@ -771,12 +818,14 @@ struct FeedbackView: View {
                 
                 // Create text layer for score
                 let textLayer = CATextLayer()
-               // let overallScore: Double = viewModel.feedback?.modelFeedback?.body?.jab_score ?? 0
-                
-             //   print("💬 Creating text layer with score: \(overallScore)")
-                
+                let koPotentialString = viewModel.feedback?.modelFeedback?.body?.force_generation_extension?.knockout_potential ?? "0 %"
+                let cleanedString = koPotentialString.replacingOccurrences(of: " %", with: "")
+                let koValue = (Double(cleanedString) ?? 0).rounded()
+
+                print("💬 Creating text layer with K.O. potential: \(koValue)%")
+
                 // Configure text layer - MAKING IT RED AND BIGGER
-             //   textLayer.string = String(format: "Score: %.1f/10", overallScore)
+                textLayer.string = "\(Int(koValue))% K.O. Potential"
                 textLayer.fontSize = cardHeight * 0.6  // Made it bigger!
                 textLayer.foregroundColor = CGColor(red: 1, green: 0, blue: 0, alpha: 1)  // BRIGHT RED
                 textLayer.alignmentMode = .center
@@ -1030,6 +1079,7 @@ struct FeedbackView_Previews: PreviewProvider {
     static var previews: some View {
         FeedbackView(feedbackId: "sampleFeedbackId", videoURL: nil)
             .environmentObject(UserManager.shared)
+            .environmentObject(PurchasesManager.shared)
             .environmentObject(FeedbackManager.shared)
     }
 }
@@ -1162,7 +1212,7 @@ struct FeedbackStepOne: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            Text("How was your boxing feedback?")
+            Text("How was your jab feedback?")
                 .font(.title2)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
@@ -1247,6 +1297,140 @@ struct ToastView: View {
             .cornerRadius(20)
             .shadow(radius: 4)
             .padding(.bottom, 20)
+    }
+}
+
+struct SendToCoachButton: View {
+    let feedbackId: String
+    @EnvironmentObject var purchasesManager: PurchasesManager
+    @EnvironmentObject var userManager: UserManager
+    @AppStorage("lastCoachSubmissionDate") private var lastSubmissionDate: Double = 0
+    @State private var showAlert = false
+    @State private var showConfirmation = false
+    @State private var alertMessage = ""
+    @State private var isLoading = false
+    @State private var confirmationText = ""
+    
+    var canSubmit: Bool {
+        let oneWeekInSeconds: TimeInterval = 7 * 24 * 60 * 60
+        let lastSubmission = Date(timeIntervalSince1970: lastSubmissionDate)
+        return Date().timeIntervalSince(lastSubmission) >= oneWeekInSeconds
+    }
+    
+    var body: some View {
+        Button {
+            showConfirmation = true
+        } label: {
+            HStack {
+                if isLoading {
+                    ProgressView()
+                        .tint(.white)
+                } else {
+                    Image(systemName: "person.fill.badge.plus")
+                }
+                Text("Share with Form Fighter Coach")
+            }
+            .padding()
+            .background(ThemeColors.primary)
+            .foregroundColor(.white)
+            .cornerRadius(10)
+        }
+        .disabled(!canSubmit || isLoading)
+        .opacity((canSubmit && !isLoading) ? 1.0 : 0.5)
+        .alert("Coach Feedback", isPresented: $showAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(alertMessage)
+        }
+        .alert("Confirm Submission", isPresented: $showConfirmation) {
+            TextField("Type 'confirm' to proceed", text: $confirmationText)
+            
+            Button("Cancel", role: .cancel) {
+                confirmationText = ""
+            }
+            
+            Button("Send") {
+                if confirmationText.lowercased() == "confirm" {
+                    isLoading = true
+                    sendToAirtable()
+                }
+                confirmationText = ""
+            }
+            .disabled(confirmationText.lowercased() != "confirm")
+            
+        } message: {
+            Text("After sending this analysis to a coach, you'll need to wait 7 days before you can send another one. A Form Fighter coach will review your feedback and provide you with a detailed analysis of your form. Expect to wait 1-2 business days for a response. Type 'confirm' to proceed.")
+        }
+    }
+    
+    private func sendToAirtable() {
+        let baseID = "appERRs3pFJISiamK"
+        let tableName = "tbl2ePhNHrHVp8pQK"
+        let url = "https://api.airtable.com/v0/\(baseID)/\(tableName)"
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer patoPAP7G5XbXe2FP.93e5c739ec811f75d2060c87287d8cd50be8a4adfca14bd642e831b1f2e1bc61",
+            "Content-Type": "application/json"
+        ]
+        
+        let subscriptionStatus: String
+        if purchasesManager.premiumSubscribed {
+            subscriptionStatus = "subscribed"
+        } else if purchasesManager.trialStatus == .active {
+            subscriptionStatus = "trial"
+        } else {
+            subscriptionStatus = "none"
+        }
+        
+        let feedbackLink = "https://www.form-fighter.com/feedback/\(feedbackId)"
+        
+        // Create date formatter for Airtable's format
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let dateString = dateFormatter.string(from: Date())
+        
+        let parameters: [String: Any] = [
+            "records": [
+                [
+                    "fields": [
+                        "feedbackId": feedbackId,
+                        "userId": userManager.userId,
+                        "feedbackLink": feedbackLink,
+                        "subscriptionStatus": subscriptionStatus,
+                        "date": dateString  // Using simple date format without time
+                    ]
+                ]
+            ]
+        ]
+        
+        print("Sending to Airtable:", parameters)
+        
+        AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .validate()
+            .responseJSON { response in
+                isLoading = false
+                
+                if let data = response.data, let str = String(data: data, encoding: .utf8) {
+                    print("Airtable response:", str)
+                }
+                
+                switch response.result {
+                case .success:
+                    lastSubmissionDate = Date().timeIntervalSince1970
+                    alertMessage = "Your feedback has been sent to the coach!"
+                    showAlert = true
+                    
+                    Analytics.logEvent("coach_feedback_sent", parameters: [
+                        "feedback_id": feedbackId,
+                        "subscription_status": subscriptionStatus
+                    ])
+                    
+                case let .failure(error):
+                    alertMessage = "Failed to send feedback. Please try again."
+                    showAlert = true
+                    print("Error sending to Airtable: \(error.localizedDescription)")
+                }
+            }
     }
 }
 

@@ -447,4 +447,14 @@ class PurchasesManager: ObservableObject {
             }
         }
     }
+    
+    func updateRevenueCatEmail(_ email: String) {
+        Purchases.shared.setEmail(email) { error in
+            if let error = error {
+                Logger.log(message: "Failed to update RevenueCat email: \(error.localizedDescription)", event: .error)
+            } else {
+                Logger.log(message: "Successfully updated RevenueCat email", event: .info)
+            }
+        }
+    }
 }

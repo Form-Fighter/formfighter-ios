@@ -68,9 +68,9 @@ struct SettingsView: View {
         .alert(isPresented: $vm.showAlert) {
             Alert(title: Text("Purchase Status"), message: Text(vm.alertMessage), dismissButton: .default(Text("OK")))
         }
-        .fullScreenCover(isPresented: $isShowingPaywall) {
-            PaywallView()
-        }
+        // .fullScreenCover(isPresented: $isShowingPaywall) {
+        //     PaywallView()
+        // }
     }
     
     @ViewBuilder

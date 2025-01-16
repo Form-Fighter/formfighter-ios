@@ -65,7 +65,7 @@ struct JabComparisonView: View {
             } else {
                 // Hands Section
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Hands")
+                    Text("Lead Hand")
                         .font(.subheadline)
                         .fontWeight(.medium)
                     

@@ -1591,6 +1591,9 @@
     "Activity Feed" : {
 
     },
+    "After sending this analysis to a coach, you'll need to wait 7 days before you can send another one. A Form Fighter coach will review your feedback and provide you with a detailed analysis of your form. Expect to wait 1-2 business days for a response. Type 'confirm' to proceed." : {
+
+    },
     "AI's Language" : {
       "localizations" : {
         "de" : {
@@ -1879,6 +1882,9 @@
           }
         }
       }
+    },
+    "Anonymous Comments" : {
+
     },
     "Any additional thoughts?" : {
 
@@ -2440,6 +2446,9 @@
     "Close" : {
 
     },
+    "Coach Feedback" : {
+
+    },
     "Color Scheme" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2518,6 +2527,9 @@
 
     },
     "Complete your first session to see your stats" : {
+
+    },
+    "Confirm Submission" : {
 
     },
     "Continue" : {
@@ -4177,6 +4189,9 @@
     "No activity yet" : {
 
     },
+    "No comments yet" : {
+
+    },
     "No data available for this time period" : {
 
     },
@@ -5199,6 +5214,9 @@
         }
       }
     },
+    "Send" : {
+
+    },
     "Settings" : {
       "localizations" : {
         "de" : {
@@ -5270,6 +5288,9 @@
       }
     },
     "Share" : {
+
+    },
+    "Share with Form Fighter Coach" : {
 
     },
     "Share your experience (optional)" : {
@@ -6216,6 +6237,9 @@
       }
     },
     "Turn %.0f° / 7°" : {
+
+    },
+    "Type 'confirm' to proceed" : {
 
     },
     "Type here" : {

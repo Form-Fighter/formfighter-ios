@@ -168,6 +168,8 @@ BadgeGridView(
                 NavigationView {
                     FeedbackView(feedbackId: feedbackId, videoURL: nil)
                         .environmentObject(UserManager.shared)
+                        .environmentObject(PurchasesManager.shared)
+                        .environmentObject(FeedbackManager.shared)
                 }
             }
         }
@@ -586,7 +588,10 @@ struct PunchListView: View {
                                 .padding(.horizontal)
                             
                             ForEach(group.1) { feedback in
-                                NavigationLink(destination: FeedbackView(feedbackId: feedback.id, videoURL: nil)) {
+                                NavigationLink(destination: FeedbackView(feedbackId: feedback.id, videoURL: nil)
+                                    .environmentObject(UserManager.shared)
+                                    .environmentObject(PurchasesManager.shared)
+                                    .environmentObject(FeedbackManager.shared)) {
                                     FeedbackRowView(feedback: feedback, sortOption: sortOption)
                                 }
                                 .buttonStyle(PlainButtonStyle())

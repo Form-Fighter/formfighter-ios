@@ -4,6 +4,20 @@ import Combine
 import os.log
 import SwiftUI
 
+struct AnonymousComment: Identifiable {
+    let id: String
+    let comment: String
+    let timestamp: Date
+    let feedbackId: String
+    
+    init(id: String, data: [String: Any]) {
+        self.id = id
+        self.comment = data["comment"] as? String ?? ""
+        self.timestamp = (data["createdAt"] as? Timestamp)?.dateValue() ?? Date()
+        self.feedbackId = data["feedbackId"] as? String ?? ""
+    }
+}
+
 class FeedbackViewModel: ObservableObject {
     @Published var feedback: FeedbackModels.FeedbackData?
     @Published var error: String?
@@ -15,6 +29,9 @@ class FeedbackViewModel: ObservableObject {
     @Published var challengeToast: String?
     private let challengeService = ChallengeService.shared
     private var toastTimer: Timer?
+    
+    @Published var anonymousComments: [AnonymousComment] = []
+    @Published var isLoadingComments = false
     
     var shouldShowChallengeIndicator: Bool {
         guard let challenge = ChallengeService.shared.activeChallenge,
@@ -252,5 +269,36 @@ class FeedbackViewModel: ObservableObject {
     deinit {
         cleanup()
         toastTimer?.invalidate()
+    }
+    
+    func fetchAnonymousComments(for feedbackId: String) {
+        isLoadingComments = true
+        print("🔍 Fetching anonymous comments for feedback: \(feedbackId)")
+        
+        let db = Firestore.firestore()
+        db.collection("anonymous_comments")
+            .whereField("feedbackId", isEqualTo: feedbackId)
+            .order(by: "createdAt", descending: true)
+            .addSnapshotListener { [weak self] querySnapshot, error in
+                guard let self = self else { return }
+                self.isLoadingComments = false
+                
+                if let error = error {
+                    print("❌ Error fetching anonymous comments: \(error.localizedDescription)")
+                    return
+                }
+                
+                guard let documents = querySnapshot?.documents else {
+                    print("No anonymous comments found")
+                    return
+                }
+                
+                self.anonymousComments = documents.map { document in
+                    print("📄 Comment data: \(document.data())")
+                    return AnonymousComment(id: document.documentID, data: document.data())
+                }
+                
+                print("✅ Fetched \(self.anonymousComments.count) anonymous comments")
+            }
     }
 } 

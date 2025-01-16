@@ -103,9 +103,9 @@ struct VisionView: View {
             // }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showPaywall) {
-            PaywallView()
-        }
+        // .sheet(isPresented: $showPaywall) {
+        //    // PaywallView()
+        // }
         .onAppear {
             if !purchasesManager.premiumSubscribed && !purchasesManager.eliteSubscribed  {
                 showPaywall = true

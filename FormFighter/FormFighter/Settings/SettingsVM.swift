@@ -105,6 +105,11 @@ class SettingsVM: ObservableObject {
         // Update local state immediately
         userManager.updateUserOnMainThread(updatedUser)
         
+        // If email was updated, sync with RevenueCat
+        if let email = email {
+            purchasesManager.updateRevenueCatEmail(email)
+        }
+        
         // Create new debounced update task for Firestore
         updateTask = Task {
             do {
