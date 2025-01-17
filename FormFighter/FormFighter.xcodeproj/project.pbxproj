@@ -189,6 +189,7 @@
 		B2C9DEED2C6AA65500508A59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */; };
 		B2D92D262D36E67700032377 /* SpeedComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D92D252D36E67700032377 /* SpeedComparisonView.swift */; };
 		B2D92D282D38EED900032377 /* DrawerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D92D272D38EED800032377 /* DrawerSection.swift */; };
+		B2D92D2A2D3A466C00032377 /* KeyTakeawaysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D92D292D3A466C00032377 /* KeyTakeawaysView.swift */; };
 		B2F447E92D08062F0032E53C /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447E82D08062F0032E53C /* Challenge.swift */; };
 		B2F447F22D081AE20032E53C /* ActiveChallengeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447EA2D081AE20032E53C /* ActiveChallengeView.swift */; };
 		B2F447F32D081AE20032E53C /* ChallengeHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447EB2D081AE20032E53C /* ChallengeHistoryView.swift */; };
@@ -379,6 +380,7 @@
 		B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B2D92D252D36E67700032377 /* SpeedComparisonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeedComparisonView.swift; sourceTree = "<group>"; };
 		B2D92D272D38EED800032377 /* DrawerSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerSection.swift; sourceTree = "<group>"; };
+		B2D92D292D3A466C00032377 /* KeyTakeawaysView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyTakeawaysView.swift; sourceTree = "<group>"; };
 		B2F447E82D08062F0032E53C /* Challenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 		B2F447EA2D081AE20032E53C /* ActiveChallengeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveChallengeView.swift; sourceTree = "<group>"; };
 		B2F447EB2D081AE20032E53C /* ChallengeHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeHistoryView.swift; sourceTree = "<group>"; };
@@ -822,6 +824,7 @@
 		B21411722CE537BB00699B15 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				B2D92D292D3A466C00032377 /* KeyTakeawaysView.swift */,
 				B2D92D252D36E67700032377 /* SpeedComparisonView.swift */,
 				B2F447F82D0822800032E53C /* ShareSheet.swift */,
 				B252ED782D07A9FC00013524 /* JabComparisonView.swift */,
@@ -1091,6 +1094,7 @@
 				B214116D2CE5324500699B15 /* NotificationPermissionView.swift in Sources */,
 				818D3FB82B700E9D00DF7299 /* +Array.swift in Sources */,
 				B2F448052D0FDF710032E53C /* ChallengeHeaderView.swift in Sources */,
+				B2D92D2A2D3A466C00032377 /* KeyTakeawaysView.swift in Sources */,
 				B252ED672D06D41800013524 /* FeedbackManager.swift in Sources */,
 				81DE14F22B76303200C41EA9 /* Meal.swift in Sources */,
 				81A02D3A2BA333CC00061567 /* BrutoButton.swift in Sources */,

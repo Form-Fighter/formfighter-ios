@@ -3288,6 +3288,9 @@
     "ft" : {
 
     },
+    "Get Key Takeaways" : {
+
+    },
     "Get Ready Fighter! Stay in the camera." : {
 
     },
@@ -3297,7 +3300,7 @@
     "Get Started Now" : {
 
     },
-    "Hands" : {
+    "Get Takeaways" : {
 
     },
     "Height" : {
@@ -3533,10 +3536,10 @@
     "How to Record Your Form" : {
 
     },
-    "How was your boxing feedback?" : {
+    "How was your experience?" : {
 
     },
-    "How was your experience?" : {
+    "How was your jab feedback?" : {
 
     },
     "ℹ️ FAQ" : {
@@ -3794,6 +3797,9 @@
 
     },
     "Lead Foot" : {
+
+    },
+    "Lead Hand" : {
 
     },
     "Leaderboard" : {
@@ -4907,6 +4913,9 @@
     "Ready to dive into" : {
 
     },
+    "Remaining requests this week: %lld" : {
+
+    },
     "Request image to DALL·E..." : {
       "localizations" : {
         "de" : {
@@ -5138,6 +5147,9 @@
 
     },
     "Score multiplier: %@" : {
+
+    },
+    "Score:" : {
 
     },
     "Score: %@" : {
@@ -6538,6 +6550,9 @@
     "Uploading your video" : {
 
     },
+    "Use 1 of %lld remaining requests?" : {
+
+    },
     "User" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -6939,6 +6954,9 @@
 
     },
     "Would you like to join Coach %@'s team?" : {
+
+    },
+    "You can request key takeaways 5 times per week" : {
 
     },
     "You have %lld free analysis left" : {

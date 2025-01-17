@@ -319,6 +319,11 @@ struct FeedbackView: View {
                         shareButtons
                     }
                     .padding(.horizontal)
+
+                    // Key Takeaways Drawer
+                     DrawerSection(title: "Key Takeaways") {
+                        KeyTakeawaysView(feedbackId: feedbackId, feedback: viewModel.feedback?.modelFeedback)
+                    }
                     
                     // Speed Analysis Drawer
                     DrawerSection(title: "Speed Analysis") {

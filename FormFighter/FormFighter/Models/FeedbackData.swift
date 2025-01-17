@@ -40,6 +40,13 @@ enum FeedbackModels {
     struct ModelFeedback: Codable {
         let body: BodyFeedback?
         let statusCode: Int?
+        let key_takeaways: String?
+        let lowest_metric: LowestMetric?
+        
+        struct LowestMetric: Codable {
+            let name: String?
+            let score: Double?
+        }
     }
     
     struct MetricDetails: Codable {

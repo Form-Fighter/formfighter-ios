@@ -4,6 +4,7 @@ class SettingsVM: ObservableObject {
     let firestoreService: DatabaseServiceProtocol
     let userManager = UserManager.shared
     let authManager: AuthManager
+    let purchasesManager: PurchasesManager
     @Published var alertMessage = ""
     @Published var showAlert = false
     @Published var isShowingDeleteUserAlert = false
@@ -12,9 +13,11 @@ class SettingsVM: ObservableObject {
     private var updateTask: Task<Void, Never>?
     
     init(firestoreService: DatabaseServiceProtocol = FirestoreService(),
-         authManager: AuthManager = AuthManager()) {
+         authManager: AuthManager = AuthManager(),
+         purchasesManager: PurchasesManager = PurchasesManager.shared) {
         self.firestoreService = firestoreService
         self.authManager = authManager
+        self.purchasesManager = purchasesManager
         
         if #available(iOS 17, *) {
             self.userTip = UserTip()
