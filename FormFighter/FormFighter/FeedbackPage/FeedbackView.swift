@@ -321,7 +321,7 @@ struct FeedbackView: View {
                     .padding(.horizontal)
 
                     // Key Takeaways Drawer
-                     DrawerSection(title: "Key Takeaways") {
+                     DrawerSection(title: "Key Takeaway") {
                         KeyTakeawaysView(feedbackId: feedbackId, feedback: viewModel.feedback?.modelFeedback)
                     }
                     

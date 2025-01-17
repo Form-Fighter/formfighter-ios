@@ -143,11 +143,7 @@ struct KeyTakeawaysView: View {
     
     private func displayTakeawaysView(metric: String, score: Double, keyTakeaways: String) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Score:")
-                    .fontWeight(.bold)
-                Text(String(format: "%.1f", score))
-            }
+          
             
             Text(metric)
                 .font(.headline)

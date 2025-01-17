@@ -34,7 +34,6 @@ struct CameraVisionView: View {
     @State private var canDismissInstructions = false
     @State private var buttonOpacity = 0.5
     @State private var isCountingDown: Bool = false
-    @State private var currentTurnAngle: Double = 0
     
     // Add new state properties at the top with other @State variables
     @State private var fullBodyPlayer: AVAudioPlayer?
@@ -46,6 +45,10 @@ struct CameraVisionView: View {
     @State private var currentInstructionStep = 1
     @State private var showInstructionsOverlay = false
     
+    // Keep the state variable
+    @State private var currentTurnAngle: Double = 0
+    @State private var isShowingTurnAnimation: Bool = false
+    
     var cameraManager: CameraManager
     
     var body: some View {
@@ -53,16 +56,14 @@ struct CameraVisionView: View {
             ZStack {
                 // Camera view
                 CameraPreviewView(detectedBodyPoints: $detectedBodyPoints,
-                                  smoothedBodyPoints: $smoothedBodyPoints,
-                                  isBodyDetected: $isBodyDetected,
-                                  isBodyComplete: $isBodyComplete,
-                                  hasTurnedBody: $hasTurnedBody,
-                                  isCountingDown: $isCountingDown,
-                                  currentTurnAngle: $currentTurnAngle,
-                                  cameraManager: cameraManager,
-                                  turnBodyPlayer: turnBodyPlayer
-                                  
-                )
+                                 smoothedBodyPoints: $smoothedBodyPoints,
+                                 isBodyDetected: $isBodyDetected,
+                                 isBodyComplete: $isBodyComplete,
+                                 hasTurnedBody: $hasTurnedBody,
+                                 isCountingDown: $isCountingDown,
+                                 currentTurnAngle: $currentTurnAngle,
+                                 cameraManager: cameraManager,
+                                 turnBodyPlayer: turnBodyPlayer)
                 .ignoresSafeArea(.all, edges: [.horizontal])
                 
                 
@@ -180,7 +181,7 @@ struct CameraVisionView: View {
                                 .foregroundColor(.white)
                                 .font(.system(size: 30))
                             
-                            Text("Turn \(currentTurnAngle, specifier: "%.0f")° / 7°")
+                            Text("Turn \(currentTurnAngle, specifier: "%.0f")°")
                                 .font(.title2.bold())
                                 .foregroundColor(.white)
                         }
@@ -195,16 +196,19 @@ struct CameraVisionView: View {
                                 .frame(width: 100, height: 100)
                             
                             Circle()
-                                .trim(from: 0, to: min(CGFloat(currentTurnAngle) / 7.0, 1.0))
+                                .trim(from: 0, to: isShowingTurnAnimation ? 1 : 0)
                                 .stroke(Color.green, style: StrokeStyle(lineWidth: 10, lineCap: .round))
                                 .frame(width: 100, height: 100)
                                 .rotationEffect(.degrees(-90))
-                                .animation(.linear, value: currentTurnAngle)
+                                .animation(.linear(duration: 2.0), value: isShowingTurnAnimation)
                         }
                     }
                     .padding(.top, 50)
                     .onAppear {
                         turnBodyPlayer?.play()
+                        withAnimation {
+                            isShowingTurnAnimation = true
+                        }
                     }
                 }
                 
@@ -296,11 +300,19 @@ struct CameraVisionView: View {
     }
     
     func checkBodyAndStartTimers() {
-        print("isBodyDetected: \(isBodyDetected), isBodyComplete: \(isBodyComplete), hasTurnedBody: \(hasTurnedBody)")
-        if isBodyDetected && isBodyComplete && hasTurnedBody {
-            startFirstTimer()
+        if isBodyDetected && isBodyComplete {
+            isShowingTurnAnimation = true
+            // Wait for animation to complete before starting timer
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                hasTurnedBody = true
+                startFirstTimer()
+            }
+            
+            // Play turn audio once at start
+            turnBodyPlayer?.play()
         } else {
             resetTimers()
+            isShowingTurnAnimation = false
         }
     }
     
@@ -402,6 +414,7 @@ struct CameraVisionView: View {
             cameraManager.stopRecording()
         }
         jabInstructionPlayer?.stop()
+        isShowingTurnAnimation = false
     }
     
     // Add these new helper views and functions

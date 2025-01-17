@@ -4,6 +4,7 @@ struct DrawerSection<Content: View>: View {
     let title: String
     let content: Content
     @State private var isExpanded = false
+    @State private var isAnimating = false
     
     init(title: String, @ViewBuilder content: () -> Content) {
         self.title = title
@@ -12,7 +13,18 @@ struct DrawerSection<Content: View>: View {
     
     var body: some View {
         VStack {
-            Button(action: { withAnimation { isExpanded.toggle() } }) {
+            Button(action: {
+                guard !isAnimating else { return }
+                isAnimating = true
+                
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    isExpanded.toggle()
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    isAnimating = false
+                }
+            }) {
                 HStack {
                     Text(title)
                         .font(.headline)

@@ -3206,6 +3206,9 @@
     "Extension" : {
 
     },
+    "Fetching takeaways..." : {
+
+    },
     "Fighter Profile" : {
 
     },
@@ -4189,6 +4192,9 @@
     "Next" : {
 
     },
+    "Next reset: %@" : {
+
+    },
     "No Active Challenge" : {
 
     },
@@ -4202,6 +4208,9 @@
 
     },
     "No previous punch data available" : {
+
+    },
+    "No Requests Remaining" : {
 
     },
     "No training sessions yet" : {
@@ -5147,9 +5156,6 @@
 
     },
     "Score multiplier: %@" : {
-
-    },
-    "Score:" : {
 
     },
     "Score: %@" : {
@@ -6248,7 +6254,7 @@
         }
       }
     },
-    "Turn %.0f° / 7°" : {
+    "Turn %.0f°" : {
 
     },
     "Type 'confirm' to proceed" : {
@@ -7029,6 +7035,9 @@
           }
         }
       }
+    },
+    "You've used all your key takeaway requests for this week. Check back next week for more insights!" : {
+
     },
     "Your Coach" : {
 
