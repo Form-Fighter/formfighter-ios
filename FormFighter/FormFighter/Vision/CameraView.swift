@@ -180,9 +180,13 @@ struct CameraVisionView: View {
                             Image(systemName: "arrow.triangle.2.circlepath")
                                 .foregroundColor(.white)
                                 .font(.system(size: 30))
-                            
-                            Text("Turn \(currentTurnAngle, specifier: "%.0f")°")
+
+                                Text("Turn 7°")
                                 .font(.title2.bold())
+                                .foregroundColor(.white)
+                            
+                            Text("\(currentTurnAngle, specifier: "%.0f")° angle")
+                                .font(.title2)
                                 .foregroundColor(.white)
                         }
                         .padding()
@@ -247,6 +251,8 @@ struct CameraVisionView: View {
                             // Stop camera when navigating to results
                             cameraManager.stopSession()
                         }
+                } else{
+                    Text("No video URL available")
                 }
             }
             .onChange(of: isBodyDetected) { _ in
@@ -265,7 +271,10 @@ struct CameraVisionView: View {
                 checkBodyAndStartTimers()
             }
             .ignoresSafeArea(.all, edges: [.horizontal, .top])
-           
+            .onDisappear {
+               // cleanup()
+                cameraManager.stopSession()
+            }
         }
          
        .navigationBarHidden(true)
@@ -278,7 +287,11 @@ struct CameraVisionView: View {
                 }
             }
             setupAudioPlayers()
-          //  checkBodyDetectionState()
+            
+            // Always ensure we have an active session
+            if !cameraManager.isActive {
+                cameraManager.startSession()
+            }
         }
     }
     
@@ -368,23 +381,26 @@ struct CameraVisionView: View {
     func simulateRecording() {
         isRecording = true
         recordingMessage = "Recording..."
-        recordingProgress = 0.0  // Start empty
+        recordingProgress = 0.0
         
-        jabInstructionPlayer?.play()  // Play the instruction once
+        jabInstructionPlayer?.play()
         cameraManager.startRecording()
         
-        // Create a timer that updates progress every 0.1 seconds
         let progressTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
             withAnimation {
-                recordingProgress += 0.05  // Increment by 5% each time (20 steps over 2 seconds)
+                recordingProgress += 0.05
             }
             
-            // Stop the timer when we reach full
             if recordingProgress >= 1.0 {
                 timer.invalidate()
                 recordingMessage = "Recording finished"
                 cameraManager.stopRecording()
                 resetTimers()
+                
+                // Add a slight delay before navigation to ensure recording is saved
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.navigateToPreview = true
+                }
             }
         }
     }
@@ -396,25 +412,28 @@ struct CameraVisionView: View {
         secondTimer?.invalidate()
         secondTimer = nil
         
-      
+        // Stop all audio players
         fullBodyPlayer?.stop()
-        
-      
         turnBodyPlayer?.stop()
+        countdownPlayer?.stop()
+        startPlayer?.stop()
+        jabInstructionPlayer?.stop()
         
+        // Reset all states
         isCounting = false
         isRecording = false
         timer1 = 0
         timer2 = 0
         recordingMessage = ""
-        hasTurnedBody = false  // Restablecer aquí
-        isCountingDown = false  // Reset flag when timers are reset
+        hasTurnedBody = false
+        isCountingDown = false
+        isShowingTurnAnimation = false
+        isBodyDetected = false
+        isBodyComplete = false
         
         if isRecording {
             cameraManager.stopRecording()
         }
-        jabInstructionPlayer?.stop()
-        isShowingTurnAnimation = false
     }
     
     // Add these new helper views and functions
@@ -511,6 +530,13 @@ struct CameraVisionView: View {
         
         // Reset audio players
         setupAudioPlayers()
+    }
+    
+    func cleanup() {
+        resetTimers()
+        cameraManager.stopSession() 
+        cameraManager.cleanup()
+        
     }
 }
 
@@ -880,8 +906,6 @@ extension CameraManager: AVCaptureFileOutputRecordingDelegate {
                 // Post notification with the URL
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: NSNotification.Name("VideoRecorded"), object: outputFileURL)
-                    self.stopSession()  // Stop the current session
-                    self.startSession() // Restart for next recording
                 }
             } else {
                 Logger.log(message: "Video file not created correctly", event: .error)

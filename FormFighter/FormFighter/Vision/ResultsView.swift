@@ -56,6 +56,9 @@ struct ResultsView: View {
     private let challengeService = ChallengeService.shared
     
     init(videoURL: URL) {
+        print("ResultsView init - videoURL: \(videoURL)")
+        print("File exists: \(FileManager.default.fileExists(atPath: videoURL.path))")
+        
         self.videoURL = videoURL
         let playerItem = AVPlayerItem(url: videoURL)
         let player = AVPlayer(playerItem: playerItem)
@@ -240,12 +243,15 @@ struct ResultsView: View {
                             self.shouldNavigateToFeedback = true
                             print("🎯 Navigation flag set: \(self.shouldNavigateToFeedback)")
                             selectedTab = TabIdentifier.profile.rawValue
+                            
+                            // Post notification after cleanup
                             NotificationCenter.default.post(
                                 name: NSNotification.Name("OpenFeedback"),
                                 object: nil,
                                 userInfo: ["feedbackId": feedbackId]
                             )
-                            dismiss()  // Dismiss the camera flow
+                            
+                            dismiss()  // Just dismiss without camera cleanup
                         }
                         continuation.resume()
                     }

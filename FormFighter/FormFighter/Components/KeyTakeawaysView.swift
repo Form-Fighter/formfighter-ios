@@ -1,14 +1,25 @@
 import SwiftUI
+import AVFoundation
 
 struct KeyTakeawaysResponse: Codable {
-    let metric: String
-    let score: Double
-    let key_takeaways: String
+    let metric: String?
+    let score: Double?
+    let key_takeaways: String?
+    let key_takeaways_audio: AudioDetails?
+    
+    struct AudioDetails: Codable {
+        let duration: Double?
+        let fileSize: Int?
+        let model: String?
+        let url: String?
+        let voiceId: String?
+    }
 }
 
 struct KeyTakeawaysView: View {
     let feedbackId: String
-    let existingTakeaways: (metric: String?, score: Double?, key_takeaways: String?)?
+    let videoUrl: String?
+    var existingTakeaways: (metric: String?, score: Double?, key_takeaways: String?, key_takeaways_audio: KeyTakeawaysResponse.AudioDetails?, videoUrl: String?)?
     
     @AppStorage("keyTakeawaysRequestCount") private var requestCount = 0
     @AppStorage("lastRequestWeek") private var lastRequestWeek = Calendar.current.component(.weekOfYear, from: Date())
@@ -18,15 +29,32 @@ struct KeyTakeawaysView: View {
     @State private var takeaways: KeyTakeawaysResponse?
     @State private var showingConfirmation = false
     
+    @State private var audioPlayer: AVPlayer?
+    @State private var isPlayingAudio = false
+    
+    @State private var selectedSentence: String? = nil
+    @State private var poseHighlightKey = UUID()
+    
+    @State private var showingPoseOverlay: Bool = false
+    
     private let maxWeeklyRequests = 5
     
-    init(feedbackId: String, feedback: FeedbackModels.ModelFeedback?) {
+    init(feedbackId: String, feedback: FeedbackModels.ModelFeedback?, videoUrl: String?) {
         self.feedbackId = feedbackId
+        self.videoUrl = videoUrl
         if let feedback = feedback {
             self.existingTakeaways = (
                 metric: feedback.lowest_metric?.name,
                 score: feedback.lowest_metric?.score,
-                key_takeaways: feedback.key_takeaways
+                key_takeaways: feedback.key_takeaways,
+                key_takeaways_audio: feedback.key_takeaways_audio.map { KeyTakeawaysResponse.AudioDetails(
+                    duration: $0.duration,
+                    fileSize: $0.fileSize,
+                    model: $0.model,
+                    url: $0.url,
+                    voiceId: $0.voiceId
+                )},
+                videoUrl: videoUrl
             )
         } else {
             self.existingTakeaways = nil
@@ -141,22 +169,145 @@ struct KeyTakeawaysView: View {
         }
     }
     
-    private func displayTakeawaysView(metric: String, score: Double, keyTakeaways: String) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-          
-            
-            Text(metric)
-                .font(.headline)
-                .padding(.vertical, 4)
-            
-            Text(keyTakeaways)
-                .font(.body)
-                .lineSpacing(4)
+    private func displayTakeawaysView(metric: String?, score: Double?, keyTakeaways: String?) -> some View {
+        ZStack {
+            // Main content
+            VStack(alignment: .leading, spacing: 12) {
+                if let metric = metric {
+                    Text(metric.replacingOccurrences(of: "_", with: " ").capitalized)
+                        .font(.headline)
+                        .padding(.vertical, 4)
+                }
+                
+                // Audio button
+                if let audioUrlString = existingTakeaways?.key_takeaways_audio?.url ?? takeaways?.key_takeaways_audio?.url,
+                   let audioUrl = URL(string: audioUrlString) {
+                    audioPlayButton(url: audioUrl)
+                }
+                
+                // Interactive takeaways with highlights
+                if let keyTakeaways = keyTakeaways {
+                    let sentences = keyTakeaways.components(separatedBy: ". ")
+                    ForEach(sentences, id: \.self) { sentence in
+                        HStack(spacing: 8) {
+                            let highlightInfo = PoseHighlightMapping.analyzeMetric(metricName: metric ?? "", sentence: sentence)
+                            let highlightColor = highlightInfo.type.color
+                            
+                            Circle()
+                                .fill(Color(highlightColor))
+                                .frame(width: 8, height: 8)
+                            
+                            HStack {
+                                Text(sentence)
+                                    .font(.body)
+                                    .lineSpacing(4)
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.gray)
+                                    .opacity(selectedSentence == sentence ? 1 : 0.5)
+                            }
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(selectedSentence == sentence ? 
+                                          Color(highlightColor).opacity(0.15) : 
+                                          Color.gray.opacity(0.05))
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(selectedSentence == sentence ? 
+                                           Color(highlightColor).opacity(0.3) : 
+                                           Color.gray.opacity(0.1))
+                            )
+                        }
+                        .onTapGesture {
+                            print("🔵 Sentence tapped: \(sentence)")
+                            withAnimation {
+                                if selectedSentence == sentence {
+                                    poseHighlightKey = UUID()
+                                }
+                                selectedSentence = sentence
+                                showingPoseOverlay = true
+                            }
+                        }
+                    }
+                } else {
+                    Text("No takeaways available")
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        .lineSpacing(4)
+                }
+                
+                // Pass selected sentence to PoseHighlightView
+                // if let metric = metric,
+                //    let videoUrl = self.videoUrl,
+                //    let url = URL(string: videoUrl) {
+                //     PoseHighlightView(
+                //         videoURL: url,
+                //         metricName: metric,
+                //         selectedSentence: selectedSentence
+                //     )
+                //     .id(poseHighlightKey)
+                //     .padding(.top, 8)
+                //     .onTapGesture {
+                //         withAnimation {
+                //             showingPoseOverlay = true
+                //         }
+                //     }
+                // }
+            }
         }
         .padding()
         .background(Color(.systemBackground))
         .cornerRadius(12)
         .shadow(radius: 2)
+        .sheet(isPresented: $showingPoseOverlay) {
+            if let metric = metric,
+               let videoUrl = self.videoUrl,
+               let url = URL(string: videoUrl) {
+                
+                VStack {
+                    PoseHighlightView(
+                        videoURL: url,
+                        metricName: metric,
+                        selectedSentence: selectedSentence
+                    )
+                }
+                .padding()
+                .background(Color(.systemBackground))
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                
+            } else {
+                VStack {
+                    Text("Unable to load content")
+                        .foregroundColor(.secondary)
+                }
+                .padding()
+                .background(Color(.systemBackground))
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+            }
+        }
+        .onDisappear {
+            stopAudio()
+        }
+    }
+    
+    private func audioPlayButton(url: URL) -> some View {
+        Button(action: toggleAudio) {
+            HStack {
+                Image(systemName: isPlayingAudio ? "pause.circle.fill" : "play.circle.fill")
+                    .font(.title2)
+                Text(isPlayingAudio ? "Pause" : "Play Audio")
+                    .font(.subheadline)
+            }
+            .foregroundColor(ThemeColors.primary)
+            .padding(.vertical, 4)
+        }
     }
     
     private func checkAndResetWeeklyCounter() {
@@ -218,6 +369,40 @@ struct KeyTakeawaysView: View {
         components.second = 0
         
         return calendar.date(from: components) ?? Date().addingTimeInterval(7 * 24 * 60 * 60)
+    }
+    
+    private func toggleAudio() {
+        if isPlayingAudio {
+            audioPlayer?.pause()
+            isPlayingAudio = false
+        } else {
+            // Check both existing and new takeaways for audio URL
+            if let audioUrlString = existingTakeaways?.key_takeaways_audio?.url ?? takeaways?.key_takeaways_audio?.url,
+               let audioUrl = URL(string: audioUrlString) {
+                if audioPlayer == nil {
+                    audioPlayer = AVPlayer(url: audioUrl)
+                    audioPlayer?.actionAtItemEnd = .pause
+                    
+                    // Add observer for playback ended
+                    NotificationCenter.default.addObserver(
+                        forName: .AVPlayerItemDidPlayToEndTime,
+                        object: audioPlayer?.currentItem,
+                        queue: .main
+                    ) { _ in
+                        isPlayingAudio = false
+                    }
+                }
+                audioPlayer?.seek(to: .zero)
+                audioPlayer?.play()
+                isPlayingAudio = true
+            }
+        }
+    }
+    
+    private func stopAudio() {
+        audioPlayer?.pause()
+        audioPlayer = nil
+        isPlayingAudio = false
     }
 }
 

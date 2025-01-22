@@ -18,6 +18,7 @@ class ProfileVM: ObservableObject {
     @Published var badges: [Badge] = []
     @Published var earnedBadges: [UserBadge] = []
     @Published var badgeProgress: [BadgeProgress] = []
+    @Published var isAuthenticated = false
     
     private let feedbackManager: FeedbackManager
     private let badgeService = BadgeService.shared
@@ -26,29 +27,34 @@ class ProfileVM: ObservableObject {
     init(feedbackManager: FeedbackManager = .shared) {
         self.feedbackManager = feedbackManager
         
-        // Start badge listener if user is authenticated
-        if let userId = Auth.auth().currentUser?.uid {
-            BadgeService.shared.startListening(userId: userId)
+        // Check authentication state immediately
+        isAuthenticated = Auth.auth().currentUser != nil
+        
+        // Only setup listeners if authenticated
+        if isAuthenticated {
+            if let userId = Auth.auth().currentUser?.uid {
+                BadgeService.shared.startListening(userId: userId)
+            }
+            
+            // Subscribe to badge service updates
+            badgeService.$userBadges
+                .assign(to: &$earnedBadges)
+            
+            badgeService.$badgeProgress
+                .assign(to: &$badgeProgress)
+                
+            // Observe changes to FeedbackManager's properties
+            feedbackManager.$isLoading
+                .assign(to: \.isLoading, on: self)
+                .store(in: &cancellables)
+                
+            feedbackManager.$feedbacks
+                .assign(to: \.feedbacks, on: self)
+                .store(in: &cancellables)
+            
+            // Load badges
+            loadBadges()
         }
-        
-        // Subscribe to badge service updates
-        badgeService.$userBadges
-            .assign(to: &$earnedBadges)
-        
-        badgeService.$badgeProgress
-            .assign(to: &$badgeProgress)
-            
-        // Observe changes to FeedbackManager's properties
-        feedbackManager.$isLoading
-            .assign(to: \.isLoading, on: self)
-            .store(in: &cancellables)
-            
-        feedbackManager.$feedbacks
-            .assign(to: \.feedbacks, on: self)
-            .store(in: &cancellables)
-        
-        // Load badges
-        loadBadges()
     }
     
     private func loadBadges() {

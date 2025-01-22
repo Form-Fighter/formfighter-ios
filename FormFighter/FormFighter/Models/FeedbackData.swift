@@ -41,7 +41,17 @@ enum FeedbackModels {
         let body: BodyFeedback?
         let statusCode: Int?
         let key_takeaways: String?
+        let key_takeaways_audio: AudioDetails?
         let lowest_metric: LowestMetric?
+        
+        
+        struct AudioDetails: Codable {
+            let duration: Double?
+            let fileSize: Int?
+            let model: String?
+            let url: String?
+            let voiceId: String?
+        }
         
         struct LowestMetric: Codable {
             let name: String?

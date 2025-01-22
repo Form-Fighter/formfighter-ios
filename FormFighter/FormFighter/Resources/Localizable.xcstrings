@@ -307,6 +307,9 @@
         }
       }
     },
+    "%.0f° angle" : {
+
+    },
     "%@" : {
       "localizations" : {
         "de" : {
@@ -3814,6 +3817,9 @@
     "Let's tailor your experience to help you master your technique." : {
 
     },
+    "Loading your feedback..." : {
+
+    },
     "Loading..." : {
 
     },
@@ -4213,7 +4219,13 @@
     "No Requests Remaining" : {
 
     },
+    "No takeaways available" : {
+
+    },
     "No training sessions yet" : {
+
+    },
+    "No video URL available" : {
 
     },
     "Not Okay" : {
@@ -4449,6 +4461,9 @@
     "Participants" : {
 
     },
+    "Pause" : {
+
+    },
     "per week" : {
 
     },
@@ -4531,6 +4546,9 @@
           }
         }
       }
+    },
+    "Play Audio" : {
+
     },
     "Please try again later. If the issue continues, consider using a different picture. Occasionally, GPT-4 Vision AI might encounter difficulties interpreting certain images or requests." : {
       "extractionState" : "stale",
@@ -5384,6 +5402,9 @@
         }
       }
     },
+    "Sign in to view your profile" : {
+
+    },
     "Sign in with Apple" : {
       "localizations" : {
         "de" : {
@@ -5553,6 +5574,9 @@
 
     },
     "Start Your Journey" : {
+
+    },
+    "Status: %@" : {
 
     },
     "Stay Updated" : {
@@ -5729,6 +5753,9 @@
 
     },
     "Suggested Stakes" : {
+
+    },
+    "Tap image to expand/collapse" : {
 
     },
     "Tap to insert user name" : {
@@ -6254,7 +6281,7 @@
         }
       }
     },
-    "Turn %.0f°" : {
+    "Turn 7°" : {
 
     },
     "Type 'confirm' to proceed" : {
@@ -6405,6 +6432,9 @@
 
     },
     "Type your last name" : {
+
+    },
+    "Unable to load content" : {
 
     },
     "Unexpected Error" : {

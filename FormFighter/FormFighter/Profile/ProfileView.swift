@@ -96,7 +96,16 @@ struct ProfileView: View {
             VStack(alignment: .leading, spacing: 24) {
                 ProfileHeader()
                 
-                if viewModel.isLoading {
+                if !viewModel.isAuthenticated {
+                    // Show sign in prompt
+                    VStack(spacing: 16) {
+                        Image(systemName: "person.crop.circle.badge.exclamationmark")
+                            .font(.system(size: 50))
+                            .foregroundColor(.secondary)
+                        Text("Sign in to view your profile")
+                            .font(.headline)
+                    }
+                } else if viewModel.isLoading {
                     LoadingView()
                 } else if viewModel.feedbacks.isEmpty {
                     EmptyStateView()

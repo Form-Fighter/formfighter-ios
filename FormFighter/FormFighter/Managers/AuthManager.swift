@@ -4,18 +4,33 @@ import AuthenticationServices
 import Combine
 import CryptoKit
 
-enum SignInWithAppleError: Error {
+enum SignInWithAppleError: LocalizedError {
     case credentialError
     case authenticationError(String)
+    case cancelled
+    
+    var errorDescription: String? {
+        switch self {
+        case .credentialError:
+            return "Failed to get Apple ID credentials"
+        case .authenticationError(let message):
+            return "Authentication failed: \(message)"
+        case .cancelled:
+            return "Sign in was cancelled"
+        }
+    }
 }
 
 enum AuthError: Error {
     case logoutError
+    case userNotFound
     
     var localizedDescription: String {
         switch self {
             case .logoutError:
                 "Error loging out"
+            case .userNotFound:
+                "User not found"
         }
     }
 }
@@ -31,11 +46,14 @@ final class AuthManager: ObservableObject {
     
     @MainActor
     func signInWithApple() async throws -> SSOUser {
+        // Cancel any existing sign-in attempts first
+        cancellables.removeAll()
+        
         signInWithAppleCoordinator.signIn()
         
         return try await withCheckedThrowingContinuation { continuation in
             signInWithAppleCoordinator.ssoUser
-                .first()
+                .first()  // This ensures we only take the first value
                 .sink(receiveCompletion: { [weak self] completion in
                     self?.cancellables.removeAll()
                     switch completion {
@@ -64,26 +82,26 @@ final class AuthManager: ObservableObject {
         }
     }
     
-    func deleteUser(completion: @escaping (Error?) -> Void) {
-        refreshUserAuthToken { result in
-            switch result {
+    func deleteUser() async throws {
+        guard let user = Auth.auth().currentUser else {
+            throw AuthError.userNotFound
+        }
+        
+        // Refresh token first
+        try await withCheckedThrowingContinuation { continuation in
+            refreshUserAuthToken { result in
+                switch result {
                 case .success(_):
-                    let user = Auth.auth().currentUser
-                    user?.delete(completion: { error in
-                        if let error = error {
-                            Logger.log(message: "Error deleting authenticated user: \(error.localizedDescription)", event: .error)
-                            completion(error)
-                        } else {
-                            Logger.log(message: "Authenticated user deleted successfully", event: .info)
-                            completion(nil)
-                        }
-                    })
-                    
-                case .failure(let failure):
-                    completion(failure)
+                    continuation.resume()
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
             }
         }
         
+        // Delete the user
+        try await user.delete()
+        Logger.log(message: "Authenticated user deleted successfully", event: .info)
     }
     
     func refreshUserAuthToken(completion: @escaping (Result<String, Error>) -> Void) {
@@ -156,21 +174,25 @@ class SignInWithAppleCoordinator: NSObject, ASAuthorizationControllerDelegate {
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-            
             guard let nonce = currentNonce else {
-                Logger.log(message: "Unable create a nonce.", event: .debug)
+                ssoUser.send(completion: .failure(SignInWithAppleError.credentialError))
                 return
             }
             
             guard let appleIdToken = appleIDCredential.identityToken else {
                 Logger.log(message: "Unable to fetch identity token", event: .debug)
+                ssoUser.send(completion: .failure(SignInWithAppleError.credentialError))
                 return
             }
             
             guard let appleIdTokenString = String(data: appleIdToken, encoding: .utf8) else {
-                Logger.log(message: "Unable decode token string from data: \(appleIdToken.debugDescription)", event: .debug)
+                Logger.log(message: "Unable decode token string from data", event: .debug)
+                ssoUser.send(completion: .failure(SignInWithAppleError.credentialError))
                 return
             }
+            
+            // Clear any existing auth state
+            try? Auth.auth().signOut()
             
             let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: appleIdTokenString, rawNonce: nonce)
             
@@ -196,6 +218,15 @@ class SignInWithAppleCoordinator: NSObject, ASAuthorizationControllerDelegate {
     }
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        let nsError = error as NSError
+        
+        // Handle user cancellation specifically
+        if nsError.code == ASAuthorizationError.canceled.rawValue {
+            Logger.log(message: "User cancelled sign in", event: .debug)
+            ssoUser.send(completion: .failure(SignInWithAppleError.cancelled))
+            return
+        }
+        
         Logger.log(message: "Error authenticating: \(error.localizedDescription)", event: .error)
         ssoUser.send(completion: .failure(SignInWithAppleError.authenticationError(error.localizedDescription)))
     }

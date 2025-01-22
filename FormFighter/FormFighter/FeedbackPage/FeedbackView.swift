@@ -65,15 +65,24 @@ struct FeedbackView: View {
     
     var body: some View {
         Group {
-            if isLoading {
-                ProgressView()
-                    .onAppear {
-                        print("⚡️ FeedbackView body appeared")
-                        if !hasAppeared {
-                            hasAppeared = true
-                            setupView()
-                        }
+            if isLoading || (!viewModel.status.isProcessing && viewModel.status != .completed && viewModel.status != .error) {
+                VStack(spacing: 16) {
+                    ProgressView()
+                        .scaleEffect(1.5)
+                    Text("Loading your feedback...")
+                        .font(.headline)
+                        .foregroundColor(ThemeColors.primary)
+                    Text("Status: \(viewModel.status.message)")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .onAppear {
+                    print("⚡️ FeedbackView body appeared")
+                    if !hasAppeared {
+                        hasAppeared = true
+                        setupView()
                     }
+                }
             } else if let feedback = viewModel.feedback, viewModel.status == .completed {
                 ScrollView {
                     VStack(spacing: 20) {
@@ -106,6 +115,8 @@ struct FeedbackView: View {
                 }
             } else if let error = viewModel.error {
                 UnexpectedErrorView(error: error)
+            } else if viewModel.status == .error {
+                UnexpectedErrorView(error: "An error occurred during processing")
             } else {
                 processingView
             }
@@ -322,7 +333,11 @@ struct FeedbackView: View {
 
                     // Key Takeaways Drawer
                      DrawerSection(title: "Key Takeaway") {
-                        KeyTakeawaysView(feedbackId: feedbackId, feedback: viewModel.feedback?.modelFeedback)
+                        KeyTakeawaysView(
+                            feedbackId: feedbackId,
+                            feedback: feedback.modelFeedback,
+                            videoUrl: feedback.videoUrl
+                        )
                     }
                     
                     // Speed Analysis Drawer

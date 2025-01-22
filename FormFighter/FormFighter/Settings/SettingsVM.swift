@@ -29,21 +29,32 @@ class SettingsVM: ObservableObject {
     }
     
     func deleteUserAndLogout() {
-        userManager.deleteUserData()
-        Tracker.deletedAccount()
-        authManager.deleteUser { [weak self] error in
-            if error != nil {
-                self?.alertMessage = "Error deleting user"
-                self?.showAlert.toggle()
-            } else {
-                self?.authManager.signOut { error in
-                    if error != nil {
-                        self?.alertMessage = "Error signing out"
-                        self?.showAlert.toggle()
-                    } else {
-                        self?.userManager.isAuthenticated = false
-                        self?.userManager.resetUserProperties()
-                    }
+        Task {
+            do {
+                // 1. Check for valid userID first
+                guard !userManager.userId.isEmpty else {
+                    throw AuthError.userNotFound
+                }
+                
+                // 2. Delete Firestore data first
+                userManager.deleteUserData()
+                
+                // 3. Track the deletion
+                Tracker.deletedAccount()
+                
+                // 4. Delete Firebase Auth user and sign out
+                try await authManager.deleteUser()
+                
+                // 5. Clean up local state (do this last)
+                await MainActor.run {
+                    userManager.isAuthenticated = false
+                    userManager.resetUserProperties()
+                }
+                
+            } catch {
+                await MainActor.run {
+                    self.alertMessage = "Error deleting user: \(error.localizedDescription)"
+                    self.showAlert = true
                 }
             }
         }

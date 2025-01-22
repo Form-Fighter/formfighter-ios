@@ -88,13 +88,30 @@ class FeedbackManager: ObservableObject {
                         jabScore = 0.0
                     }
                     
+                    let modelFeedbackData = data["modelFeedback"] as? [String: Any] ?? [:]
+                    let modelFeedback: FeedbackModels.ModelFeedback?
+                    
+                    do {
+                        print("📦 Raw model feedback data: \(modelFeedbackData)")
+                        // Convert Firestore data to JSON-safe format
+                        let jsonSafeData = self.convertFirestoreDataToJSON(modelFeedbackData)
+                        print("🔄 Converted JSON-safe data: \(jsonSafeData)")
+                        let jsonData = try JSONSerialization.data(withJSONObject: jsonSafeData)
+                        modelFeedback = try JSONDecoder().decode(FeedbackModels.ModelFeedback.self, from: jsonData)
+                        print("✅ Successfully decoded model feedback")
+                    } catch {
+                        print("❌ Error decoding model feedback: \(error)")
+                        print("❌ JSON conversion failed at step: \(error.localizedDescription)")
+                        modelFeedback = nil
+                    }
+                    
                     return FeedbackListItem(
                         id: document.documentID,
                         date: (data["createdAt"] as? Timestamp)?.dateValue() ?? Date(),
                         status: status,
                         videoUrl: data["videoUrl"] as? String,
                         score: jabScore,
-                        modelFeedback: try? JSONDecoder().decode(FeedbackModels.ModelFeedback.self, from: JSONSerialization.data(withJSONObject: data["modelFeedback"] ?? [:]))
+                        modelFeedback: modelFeedback
                     )
                 }
                 
@@ -260,6 +277,27 @@ class FeedbackManager: ObservableObject {
         
         print("✅ Extracted power: \(value)")
         return value
+    }
+    
+    private func convertFirestoreDataToJSON(_ data: [String: Any]) -> [String: Any] {
+        var result: [String: Any] = [:]
+        
+        for (key, value) in data {
+            if let timestamp = value as? Timestamp {
+                // Convert Timestamp to ISO8601 string
+                result[key] = timestamp.dateValue().ISO8601Format()
+            } else if let nestedDict = value as? [String: Any] {
+                // Recursively convert nested dictionaries
+                result[key] = convertFirestoreDataToJSON(nestedDict)
+            } else if let array = value as? [[String: Any]] {
+                // Handle arrays of dictionaries
+                result[key] = array.map { convertFirestoreDataToJSON($0) }
+            } else {
+                result[key] = value
+            }
+        }
+        
+        return result
     }
 }
 

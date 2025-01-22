@@ -190,6 +190,8 @@
 		B2D92D262D36E67700032377 /* SpeedComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D92D252D36E67700032377 /* SpeedComparisonView.swift */; };
 		B2D92D282D38EED900032377 /* DrawerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D92D272D38EED800032377 /* DrawerSection.swift */; };
 		B2D92D2A2D3A466C00032377 /* KeyTakeawaysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D92D292D3A466C00032377 /* KeyTakeawaysView.swift */; };
+		B2D92D2E2D3B3D9200032377 /* PoseHighlightMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D92D2D2D3B3D9200032377 /* PoseHighlightMapping.swift */; };
+		B2D92D302D3CD8FB00032377 /* PoseHighlightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D92D2F2D3CD8FB00032377 /* PoseHighlightView.swift */; };
 		B2F447E92D08062F0032E53C /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447E82D08062F0032E53C /* Challenge.swift */; };
 		B2F447F22D081AE20032E53C /* ActiveChallengeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447EA2D081AE20032E53C /* ActiveChallengeView.swift */; };
 		B2F447F32D081AE20032E53C /* ChallengeHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F447EB2D081AE20032E53C /* ChallengeHistoryView.swift */; };
@@ -381,6 +383,8 @@
 		B2D92D252D36E67700032377 /* SpeedComparisonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeedComparisonView.swift; sourceTree = "<group>"; };
 		B2D92D272D38EED800032377 /* DrawerSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerSection.swift; sourceTree = "<group>"; };
 		B2D92D292D3A466C00032377 /* KeyTakeawaysView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyTakeawaysView.swift; sourceTree = "<group>"; };
+		B2D92D2D2D3B3D9200032377 /* PoseHighlightMapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoseHighlightMapping.swift; sourceTree = "<group>"; };
+		B2D92D2F2D3CD8FB00032377 /* PoseHighlightView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoseHighlightView.swift; sourceTree = "<group>"; };
 		B2F447E82D08062F0032E53C /* Challenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 		B2F447EA2D081AE20032E53C /* ActiveChallengeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveChallengeView.swift; sourceTree = "<group>"; };
 		B2F447EB2D081AE20032E53C /* ChallengeHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeHistoryView.swift; sourceTree = "<group>"; };
@@ -490,6 +494,7 @@
 		818D3F812B6FA3CA00DF7299 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B2D92D2D2D3B3D9200032377 /* PoseHighlightMapping.swift */,
 				B2F448002D082BCC0032E53C /* ChallengeError.swift */,
 				B2F447E82D08062F0032E53C /* Challenge.swift */,
 				B252ED6D2D076D1800013524 /* Badge.swift */,
@@ -824,6 +829,7 @@
 		B21411722CE537BB00699B15 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				B2D92D2F2D3CD8FB00032377 /* PoseHighlightView.swift */,
 				B2D92D292D3A466C00032377 /* KeyTakeawaysView.swift */,
 				B2D92D252D36E67700032377 /* SpeedComparisonView.swift */,
 				B2F447F82D0822800032E53C /* ShareSheet.swift */,
@@ -1177,6 +1183,7 @@
 				8125D5B82B77F237001A846B /* ChatGPTResponse.swift in Sources */,
 				81DE14EE2B762BC200C41EA9 /* CryptoUtils.swift in Sources */,
 				B2F447FB2D0827A90032E53C /* LeaderboardView.swift in Sources */,
+				B2D92D302D3CD8FB00032377 /* PoseHighlightView.swift in Sources */,
 				81DE14EA2B75563600C41EA9 /* FAQView.swift in Sources */,
 				818D3FC82B70100F00DF7299 /* EmptyResponse.swift in Sources */,
 				B2F448012D082BCC0032E53C /* ChallengeError.swift in Sources */,
@@ -1184,6 +1191,7 @@
 				818D3FDA2B713D0F00DF7299 /* PillButton.swift in Sources */,
 				8125D5B42B77F167001A846B /* ChatGPTService.swift in Sources */,
 				B2119AEF2D010AD10071C52E /* Extensions.swift in Sources */,
+				B2D92D2E2D3B3D9200032377 /* PoseHighlightMapping.swift in Sources */,
 				818D3FE42B715DCC00DF7299 /* MultiplePagesOnboardingFeature.swift in Sources */,
 				81DE14D62B75266200C41EA9 /* UserManager.swift in Sources */,
 				81DE14DA2B75269600C41EA9 /* User.swift in Sources */,

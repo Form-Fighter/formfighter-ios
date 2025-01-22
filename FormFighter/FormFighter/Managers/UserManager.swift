@@ -37,6 +37,7 @@ class UserManager: ObservableObject {
     @Published var shouldShowCelebration: Bool = false
     private var userListener: ListenerRegistration?
     let badgeService = BadgeService()
+    var isSigningInForDeletion = false  // Add this property
     
     private init(user: User? = nil,
                  isAuthenticated: Bool = false,
@@ -63,25 +64,29 @@ class UserManager: ObservableObject {
         
         do {
             // Try to fetch existing user data
-            if let fetchedUser = try await firestoreService.fetchUser(userID: currentUser.uid) {
-                // If user exists but has empty height/weight, set defaults
-                var updatedUser = fetchedUser
-                if fetchedUser.height?.isEmpty ?? true {
-                    updatedUser.height = .defaultHeight
-                }
-                if fetchedUser.weight?.isEmpty ?? true {
-                    updatedUser.weight = .defaultWeight
+            if let fetchedUser = try? await firestoreService.fetchUser(userID: currentUser.uid) {
+                // Existing user flow
+                let updatedUser = await MainActor.run {
+                    var user = fetchedUser
+                    if fetchedUser.height?.isEmpty ?? true {
+                        user.height = .defaultHeight
+                    }
+                    if fetchedUser.weight?.isEmpty ?? true {
+                        user.weight = .defaultWeight
+                    }
+                    return user
                 }
                 
-                // Only update in Firestore if we made changes
                 if updatedUser != fetchedUser {
                     try await firestoreService.updateUser(userID: updatedUser.id, with: updatedUser)
                 }
                 
-                self.user = updatedUser
-                Logger.log(message: "Existing user data fetched successfully", event: .debug)
+                await MainActor.run {
+                    self.user = updatedUser
+                }
+                print("Existing user fetched successfully")
             } else {
-                // User doesn't exist in database, create new one with defaults
+                // Create new user if doesn't exist
                 let newUser = User(
                     id: currentUser.uid,
                     name: currentUser.displayName ?? "",
@@ -99,16 +104,18 @@ class UserManager: ObservableObject {
                 )
                 
                 try await firestoreService.createUser(userID: newUser.id, with: newUser)
-                self.user = newUser
+                await MainActor.run {
+                    self.user = newUser
+                }
+                print("New User created successfully")
             }
             
-            // Only request notification permissions if user is authenticated
-            DispatchQueue.main.async {
+            await MainActor.run {
                 NotificationManager.shared.requestNotificationPermission()
             }
         } catch {
-            Logger.log(message: "Error fetching/creating user: \(error.localizedDescription)", event: .error)
-            throw error
+            print("Error in fetchAllData: \(error.localizedDescription)")
+            // Don't throw here, just log the error
         }
     }
     
@@ -149,7 +156,14 @@ class UserManager: ObservableObject {
         if let _ = Auth.auth().currentUser {
             Logger.log(message: "🟢 Authenticated set to TRUE", event: .debug)
             isAuthenticated = true
-            startListening()
+            
+            // Only start listening and fetch data if NOT signing in for deletion
+            if !isSigningInForDeletion {
+                startListening()
+                Task {
+                    try? await fetchAllData()
+                }
+            }
         } else {
             Logger.log(message: "🔴 Authenticated set to FALSE", event: .debug)
             isAuthenticated = false
@@ -182,6 +196,7 @@ class UserManager: ObservableObject {
     }
     
     func deleteUserData() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
         firestoreService.deleteUser(userID: userId)
     }
     
