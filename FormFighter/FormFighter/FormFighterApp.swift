@@ -109,24 +109,24 @@ struct FormFighterApp: App {
                     Group {
 
                         // PRODUCTION VERSION
-                        // if !hasCompletedOnboarding {
+                        if !hasCompletedOnboarding {
+                            OnePageOnboardingView(userManager: userManager)
+                        } else if !userManager.isAuthenticated {
+                            LoginView(showPaywallInTheOnboarding: false)
+                        } else if isTestFlight() || (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
+                            normalUI
+                        } else {
+                            PaywallView()
+                        }
+
+                        // TEST FLIGHT BETA   VERSION
+                        //  if !hasCompletedOnboarding {
                         //     onboarding
                         // } else if !userManager.isAuthenticated {
                         //     LoginView(showPaywallInTheOnboarding: false)
-                        // } else if isTestFlight() || (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
-                        //     normalUI
                         // } else {
-                        //     PaywallView()
-                        // }
-
-                        // TEST FLIGHT BETA   VERSION
-                         if !hasCompletedOnboarding {
-                            onboarding
-                        } else if !userManager.isAuthenticated {
-                            LoginView(showPaywallInTheOnboarding: false)
-                        } else {
-                            normalUI
-                        } 
+                        //     normalUI
+                        // } 
                     }
                     .opacity(showSplash ? 0 : 1)
                     
@@ -205,7 +205,7 @@ struct FormFighterApp: App {
         NavigationStack {
             // MARK: - You can change the type of onboarding you want commenting and uncommenting the views.
              //MultiplePagesOnboardingView()
-            OnePageOnboardingView()
+           OnePageOnboardingView(userManager: userManager)
         }
     }
     

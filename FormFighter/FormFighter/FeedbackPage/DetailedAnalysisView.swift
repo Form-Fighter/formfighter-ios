@@ -4,7 +4,7 @@ struct DetailedAnalysisView: View {
     @ObservedObject var viewModel: FeedbackViewModel
     
     // Categories matching the React version
-    private let categories = [
+     let categories = [
         ("all", "All"),
         ("head", "Head & Chin"),
         ("arms", "Arms & Hands"),
@@ -17,7 +17,7 @@ struct DetailedAnalysisView: View {
     @State private var selectedCategory: String = "all"
     
     // Grouped metrics matching the React version
-    private let groupedMetrics: [String: [String]] = [
+     let groupedMetrics: [String: [String]] = [
         "head": [
             "Chin_Lift_Extension",
             "Chin_Tucked_Extension",

@@ -182,6 +182,8 @@
 		B252ED792D07A9FC00013524 /* JabComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B252ED782D07A9FC00013524 /* JabComparisonView.swift */; };
 		B252ED7B2D07B9C700013524 /* VideoCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B252ED7A2D07B9C700013524 /* VideoCache.swift */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
+		B2B448F92D4A7F280058EBCF /* MetricsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B448F82D4A7F280058EBCF /* MetricsConstants.swift */; };
+		B2B448FB2D4ACDFC0058EBCF /* FocusMetricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B448FA2D4ACDFC0058EBCF /* FocusMetricsView.swift */; };
 		B2B9F0B52CB083D400D7CFC8 /* IntNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */; };
 		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
 		B2B9F0BA2CB0A8EF00D7CFC8 /* ProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B92CB0A8EF00D7CFC8 /* ProfileVM.swift */; };
@@ -374,6 +376,8 @@
 		B252ED782D07A9FC00013524 /* JabComparisonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JabComparisonView.swift; sourceTree = "<group>"; };
 		B252ED7A2D07B9C700013524 /* VideoCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCache.swift; sourceTree = "<group>"; };
 		B256D8A02CEA638F00085249 /* FormFighter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighter.entitlements; sourceTree = "<group>"; };
+		B2B448F82D4A7F280058EBCF /* MetricsConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetricsConstants.swift; sourceTree = "<group>"; };
+		B2B448FA2D4ACDFC0058EBCF /* FocusMetricsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusMetricsView.swift; sourceTree = "<group>"; };
 		B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighterDebug.entitlements; sourceTree = "<group>"; };
 		B2B9F0B42CB083D400D7CFC8 /* IntNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntNumberFieldView.swift; sourceTree = "<group>"; };
 		B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -574,6 +578,7 @@
 		818D3FA42B700A2B00DF7299 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				B2B448F82D4A7F280058EBCF /* MetricsConstants.swift */,
 				B2F448022D0EFCE10032E53C /* DeepLinkHandler.swift */,
 				818D3FA92B700E7C00DF7299 /* Extensions */,
 				818D3FA52B700A3500DF7299 /* Constants.swift */,
@@ -788,6 +793,7 @@
 		B214115A2CCF128600699B15 /* FeedbackPage */ = {
 			isa = PBXGroup;
 			children = (
+				B2B448FA2D4ACDFC0058EBCF /* FocusMetricsView.swift */,
 				B2D92D272D38EED800032377 /* DrawerSection.swift */,
 				B2F448092D215E970032E53C /* DetailedAnalysisView.swift */,
 				B2F448082D215E970032E53C /* MetricCardView.swift */,
@@ -1092,6 +1098,7 @@
 				B2F447F72D081AE20032E53C /* ChallengeViewModel.swift in Sources */,
 				81E98B082B72A781000E8996 /* RequestReviewView.swift in Sources */,
 				B21411732CE537BB00699B15 /* FeedbackSection.swift in Sources */,
+				B2B448F92D4A7F280058EBCF /* MetricsConstants.swift in Sources */,
 				B252ED752D076DAB00013524 /* BadgeCelebrationView.swift in Sources */,
 				B21411832CE63BED00699B15 /* ImprovementsGridView.swift in Sources */,
 				B2F447FF2D082ABB0032E53C /* ChallengeService.swift in Sources */,
@@ -1135,6 +1142,7 @@
 				818D3FCB2B70100F00DF7299 /* RequestError.swift in Sources */,
 				814731F22B7D381B00E223A7 /* DALLEVM.swift in Sources */,
 				81F5C5112BCED29A001A0F57 /* AnimatedSelector.swift in Sources */,
+				B2B448FB2D4ACDFC0058EBCF /* FocusMetricsView.swift in Sources */,
 				81E98B062B72A777000E8996 /* HeartView.swift in Sources */,
 				81DE14DC2B75270500C41EA9 /* FirestoreService.swift in Sources */,
 				8125D5BA2B77FC77001A846B /* Message.swift in Sources */,

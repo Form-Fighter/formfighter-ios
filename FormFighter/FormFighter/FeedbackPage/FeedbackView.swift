@@ -345,7 +345,12 @@ struct FeedbackView: View {
                         speedAnalysisSection(metrics: metrics)
                     }
                     
-                    // Video Comparison Drawer
+                    // After Speed Analysis Drawer and before Video Analysis Drawer
+                    DrawerSection(title: "Focus Metrics") {
+                        focusMetricsSection(metrics: metrics)
+                    }
+                    
+                    // Video Analysis Drawer
                     DrawerSection(title: "Video Analysis") {
                         videoComparisonSection(feedback: feedback)
                     }
@@ -468,7 +473,36 @@ struct FeedbackView: View {
             }
         }
     }
+
+    private func focusMetricsSection(metrics: FeedbackModels.BodyFeedback) -> some View {
     
+        VStack(spacing: 16) {
+            Toggle("Compare with last punch", isOn: $compareWithLastPunch)
+                .padding(.horizontal)
+            
+            ScrollView {
+                VStack(spacing: 24) {
+                    if userManager.pinnedMetrics.isEmpty {
+                        Text("No focus metrics selected")
+                            .foregroundColor(.secondary)
+                            .padding()
+                    } else {
+                        ForEach(userManager.pinnedMetrics, id: \.id) { metric in
+                            MetricComparisonCard(
+                                metric: metric,
+                                currentMetrics: metrics,
+                                feedbackId: feedbackId,
+                                compareWithLastPunch: compareWithLastPunch
+                            )
+                        }
+                    }
+                }
+                .padding()
+                    }
+                }
+    }
+    
+
     private var anonymousCommentsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Anonymous Comments")

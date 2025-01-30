@@ -7,6 +7,7 @@
 import SwiftUI
 import ConfettiSwiftUI
 
+
 enum ProfileSection {
     case analytics, history
 }
@@ -90,6 +91,7 @@ struct ProfileView: View {
     @State private var triggerConfetti = 0
     @State private var showingBadgeCelebration = false
     @State private var earnedBadge: Badge?
+    @State private var showMetricsSelection = false
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
@@ -283,10 +285,27 @@ struct GamificationStats: View {
 struct AnalyticsSection: View {
     @Binding var selectedTab: TimePeriod
     @ObservedObject var viewModel: ProfileVM
+    @EnvironmentObject var userManager: UserManager
+    @State private var showMetricsSelection = false
     
     var body: some View {
-      
-      
+        VStack(alignment: .leading, spacing: 24) {
+            Button(action: { showMetricsSelection = true }) {
+                HStack {
+                    Image(systemName: "target")
+                    Text("Focus Metrics")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                }
+                .padding()
+                .background(Color.secondarySystemBackground)
+                .cornerRadius(12)
+            }
+            .padding(.horizontal)
+            .sheet(isPresented: $showMetricsSelection) {
+                JabMetricsSelectionView(userManager: userManager)
+                    .presentationDetents([.large])
+            }
             
             TabView(selection: $selectedTab) {
                 StatsView(timeInterval: .day, feedbacks: viewModel.feedbacks, viewModel: viewModel)
@@ -310,7 +329,7 @@ struct AnalyticsSection: View {
             }
             .frame(height: 600)
             .padding(.bottom, 50)
-     
+        }
     }
 }
 
@@ -774,6 +793,486 @@ struct PaginationControls: View {
 
 #Preview {
     ProfileView()
+}
+
+struct JabMetricsQuizView: View {
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var userManager: UserManager
+    @State private var showQuiz = false
+    @State private var selectedAnswers: [String: String] = [:]
+    @State private var currentQuestionIndex = 0
+    @State private var showRecommendations = false
+    
+    private var isLastQuestion: Bool {
+        currentQuestionIndex == jabQuizQuestions.count - 1
+    }
+    
+    private var hasAnsweredAllQuestions: Bool {
+        selectedAnswers.count >= 5  // Ensure at least 5 questions are answered
+    }
+    
+    private var currentQuestion: JabMetricQuestion? {
+        guard currentQuestionIndex < jabQuizQuestions.count else { return nil }
+        return jabQuizQuestions[currentQuestionIndex]
+    }
+    
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    if !showQuiz {
+                        Button(action: { showQuiz = true }) {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text("Personalize Your Metrics")
+                                        .font(.headline)
+                                    Text("Take a quick quiz to focus on what matters most")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                            }
+                            .padding()
+                            .background(Color.secondarySystemBackground)
+                            .cornerRadius(12)
+                        }
+                    } else if let question = currentQuestion {
+                        VStack(alignment: .leading, spacing: 24) {
+                            // Progress indicator
+                            HStack {
+                                Text("Question \(currentQuestionIndex + 1) of \(jabQuizQuestions.count)")
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                                ProgressView(value: Double(currentQuestionIndex + 1), total: Double(jabQuizQuestions.count))
+                                    .frame(width: 100)
+                            }
+                            .padding(.bottom)
+                            
+                            QuizQuestionView(
+                                question: question,
+                                selectedAnswer: selectedAnswers[question.question] ?? "",
+                                onSelect: { answer in
+                                    selectedAnswers[question.question] = answer
+                                    updatePinnedMetrics()
+                                    
+                                    if isLastQuestion && hasAnsweredAllQuestions {
+                                        showRecommendations = true
+                                    } else if currentQuestionIndex < jabQuizQuestions.count - 1 {
+                                        withAnimation {
+                                            currentQuestionIndex += 1
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                        .padding()
+                        
+                        if isLastQuestion && hasAnsweredAllQuestions {
+                            Button(action: {
+                                showRecommendations = true
+                            }) {
+                                Text("See Recommendations")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.brand)
+                                    .cornerRadius(12)
+                            }
+                            .padding()
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Personalize Training")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if showQuiz {
+                        Button("Done") {
+                            dismiss()
+                        }
+                    }
+                }
+            }
+        }
+        .fullScreenCover(isPresented: $showRecommendations) {
+            QuizResultsView(metrics: userManager.pinnedMetrics)
+        }
+    }
+    
+    private func updatePinnedMetrics() {
+        var recommendedMetrics = Set<String>()
+        
+        // Collect metrics from quiz answers
+        for (question, answer) in selectedAnswers {
+            if let question = jabQuizQuestions.first(where: { $0.question == question }),
+               let metrics = question.relatedMetrics[answer] {
+                metrics.forEach { recommendedMetrics.insert($0) }
+            }
+        }
+        
+        // Update user's pinned metrics (limit to 3)
+        userManager.pinnedMetrics = Array(recommendedMetrics.prefix(3)).map { metricId in
+            PinnedMetric(
+                id: metricId,
+                category: getCategoryForMetric(metricId),
+                displayName: getDisplayName(for: metricId)
+            )
+        }
+    }
+    
+    private func getCategoryForMetric(_ metricId: String) -> String {
+        for (category, metrics) in MetricsConstants.groupedMetrics {
+            if metrics.contains(metricId) {
+                return category
+            }
+        }
+        return "overall"
+    }
+    
+    private func getDisplayName(for metricId: String) -> String {
+        return metricId.replacingOccurrences(of: "_", with: " ")
+            .capitalized
+    }
+}
+
+struct QuizResultsView: View {
+    let metrics: [PinnedMetric]
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Your Recommended Focus Areas")
+                .font(.title2.bold())
+                .padding(.bottom)
+            
+            ForEach(metrics, id: \.id) { metric in
+                MetricExplanationCard(metric: metric)
+            }
+        }
+    }
+}
+
+struct MetricExplanationCard: View {
+    let metric: PinnedMetric
+    
+    private var explanation: String {
+        MetricsConstants.getExplanation(for: metric.id)
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(metric.displayName)
+                .font(.headline)
+            Text(explanation)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.secondarySystemBackground)
+        .cornerRadius(12)
+    }
+}
+
+struct JabMetricsSelectionView: View {
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var userManager: UserManager
+    @State private var showQuiz = false
+    @State private var showDirectSelection = false
+    
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 24) {
+                    Text("Track Your Progress")
+                        .font(.title2.bold())
+                        .padding(.top)
+                    
+                    if userManager.pinnedMetrics.isEmpty {
+                        Text("Choose up to 3 metrics to focus on")
+                            .foregroundColor(.secondary)
+                    } else {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Current Focus Areas")
+                                .font(.headline)
+                            
+                            ForEach(userManager.pinnedMetrics, id: \.id) { metric in
+                                MetricExplanationCard(metric: metric)
+                            }
+                        }
+                        .padding()
+                        .background(Color.secondarySystemBackground)
+                        .cornerRadius(12)
+                    }
+                    
+                    // Selection Method Buttons
+                    VStack(spacing: 16) {
+                        SelectionMethodButton(
+                            title: "Take Quick Quiz",
+                            subtitle: "Get personalized recommendations",
+                            icon: "list.bullet.clipboard",
+                            action: { showQuiz = true }
+                        )
+                        
+                        SelectionMethodButton(
+                            title: "Select Metrics",
+                            subtitle: "Choose specific metrics to track",
+                            icon: "square.grid.2x2",
+                            action: { showDirectSelection = true }
+                        )
+                    }
+                    .padding()
+                    
+                    Spacer(minLength: 0)
+                }
+                .padding()
+            }
+            .sheet(isPresented: $showQuiz) {
+                JabMetricsQuizView(userManager: userManager)
+                    .presentationDetents([.large])
+                    .interactiveDismissDisabled()
+            }
+            .sheet(isPresented: $showDirectSelection) {
+                MetricsDirectSelectionView(userManager: userManager)
+                    .presentationDetents([.large])
+                    .interactiveDismissDisabled()
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct SelectionMethodButton: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 16) {
+                Image(systemName: icon)
+                    .font(.title2)
+                    .foregroundColor(.brand)
+                    .frame(width: 32)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.headline)
+                    Text(subtitle)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.secondary)
+            }
+            .padding()
+            .background(Color.secondarySystemBackground)
+            .cornerRadius(12)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+struct MetricsDirectSelectionView: View {
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var userManager: UserManager
+    @State private var selectedMetrics: Set<String> = []
+    
+    // Initialize selectedMetrics with current pinnedMetrics
+    init(userManager: UserManager) {
+        self.userManager = userManager
+        _selectedMetrics = State(initialValue: Set(userManager.pinnedMetrics.map { $0.id }))
+    }
+    
+    private func updateUserMetrics() {
+        userManager.pinnedMetrics = Array(selectedMetrics).map { metricId in
+            PinnedMetric(
+                id: metricId,
+                category: getCategoryForMetric(metricId),
+                displayName: getDisplayName(for: metricId)
+            )
+        }
+    }
+    
+    private func getCategoryForMetric(_ metricId: String) -> String {
+        for (category, metrics) in MetricsConstants.groupedMetrics {
+            if metrics.contains(metricId) {
+                return category
+            }
+        }
+        return "overall"
+    }
+    
+    private func getDisplayName(for metricId: String) -> String {
+        return metricId.replacingOccurrences(of: "_", with: " ")
+            .capitalized
+    }
+    
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(Array(MetricsConstants.groupedMetrics.keys.sorted()), id: \.self) { category in
+                    Section(header: Text(category.capitalized)) {
+                        ForEach(MetricsConstants.groupedMetrics[category] ?? [], id: \.self) { metric in
+                            MetricSelectionRow(
+                                metric: metric,
+                                isSelected: selectedMetrics.contains(metric),
+                                canSelect: selectedMetrics.count < 3 || selectedMetrics.contains(metric),
+                                onToggle: { isSelected in
+                                    if isSelected {
+                                        if selectedMetrics.count < 3 {
+                                            selectedMetrics.insert(metric)
+                                        }
+                                    } else {
+                                        selectedMetrics.remove(metric)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Select Metrics")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        updateUserMetrics()
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct MetricSelectionRow: View {
+    let metric: String
+    let isSelected: Bool
+    let canSelect: Bool
+    let onToggle: (Bool) -> Void
+    
+    private func getDisplayName(for metricId: String) -> String {
+        return metricId.replacingOccurrences(of: "_", with: " ")
+            .capitalized
+    }
+    
+    var body: some View {
+        Button(action: { if canSelect { onToggle(!isSelected) } }) {
+            HStack {
+                Text(getDisplayName(for: metric))
+                Spacer()
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.brand)
+                }
+            }
+        }
+        .disabled(!canSelect)
+        .opacity(canSelect ? 1 : 0.5)
+    }
+}
+
+extension Color {
+    static let secondarySystemBackground = Color(UIColor.secondarySystemBackground)
+}
+
+struct QuizQuestionView: View {
+    let question: JabMetricQuestion
+    let selectedAnswer: String
+    let onSelect: (String) -> Void
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(question.question)
+                .font(.headline)
+            
+            VStack(spacing: 8) {
+                ForEach(question.options, id: \.self) { option in
+                    Button(action: { onSelect(option) }) {
+                        HStack {
+                            Text(option)
+                                .foregroundColor(.primary)
+                                .multilineTextAlignment(.leading)
+                            Spacer()
+                            if selectedAnswer == option {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.brand)
+                            } else {
+                                Image(systemName: "circle")
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .padding()
+                        .background(selectedAnswer == option ? Color.brand.opacity(0.1) : Color.secondarySystemBackground)
+                        .cornerRadius(12)
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct RecommendedFocusAreasView: View {
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var userManager: UserManager
+    let selectedAnswers: [String: String]
+    let jabQuizQuestions: [JabMetricQuestion]
+    
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    Text("Your Recommended Focus Areas")
+                        .font(.title2.bold())
+                        .padding(.bottom)
+                    
+                    Text("Based on your responses, we recommend focusing on these key metrics:")
+                        .foregroundColor(.secondary)
+                        .padding(.bottom)
+                    
+                    ForEach(userManager.pinnedMetrics, id: \.id) { metric in
+                        MetricExplanationCard(metric: metric)
+                    }
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Text("Get Started")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.brand)
+                            .cornerRadius(12)
+                    }
+                    .padding(.top, 32)
+                }
+                .padding()
+            }
+            .navigationTitle("Recommendations")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Skip") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
 }
 
 

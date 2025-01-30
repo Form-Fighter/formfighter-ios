@@ -20,6 +20,7 @@ struct SurveyResponse {
 
 struct OnePageOnboardingView: View {
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding: Bool = false
+    @ObservedObject var userManager: UserManager
     @State private var currentStep = 0
     @State private var showPaywall = false
     @State private var selectedAnswers: [String: Set<String>] = [:]
@@ -57,12 +58,36 @@ struct OnePageOnboardingView: View {
             questions: [
                 SurveyQuestion(
                     question: "What discipline(s) do you train?",
-                    options: ["Muay Thai", "Boxing", "MMA", "Other"],
+                    options: ["Muay Thai", "Boxing", "MMA", "Kickboxing", "Other"],
                     allowsMultipleSelection: true,
                     isOpenEnded: false
                 )
             ],
             stepNumber: 3
+        ),
+        OnboardingSurveyStep(
+            title: "Jab Analysis",
+            questions: [
+                SurveyQuestion(
+                    question: "What's your most common feedback during sparring with your jab?",
+                    options: ["I get countered easily", "My jab lacks power", "I'm too slow to retract", "I drop my hands after jabbing"],
+                    allowsMultipleSelection: false,
+                    isOpenEnded: false
+                ),
+                SurveyQuestion(
+                    question: "What aspect of your jab do you want to improve most?",
+                    options: ["Speed and explosiveness", "Technical form", "Defense while jabbing", "Power generation"],
+                    allowsMultipleSelection: false,
+                    isOpenEnded: false
+                ),
+                SurveyQuestion(
+                    question: "What's your biggest technical challenge with the jab?",
+                    options: ["My elbow flares out", "I telegraph my jab", "My footwork is off", "My jab isn't straight"],
+                    allowsMultipleSelection: false,
+                    isOpenEnded: false
+                )
+            ],
+            stepNumber: 4
         ),
         OnboardingSurveyStep(
             title: "Feedback Experience",
@@ -74,7 +99,7 @@ struct OnePageOnboardingView: View {
                     isOpenEnded: false
                 )
             ],
-            stepNumber: 4
+            stepNumber: 5
         ),
         OnboardingSurveyStep(
             title: "Training Investment",
@@ -92,7 +117,7 @@ struct OnePageOnboardingView: View {
                     isOpenEnded: false
                 )
             ],
-            stepNumber: 5
+            stepNumber: 6
         ),
         // OnboardingSurveyStep(
         //     title: "Personal Impact",
@@ -111,7 +136,6 @@ struct OnePageOnboardingView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Premium animated background
                 BackgroundView(animate: $animateBackground)
                 
                 VStack(spacing: 0) {
@@ -123,13 +147,38 @@ struct OnePageOnboardingView: View {
                                 insertion: .move(edge: .trailing).combined(with: .opacity),
                                 removal: .move(edge: .leading).combined(with: .opacity)
                             ))
-                    } else {
-                        insightsView
-                            .transition(.scale.combined(with: .opacity))
+                    } else if currentStep == surveySteps.count + 1 {
+                        LoadingAnalysisView {
+                            updatePinnedMetrics()
+                            withAnimation {
+                                currentStep += 1
+                            }
+                        }
+                        .transition(.opacity)
+                    } else if currentStep == surveySteps.count + 2 {
+                        OnboardingRecommendedFocusAreasView(
+                            userManager: userManager,
+                            selectedAnswers: selectedAnswers,
+                            onContinue: {
+                                withAnimation {
+                                    currentStep += 1
+                                }
+                            }
+                        )
+                        .transition(.scale.combined(with: .opacity))
+                    } else if currentStep == surveySteps.count + 3 {
+                        SavingsView(
+                            selectedAnswers: selectedAnswers,
+                            onContinue: {
+                                hasCompletedOnboarding = true
+                            }
+                        )
+                        .transition(.scale.combined(with: .opacity))
                     }
                 }
                 .animation(.spring(response: 0.6, dampingFraction: 0.8), value: currentStep)
             }
+            .padding(.vertical, 10)
         }
         .ignoresSafeArea()
     }
@@ -147,11 +196,11 @@ struct OnePageOnboardingView: View {
                     }
                 })
                 
-                Button("Skip") {
-                    hasCompletedOnboarding = true 
-                }
-                .foregroundColor(.white.opacity(0.6))
-                .padding(.top, 8)
+                // Button("Skip") {
+                //     hasCompletedOnboarding = true 
+                // }
+                // .foregroundColor(.white.opacity(0.6))
+                // .padding(.top, 8)
                 
                 Spacer()
                     .frame(height: 20)
@@ -221,12 +270,12 @@ struct OnePageOnboardingView: View {
                 }
                 .frame(height: 120)
                 
-                Text("Let's tailor your experience to help you master your technique.")
-                    .font(.special(.title3, weight: .medium))
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.white.opacity(0.7))
-                    .padding(.horizontal, 24)
-                    .fixedSize(horizontal: false, vertical: true)
+                // Text("Let's tailor your experience to help you master your technique.")
+                //     .font(.special(.title3, weight: .medium))
+                //     .multilineTextAlignment(.center)
+                //     .foregroundColor(.white.opacity(0.7))
+                //     .padding(.horizontal, 24)
+                //     .fixedSize(horizontal: false, vertical: true)
             }
             .padding(.horizontal)
         }
@@ -286,8 +335,8 @@ struct OnePageOnboardingView: View {
             RoundedButton(title: "Continue") {
                 withAnimation {
                     if step.stepNumber == surveySteps.count {
-                        currentStep = surveySteps.count + 1 // Show insights
-                        hasCompletedOnboarding = true // Set onboarding as completed
+                        updatePinnedMetrics()
+                        currentStep = surveySteps.count + 1 // Show recommendations
                     } else {
                         currentStep += 1
                     }
@@ -341,6 +390,12 @@ struct OnePageOnboardingView: View {
         if let monthlyCoaching = selectedAnswers["How much do you spend monthly on private coaching?"]?.first {
             let yearlyCoachingSpending = calculateYearlyCoachingSpending(from: monthlyCoaching)
             let yearlyAppCost = 780 // $14.99 * 52 weeks
+            
+            // If they spend $0 on coaching, show them potential value instead of negative savings
+            if yearlyCoachingSpending == 0 {
+                return 1080 // Example value of what they could save compared to getting coaching
+            }
+            
             return yearlyCoachingSpending - yearlyAppCost
         }
         return nil
@@ -446,7 +501,108 @@ struct OnePageOnboardingView: View {
         return monthlyAmount * 12
     }
     
-    // ... Add other views and helper methods ...
+    private func convertToStringDict(_ dict: [String: Set<String>]) -> [String: String] {
+        var result: [String: String] = [:]
+        for (key, value) in dict {
+            if let firstValue = value.first {
+                result[key] = firstValue
+            }
+        }
+        return result
+    }
+    
+    private func convertToJabQuestions(_ steps: [OnboardingSurveyStep]) -> [JabMetricQuestion] {
+        return steps.flatMap { step in
+            step.questions.map { question in
+                JabMetricQuestion(
+                    question: question.question,
+                    options: question.options,
+                    relatedMetrics: [:] // Add appropriate metrics mapping if needed
+                )
+            }
+        }
+    }
+    
+    private func updatePinnedMetrics() {
+        var recommendedMetrics = Set<String>()
+        
+        // Map survey questions to metrics using jabQuizQuestions mapping
+        for (question, answers) in selectedAnswers {
+            switch question {
+            case "What's your most common feedback during sparring with your jab?":
+                if let answer = answers.first {
+                    recommendedMetrics.insert("Hand_Velocity_Extension")
+                    recommendedMetrics.insert("Chin_Tucked_Extension")
+                    if answer == "I get countered easily" {
+                        recommendedMetrics.insert("Jab_Straight_Line_Extension")
+                    } else if answer == "My jab lacks power" {
+                        recommendedMetrics.insert("Force_Generation_Extension")
+                    } else if answer == "I'm too slow to retract" {
+                        recommendedMetrics.insert("Hand_Velocity_Retraction")
+                    } else if answer == "I drop my hands after jabbing" {
+                        recommendedMetrics.insert("Hands_Above_Shoulders_Guard")
+                    }
+                }
+            case "What aspect of your jab do you want to improve most?":
+                if let answer = answers.first {
+                    if answer == "Speed and explosiveness" {
+                        recommendedMetrics.insert("Overall_Velocity_Extension")
+                        recommendedMetrics.insert("Hand_Velocity_Extension")
+                    } else if answer == "Technical form" {
+                        recommendedMetrics.insert("Jab_Straight_Line_Extension")
+                        recommendedMetrics.insert("Jab_Arm_Extension")
+                    } else if answer == "Defense while jabbing" {
+                        recommendedMetrics.insert("Rear_Hand_In_Guard_Extension")
+                        recommendedMetrics.insert("Chin_Tucked_Extension")
+                    } else if answer == "Power generation" {
+                        recommendedMetrics.insert("Force_Generation_Extension")
+                        recommendedMetrics.insert("Motion_Sequence")
+                    }
+                }
+            case "What's your biggest technical challenge with the jab?":
+                if let answer = answers.first {
+                    if answer == "My elbow flares out" {
+                        recommendedMetrics.insert("Elbow_Flare_Extension")
+                        recommendedMetrics.insert("Elbow_Protection_Extension")
+                    } else if answer == "I telegraph my jab" {
+                        recommendedMetrics.insert("Hand_Drop_Before_Extension")
+                        recommendedMetrics.insert("Motion_Sequence")
+                    } else if answer == "My footwork is off" {
+                        recommendedMetrics.insert("Foot_Placement_Extension")
+                        recommendedMetrics.insert("Step_Distance_Extension")
+                    } else if answer == "My jab isn't straight" {
+                        recommendedMetrics.insert("Jab_Straight_Line_Extension")
+                        recommendedMetrics.insert("Elbow_Straight_Line_Extension")
+                    }
+                }
+            default:
+                break
+            }
+        }
+        
+        // Update user's pinned metrics (limit to 3)
+        userManager.pinnedMetrics = Array(recommendedMetrics.prefix(3)).map { metricId in
+            PinnedMetric(
+                id: metricId,
+                category: getCategoryForMetric(metricId),
+                displayName: getDisplayName(for: metricId)
+            )
+        }
+    }
+    
+    private func getCategoryForMetric(_ metricId: String) -> String {
+        for (category, metrics) in MetricsConstants.groupedMetrics {
+            if metrics.contains(metricId) {
+                return category
+            }
+        }
+        return "overall"
+    }
+    
+    private func getDisplayName(for metricId: String) -> String {
+        metricId.replacingOccurrences(of: "_", with: " ")
+            .capitalized
+    }
 }
 
 
@@ -741,9 +897,274 @@ private struct ComparisonRow: View {
     }
 }
 
-#Preview {
-    OnePageOnboardingView()
+struct OnboardingMetricsSelectionView: View {
+    @Binding var selectedAnswers: [String: Set<String>]
+    @Binding var currentStep: Int
+    @State private var showDirectSelection = false
+    @ObservedObject var userManager: UserManager
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("Your Personalized Focus Areas")
+                .font(.special(.title2, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.top)
+            
+            Text("Based on your responses, we recommend focusing on these key metrics:")
+                .foregroundColor(.white.opacity(0.7))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            
+            // Quiz-based recommendations
+            ForEach(userManager.pinnedMetrics, id: \.id) { metric in
+                MetricExplanationCard(metric: metric)
+            }
+            
+            // Divider with "or"
+            HStack {
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundColor(.white.opacity(0.3))
+                Text("or")
+                    .foregroundColor(.white.opacity(0.7))
+                    .padding(.horizontal)
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundColor(.white.opacity(0.3))
+            }
+            .padding()
+            
+            // Manual selection button
+            Button(action: { showDirectSelection = true }) {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Choose Your Own Metrics")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                        Text("Select from all 50+ available metrics")
+                            .font(.subheadline)
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.white)
+                }
+                .padding()
+                .background(Color.white.opacity(0.1))
+                .cornerRadius(12)
+            }
+            
+            // Continue button
+            Button(action: { currentStep += 1 }) {
+                Text("Continue")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.brand)
+                    .cornerRadius(12)
+            }
+            .padding(.top)
+        }
+        .padding()
+        .sheet(isPresented: $showDirectSelection) {
+            MetricsDirectSelectionView(userManager: userManager)
+                .presentationDetents([.large])
+        }
+    }
 }
+
+struct OnboardingRecommendedFocusAreasView: View {
+    @ObservedObject var userManager: UserManager
+    let selectedAnswers: [String: Set<String>]
+    let onContinue: () -> Void
+    @State private var showDirectSelection = false
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("Your Personalized Focus Areas")
+                .font(.special(.title2, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.top)
+            
+            Text("Based on your responses, we recommend focusing on these key metrics:")
+                .foregroundColor(.white.opacity(0.7))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            
+            ScrollView {
+                VStack(spacing: 16) {
+                    ForEach(userManager.pinnedMetrics, id: \.id) { metric in
+                        MetricExplanationCard(metric: metric)
+                    }
+                }
+                .padding(.vertical)
+            }
+            
+            // Divider with "or"
+            HStack {
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundColor(.white.opacity(0.3))
+                Text("or")
+                    .foregroundColor(.white.opacity(0.7))
+                    .padding(.horizontal)
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundColor(.white.opacity(0.3))
+            }
+            .padding()
+            
+            Button(action: { showDirectSelection = true }) {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Choose Your Own Metrics")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                        Text("Select from all 50+ available metrics")
+                            .font(.subheadline)
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.white)
+                }
+                .padding()
+                .background(Color.white.opacity(0.1))
+                .cornerRadius(12)
+            }
+            
+            Button(action: onContinue) {
+                Text("Get Started Now")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.brand)
+                    .cornerRadius(12)
+            }
+            .padding(.top)
+        }
+        .padding()
+        .sheet(isPresented: $showDirectSelection) {
+            MetricsDirectSelectionView(userManager: userManager)
+        }
+    }
+}
+
+struct SavingsView: View {
+    let selectedAnswers: [String: Set<String>]
+    let onContinue: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("Your Potential Savings")
+                .font(.special(.title2, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.top)
+            
+            if let savings = calculateSavings() {
+                Text("$\(savings)")
+                    .font(.system(size: 64, weight: .heavy))
+                    .foregroundColor(.brand)
+                    .padding(.vertical, 8)
+                
+                Text("per year")
+                    .font(.special(.title3, weight: .medium))
+                    .foregroundColor(.white.opacity(0.7))
+            }
+            
+            // ComparisonTableView()
+            //     .padding(.top, 24)
+            
+            Button(action: onContinue) {
+                Text("Get Started Now")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.brand)
+                    .cornerRadius(12)
+            }
+            .padding(.top)
+        }
+        .padding()
+    }
+    
+    private func calculateSavings() -> Int? {
+        if let monthlyCoaching = selectedAnswers["How much do you spend monthly on private coaching?"]?.first {
+            let yearlyCoachingSpending = calculateYearlyCoachingSpending(from: monthlyCoaching)
+            let yearlyAppCost = 780 // $14.99 * 52 weeks
+            
+            // If they spend $0 on coaching, show them potential value instead of negative savings
+            if yearlyCoachingSpending == 0 {
+                return 1080 // Example value of what they could save compared to getting coaching
+            }
+            
+            return yearlyCoachingSpending - yearlyAppCost
+        }
+        return nil
+    }
+    
+    private func calculateYearlyCoachingSpending(from monthlyCoaching: String) -> Int {
+        let monthlyAmount: Int
+        switch monthlyCoaching {
+        case "$0 (No private coaching)": monthlyAmount = 0
+        case "$100–$200": monthlyAmount = 150
+        case "$200–$400": monthlyAmount = 300
+        case "Over $400": monthlyAmount = 500
+        default: monthlyAmount = 0
+        }
+        return monthlyAmount * 12
+    }
+}
+
+struct LoadingAnalysisView: View {
+    @State private var currentMessage = 0
+    let messages = [
+        "Analyzing your technique with AI...",
+        "Crunching the numbers...",
+        "Finding your best improvements...",
+        "Personalizing your experience..."
+    ]
+    
+    let timer = Timer.publish(every: 1.5, on: .main, in: .common).autoconnect()
+    @State private var progress: Double = 0
+    let onComplete: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            Spacer()
+            
+            ProgressView()
+                .scaleEffect(1.5)
+                .tint(.brand)
+                .padding()
+            
+            Text(messages[currentMessage])
+                .font(.special(.title3, weight: .medium))
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center)
+                .transition(.opacity)
+                .animation(.easeInOut, value: currentMessage)
+            
+            Spacer()
+        }
+        .padding()
+        .onReceive(timer) { _ in
+            if currentMessage < messages.count - 1 {
+                currentMessage += 1
+            } else if progress >= 1.0 {
+                onComplete()
+            }
+            progress += 0.25
+        }
+    }
+}
+
+// #Preview {
+//     OnePageOnboardingView(userManager: UserManager())
+// }
 
 
 // .navigationDestination(isPresented: $navigate) {

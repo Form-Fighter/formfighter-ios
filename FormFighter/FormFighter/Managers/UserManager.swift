@@ -5,6 +5,7 @@ import FirebaseFirestoreSwift
 import Combine
 import OSLog
 import FirebaseAnalytics  // Add this import
+import SwiftUI  // Add this at the top with other imports
 
 
 enum UserManagerError: LocalizedError {
@@ -39,6 +40,15 @@ class UserManager: ObservableObject {
     let badgeService = BadgeService()
     var isSigningInForDeletion = false  // Add this property
     
+    @AppStorage("pinnedMetrics") private var pinnedMetricsData: Data?
+    @Published var pinnedMetrics: [PinnedMetric] = [] {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(pinnedMetrics) {
+                pinnedMetricsData = encoded
+            }
+        }
+    }
+    
     private init(user: User? = nil,
                  isAuthenticated: Bool = false,
                  firestoreService: DatabaseServiceProtocol = FirestoreService(),
@@ -56,6 +66,14 @@ class UserManager: ObservableObject {
             Task {
                 try? await fetchAllData()
             }
+        }
+        
+        // Load pinned metrics from UserDefaults
+        if let savedMetrics = UserDefaults.standard.data(forKey: "pinnedMetrics"),
+           let decodedMetrics = try? JSONDecoder().decode([PinnedMetric].self, from: savedMetrics) {
+            self.pinnedMetrics = decodedMetrics
+        } else {
+            self.pinnedMetrics = []
         }
     }
     
@@ -387,3 +405,96 @@ extension UserManager {
         set { user?.lastTrainingDate = newValue }
     }
 }
+
+struct PinnedMetric: Codable {
+    let id: String
+    let category: String
+    let displayName: String
+}
+
+struct JabMetricQuestion {
+    let question: String
+    let options: [String]
+    let relatedMetrics: [String: [String]] // Maps answer to metric IDs
+}
+
+let jabQuizQuestions = [
+    JabMetricQuestion(
+        question: "What's your most common feedback during sparring with your jab?",
+        options: [
+            "I get countered easily",
+            "My jab lacks power",
+            "I'm too slow to retract",
+            "I drop my hands after jabbing"
+        ],
+        relatedMetrics: [
+            "I get countered easily": ["Chin_Tucked_Extension", "Hand_Velocity_Extension"],
+            "My jab lacks power": ["Force_Generation_Extension", "Whip_Effect_Extension"],
+            "I'm too slow to retract": ["Hand_Velocity_Retraction", "Overall_Velocity_Retraction"],
+            "I drop my hands after jabbing": ["Hand_Drop_Before_Extension", "Hands_Above_Shoulders_Guard"]
+        ]
+    ),
+    JabMetricQuestion(
+        question: "What aspect of your jab do you want to improve most?",
+        options: [
+            "Speed and explosiveness",
+            "Technical form",
+            "Defense while jabbing",
+            "Power generation"
+        ],
+        relatedMetrics: [
+            "Speed and explosiveness": ["Hand_Velocity_Extension", "Overall_Velocity_Extension"],
+            "Technical form": ["Jab_Straight_Line_Extension", "Elbow_Straight_Line_Extension"],
+            "Defense while jabbing": ["Chin_Tucked_Extension", "Rear_Hand_In_Guard_Extension"],
+            "Power generation": ["Force_Generation_Extension", "Hip_Rotation_Extension"]
+        ]
+    ),
+    JabMetricQuestion(
+        question: "What's your biggest technical challenge with the jab?",
+        options: [
+            "My elbow flares out",
+            "I telegraph my jab",
+            "My footwork is off",
+            "My jab isn't straight"
+        ],
+        relatedMetrics: [
+            "My elbow flares out": ["Elbow_Flare_Extension", "Elbow_Straight_Line_Extension"],
+            "I telegraph my jab": ["Hand_Drop_Before_Extension", "Motion_Sequence"],
+            "My footwork is off": ["Foot_Placement_Extension", "Step_Distance_Extension"],
+            "My jab isn't straight": ["Jab_Straight_Line_Extension", "Wrist_Angle_Extension"]
+        ]
+    ),
+    JabMetricQuestion(
+        question: "What do you want to add to your jab?",
+        options: [
+            "More snap/whip",
+            "Better body rotation",
+            "Smoother motion",
+            "Better balance"
+        ],
+        relatedMetrics: [
+            "More snap/whip": ["Whip_Effect_Extension", "Hand_Velocity_Extension"],
+            "Better body rotation": ["Torso_Rotation_Extension", "Hip_Rotation_Extension"],
+            "Smoother motion": ["Motion_Sequence", "Overall_Velocity_Extension"],
+            "Better balance": ["Mean_Back_Leg_Angle_Extension", "Foot_Placement_Extension"]
+        ]
+    ),
+    JabMetricQuestion(
+        question: "What happens after you throw your jab?",
+        options: [
+            "I'm slow getting back to guard",
+            "I'm off balance",
+            "I get hit with counters",
+            "My stance is compromised"
+        ],
+        relatedMetrics: [
+            "I'm slow getting back to guard": ["Hand_Velocity_Retraction", "Return_Position_Difference_Retraction"],
+            "I'm off balance": ["Mean_Back_Leg_Angle_Retraction", "Foot_Placement_Retraction"],
+            "I get hit with counters": ["Rear_Hand_In_Guard_Extension", "Head_Stability_Extension"],
+            "My stance is compromised": ["Leg_To_Shoulder_Width_Guard", "Mean_Back_Leg_Angle_Guard"]
+        ]
+    )
+]
+
+
+

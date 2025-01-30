@@ -28,7 +28,7 @@ struct LoginView: View {
             } else {
                 // Main content
                 VStack(spacing: 32) {
-                    Text("\(Const.appName)")
+                    Text("Form Fighter")
                         .font(.special(.extraLargeTitle, weight: .black))
                         .foregroundStyle(.white) // Changed to white
                     
@@ -37,7 +37,7 @@ struct LoginView: View {
                         .scaledToFit()
                         .frame(maxWidth: 180)
                     
-                    Text("Master Your Form")  // Updated text to match Muay Thai theme
+                    Text("Train Smarter, Fight Better, Think like a Coach.")  // Updated text to match Muay Thai theme
                         .font(.special(.title3, weight: .bold))
                         .foregroundColor(.white)  // Changed to white
                         .frame(maxWidth: .infinity)
