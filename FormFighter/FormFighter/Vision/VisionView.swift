@@ -7,18 +7,22 @@ struct VisionView: View {
     @State private var missingPermissionsMessage = ""
     @State private var showPaywall = false
     @EnvironmentObject private var purchasesManager: PurchasesManager
+    @EnvironmentObject var userManager: UserManager
     
     @StateObject private var cameraManager = CameraManager()
+    @State private var isCameraReady = false
     
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
             ThemeColors.background.ignoresSafeArea()
 
-              if showCameraView {
+            if showCameraView && isCameraReady {
                 CameraVisionView(cameraManager: cameraManager)
                     .onAppear {
-                        cameraManager.startSession()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            cameraManager.startSession()
+                        }
                     }
                     .onDisappear {
                         cameraManager.stopSession()
@@ -111,6 +115,11 @@ struct VisionView: View {
                 showPaywall = true
             }
             checkPermissions()
+            if hasCameraPermission {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    isCameraReady = true
+                }
+            }
         }
     }
     

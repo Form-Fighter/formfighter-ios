@@ -8,7 +8,8 @@ struct FeedbackListItem: Identifiable {
     let videoUrl: String?
     let score: Double
     let modelFeedback: FeedbackModels.ModelFeedback?
-    
+    let homeworkId: String?
+    let coachId: String?
     var isCompleted: Bool {
         status == .completed
     }

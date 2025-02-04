@@ -5,7 +5,7 @@ struct User: Codable, Equatable {
     var name: String
     var firstName: String
     var lastName: String
-    var coachID: String
+    var coachId: String
     var myCoach: String
     var height: String?
     var weight: String?
@@ -20,7 +20,7 @@ struct User: Codable, Equatable {
         lhs.name == rhs.name &&
         lhs.firstName == rhs.firstName &&
         lhs.lastName == rhs.lastName &&
-        lhs.coachID == rhs.coachID &&
+        lhs.coachId == rhs.coachId &&
         lhs.myCoach == rhs.myCoach &&
         lhs.height == rhs.height &&
         lhs.weight == rhs.weight &&
@@ -38,7 +38,7 @@ extension User {
              name: "Unknown", 
              firstName: "Unknown", 
              lastName: "Unknown", 
-             coachID: "Unknown", 
+             coachId: "Unknown", 
              myCoach: "Unknown",
              height: "",
              weight: "",

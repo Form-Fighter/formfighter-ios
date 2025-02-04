@@ -49,6 +49,13 @@ class UserManager: ObservableObject {
         }
     }
     
+    @Published var userId: String = ""
+    @Published var myCoach: String = ""
+    
+    @Published var currentHomework: Homework?
+    
+    private let db = Firestore.firestore()
+    
     private init(user: User? = nil,
                  isAuthenticated: Bool = false,
                  firestoreService: DatabaseServiceProtocol = FirestoreService(),
@@ -110,7 +117,7 @@ class UserManager: ObservableObject {
                     name: currentUser.displayName ?? "",
                     firstName: "",
                     lastName: "",
-                    coachID: "",
+                    coachId: "",
                     myCoach: "",
                     height: .defaultHeight,
                     weight: .defaultWeight,
@@ -146,7 +153,7 @@ class UserManager: ObservableObject {
             name: currentUser.displayName ?? "",
             firstName: "",
             lastName: "",
-            coachID: "",
+            coachId: "",
             myCoach: "",
             height: "",
             weight: "",
@@ -163,7 +170,7 @@ class UserManager: ObservableObject {
     func setFirebaseAuthUser() {
         if let currentUser = Auth.auth().currentUser {
             //self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", weight: "", height: "", wingSpan: "", preferredStance: "", email: "")
-            self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", coachID: "" , myCoach: "", email: "")
+            self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", coachId: "" , myCoach: "", email: "")
 
         } else {
             Logger.log(message: "There is no current Auth user", event: .error)
@@ -180,6 +187,8 @@ class UserManager: ObservableObject {
                 startListening()
                 Task {
                     try? await fetchAllData()
+                    // Add homework fetch here
+                    await fetchCurrentHomework()
                 }
             }
         } else {
@@ -344,13 +353,75 @@ class UserManager: ObservableObject {
     func updateUserOnMainThread(_ newUser: User) {
         self.user = newUser
     }
+    
+    func fetchUserData() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        db.collection("users").document(userId).getDocument { [weak self] document, error in
+            if let data = document?.data() {
+                self?.myCoach = data["myCoach"] as? String ?? ""
+            }
+        }
+    }
+    
+    func fetchCurrentHomework() async {
+        guard let userId = Auth.auth().currentUser?.uid else { 
+            print("📝 No user ID available for homework fetch")
+            return 
+        }
+        
+        print("📝 Fetching homework for user: \(userId)")
+        let db = Firestore.firestore()
+        
+        let today = Calendar.current.startOfDay(for: Date())
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+        
+        do {
+            let snapshot = try await db.collection("homework")
+                .whereField("students", arrayContains: userId)
+                .whereField("assignedDate", isGreaterThanOrEqualTo: today)
+                .whereField("assignedDate", isLessThan: tomorrow)
+                .getDocuments()
+            
+            print("📝 Found \(snapshot.documents.count) homework documents")
+            
+            let homeworkList = snapshot.documents.compactMap { doc -> Homework? in
+                print("📝 Raw homework data: \(doc.data())")
+                let homework = try? doc.data(as: Homework.self)
+                print("📝 Decoded homework: \(String(describing: homework))")
+                return homework
+            }
+            
+            // Set the earliest incomplete homework
+            DispatchQueue.main.async {
+                let filteredHomework = homeworkList
+                    .filter { homework in
+                        let completedCount = homework.completedFeedbackIds?.count ?? 0
+                        let punchCount = homework.punchCount ?? 0
+                        let isIncomplete = completedCount < punchCount
+                        print("📝 Homework \(String(describing: homework.id)) - completed: \(completedCount)/\(punchCount), isIncomplete: \(isIncomplete)")
+                        return isIncomplete
+                    }
+                
+                print("📝 Filtered homework count: \(filteredHomework.count)")
+                
+                self.currentHomework = filteredHomework
+                    .sorted { h1, h2 in
+                        let date1 = h1.assignedDate?.dateValue() ?? Date()
+                        let date2 = h2.assignedDate?.dateValue() ?? Date()
+                        return date1 < date2
+                    }
+                    .first
+                
+                print("📝 Current Homework set to: \(String(describing: self.currentHomework))")
+            }
+        } catch {
+            print("❌ Error fetching homework: \(error)")
+        }
+    }
 }
 
 extension UserManager {
-    var userId: String {
-        user?.id ?? ""
-    }
-    
     var email: String {
         user?.email ?? ""
     }
@@ -369,9 +440,9 @@ extension UserManager {
         set { user?.lastName = newValue }
     }
     
-    var coachID: String {
-        get { user?.coachID ?? "unknown" }
-        set { user?.coachID = newValue }
+    var coachId: String {
+        get { user?.coachId ?? "unknown" }
+        set { user?.coachId = newValue }
     }
     
     var weight: String {

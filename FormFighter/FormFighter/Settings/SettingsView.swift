@@ -71,6 +71,9 @@ struct SettingsView: View {
         // .fullScreenCover(isPresented: $isShowingPaywall) {
         //     PaywallView()
         // }
+        .onAppear {
+            vm.fetchTokensIfNeeded()
+        }
     }
     
     @ViewBuilder
@@ -244,14 +247,9 @@ struct SettingsView: View {
                     TextField("Type your first name", 
                              text: Binding(
                                  get: { userManager.firstName },
-                                 set: { newValue in
-                                     userManager.firstName = newValue
-                                     vm.updateUserInfo(
-                                         firstName: newValue,
-                                         lastName: userManager.lastName
-                                     )
-                                 }
+                                 set: { userManager.firstName = $0 }
                              ))
+                             .onSubmit { vm.updateUserInfo(firstName: userManager.firstName, lastName: userManager.lastName) }
                         .multilineTextAlignment(.trailing)
                         .fontWeight(.medium)
                         .submitLabel(.done)
@@ -264,19 +262,10 @@ struct SettingsView: View {
                 LabeledContent {
                     TextField("Type your last name", 
                              text: Binding(
-                                get: { 
-                                    print("Getting lastName: \(userManager.lastName)")
-                                    return userManager.lastName 
-                                },
-                                set: { newValue in
-                                    print("Setting lastName to: \(newValue)")
-                                    userManager.lastName = newValue
-                                    vm.updateUserInfo(
-                                        firstName: userManager.firstName,
-                                        lastName: newValue
-                                    )
-                                }
+                                 get: { userManager.lastName },
+                                 set: { userManager.lastName = $0 }
                              ))
+                             .onSubmit { vm.updateUserInfo(firstName: userManager.firstName, lastName: userManager.lastName) }
                         .multilineTextAlignment(.trailing)
                         .fontWeight(.medium)
                         .submitLabel(.done)
@@ -293,16 +282,14 @@ struct SettingsView: View {
                             .multilineTextAlignment(.trailing)
                             .keyboardType(.numberPad)
                             .onChange(of: heightFeet) { newValue in
-                                // Limit to 8 feet
                                 if let feet = Int(newValue), feet > 8 {
                                     heightFeet = "8"
-                                    // If we're at 8 feet, inches must be 3 or less
                                     if let inches = Int(heightInches), inches > 3 {
                                         heightInches = "3"
                                     }
                                 }
-                                updateHeight()
                             }
+                            .onSubmit { updateHeight() }
                         
                         Text("'")
                         
@@ -311,19 +298,15 @@ struct SettingsView: View {
                             .multilineTextAlignment(.trailing)
                             .keyboardType(.numberPad)
                             .onChange(of: heightInches) { newValue in
-                                // If at 8 feet, limit to 3 inches
                                 if let feet = Int(heightFeet), feet == 8 {
                                     if let inches = Int(newValue), inches > 3 {
                                         heightInches = "3"
                                     }
-                                } else {
-                                    // Otherwise limit to 11 inches
-                                    if let inches = Int(newValue), inches >= 12 {
-                                        heightInches = "11"
-                                    }
+                                } else if let inches = Int(newValue), inches >= 12 {
+                                    heightInches = "11"
                                 }
-                                updateHeight()
                             }
+                            .onSubmit { updateHeight() }
                         
                         Text("\"")
                     }
@@ -339,15 +322,8 @@ struct SettingsView: View {
                     TextField("Weight in lbs", text: $localWeight)
                         .multilineTextAlignment(.trailing)
                         .keyboardType(.numberPad)
-                        .onChange(of: localWeight) { newValue in
-                            userManager.weight = newValue
-                            vm.updateUserInfo(
-                                firstName: userManager.firstName,
-                                lastName: userManager.lastName,
-                                height: userManager.height,
-                                weight: newValue
-                            )
-                        }
+                        .onChange(of: localWeight) { userManager.weight = $0 }
+                        .onSubmit { vm.updateUserInfo(firstName: userManager.firstName, lastName: userManager.lastName, weight: localWeight) }
                         .onAppear {
                             localWeight = userManager.weight
                         }
@@ -388,14 +364,8 @@ struct SettingsView: View {
                     TextField("Optional", text: $localReach)
                         .multilineTextAlignment(.trailing)
                         .keyboardType(.numberPad)
-                        .onChange(of: localReach) { newValue in
-                            userManager.reach = newValue
-                            vm.updateUserInfo(
-                                firstName: userManager.firstName,
-                                lastName: userManager.lastName,
-                                reach: newValue
-                            )
-                        }
+                        .onChange(of: localReach) { userManager.reach = $0 }
+                        .onSubmit { vm.updateUserInfo(firstName: userManager.firstName, lastName: userManager.lastName, reach: localReach) }
                 } label: {
                     Text("Reach (inches)")
                 }
@@ -426,6 +396,7 @@ struct SettingsView: View {
             
             // Account Management Section
             Section("⚙️ Account Management") {
+                tokenSection
                 // Subscription Status & Management
                 if !purchasesManager.premiumSubscribed && !purchasesManager.eliteSubscribed {
                     Button {
@@ -455,7 +426,6 @@ struct SettingsView: View {
                 
                 subscriptionManagement
                 
-               
                 
                 Button(role: .destructive) {
                     Task {
@@ -719,6 +689,37 @@ struct SettingsView: View {
         localEmail = userManager.email
         if let stance = userManager.preferredStance {
             selectedStance = stance.lowercased() == "southpaw" ? .southpaw : .orthodox
+        }
+    }
+    
+    var tokenSection: some View {
+        Group {
+            if let myCoach = userManager.user?.myCoach, !myCoach.isEmpty {
+                Section("Coaching Tokens") {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text("Tokens Remaining:")
+                            Spacer()
+                            Text("\(vm.tokenManager.tokensRemaining)")
+                                .bold()
+                        }
+                        
+                        HStack {
+                            Text("Total Used:")
+                            Spacer()
+                            Text("\(vm.tokenManager.totalTokensUsed)")
+                        }
+                        
+                        if let nextReset = vm.tokenManager.nextTokenReset {
+                            HStack {
+                                Text("Next Reset:")
+                                Spacer()
+                                Text(nextReset, style: .date)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

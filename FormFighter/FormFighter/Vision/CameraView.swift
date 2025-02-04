@@ -49,12 +49,16 @@ struct CameraVisionView: View {
     @State private var currentTurnAngle: Double = 0
     @State private var isShowingTurnAnimation: Bool = false
     
+    // Add these state variables at the top
+    @State private var isCameraInitialized = false
+    @EnvironmentObject var userManager: UserManager
+    
     var cameraManager: CameraManager
     
     var body: some View {
         NavigationStack {
             ZStack {
-                // Camera view
+                // Camera preview should be the base layer
                 CameraPreviewView(detectedBodyPoints: $detectedBodyPoints,
                                  smoothedBodyPoints: $smoothedBodyPoints,
                                  isBodyDetected: $isBodyDetected,
@@ -64,20 +68,30 @@ struct CameraVisionView: View {
                                  currentTurnAngle: $currentTurnAngle,
                                  cameraManager: cameraManager,
                                  turnBodyPlayer: turnBodyPlayer)
-                .ignoresSafeArea(.all, edges: [.horizontal])
+                    .ignoresSafeArea(.all, edges: [.horizontal])
+                    .onAppear {
+                        // Delay the body detection until camera is ready
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            isCameraInitialized = true
+                        }
+                    }
                 
-                
-                // Updated keypoints visualization
-                ForEach(smoothedBodyPoints.indices, id: \.self) { index in
-                    let point = smoothedBodyPoints[index]
-                    Circle()
-                        .fill(Color.red)
-                        .frame(width: 15, height: 15)
-                        .position(x: point.x, y: point.y)
-                        .shadow(color: .black, radius: 2)
+                // Only show body detection overlay if camera is initialized
+                if isCameraInitialized {
+                    // Body detection points and messages
+                    ForEach(smoothedBodyPoints.indices, id: \.self) { index in
+                        let point = smoothedBodyPoints[index]
+                        Circle()
+                            .fill(Color.red)
+                            .frame(width: 15, height: 15)
+                            .position(x: point.x, y: point.y)
+                            .shadow(color: .black, radius: 2)
+                    }
+                    
+                    if !isBodyDetected || !isBodyComplete {
+                        bodyDetectionOverlay
+                    }
                 }
-                .ignoresSafeArea()
-                
                 
                 // Updated analyzing message with progress bar
                 if isCounting && timer1 < 3 {
@@ -118,26 +132,10 @@ struct CameraVisionView: View {
                     }
                 }
                 
-             
-                
-               
-                // Visual Guide Overlay when body not detected
-                if !isBodyDetected || !isBodyComplete {
-                    Rectangle()
-                        .stroke(style: StrokeStyle(lineWidth: 3, dash: [10]))
-                        .foregroundColor(.red.opacity(0.6))
-                        .padding(40)
-                        .overlay(
-                            Image(systemName: "figure.boxing")
-                                .font(.system(size: 100))
-                                .foregroundColor(.black.opacity(0.3))
-                        )
-                }
-                
                 // Updated countdown with visual feedback
-                if timer2 > 0 && timer2 <= 4 && !isRecording {
+                if timer2 > 0 && timer2 <= 5 && !isRecording {
                     VStack {
-                        Text("\(4 - timer2)")
+                        Text("\(5 - timer2)")
                             .font(.system(size: 120, weight: .heavy))
                             .foregroundColor(.red)
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
@@ -358,13 +356,13 @@ struct CameraVisionView: View {
     func startSecondTimer() {
         guard secondTimer == nil else { return }
         
-        timer2 = 1  // Start at 1 to show "3"
-        isCountingDown = true  // Set flag when countdown starts
+        timer2 = 1  // Start at 1 to show "5"
+        isCountingDown = true
         
         secondTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            if timer2 < 4 {
+            if timer2 < 6 {
                 timer2 += 1
-                if timer2 < 4 {
+                if timer2 < 6 {
                     countdownPlayer?.play()
                 } else {
                     startPlayer?.play()
@@ -537,6 +535,21 @@ struct CameraVisionView: View {
         cameraManager.stopSession() 
         cameraManager.cleanup()
         
+    }
+    
+    private var bodyDetectionOverlay: some View {
+        VStack {
+            Text("Step your full body into the frame, fighter! 🥊")
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding()
+                .background(Color.red.opacity(0.8))
+                .cornerRadius(15)
+        }
+        .padding(.top, 50)
+        .onAppear {
+            fullBodyPlayer?.play()
+        }
     }
 }
 

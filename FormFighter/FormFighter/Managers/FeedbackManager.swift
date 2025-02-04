@@ -198,7 +198,9 @@ class FeedbackManager: ObservableObject {
                         status: status,
                         videoUrl: data["videoUrl"] as? String,
                         score: jabScore,
-                        modelFeedback: modelFeedback
+                        modelFeedback: modelFeedback,
+                        homeworkId: data["homeworkId"] as? String,
+                        coachId: data["coachId"] as? String
                     )
                 }
                 

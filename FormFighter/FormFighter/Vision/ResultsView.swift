@@ -43,6 +43,7 @@ struct ResultsView: View {
     @State private var currentTipIndex = 0
     @State private var isShowingBoxing = true
     @State private var symbolOpacity = 1.0
+    @State private var currentHomework: Homework?
     
     private let muayThaiTips = [
         "Keep your guard up - protect your chin!",
@@ -82,6 +83,9 @@ struct ResultsView: View {
                 .disabled(true)
                 .onAppear {
                     player.play()
+                    Task {
+                        currentHomework = await getActiveHomework()
+                    }
                 }
             
             // Upload overlay
@@ -160,7 +164,7 @@ struct ResultsView: View {
     
     private func initiateFeedback() async {
         guard !isUploading else { return }
-        guard !userManager.userId.isEmpty else {
+        guard let userId = userManager.user?.id else {
             activeError = .userNotLoggedIn
             return
         }
@@ -169,19 +173,27 @@ struct ResultsView: View {
         defer { isUploading = false }
         
         do {
-            let userDoc = try await db.collection("users").document(userManager.userId).getDocument()
+            let userDoc = try await db.collection("users").document(userId).getDocument()
             let coachId = userDoc.data()?["myCoach"] as? String
             
+            // Get active homework
+            let homework = await getActiveHomework()
+            
             let feedbackRef = try await db.collection("feedback").addDocument(data: [
-                "userId": userManager.userId,
+                "userId": userId,
                 "coachId": coachId as Any,
                 "createdAt": Timestamp(date: Date()),
                 "status": "pending",
                 "fileName": videoURL.lastPathComponent,
-                "challengeId": challengeService.activeChallenge?.id
+                "challengeId": challengeService.activeChallenge?.id,
+                "homeworkId": homework?.id
             ])
             
-            // Upload video immediately after creating feedback document
+            // Update homework progress if this is for homework
+            if let homeworkId = homework?.id {
+                updateHomeworkProgress(homeworkId: homeworkId, feedbackId: feedbackRef.documentID)
+            }
+            
             await uploadToServer(feedbackId: feedbackRef.documentID, coachId: coachId)
         } catch {
             activeError = .failedToCreateFeedback(error)
@@ -194,8 +206,12 @@ struct ResultsView: View {
         let startTime = Date()
         
         do {
+            guard let userId = userManager.user?.id else {
+                throw ResultsViewError.userNotLoggedIn
+            }
+            
             let headers: HTTPHeaders = [
-                "userID": userManager.userId,
+                "userID": userId,
                 "Content-Type": "multipart/form-data"
             ]
             
@@ -410,6 +426,43 @@ struct ResultsView: View {
                     lastTrainingTime: Date()
                 )
             }
+        }
+    }
+    
+    private func getActiveHomework() async -> Homework? {
+        guard let userId = Auth.auth().currentUser?.uid else { return nil }
+        let db = Firestore.firestore()
+        
+        let today = Calendar.current.startOfDay(for: Date())
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+        
+        do {
+            let snapshot = try await db.collection("homework")
+                .whereField("students", arrayContains: userId)
+                .whereField("assignedDate", isGreaterThanOrEqualTo: today)
+                .whereField("assignedDate", isLessThan: tomorrow)
+                .getDocuments()
+            
+            let homeworkList = snapshot.documents.compactMap { doc -> Homework? in
+                try? doc.data(as: Homework.self)
+            }
+            
+            // Return earliest incomplete homework
+            return homeworkList
+                .filter { homework in
+                    let completedCount = homework.completedFeedbackIds?.count ?? 0
+                    let punchCount = homework.punchCount ?? 0
+                    return completedCount < punchCount
+                }
+                .sorted { h1, h2 in
+                    let date1 = h1.assignedDate?.dateValue() ?? Date()
+                    let date2 = h2.assignedDate?.dateValue() ?? Date()
+                    return date1 < date2
+                }
+                .first
+        } catch {
+            print("Error fetching homework: \(error)")
+            return nil
         }
     }
 }

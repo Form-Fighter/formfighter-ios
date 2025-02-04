@@ -26,6 +26,7 @@ enum FeedbackModels {
         let coachId: String?
         let commentUpdatedAt: Date?
         let challengeId: String?
+        let homeworkId: String?
     }
     
     struct UserFeedback: Codable {

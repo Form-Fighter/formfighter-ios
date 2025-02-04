@@ -5,12 +5,14 @@ class SettingsVM: ObservableObject {
     let userManager = UserManager.shared
     let authManager: AuthManager
     let purchasesManager: PurchasesManager
+    let tokenManager = TokenManager.shared
     @Published var alertMessage = ""
     @Published var showAlert = false
     @Published var isShowingDeleteUserAlert = false
     @Published var isShowingDeleteSignIn = false
     var userTip: TipShim? = nil
     private var updateTask: Task<Void, Never>?
+    private var isUpdating = false
     
     init(firestoreService: DatabaseServiceProtocol = FirestoreService(),
          authManager: AuthManager = AuthManager(),
@@ -23,9 +25,9 @@ class SettingsVM: ObservableObject {
             self.userTip = UserTip()
         }
         
-        Task {
-            try? await userManager.fetchAllData()
-        }
+        // Task {
+        //     try? await userManager.fetchAllData()
+        // }
     }
     
     func deleteUserAndLogout() {
@@ -95,7 +97,9 @@ class SettingsVM: ObservableObject {
         preferredStance: String? = nil,
         email: String? = nil
     ) {
-        guard let currentUser = userManager.user else { return }
+        guard !isUpdating, let currentUser = userManager.user else { return }
+        
+        isUpdating = true
         
         // Cancel any pending update
         updateTask?.cancel()
@@ -105,7 +109,7 @@ class SettingsVM: ObservableObject {
             name: "\(firstName) \(lastName)",
             firstName: firstName,
             lastName: lastName,
-            coachID: currentUser.coachID,
+            coachId: currentUser.coachId,
             myCoach: currentUser.myCoach,
             height: height ?? currentUser.height ?? "",
             weight: weight ?? currentUser.weight ?? "",
@@ -129,9 +133,22 @@ class SettingsVM: ObservableObject {
             do {
                 try await Task.sleep(nanoseconds: 500_000_000) // 0.5 second debounce
                 try await firestoreService.updateUser(userID: currentUser.id, with: updatedUser)
+                isUpdating = false
             } catch {
                 Logger.log(message: "Failed to update user: \(error.localizedDescription)", event: .error)
+                isUpdating = false
             }
+        }
+    }
+    
+    func fetchTokensIfNeeded() {
+        if let myCoach = userManager.user?.myCoach,
+           let userId = userManager.user?.id,
+           !myCoach.isEmpty {
+            tokenManager.fetchTokenInfo(
+                coachId: myCoach,
+                studentId: userId
+            )
         }
     }
 }

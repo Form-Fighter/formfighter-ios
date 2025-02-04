@@ -117,8 +117,6 @@ struct ProfileView: View {
                             .onAppear {
                                 print("🎯 GamificationStats appeared - current streak: \(userManager.currentStreak)")
                             }
-                        
-                        
                     }
                     else if selectedSection == .history {
 BadgeGridView(
@@ -290,6 +288,15 @@ struct AnalyticsSection: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
+            // Homework section
+            if let homework = userManager.currentHomework {
+                HomeworkView(
+                    homework: homework,
+                    feedbacks: viewModel.feedbacks
+                )
+            }
+            
+            // Focus Metrics button
             Button(action: { showMetricsSelection = true }) {
                 HStack {
                     Image(systemName: "target")

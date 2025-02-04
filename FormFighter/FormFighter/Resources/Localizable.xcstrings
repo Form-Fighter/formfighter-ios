@@ -386,6 +386,16 @@
     "%lld" : {
 
     },
+    "%lld %@ remaining" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld %2$@ remaining"
+          }
+        }
+      }
+    },
     "%lld day streak" : {
 
     },
@@ -566,6 +576,9 @@
 
     },
     "×%lld" : {
+
+    },
+    "=" : {
 
     },
     "☁️ Sync Your Foods in the Cloud" : {
@@ -2158,6 +2171,7 @@
 
     },
     "Change progress" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2459,6 +2473,9 @@
 
     },
     "Coach Feedback" : {
+
+    },
+    "Coaching Tokens" : {
 
     },
     "Color Scheme" : {
@@ -4211,6 +4228,9 @@
 
     },
     "Next" : {
+
+    },
+    "Next Reset:" : {
 
     },
     "Next reset: %@" : {
@@ -6182,6 +6202,7 @@
 
     },
     "Title" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6250,6 +6271,12 @@
           }
         }
       }
+    },
+    "Tokens Remaining:" : {
+
+    },
+    "Total Used:" : {
+
     },
     "Track Your Progress" : {
 
