@@ -11,6 +11,7 @@ struct VisionView: View {
     
     @StateObject private var cameraManager = CameraManager()
     @State private var isCameraReady = false
+    @State private var cameraSessionState: CameraSessionState = .idle
     
     var body: some View {
         ZStack {
@@ -20,9 +21,7 @@ struct VisionView: View {
             if showCameraView && isCameraReady {
                 CameraVisionView(cameraManager: cameraManager)
                     .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            cameraManager.startSession()
-                        }
+                        startCameraSession()
                     }
                     .onDisappear {
                         cameraManager.stopSession()
@@ -167,5 +166,15 @@ struct VisionView: View {
             missingPermissionsMessage += "📸 Camera Access\n"
         }
         missingPermissionsMessage += "\nThis helps us provide real-time feedback on your form."
+    }
+    
+    func startCameraSession() {
+        DispatchQueue.main.async {
+            guard self.cameraSessionState == .idle else { return }
+            self.cameraSessionState = .starting
+            self.cameraManager.startSession()
+            self.cameraSessionState = .running
+            print("Camera session started.")
+        }
     }
 }

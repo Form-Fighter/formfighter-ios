@@ -161,7 +161,12 @@ class UserManager: ObservableObject {
             preferredStance: nil,
             email: currentUser.email ?? "",
             currentStreak: 0,
-            lastTrainingDate: nil
+            lastTrainingDate: nil,
+            stripeCustomerId: nil,
+            membershipEndsAt: nil,
+            currentPeriodEnd: nil,
+            subscriptionId: nil,
+            tokens: 0
         )
         
         try await firestoreService.createUser(userID: newUser.id, with: newUser)
@@ -170,7 +175,7 @@ class UserManager: ObservableObject {
     func setFirebaseAuthUser() {
         if let currentUser = Auth.auth().currentUser {
             //self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", weight: "", height: "", wingSpan: "", preferredStance: "", email: "")
-            self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", coachId: "" , myCoach: "", email: "")
+            self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", coachId: "" , myCoach: "", email: "", currentStreak: 0, lastTrainingDate: nil, stripeCustomerId: nil, membershipEndsAt: nil, currentPeriodEnd: nil, subscriptionId: nil, tokens: 0)
 
         } else {
             Logger.log(message: "There is no current Auth user", event: .error)
@@ -417,6 +422,23 @@ class UserManager: ObservableObject {
             }
         } catch {
             print("❌ Error fetching homework: \(error)")
+        }
+    }
+    
+    func updateSubscriptionAndTokens() {
+        guard let currentUser = user else {
+            print("No user is currently logged in.")
+            return
+        }
+        
+      
+        
+        purchasesManager.checkStripeSubscription(user: currentUser) { isActive in
+            if isActive {
+                print("User has an active Stripe subscription.")
+            } else {
+                print("User does not have an active Stripe subscription.")
+            }
         }
     }
 }

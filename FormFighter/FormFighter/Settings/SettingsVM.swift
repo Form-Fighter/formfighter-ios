@@ -5,7 +5,6 @@ class SettingsVM: ObservableObject {
     let userManager = UserManager.shared
     let authManager: AuthManager
     let purchasesManager: PurchasesManager
-    let tokenManager = TokenManager.shared
     @Published var alertMessage = ""
     @Published var showAlert = false
     @Published var isShowingDeleteUserAlert = false
@@ -117,7 +116,12 @@ class SettingsVM: ObservableObject {
             preferredStance: preferredStance ?? currentUser.preferredStance ?? "",
             email: email ?? currentUser.email,
             currentStreak: currentUser.currentStreak,
-            lastTrainingDate: currentUser.lastTrainingDate
+            lastTrainingDate: currentUser.lastTrainingDate,
+            stripeCustomerId: currentUser.stripeCustomerId,
+            membershipEndsAt: currentUser.membershipEndsAt,
+            currentPeriodEnd: currentUser.currentPeriodEnd,
+            subscriptionId: currentUser.subscriptionId,
+            tokens: currentUser.tokens
         )
         
         // Update local state immediately
@@ -138,17 +142,6 @@ class SettingsVM: ObservableObject {
                 Logger.log(message: "Failed to update user: \(error.localizedDescription)", event: .error)
                 isUpdating = false
             }
-        }
-    }
-    
-    func fetchTokensIfNeeded() {
-        if let myCoach = userManager.user?.myCoach,
-           let userId = userManager.user?.id,
-           !myCoach.isEmpty {
-            tokenManager.fetchTokenInfo(
-                coachId: myCoach,
-                studentId: userId
-            )
         }
     }
 }

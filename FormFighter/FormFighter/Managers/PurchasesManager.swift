@@ -3,6 +3,7 @@ import RevenueCat
 import UIKit
 import SwiftUI
 import Firebase
+import Alamofire
 
 class PurchasesManager: ObservableObject {
     enum PurchasesError: LocalizedError {
@@ -69,6 +70,7 @@ class PurchasesManager: ObservableObject {
     @Published var premiumSubscribed: Bool = false
     @Published var eliteSubscribed: Bool = false
     @AppStorage("affiliateID") private var affiliateID: String = ""
+    @Published var isStripeSubscribed: Bool = false
     
     // MARK: Useful for changing remotely the amount of free credits you give to users to try your app,
     // without having to create a new app version and pass a new review.
@@ -450,5 +452,74 @@ class PurchasesManager: ObservableObject {
     
     func updateRevenueCatEmail(_ email: String?) {
         Purchases.shared.setEmail(email)
+    }
+    
+    func checkUserSubscriptionAndTokens(user: User) {
+        // Check if the user has a Stripe account
+        if let stripeAccountId = user.stripeAccountId, !stripeAccountId.isEmpty {
+            // Perform checks related to Stripe
+            print("User has a Stripe account: \(stripeAccountId)")
+            // Add logic to check subscription status and tokens
+        } else {
+            print("User does not have a Stripe account.")
+        }
+        
+        // Check if the user has an active subscription
+        if let subscriptionStatus = user.subscriptionId, !subscriptionStatus.isEmpty {
+            print("User has an active subscription: \(subscriptionStatus)")
+            // Add logic to verify subscription status
+        } else {
+            print("User does not have an active subscription.")
+        }
+        
+        // Check user's token balance
+        if let tokens = user.tokens, tokens > 0 {
+            print("User has \(tokens) tokens.")
+        } else {
+            print("User has no tokens.")
+        }
+    }
+    
+    func checkStripeSubscription(user: User, completion: @escaping (Bool) -> Void) {
+        guard let stripeCustomerId = user.stripeCustomerId, let subscriptionId = user.subscriptionId else {
+            completion(false)
+            return
+        }
+        
+        // Define the endpoint URL
+        let url = "https://www.form-fighter.com/api/check-subscription"
+        
+        // Define the parameters
+        let parameters: [String: Any] = [
+            "customerId": stripeCustomerId,
+            "subscriptionId": subscriptionId
+        ]
+        
+        // Make the request using Alamofire
+        AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+            .validate()
+            .responseJSON { response in
+                switch response.result {
+                case .success(let value):
+                    if let json = value as? [String: Any],
+                       let isActive = json["isActive"] as? Bool {
+                        DispatchQueue.main.async {
+                            self.isStripeSubscribed = isActive
+                            completion(isActive)
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.isStripeSubscribed = false
+                            completion(false)
+                        }
+                    }
+                case .failure(let error):
+                    print("Error checking subscription status: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        self.isStripeSubscribed = false
+                        completion(false)
+                    }
+                }
+            }
     }
 }

@@ -113,7 +113,7 @@ struct FormFighterApp: App {
                             OnePageOnboardingView(userManager: userManager)
                         } else if !userManager.isAuthenticated {
                             LoginView(showPaywallInTheOnboarding: false)
-                        } else if isTestFlight() || (purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed) {
+                        } else if isTestFlight() || purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed || purchasesManager.isStripeSubscribed {
                             normalUI
                         } else {
                             PaywallView()

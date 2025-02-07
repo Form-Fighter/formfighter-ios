@@ -700,23 +700,13 @@ struct SettingsView: View {
                         HStack {
                             Text("Tokens Remaining:")
                             Spacer()
-                            Text("\(vm.tokenManager.tokensRemaining)")
+                            Text("\(userManager.tokens)")
                                 .bold()
                         }
                         
-                        HStack {
-                            Text("Total Used:")
-                            Spacer()
-                            Text("\(vm.tokenManager.totalTokensUsed)")
-                        }
+                     
                         
-                        if let nextReset = vm.tokenManager.nextTokenReset {
-                            HStack {
-                                Text("Next Reset:")
-                                Spacer()
-                                Text(nextReset, style: .date)
-                            }
-                        }
+                     
                     }
                 }
             }

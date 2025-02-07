@@ -14,6 +14,12 @@ struct User: Codable, Equatable {
     let email: String
     var currentStreak: Int?
     var lastTrainingDate: Date?
+    var stripeCustomerId: String?
+    var membershipEndsAt: Date?
+    var lastTrainingDate: Date?
+    var currentPeriodEnd: Date?
+    var subscriptionId: String?
+    var tokens: Int?
     
     static func == (lhs: User, rhs: User) -> Bool {
         lhs.id == rhs.id &&
@@ -28,7 +34,12 @@ struct User: Codable, Equatable {
         lhs.preferredStance == rhs.preferredStance &&
         lhs.email == rhs.email &&
         lhs.currentStreak == rhs.currentStreak &&
-        lhs.lastTrainingDate == rhs.lastTrainingDate
+        lhs.lastTrainingDate == rhs.lastTrainingDate &&
+        lhs.membershipEndsAt == rhs.membershipEndsAt &&
+        lhs.currentPeriodEnd == rhs.currentPeriodEnd &&
+        lhs.subscriptionId == rhs.subscriptionId &&
+        lhs.stripeCustomerId == rhs.stripeCustomerId &&
+        lhs.tokens == rhs.tokens
     }
 }
 
@@ -46,6 +57,11 @@ extension User {
              preferredStance: "",
              email: "unknown@email.com",
              currentStreak: 0,
-             lastTrainingDate: nil)
+             lastTrainingDate: nil,
+             stripeCustomerId: nil,
+             membershipEndsAt: nil,
+             currentPeriodEnd: nil,
+             subscriptionId: nil,
+             tokens: 0)
     }
 }
