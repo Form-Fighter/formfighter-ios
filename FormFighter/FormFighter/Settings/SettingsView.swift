@@ -71,9 +71,7 @@ struct SettingsView: View {
         // .fullScreenCover(isPresented: $isShowingPaywall) {
         //     PaywallView()
         // }
-        .onAppear {
-            vm.fetchTokensIfNeeded()
-        }
+     
     }
     
     @ViewBuilder
@@ -396,7 +394,7 @@ struct SettingsView: View {
             
             // Account Management Section
             Section("⚙️ Account Management") {
-                tokenSection
+                
                 // Subscription Status & Management
                 if !purchasesManager.premiumSubscribed && !purchasesManager.eliteSubscribed {
                     Button {
@@ -692,26 +690,7 @@ struct SettingsView: View {
         }
     }
     
-    var tokenSection: some View {
-        Group {
-            if let myCoach = userManager.user?.myCoach, !myCoach.isEmpty {
-                Section("Coaching Tokens") {
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text("Tokens Remaining:")
-                            Spacer()
-                            Text("\(userManager.tokens)")
-                                .bold()
-                        }
-                        
-                     
-                        
-                     
-                    }
-                }
-            }
-        }
-    }
+ 
 }
 
 @available(iOS 17, *)

@@ -1,6 +1,13 @@
 import SwiftUI
 import AVFoundation
 
+enum CameraSessionState {
+    case idle
+    case starting
+    case running
+    case stopped
+}
+
 struct VisionView: View {
     @State private var hasCameraPermission = false
     @State private var showCameraView = false

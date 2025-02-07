@@ -455,10 +455,10 @@ class PurchasesManager: ObservableObject {
     }
     
     func checkUserSubscriptionAndTokens(user: User) {
-        // Check if the user has a Stripe account
-        if let stripeAccountId = user.stripeAccountId, !stripeAccountId.isEmpty {
+        // Check if the user has a Stripe account using the correct property
+        if let stripeCustomerId = user.stripeCustomerId, !stripeCustomerId.isEmpty {
             // Perform checks related to Stripe
-            print("User has a Stripe account: \(stripeAccountId)")
+            print("User has a Stripe account: \(stripeCustomerId)")
             // Add logic to check subscription status and tokens
         } else {
             print("User does not have a Stripe account.")

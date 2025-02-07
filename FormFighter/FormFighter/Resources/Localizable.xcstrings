@@ -2475,9 +2475,6 @@
     "Coach Feedback" : {
 
     },
-    "Coaching Tokens" : {
-
-    },
     "Color Scheme" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4228,9 +4225,6 @@
 
     },
     "Next" : {
-
-    },
-    "Next Reset:" : {
 
     },
     "Next reset: %@" : {
@@ -6271,12 +6265,6 @@
           }
         }
       }
-    },
-    "Tokens Remaining:" : {
-
-    },
-    "Total Used:" : {
-
     },
     "Track Your Progress" : {
 
