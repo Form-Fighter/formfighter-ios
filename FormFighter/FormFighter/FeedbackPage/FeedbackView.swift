@@ -366,11 +366,11 @@ struct FeedbackView: View {
                     }
                     
                     // Coach Feedback (not in drawer, at bottom)
-                    VStack {
-                        Divider()
-                        SendToCoachButton(feedbackId: feedbackId)
-                            .padding()
-                    }
+                    // VStack {
+                    //     Divider()
+                    //     SendToCoachButton(feedbackId: feedbackId)
+                    //         .padding()
+                    // }
                 }
             }
         }

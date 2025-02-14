@@ -310,6 +310,7 @@ struct OnePageOnboardingView: View {
     private func surveyStepView(step: OnboardingSurveyStep) -> some View {
         VStack(spacing: 24) {
             ProgressView(value: Double(step.stepNumber), total: Double(surveySteps.count))
+                .padding(.top, 20)
                 .tint(.brand)
             
             Text("Step \(step.stepNumber) of \(surveySteps.count)")

@@ -4,6 +4,7 @@ import UIKit
 import SwiftUI
 import Firebase
 import Alamofire
+import Combine
 
 class PurchasesManager: ObservableObject {
     enum PurchasesError: LocalizedError {
@@ -71,6 +72,9 @@ class PurchasesManager: ObservableObject {
     @Published var eliteSubscribed: Bool = false
     @AppStorage("affiliateID") private var affiliateID: String = ""
     @Published var isStripeSubscribed: Bool = false
+    
+    // Define the cancellables for Combine subscriptions.
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: Useful for changing remotely the amount of free credits you give to users to try your app,
     // without having to create a new app version and pass a new review.
@@ -329,18 +333,20 @@ class PurchasesManager: ObservableObject {
     // buttons over your app.
     func purchaseSubscription(_ type: SubscriptionType) async throws {
         if let currentOffering {
-            guard let package = switch type {
-            case .weekly:
-                currentOffering.weekly
-            case .monthly:
-                currentOffering.monthly 
-            case .quarterly:
-                currentOffering.threeMonth
-            case .annual:
-                currentOffering.annual
-            case .lifetime:
-                currentOffering.lifetime
-            } else {
+            guard let package = {
+                switch type {
+                case .weekly:
+                    return currentOffering.weekly
+                case .monthly:
+                    return currentOffering.monthly 
+                case .quarterly:
+                    return currentOffering.threeMonth
+                case .annual:
+                    return currentOffering.annual
+                case .lifetime:
+                    return currentOffering.lifetime
+                }
+            }() else {
                 throw PurchasesError.noPackage
             }
             
@@ -350,18 +356,17 @@ class PurchasesManager: ObservableObject {
                 Logger.log(message: "Premium purchased!", event: .info)
                 Tracker.purchasedPremium()
                 
-                // Wrap UI state updates in MainActor.run
                 await MainActor.run {
                     self.entitlement = entitlement
                     self.checkSubscribed()
                 }
                 
-                
-            
+                // Update the user's tokens: add 15 tokens upon successful purchase.
+                await UserManager.shared.addTokensForSuccessfulPurchase()
+            }
         } else {
             throw PurchasesError.noCurrentOffering
         }
-    }
     }
     
     func cancelSubscription() async throws {
@@ -521,5 +526,76 @@ class PurchasesManager: ObservableObject {
                     }
                 }
             }
+    }
+    
+    // Async method to check if a user's Stripe subscription is active.
+    func isStripeSubscriptionActive(for user: User) async -> Bool {
+        // Ensure the user has a valid stripeCustomerId and subscriptionId.
+        guard let stripeCustomerId = user.stripeCustomerId, !stripeCustomerId.isEmpty,
+              let subscriptionId = user.subscriptionId, !subscriptionId.isEmpty else {
+            return false
+        }
+        
+        let urlString = "https://www.form-fighter.com/api/check-subscription"
+        guard let url = URL(string: urlString) else {
+            return false
+        }
+        
+        // Build the request.
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        // Define the parameters for the API call.
+        let parameters: [String: Any] = [
+            "customerId": stripeCustomerId,
+            "subscriptionId": subscriptionId
+        ]
+        
+        do {
+            // Encode the parameters as JSON.
+            request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: [])
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            // Perform the API call.
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            // Check for a successful response (status code 200).
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                return false
+            }
+            
+            // Decode the JSON – expecting a structure like ["isActive": Bool].
+            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+               let isActive = json["isActive"] as? Bool {
+                return isActive
+            }
+        } catch {
+            print("Error checking stripe subscription: \(error.localizedDescription)")
+        }
+        
+        return false
+    }
+    
+    /// Initiates the premium one-time purchase.
+    func purchasePremiumOneTime() async throws {
+        // Look for the one-time purchase package by product identifier.
+        guard let currentOffering = self.currentOffering,
+              let package = currentOffering.availablePackages.first(where: {
+                  $0.storeProduct.productIdentifier == "premium_one_time_purchase"
+              }) else {
+            throw PurchasesError.noPackage
+        }
+        
+        // Initiate the purchase via RevenueCat.
+        let purchaseResultData = try await Purchases.shared.purchase(package: package)
+        
+        // If the purchase was cancelled by the user, throw an error.
+        if purchaseResultData.userCancelled {
+            throw PurchasesError.cancelFailed
+        }
+        
+        Logger.log(message: "Premium one-time purchase successful!", event: .info)
+        // On successful purchase, add 7 tokens to the user.
+        await UserManager.shared.addPremiumOneTimePurchaseTokens()
     }
 }

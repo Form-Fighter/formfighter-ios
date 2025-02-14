@@ -268,6 +268,11 @@ struct ResultsView: View {
                             )
                             
                             dismiss()  // Just dismiss without camera cleanup
+                            
+                            // Deduct one token for a successful video upload.
+                            Task {
+                                await UserManager.shared.deductOneToken()
+                            }
                         }
                         continuation.resume()
                     }

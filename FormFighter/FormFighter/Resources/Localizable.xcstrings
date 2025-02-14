@@ -2008,6 +2008,12 @@
     "Birthdate" : {
 
     },
+    "Buy a Premium One-Time Purchase and get 7 tokens." : {
+
+    },
+    "Buy One-Time Purchase" : {
+
+    },
     "Camera" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3849,6 +3855,9 @@
     "Let's go!" : {
 
     },
+    "Loading user data..." : {
+
+    },
     "Loading your feedback..." : {
 
     },
@@ -4997,6 +5006,9 @@
     "Remaining requests this week: %lld" : {
 
     },
+    "Remaining Tokens: %lld" : {
+
+    },
     "Request image to DALL·E..." : {
       "localizations" : {
         "de" : {
@@ -5631,9 +5643,6 @@
       }
     },
     "Start Subscription" : {
-
-    },
-    "Start with 7-day free trial" : {
 
     },
     "Start Your Journey" : {
@@ -7138,6 +7147,9 @@
           }
         }
       }
+    },
+    "You have 0 tokens" : {
+
     },
     "You've used all your key takeaway requests for this week. Check back next week for more insights!" : {
 

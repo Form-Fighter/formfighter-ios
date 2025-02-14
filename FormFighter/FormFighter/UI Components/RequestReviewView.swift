@@ -55,7 +55,7 @@ struct RequestReviewView: View {
                 
                 if buttonPressed {
                     ProgressView()
-                        .offset(y: -50)
+                        .offset(y: -20)
                 }
             }
         })

@@ -56,239 +56,261 @@ struct CameraVisionView: View {
     var cameraManager: CameraManager
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                // Camera preview should be the base layer
-                CameraPreviewView(detectedBodyPoints: $detectedBodyPoints,
-                                 smoothedBodyPoints: $smoothedBodyPoints,
-                                 isBodyDetected: $isBodyDetected,
-                                 isBodyComplete: $isBodyComplete,
-                                 hasTurnedBody: $hasTurnedBody,
-                                 isCountingDown: $isCountingDown,
-                                 currentTurnAngle: $currentTurnAngle,
-                                 cameraManager: cameraManager,
-                                 turnBodyPlayer: turnBodyPlayer)
-                    .ignoresSafeArea(.all, edges: [.horizontal])
-                    .onAppear {
-                        // Delay the body detection until camera is ready
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            isCameraInitialized = true
+        if userManager.user?.tokens ?? 0 == 0 {
+            LowTokensView()
+                .environmentObject(userManager)
+                .environmentObject(PurchasesManager.shared)
+        } else {
+           
+                ZStack {
+                    // Camera preview should be the base layer
+                    CameraPreviewView(detectedBodyPoints: $detectedBodyPoints,
+                                     smoothedBodyPoints: $smoothedBodyPoints,
+                                     isBodyDetected: $isBodyDetected,
+                                     isBodyComplete: $isBodyComplete,
+                                     hasTurnedBody: $hasTurnedBody,
+                                     isCountingDown: $isCountingDown,
+                                     currentTurnAngle: $currentTurnAngle,
+                                     cameraManager: cameraManager,
+                                     turnBodyPlayer: turnBodyPlayer)
+                        .ignoresSafeArea( edges: [.horizontal, .top])
+                        .onAppear {
+                            // Delay the body detection until camera is ready
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                isCameraInitialized = true
+                            }
                         }
-                    }
-                
-                // Only show body detection overlay if camera is initialized
-                if isCameraInitialized {
-                    // Body detection points and messages
-                    ForEach(smoothedBodyPoints.indices, id: \.self) { index in
-                        let point = smoothedBodyPoints[index]
-                        Circle()
-                            .fill(Color.red)
-                            .frame(width: 15, height: 15)
-                            .position(x: point.x, y: point.y)
-                            .shadow(color: .black, radius: 2)
-                    }
                     
-                    if !isBodyDetected || !isBodyComplete {
-                        bodyDetectionOverlay
-                    }
-                }
-                
-                // Updated analyzing message with progress bar
-                if isCounting && timer1 < 3 {
+                    // Add the token display overlay at the top of the camera view.
                     VStack {
                         HStack {
-                            Image(systemName: "figure.kickboxing")
-                                .foregroundColor(.red)
-                                .font(.system(size: 40))
-                            Text("Get Ready Fighter! Stay in the camera.")
-                                .font(.title3.bold())
+                            Spacer()
+                            Text("Remaining Tokens: \(userManager.user?.tokens ?? 0)")
+                                .font(.headline)
                                 .foregroundColor(.white)
+                                .padding(8)
+                                .background(Color.black.opacity(0.5))
+                                .cornerRadius(8)
+                            Spacer()
                         }
-                        .padding()
-                        .background(Color.black.opacity(0.7))
-                        .cornerRadius(15)
-                        
-                        ProgressView(value: Double(timer1), total: 3.0)
-                            .progressViewStyle(LinearProgressViewStyle(tint: .red))
-                            .padding(.top, 10)
-                            .frame(width: 200)
+                        .padding(.top, 20)  // Adjust to honor safe area if needed
+                        Spacer()
                     }
-                    .padding(.top, 50)
-                }
-                
-                // Updated body detection message
-                if !isBodyDetected || !isBodyComplete {
-                    VStack {
-                        Text("Step your full body into the frame, fighter! 🥊")
-                            .font(.headline)
-                            .foregroundColor(.white)
+                    
+                    // Only show body detection overlay if camera is initialized
+                    if isCameraInitialized {
+                        // Body detection points and messages
+                        ForEach(smoothedBodyPoints.indices, id: \.self) { index in
+                            let point = smoothedBodyPoints[index]
+                            Circle()
+                                .fill(Color.red)
+                                .frame(width: 15, height: 15)
+                                .position(x: point.x, y: point.y)
+                                .shadow(color: .black, radius: 2)
+                        }
+                        
+                        if !isBodyDetected || !isBodyComplete {
+                            bodyDetectionOverlay
+                        }
+                    }
+                    
+                    // Updated analyzing message with progress bar
+                    if isCounting && timer1 < 3 {
+                        VStack {
+                            HStack {
+                                Image(systemName: "figure.kickboxing")
+                                    .foregroundColor(.red)
+                                    .font(.system(size: 40))
+                                Text("Get Ready Fighter! Stay in the camera.")
+                                    .font(.title3.bold())
+                                    .foregroundColor(.white)
+                            }
                             .padding()
-                            .background(Color.red.opacity(0.8))
+                            .background(Color.black.opacity(0.7))
                             .cornerRadius(15)
+                            
+                            ProgressView(value: Double(timer1), total: 3.0)
+                                .progressViewStyle(LinearProgressViewStyle(tint: .red))
+                                .padding(.top, 10)
+                                .frame(width: 200)
+                        }
+                        .padding(.top, 50)
                     }
-                    .padding(.top, 50)
-                    .onAppear {
-                        fullBodyPlayer?.play()
-                    }
-                }
-                
-                // Updated countdown with visual feedback
-                if timer2 > 0 && timer2 <= 5 && !isRecording {
-                    VStack {
-                        Text("\(5 - timer2)")
-                            .font(.system(size: 120, weight: .heavy))
-                            .foregroundColor(.red)
-                            .shadow(color: .black, radius: 2, x: 0, y: 0)
-                            .transition(.scale)
-                            .animation(.easeInOut, value: timer2)
-                        
-                        Text("Get Ready!")
-                            .font(.title2.bold())
-                            .foregroundColor(.white)
-                            .shadow(color: .black, radius: 2)
-                    }
-                }
-                
-                // Updated recording message overlay
-                if isRecording {
-                    VStack(spacing: 15) {
-                        Image(systemName: "record.circle")
-                            .foregroundColor(.red)
-                            .font(.system(size: 50))
-                        Text(recordingMessage)
-                            .font(.headline.bold())
-                            .foregroundColor(.white)
-                        
-                        // Timer bar
-                        ProgressView(value: recordingProgress, total: 1.0)
-                            .progressViewStyle(LinearProgressViewStyle(tint: .red))
-                            .frame(width: 200)
-                            .animation(.linear(duration: 2.0), value: recordingProgress)
-                    }
-                    .padding()
-                    .background(Color.black.opacity(0.7))
-                    .cornerRadius(15)
-                    .padding(.top, 100)
-                }
-                
-                // Add to CameraVisionView body, after the existing overlays
-                if isBodyDetected && isBodyComplete && !hasTurnedBody {
-                    VStack {
-                        HStack(spacing: 15) {
-                            Image(systemName: "arrow.triangle.2.circlepath")
+                    
+                    // Updated body detection message
+                    if !isBodyDetected || !isBodyComplete {
+                        VStack {
+                            Text("Step your full body into the frame, fighter! 🥊")
+                                .font(.headline)
                                 .foregroundColor(.white)
-                                .font(.system(size: 30))
-
-                                Text("Turn 7°")
+                                .padding()
+                                .background(Color.red.opacity(0.8))
+                                .cornerRadius(15)
+                        }
+                        .padding(.top, 50)
+                        .onAppear {
+                            fullBodyPlayer?.play()
+                        }
+                    }
+                    
+                    // Updated countdown with visual feedback
+                    if timer2 > 0 && timer2 <= 5 && !isRecording {
+                        VStack {
+                            Text("\(5 - timer2)")
+                                .font(.system(size: 120, weight: .heavy))
+                                .foregroundColor(.red)
+                                .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                .transition(.scale)
+                                .animation(.easeInOut, value: timer2)
+                            
+                            Text("Get Ready!")
                                 .font(.title2.bold())
                                 .foregroundColor(.white)
-                            
-                            Text("\(currentTurnAngle, specifier: "%.0f")° angle")
-                                .font(.title2)
+                                .shadow(color: .black, radius: 2)
+                        }
+                    }
+                    
+                    // Updated recording message overlay
+                    if isRecording {
+                        VStack(spacing: 15) {
+                            Image(systemName: "record.circle")
+                                .foregroundColor(.red)
+                                .font(.system(size: 50))
+                            Text(recordingMessage)
+                                .font(.headline.bold())
                                 .foregroundColor(.white)
+                            
+                            // Timer bar
+                            ProgressView(value: recordingProgress, total: 1.0)
+                                .progressViewStyle(LinearProgressViewStyle(tint: .red))
+                                .frame(width: 200)
+                                .animation(.linear(duration: 2.0), value: recordingProgress)
                         }
                         .padding()
                         .background(Color.black.opacity(0.7))
                         .cornerRadius(15)
-                        
-                        // Progress arc
-                        ZStack {
-                            Circle()
-                                .stroke(Color.white.opacity(0.3), lineWidth: 10)
-                                .frame(width: 100, height: 100)
+                        .padding(.top, 100)
+                    }
+                    
+                    // Add to CameraVisionView body, after the existing overlays
+                    if isBodyDetected && isBodyComplete && !hasTurnedBody {
+                        VStack {
+                            HStack(spacing: 15) {
+                                Image(systemName: "arrow.triangle.2.circlepath")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 30))
+
+                                    Text("Turn 7°")
+                                    .font(.title2.bold())
+                                    .foregroundColor(.white)
+                                
+                                Text("\(currentTurnAngle, specifier: "%.0f")° angle")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                            }
+                            .padding()
+                            .background(Color.black.opacity(0.7))
+                            .cornerRadius(15)
                             
-                            Circle()
-                                .trim(from: 0, to: isShowingTurnAnimation ? 1 : 0)
-                                .stroke(Color.green, style: StrokeStyle(lineWidth: 10, lineCap: .round))
-                                .frame(width: 100, height: 100)
-                                .rotationEffect(.degrees(-90))
-                                .animation(.linear(duration: 2.0), value: isShowingTurnAnimation)
+                            // Progress arc
+                            ZStack {
+                                Circle()
+                                    .stroke(Color.white.opacity(0.3), lineWidth: 10)
+                                    .frame(width: 100, height: 100)
+                                
+                                Circle()
+                                    .trim(from: 0, to: isShowingTurnAnimation ? 1 : 0)
+                                    .stroke(Color.green, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                                    .frame(width: 100, height: 100)
+                                    .rotationEffect(.degrees(-90))
+                                    .animation(.linear(duration: 2.0), value: isShowingTurnAnimation)
+                            }
                         }
-                    }
-                    .padding(.top, 50)
-                    .onAppear {
-                        turnBodyPlayer?.play()
-                        withAnimation {
-                            isShowingTurnAnimation = true
-                        }
-                    }
-                }
-                
-                // Add the info button in the top right
-                VStack {
-                    HStack {
-                        Spacer()
-                        Button {
-                            currentInstructionStep = 1
-                            showInstructionsOverlay = true
-                        } label: {
-                            Image(systemName: "info.circle")
-                                .font(.title2)
-                                .foregroundColor(.white)
-                        }
-                        .padding()
-                    }
-                    .padding(.top, 50)
-                    Spacer()
-                }
-                
-                // Instructions overlay
-                if !hasSeenInstructions || showInstructionsOverlay {
-                    InstructionsOverlay(
-                        currentStep: $currentInstructionStep,
-                        isShowing: $showInstructionsOverlay,
-                        hasSeenInstructions: $hasSeenInstructions
-                    )
-                }
-            }
-            .navigationDestination(isPresented: $navigateToPreview) {
-                if let videoURL = videoURL {
-                    ResultsView(videoURL: videoURL)
-                        .environmentObject(UserManager.shared)
+                        .padding(.top, 50)
                         .onAppear {
-                            // Stop camera when navigating to results
-                            cameraManager.stopSession()
+                            turnBodyPlayer?.play()
+                            withAnimation {
+                                isShowingTurnAnimation = true
+                            }
                         }
-                } else{
-                    Text("No video URL available")
+                    }
+                    
+                    // Add the info button in the top right
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Button {
+                                currentInstructionStep = 1
+                                showInstructionsOverlay = true
+                            } label: {
+                                Image(systemName: "info.circle")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                            }
+                            .padding()
+                        }
+                        .padding(.top, 50)
+                        Spacer()
+                    }
+                    
+                    // Instructions overlay
+                    if !hasSeenInstructions || showInstructionsOverlay {
+                        InstructionsOverlay(
+                            currentStep: $currentInstructionStep,
+                            isShowing: $showInstructionsOverlay,
+                            hasSeenInstructions: $hasSeenInstructions
+                        )
+                    }
                 }
-            }
-            .onChange(of: isBodyDetected) { _ in
-                print("isBodyDetected changed to: \(isBodyDetected)")
-                checkBodyDetectionState()
-                checkBodyAndStartTimers()
-            }
-            .onChange(of: isBodyComplete) { _ in
-                print("isBodyComplete changed to: \(isBodyComplete)")
-                checkBodyDetectionState()
-                checkBodyAndStartTimers()
-            }
-            .onChange(of: hasTurnedBody) { _ in
-                print("hasTurnedBody changed to: \(hasTurnedBody)")
-                checkBodyDetectionState()
-                checkBodyAndStartTimers()
-            }
-            .ignoresSafeArea(.all, edges: [.horizontal, .top])
-            .onDisappear {
-               // cleanup()
-                cameraManager.stopSession()
-            }
-        }
-         
-       .navigationBarHidden(true)
-       .navigationBarBackButtonHidden(true)
-        .onAppear {
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("VideoRecorded"), object: nil, queue: .main) { notification in
-                if let url = notification.object as? URL {
-                    self.videoURL = url
-                    self.navigateToPreview = true
+                .sheet(isPresented: $navigateToPreview) {
+                    if let videoURL = videoURL {
+                        ResultsView(videoURL: videoURL)
+                            .environmentObject(UserManager.shared)
+                            .onAppear {
+                                // Stop camera when navigating to results
+                                cameraManager.stopSession()
+                            }
+                    } else {
+                        Text("No video URL available")
+                    }
                 }
-            }
-            setupAudioPlayers()
+                .onChange(of: isBodyDetected) { _ in
+                    print("isBodyDetected changed to: \(isBodyDetected)")
+                    checkBodyDetectionState()
+                    checkBodyAndStartTimers()
+                }
+                .onChange(of: isBodyComplete) { _ in
+                    print("isBodyComplete changed to: \(isBodyComplete)")
+                    checkBodyDetectionState()
+                    checkBodyAndStartTimers()
+                }
+                .onChange(of: hasTurnedBody) { _ in
+                    print("hasTurnedBody changed to: \(hasTurnedBody)")
+                    checkBodyDetectionState()
+                    checkBodyAndStartTimers()
+                }
+                .ignoresSafeArea(edges: [.top, .leading, .trailing])
+                .onDisappear {
+                   // cleanup()
+                    cameraManager.stopSession()
+                }
             
-            // Always ensure we have an active session
-            if !cameraManager.isActive {
-                cameraManager.startSession()
+             
+           .navigationBarHidden(true)
+           .navigationBarBackButtonHidden(true)
+            .onAppear {
+                NotificationCenter.default.addObserver(forName: NSNotification.Name("VideoRecorded"), object: nil, queue: .main) { notification in
+                    if let url = notification.object as? URL {
+                        self.videoURL = url
+                        self.navigateToPreview = true
+                    }
+                }
+                setupAudioPlayers()
+                
+                // Always ensure we have an active session
+                if !cameraManager.isActive {
+                    cameraManager.startSession()
+                }
             }
         }
     }

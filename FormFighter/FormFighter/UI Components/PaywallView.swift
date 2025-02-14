@@ -74,14 +74,10 @@ struct PaywallView: View {
                     // Pricing
                     VStack(spacing: 16) {
                         if let offering = purchaseManager.currentOffering {
-                            if let weekly = offering.weekly {
-                                Text(weekly.storeProduct.localizedPriceString + "/week")
+                            if let monthly = offering.monthly {
+                                Text(monthly.storeProduct.localizedPriceString + "/month")
                                     .font(.special(.title2, weight: .bold))
                                     .foregroundColor(.white)
-                                
-                                 Text("Start with 7-day free trial")
-                                        .font(.special(.subheadline, weight: .medium))
-                                        .foregroundColor(.white.opacity(0.7))
                                 
                                 Text("Cancel anytime")
                                     .font(.special(.subheadline, weight: .medium))
@@ -98,14 +94,26 @@ struct PaywallView: View {
                     Button {
                         Task {
                             isLoading = true
-                            if let offering = purchaseManager.currentOffering,
-                               let weekly = offering.weekly {
-                                do {
-                                    try await purchaseManager.purchaseSubscription(.weekly)
+                            do {
+                                // First, restore previous purchases to check for an active subscription.
+                                let restoredCustomerInfo = try await Purchases.shared.restorePurchases()
+                                
+                                // Check if the user has an active subscription for the premium entitlement.
+                                if let entitlement = restoredCustomerInfo.entitlements.all[Const.Purchases.premiumEntitlementIdentifier],
+                                   entitlement.isActive {
+                                    // Active subscription found: update the state and dismiss the Paywall.
+                                    await purchaseManager.fetchCustomerInfo()
                                     dismiss()
-                                } catch {
-                                    print("Purchase failed: \(error)")
+                                } else {
+                                    // No active subscription found: proceed with the purchase logic.
+                                    if let offering = purchaseManager.currentOffering,
+                                       let monthly = offering.monthly {
+                                        try await purchaseManager.purchaseSubscription(.monthly)
+                                        dismiss()
+                                    }
                                 }
+                            } catch {
+                                print("Restore/Purchase flow failed: \(error.localizedDescription)")
                             }
                             isLoading = false
                         }
@@ -135,7 +143,7 @@ struct PaywallView: View {
                         )
                         .shadow(color: .brand.opacity(0.5), radius: 20)
                     }
-                    .disabled(isLoading || purchaseManager.currentOffering?.weekly == nil)
+                    .disabled(isLoading || purchaseManager.currentOffering?.monthly == nil)
                     .padding(.horizontal)
                     
                     // Footer links

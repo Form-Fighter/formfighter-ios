@@ -88,16 +88,16 @@ final class AuthManager: ObservableObject {
         }
         
         // Refresh token first
-        try await withCheckedThrowingContinuation { continuation in
-            refreshUserAuthToken { result in
-                switch result {
-                case .success(_):
-                    continuation.resume()
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
+        // try await withCheckedThrowingContinuation { continuation in
+        //     refreshUserAuthToken { result in
+        //         switch result {
+        //         case .success(_):
+        //             continuation.resume()
+        //         case .failure(let error):
+        //             continuation.resume(throwing: error)
+        //         }
+        //     }
+        // }
         
         // Delete the user
         try await user.delete()

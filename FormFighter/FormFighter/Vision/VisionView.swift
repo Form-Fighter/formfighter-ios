@@ -22,8 +22,8 @@ struct VisionView: View {
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
-            ThemeColors.background.ignoresSafeArea()
+            Color.black.ignoresSafeArea(edges: [.top, .leading, .trailing])
+            ThemeColors.background.ignoresSafeArea(edges: [.top, .leading, .trailing])
 
             if showCameraView && isCameraReady {
                 CameraVisionView(cameraManager: cameraManager)
@@ -117,9 +117,7 @@ struct VisionView: View {
         //    // PaywallView()
         // }
         .onAppear {
-            if !purchasesManager.premiumSubscribed && !purchasesManager.eliteSubscribed  {
-                showPaywall = true
-            }
+           
             checkPermissions()
             if hasCameraPermission {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {

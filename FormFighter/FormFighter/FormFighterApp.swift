@@ -107,17 +107,30 @@ struct FormFighterApp: App {
             NavigationStack {
                 ZStack {
                     Group {
-
-                        // PRODUCTION VERSION
                         if !hasCompletedOnboarding {
                             OnePageOnboardingView(userManager: userManager)
                         } else if !userManager.isAuthenticated {
                             LoginView(showPaywallInTheOnboarding: false)
-                        } else if isTestFlight() || purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed || purchasesManager.isStripeSubscribed {
+                        } else if userManager.user == nil {
+                            ProgressView("Loading user data...")
+                        } else if purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed || purchasesManager.isStripeSubscribed {
                             normalUI
                         } else {
                             PaywallView()
                         }
+
+                        //  if !hasCompletedOnboarding {
+                        //     OnePageOnboardingView(userManager: userManager)
+                        // } else if !userManager.isAuthenticated {
+                        //     LoginView(showPaywallInTheOnboarding: false)
+                        // } else if userManager.user == nil {
+                        //     ProgressView("Loading user data...")
+                        // } else if isTestFlight() || purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed || purchasesManager.isStripeSubscribed {
+                        //     normalUI
+                        // } else {
+                        //     PaywallView()
+                        // }
+                        
 
                         // TEST FLIGHT BETA   VERSION
                         //  if !hasCompletedOnboarding {
@@ -172,6 +185,11 @@ struct FormFighterApp: App {
                     }
                 }
                 .onAppear {
+                    Task {
+                        if let user = userManager.user {
+                            purchasesManager.isStripeSubscribed = await purchasesManager.isStripeSubscriptionActive(for: user)
+                        }
+                    }
                     Tracker.appOpened()
                     Tracker.appSessionBegan()
                 }
@@ -195,6 +213,13 @@ struct FormFighterApp: App {
                 }
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("SwitchToProfile"))) { _ in
                     selectedTab = .profile
+                }
+                .onChange(of: userManager.user) { newUser in
+                    if let user = newUser {
+                        Task {
+                            purchasesManager.isStripeSubscribed = await purchasesManager.isStripeSubscriptionActive(for: user)
+                        }
+                    }
                 }
             }
             .environment(\.tabSelection, $selectedTab)

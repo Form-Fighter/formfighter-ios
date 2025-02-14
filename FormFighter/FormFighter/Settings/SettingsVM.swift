@@ -1,4 +1,13 @@
 import Foundation
+import FirebaseAuth
+
+extension String {
+    var isValidEmail: Bool {
+        // This regex is a common pattern for basic email validation.
+        let emailRegEx = "^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+        return NSPredicate(format: "SELF MATCHES %@", emailRegEx).evaluate(with: self)
+    }
+}
 
 class SettingsVM: ObservableObject {
     let firestoreService: DatabaseServiceProtocol
@@ -32,33 +41,74 @@ class SettingsVM: ObservableObject {
     func deleteUserAndLogout() {
         Task {
             do {
-                // 1. Check for valid userID first
-                guard !userManager.userId.isEmpty else {
+                // Check for a valid user either in userManager or FirebaseAuth.
+                let userID: String
+                if let user = userManager.user, !user.id.isEmpty {
+                    userID = user.id
+                } else if let firebaseUser = Auth.auth().currentUser {
+                    userID = firebaseUser.uid
+                } else {
+                    print("deleteUserAndLogout: No user found in userManager or Firebase.")
                     throw AuthError.userNotFound
                 }
+                print("deleteUserAndLogout: Found user ID \(userID). Deleting Firestore data...")
                 
-                // 2. Delete Firestore data first
+                // 1. Delete Firestore data.
                 userManager.deleteUserData()
+                print("deleteUserAndLogout: Firestore data deleted.")
                 
-                // 3. Track the deletion
+                // 2. Track the deletion event.
                 Tracker.deletedAccount()
+                print("deleteUserAndLogout: Deletion event tracked.")
                 
-                // 4. Delete Firebase Auth user and sign out
+                // 3. Attempt to delete the Firebase Auth user.
+                print("deleteUserAndLogout: Attempting to delete Firebase Auth user...")
                 try await authManager.deleteUser()
+                print("deleteUserAndLogout: Firebase Auth user deleted successfully.")
                 
-                // 5. Clean up local state (do this last)
+                // 4. Clean up local state.
                 await MainActor.run {
                     userManager.isAuthenticated = false
                     userManager.resetUserProperties()
                 }
+                print("deleteUserAndLogout: Local state reset. User logged out.")
                 
             } catch {
-                await MainActor.run {
-                    self.alertMessage = "Error deleting user: \(error.localizedDescription)"
-                    self.showAlert = true
+                print("deleteUserAndLogout - Initial attempt error: \(error.localizedDescription)")
+                if let nsError = error as NSError?, nsError.code == AuthErrorCode.requiresRecentLogin.rawValue {
+                    print("deleteUserAndLogout: Received requiresRecentLogin error. Attempting reauthentication...")
+                    do {
+                        try await self.reauthenticateUser()
+                        print("deleteUserAndLogout: Reauthentication succeeded. Retrying deletion...")
+                        try await authManager.deleteUser()
+                        print("deleteUserAndLogout: Deletion after reauthentication succeeded.")
+                        await MainActor.run {
+                            userManager.isAuthenticated = false
+                            userManager.resetUserProperties()
+                        }
+                        print("deleteUserAndLogout: Local state reset after reauthenticated deletion.")
+                    } catch {
+                        print("deleteUserAndLogout - Error after reauthentication: \(error.localizedDescription)")
+                        await MainActor.run {
+                            self.alertMessage = "Error deleting user after reauthentication: \(error.localizedDescription)"
+                            self.showAlert = true
+                        }
+                    }
+                } else {
+                    await MainActor.run {
+                        self.alertMessage = "Error deleting user: \(error.localizedDescription)"
+                        self.showAlert = true
+                    }
                 }
             }
         }
+    }
+    
+    // Reauthentication method that leverages signInWithApple from authManager.
+    func reauthenticateUser() async throws {
+        print("reauthenticateUser: Starting reauthentication using signInWithApple...")
+        let user = try await authManager.signInWithApple()
+        print("reauthenticateUser: Reauthentication complete. Signed in as: \(user.email)")
     }
     
     func signIn() {
@@ -97,6 +147,14 @@ class SettingsVM: ObservableObject {
         email: String? = nil
     ) {
         guard !isUpdating, let currentUser = userManager.user else { return }
+        
+        // Validate email if provided (and not empty)
+        if let email = email, !email.isEmpty, !email.isValidEmail {
+            isUpdating = false
+            self.alertMessage = "Invalid email address. Please enter a valid email."
+            self.showAlert = true
+            return
+        }
         
         isUpdating = true
         

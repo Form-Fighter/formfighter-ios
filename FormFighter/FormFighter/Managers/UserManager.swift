@@ -239,13 +239,13 @@ class UserManager: ObservableObject {
         // Clear FCM token from Firestore when user logs out
         if let userId = Auth.auth().currentUser?.uid {
             let db = Firestore.firestore()
-            db.collection("users").document(userId).updateData([
-                "fcmToken": FieldValue.delete()
-            ]) { error in
-                if let error = error {
-                    print("Error removing FCM token: \(error.localizedDescription)")
-                }
+        db.collection("users").document(userId).setData([
+            "fcmToken": FieldValue.delete()
+        ], merge: true) { error in
+            if let error = error {
+                print("Error removing FCM token: \(error.localizedDescription)")
             }
+        }
         }
     }
     
@@ -441,6 +441,71 @@ class UserManager: ObservableObject {
             }
         }
     }
+    
+    @MainActor
+    func addTokensForSuccessfulPurchase() async {
+        guard var currentUser = self.user else {
+            print("No current user found.")
+            return
+        }
+        
+        // If tokens exist, increment by 15; if not, set tokens to 15.
+        let currentTokens = currentUser.tokens ?? 0
+        let updatedTokens = currentTokens + 15
+        currentUser.tokens = updatedTokens
+        self.user = currentUser
+        
+        do {
+            try await db.collection("users").document(currentUser.id)
+            .setData(["tokens": updatedTokens], merge: true)
+            print("Updated user tokens to \(updatedTokens) in Firestore.")
+        } catch {
+            print("Error updating tokens in Firestore: \(error.localizedDescription)")
+        }
+    }
+
+    // In UserManager.swift, somewhere with your other @Published properties
+@Published var tokenBannerMessage: String? = nil
+
+@MainActor
+func deductOneToken() async {
+    guard var currentUser = self.user else {
+        print("No user logged in, cannot deduct token")
+        return
+    }
+    
+    let currentTokens = currentUser.tokens ?? 0
+    if currentTokens < 1 {
+        // Set a message to be shown in the UI for a few seconds
+        self.tokenBannerMessage = "You have run out of tokens"
+        // Clear the message after 3 seconds
+        Task {
+            try? await Task.sleep(nanoseconds: 3 * 1_000_000_000) // 3 seconds
+            self.tokenBannerMessage = nil
+        }
+        return
+    }
+    
+    let updatedTokens = currentTokens - 1
+    currentUser.tokens = updatedTokens
+    self.user = currentUser  // update the local copy
+    
+    do {
+        try await db.collection("users").document(currentUser.id)
+            .setData(["tokens": updatedTokens], merge: true)
+        print("Deducted one token. New token count: \(updatedTokens)")
+    } catch {
+        print("Error updating tokens: \(error.localizedDescription). Retrying once...")
+        // Retry once
+        do {
+            try await await db.collection("users").document(currentUser.id)
+            .setData(["tokens": updatedTokens], merge: true)
+            print("Token deduction retry succeeded.")
+        } catch {
+                print("Token deduction retry failed: \(error.localizedDescription).")
+            }
+        }
+    }
 }
 
 extension UserManager {
@@ -588,6 +653,29 @@ let jabQuizQuestions = [
         ]
     )
 ]
+
+extension UserManager {
+    @MainActor
+    func addPremiumOneTimePurchaseTokens() async {
+        guard var currentUser = self.user else {
+            print("No current user found for premium one-time purchase")
+            return
+        }
+        
+        let currentTokens = currentUser.tokens ?? 0
+        let updatedTokens = currentTokens + 7
+        currentUser.tokens = updatedTokens
+        self.user = currentUser
+        
+        do {
+           try await db.collection("users").document(currentUser.id)
+            .setData(["tokens": updatedTokens], merge: true)
+            print("Updated user tokens to \(updatedTokens) after premium one-time purchase")
+        } catch {
+            print("Error updating tokens in Firestore: \(error.localizedDescription)")
+        }
+    }
+}
 
 
 
