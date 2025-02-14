@@ -396,6 +396,9 @@
         }
       }
     },
+    "%lld 🔸" : {
+
+    },
     "%lld day streak" : {
 
     },
@@ -936,6 +939,9 @@
           }
         }
       }
+    },
+    "💎" : {
+
     },
     "💡 Suggest New Features" : {
       "localizations" : {
@@ -2008,10 +2014,10 @@
     "Birthdate" : {
 
     },
-    "Buy a Premium One-Time Purchase and get 7 tokens." : {
+    "Buy 5 tokens and get back to punching!" : {
 
     },
-    "Buy One-Time Purchase" : {
+    "Buy Now" : {
 
     },
     "Camera" : {
@@ -7148,9 +7154,6 @@
         }
       }
     },
-    "You have 0 tokens" : {
-
-    },
     "You've used all your key takeaway requests for this week. Check back next week for more insights!" : {
 
     },
@@ -7244,6 +7247,9 @@
 
     },
     "Your Recommended Focus Areas" : {
+
+    },
+    "Your Token Bank" : {
 
     }
   },

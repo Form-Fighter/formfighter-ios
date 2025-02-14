@@ -278,7 +278,14 @@ class PurchasesManager: ObservableObject {
             }
             
             if let customerInfo = customerInfo {
-                self?.entitlement = customerInfo.entitlements.all[Const.Purchases.premiumEntitlementIdentifier]
+                DispatchQueue.main.async {
+                    let premiumEntitlement = customerInfo.entitlements.all[Const.Purchases.premiumEntitlementIdentifier]
+                    let eliteEntitlement = customerInfo.entitlements.all[Const.Purchases.eliteEntitlementIdentifier]
+                    
+                    self?.premiumSubscribed = premiumEntitlement?.isActive ?? false
+                    self?.eliteSubscribed = eliteEntitlement?.isActive ?? false
+                    self?.entitlement = premiumEntitlement
+                }
             }
         }
     }
@@ -577,25 +584,31 @@ class PurchasesManager: ObservableObject {
     }
     
     /// Initiates the premium one-time purchase.
-    func purchasePremiumOneTime() async throws {
-        // Look for the one-time purchase package by product identifier.
-        guard let currentOffering = self.currentOffering,
-              let package = currentOffering.availablePackages.first(where: {
-                  $0.storeProduct.productIdentifier == "premium_one_time_purchase"
-              }) else {
-            throw PurchasesError.noPackage
-        }
-        
-        // Initiate the purchase via RevenueCat.
-        let purchaseResultData = try await Purchases.shared.purchase(package: package)
-        
-        // If the purchase was cancelled by the user, throw an error.
-        if purchaseResultData.userCancelled {
-            throw PurchasesError.cancelFailed
-        }
-        
-        Logger.log(message: "Premium one-time purchase successful!", event: .info)
-        // On successful purchase, add 7 tokens to the user.
-        await UserManager.shared.addPremiumOneTimePurchaseTokens()
+   func purchasePremiumOneTime() async throws {
+    // Ensure we have a current offering.
+    guard let currentOffering = self.currentOffering else {
+        throw PurchasesError.noCurrentOffering
     }
+    
+    // Look for the one-time purchase package by product identifier.
+    guard let package = currentOffering.availablePackages.first(where: {
+        $0.storeProduct.productIdentifier == "premium_one_time_purchase"
+    }) else {
+        let availableProductIDs = currentOffering.availablePackages.map { $0.storeProduct.productIdentifier }
+        Logger.log(message: "premium_one_time_purchase not found. Available packages: \(availableProductIDs)", event: .error)
+        throw PurchasesError.noPackage
+    }
+    
+    // Initiate the purchase via RevenueCat.
+    let purchaseResultData = try await Purchases.shared.purchase(package: package)
+    
+    // If the purchase was cancelled by the user, throw an error.
+    if purchaseResultData.userCancelled {
+        throw PurchasesError.cancelFailed
+    }
+    
+    Logger.log(message: "Premium one-time purchase successful!", event: .info)
+    // On successful purchase, add 7 tokens to the user.
+    await UserManager.shared.addPremiumOneTimePurchaseTokens()
+}
 }

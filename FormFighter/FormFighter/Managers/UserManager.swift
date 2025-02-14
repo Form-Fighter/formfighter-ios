@@ -663,7 +663,7 @@ extension UserManager {
         }
         
         let currentTokens = currentUser.tokens ?? 0
-        let updatedTokens = currentTokens + 7
+        let updatedTokens = currentTokens + 5
         currentUser.tokens = updatedTokens
         self.user = currentUser
         
