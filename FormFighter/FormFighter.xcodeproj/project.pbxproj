@@ -183,6 +183,7 @@
 		B252ED7B2D07B9C700013524 /* VideoCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B252ED7A2D07B9C700013524 /* VideoCache.swift */; };
 		B29CD0932D510B760033E826 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29CD0922D510B760033E826 /* TokenManager.swift */; };
 		B29CD0952D589ED00033E826 /* LowTokensView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29CD0942D589ED00033E826 /* LowTokensView.swift */; };
+		B29CD0972D63BEBE0033E826 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29CD0962D63BEBE0033E826 /* CameraManager.swift */; };
 		B2A504132C6C50CF00397093 /* FormFighter.entitlements in Sources */ = {isa = PBXBuildFile; fileRef = 81DE14DD2B752C3D00C41EA9 /* FormFighter.entitlements */; };
 		B2B448F92D4A7F280058EBCF /* MetricsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B448F82D4A7F280058EBCF /* MetricsConstants.swift */; };
 		B2B448FB2D4ACDFC0058EBCF /* FocusMetricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B448FA2D4ACDFC0058EBCF /* FocusMetricsView.swift */; };
@@ -381,6 +382,7 @@
 		B256D8A02CEA638F00085249 /* FormFighter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FormFighter.entitlements; sourceTree = "<group>"; };
 		B29CD0922D510B760033E826 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		B29CD0942D589ED00033E826 /* LowTokensView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LowTokensView.swift; sourceTree = "<group>"; };
+		B29CD0962D63BEBE0033E826 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
 		B2B448F82D4A7F280058EBCF /* MetricsConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetricsConstants.swift; sourceTree = "<group>"; };
 		B2B448FA2D4ACDFC0058EBCF /* FocusMetricsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusMetricsView.swift; sourceTree = "<group>"; };
 		B2B448FC2D4F0EFF0058EBCF /* HomeworkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeworkView.swift; sourceTree = "<group>"; };
@@ -668,6 +670,7 @@
 		818D3FD12B70119400DF7299 /* Vision */ = {
 			isa = PBXGroup;
 			children = (
+				B29CD0962D63BEBE0033E826 /* CameraManager.swift */,
 				818D3F7B2B6FA14100DF7299 /* VisionView.swift */,
 				81DE14FB2B76A37B00C41EA9 /* VisionVM.swift */,
 				81DE15012B7797B600C41EA9 /* ResultsView.swift */,
@@ -1224,6 +1227,7 @@
 				81E98B0F2B72B058000E8996 /* LoginView.swift in Sources */,
 				81D531F42B84A9160044D990 /* Tracker.swift in Sources */,
 				B2B448FD2D4F0F000058EBCF /* HomeworkView.swift in Sources */,
+				B29CD0972D63BEBE0033E826 /* CameraManager.swift in Sources */,
 				8125D5C42B7BFA16001A846B /* DALLERequestModel.swift in Sources */,
 				818D3F852B6FA53C00DF7299 /* OnePageOnboardingView.swift in Sources */,
 				B2D92D262D36E67700032377 /* SpeedComparisonView.swift in Sources */,
@@ -1373,7 +1377,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = FormFighter/FormFighterDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.7;
+				CURRENT_PROJECT_VERSION = 1.0.71;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "FormFighter/Preview\\ Content";
 				DEVELOPMENT_TEAM = ZLJZ8QH928;
@@ -1381,7 +1385,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "FormFighter/Supporting Files/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Form Fighter";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to record your movements for analysis.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FormFighter needs access to your photo library to save your images taken with the camera.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1394,7 +1398,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.63;
+				MARKETING_VERSION = 1.0.65;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.formfighter.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1415,14 +1419,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = FormFighter/FormFighter.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.7;
+				CURRENT_PROJECT_VERSION = 1.0.71;
 				DEVELOPMENT_ASSET_PATHS = "FormFighter/Preview\\ Content";
 				DEVELOPMENT_TEAM = ZLJZ8QH928;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "FormFighter/Supporting Files/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Form Fighter";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to record your movements for analysis.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "FormFighter needs access to your photo library to save your images taken with the camera.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1435,7 +1439,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.63;
+				MARKETING_VERSION = 1.0.65;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.formfighter.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";

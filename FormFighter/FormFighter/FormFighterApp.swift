@@ -113,7 +113,7 @@ struct FormFighterApp: App {
                             LoginView(showPaywallInTheOnboarding: false)
                         } else if userManager.user == nil {
                             ProgressView("Loading user data...")
-                        } else if purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed || purchasesManager.isStripeSubscribed {
+                        } else if userManager.isFreeUser || purchasesManager.premiumSubscribed || purchasesManager.eliteSubscribed || purchasesManager.isStripeSubscribed {
                             normalUI
                         } else {
                             PaywallView()

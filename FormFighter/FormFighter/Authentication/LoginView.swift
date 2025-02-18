@@ -16,33 +16,34 @@ struct LoginView: View {
     
     var body: some View {
         ZStack {
-            // Add black background
+            // Full screen black background.
             Color.black
                 .ignoresSafeArea()
             
             if isSigningIn {
                 ProgressView()
-                    .tint(.white) // Changed to white for better visibility on black
+                    .tint(.white)
                     .scaleEffect(2)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                // Main content
                 VStack(spacing: 32) {
                     Text("Form Fighter")
                         .font(.special(.extraLargeTitle, weight: .black))
-                        .foregroundStyle(.white) // Changed to white
+                        .foregroundStyle(.white)
                     
+                    // App logo with explicit black background.
                     Image("app-logo")
                         .resizable()
                         .scaledToFit()
                         .frame(maxWidth: 180)
+                        .background(Color.black)
                     
-                    Text("Train Smarter, Fight Better, Think like a Coach.")  // Updated text to match Muay Thai theme
+                    Text("Train Smarter, Fight Better, Think like a Coach.")
                         .font(.special(.title3, weight: .bold))
-                        .foregroundColor(.white)  // Changed to white
+                        .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        
                 }
+                .padding(.horizontal) // Added horizontal padding for the main content.
                 
                 VStack {
                     // if canEnableFreeCredits {
@@ -51,14 +52,12 @@ struct LoginView: View {
                     
                     CustomSignInWithAppleButton {
                         signIn()
-                       
-                        
                     }
                     
                     TermsAndPrivacyPolicyView()
                 }
-                .padding(.horizontal)
-                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .bottom)
+                .padding(.horizontal) // Added horizontal padding for the bottom section.
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -74,8 +73,7 @@ struct LoginView: View {
         // MARK: Comment the line above and uncomment the line below if you prefer using the Image Paywall, like
         // in the RevenueCat Dashboard.
         //.presentPaywallIfNeeded(requiredEntitlementIdentifier: Const.Purchases.premiumEntitlementIdentifier)
-        .background(.customBackground)
-        
+        .background(Color.customBackground)
     }
     
     var freeCreditsText: some View {
@@ -90,7 +88,6 @@ struct LoginView: View {
         .multilineTextAlignment(.center)
         .frame(maxWidth: .infinity, alignment: .center)
         .padding(.horizontal)
-        
     }
     
     // MARK: - Sign in flow

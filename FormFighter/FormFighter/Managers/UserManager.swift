@@ -125,7 +125,13 @@ class UserManager: ObservableObject {
                     preferredStance: nil,
                     email: currentUser.email ?? "",
                     currentStreak: 0,
-                    lastTrainingDate: nil
+                    lastTrainingDate: nil,
+                    stripeCustomerId: nil,
+                    membershipEndsAt: nil,
+                    currentPeriodEnd: nil,
+                    subscriptionId: nil,
+                    tokens: 0,
+                    isFreeUser: true
                 )
                 
                 try await firestoreService.createUser(userID: newUser.id, with: newUser)
@@ -166,7 +172,8 @@ class UserManager: ObservableObject {
             membershipEndsAt: nil,
             currentPeriodEnd: nil,
             subscriptionId: nil,
-            tokens: 0
+            tokens: 0,
+            isFreeUser: true
         )
         
         try await firestoreService.createUser(userID: newUser.id, with: newUser)
@@ -175,7 +182,7 @@ class UserManager: ObservableObject {
     func setFirebaseAuthUser() {
         if let currentUser = Auth.auth().currentUser {
             //self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", weight: "", height: "", wingSpan: "", preferredStance: "", email: "")
-            self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", coachId: "" , myCoach: "", email: "", currentStreak: 0, lastTrainingDate: nil, stripeCustomerId: nil, membershipEndsAt: nil, currentPeriodEnd: nil, subscriptionId: nil, tokens: 0)
+            self.user = User(id: currentUser.uid, name: "", firstName: "", lastName: "", coachId: "" , myCoach: "", email: "", currentStreak: 0, lastTrainingDate: nil, stripeCustomerId: nil, membershipEndsAt: nil, currentPeriodEnd: nil, subscriptionId: nil, tokens: 0, isFreeUser: true)
 
         } else {
             Logger.log(message: "There is no current Auth user", event: .error)
@@ -561,6 +568,10 @@ extension UserManager {
     var lastTrainingDate: Date? {
         get { user?.lastTrainingDate }
         set { user?.lastTrainingDate = newValue }
+    }
+
+     var isFreeUser: Bool {
+        user?.isFreeUser ?? false
     }
 }
 

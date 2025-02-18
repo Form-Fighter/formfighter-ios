@@ -95,25 +95,17 @@ struct PaywallView: View {
                         Task {
                             isLoading = true
                             do {
-                                // First, restore previous purchases to check for an active subscription.
-                                let restoredCustomerInfo = try await Purchases.shared.restorePurchases()
-                                
-                                // Check if the user has an active subscription for the premium entitlement.
-                                if let entitlement = restoredCustomerInfo.entitlements.all[Const.Purchases.premiumEntitlementIdentifier],
-                                   entitlement.isActive {
-                                    // Active subscription found: update the state and dismiss the Paywall.
-                                    await purchaseManager.fetchCustomerInfo()
+                                // Directly initiate a new purchase flow.
+                                if let offering = purchaseManager.currentOffering,
+                                   let monthly = offering.monthly {
+                                    try await purchaseManager.purchaseSubscription(.monthly)
                                     dismiss()
                                 } else {
-                                    // No active subscription found: proceed with the purchase logic.
-                                    if let offering = purchaseManager.currentOffering,
-                                       let monthly = offering.monthly {
-                                        try await purchaseManager.purchaseSubscription(.monthly)
-                                        dismiss()
-                                    }
+                                    // Optionally, log or handle the absence of a valid offering.
+                                    print("DEBUG: No valid offering found.")
                                 }
                             } catch {
-                                print("Restore/Purchase flow failed: \(error.localizedDescription)")
+                                print("DEBUG: In-App Purchase flow error: \(error.localizedDescription)")
                             }
                             isLoading = false
                         }

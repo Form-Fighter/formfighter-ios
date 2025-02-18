@@ -307,9 +307,6 @@
         }
       }
     },
-    "%.0f° angle" : {
-
-    },
     "%@" : {
       "localizations" : {
         "de" : {
@@ -478,16 +475,6 @@
     },
     "%lld years old" : {
 
-    },
-    "%lld. %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld. %2$@"
-          }
-        }
-      }
     },
     "%lld/%lld" : {
       "localizations" : {
@@ -1161,10 +1148,10 @@
     "🥊" : {
 
     },
-    "🥊 Fighter Profile" : {
+    "🥊  Vision Access 🥊" : {
 
     },
-    "🥊 Muay Thai Vision Access 🥊" : {
+    "🥊 Fighter Profile" : {
 
     },
     "🥙 Unlimited meal analysis" : {
@@ -3082,9 +3069,6 @@
     "Detected Sequence:" : {
 
     },
-    "Discard" : {
-
-    },
     "Done" : {
 
     },
@@ -3339,12 +3323,6 @@
 
     },
     "Get Key Takeaways" : {
-
-    },
-    "Get Ready Fighter! Stay in the camera." : {
-
-    },
-    "Get Ready!" : {
 
     },
     "Get Started" : {
@@ -5577,6 +5555,12 @@
     "Start Free Trial" : {
 
     },
+    "Start Over" : {
+
+    },
+    "Start Recording" : {
+
+    },
     "Start scanning your meals!" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -5671,9 +5655,6 @@
       }
     },
     "Step %lld of 3" : {
-
-    },
-    "Step your full body into the frame, fighter! 🥊" : {
 
     },
     "Store and showcase a colorful array of drawings in your personal gallery" : {
@@ -6368,9 +6349,6 @@
           }
         }
       }
-    },
-    "Turn 7°" : {
-
     },
     "Type 'confirm' to proceed" : {
 

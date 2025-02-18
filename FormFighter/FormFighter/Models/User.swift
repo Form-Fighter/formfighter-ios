@@ -19,6 +19,7 @@ struct User: Codable, Equatable {
     var currentPeriodEnd: Date?
     var subscriptionId: String?
     var tokens: Int?
+    var isFreeUser: Bool?
     
     static func == (lhs: User, rhs: User) -> Bool {
         return lhs.id == rhs.id &&
@@ -38,7 +39,8 @@ struct User: Codable, Equatable {
             lhs.currentPeriodEnd == rhs.currentPeriodEnd &&
             lhs.subscriptionId == rhs.subscriptionId &&
             lhs.stripeCustomerId == rhs.stripeCustomerId &&
-            lhs.tokens == rhs.tokens
+            lhs.tokens == rhs.tokens &&
+            lhs.isFreeUser == rhs.isFreeUser
     }
 }
 
@@ -62,7 +64,8 @@ extension User {
             membershipEndsAt: nil,
             currentPeriodEnd: nil,
             subscriptionId: nil,
-            tokens: 0
+            tokens: 0,
+            isFreeUser: false
         )
     }
 }

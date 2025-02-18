@@ -38,7 +38,7 @@ struct VisionView: View {
                     }
             } else {
                 VStack {
-                    Text("🥊 Muay Thai Vision Access 🥊")
+                    Text("🥊  Vision Access 🥊")
                         .font(.title2)
                         .fontWeight(.bold)
                         .padding(.bottom, 5)

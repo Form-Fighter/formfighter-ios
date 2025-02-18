@@ -98,7 +98,7 @@ struct ResultsView: View {
             VStack {
                 Spacer()
                 HStack(spacing: 20) {
-                    Button("Discard") {
+                    Button("Start Over") {
                         deleteTemporaryVideo()
                         dismiss()
                     }
@@ -127,6 +127,13 @@ struct ResultsView: View {
                     .environmentObject(UserManager.shared)
                     .environmentObject(PurchasesManager.shared)
                     .environmentObject(FeedbackManager.shared)
+                    .onDisappear {
+                        // When returning from FeedbackView, dismiss ResultsView
+                        if shouldNavigateToFeedback {
+                            shouldNavigateToFeedback = false
+                            dismiss()
+                        }
+                    }
             }
         }
         .navigationBarBackButtonHidden(true)

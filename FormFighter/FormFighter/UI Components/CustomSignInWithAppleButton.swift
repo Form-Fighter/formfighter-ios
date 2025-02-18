@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct CustomSignInWithAppleButton: View {
-    @Environment(\.colorScheme) var colorScheme
-    
     var action: () -> Void
     
     var body: some View {
@@ -16,8 +14,8 @@ struct CustomSignInWithAppleButton: View {
             }
             .frame(minWidth: 0, maxWidth: .infinity)
             .frame(height: 56)
-            .foregroundColor(colorScheme == .dark ? .black : .white)
-            .background(colorScheme == .light ? .black : .white)
+            .foregroundColor(.black)
+            .background(Color.white)
             .cornerRadius(10)
         }
     }
