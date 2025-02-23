@@ -14,6 +14,10 @@ struct CameraVisionView: View {
     @State private var recordedVideoURL: URL?
     @State private var navigateToPreview = false
 
+    // Timers for countdown and recording progress.
+    @State private var countdownTimer: Timer?
+    @State private var recordingTimer: Timer?
+
     // MARK: - Audio Players
     @State private var countdownPlayer: AVAudioPlayer?
     @State private var startPlayer: AVAudioPlayer?
@@ -25,7 +29,10 @@ struct CameraVisionView: View {
     @AppStorage("hasSeenInstructions") private var hasSeenInstructions = false
     @State private var currentInstructionStep = 1
     @State private var showInstructionsOverlay = false
-    
+
+    // Track app state (foreground/background)
+    @Environment(\.scenePhase) var scenePhase
+
     var body: some View {
         ZStack {
             // Camera preview
@@ -35,47 +42,47 @@ struct CameraVisionView: View {
                     print("DEBUG: CameraPreviewView appeared.")
                 }
 
-              VStack {
-        HStack {
-            Spacer()
-            Text("Remaining Tokens: \(userManager.user?.tokens ?? 0)")
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding(8)
-                .background(Color.black.opacity(0.5))
-                .cornerRadius(8)
-            Spacer()
-        }
-        .padding(.top, 20)
-        Spacer()
-    }
-    
-    // Add the info button in the top right
-    VStack {
-        HStack {
-            Spacer()
-            Button {
-                currentInstructionStep = 1
-                showInstructionsOverlay = true
-            } label: {
-                Image(systemName: "info.circle")
-                    .font(.title2)
-                    .foregroundColor(.white)
+            VStack {
+                HStack {
+                    Spacer()
+                    Text("Remaining Tokens: \(userManager.user?.tokens ?? 0)")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(8)
+                        .background(Color.black.opacity(0.5))
+                        .cornerRadius(8)
+                    Spacer()
+                }
+                .padding(.top, 20)
+                Spacer()
             }
-            .padding()
-        }
-        .padding(.top, 50)
-        Spacer()
-    }
-    
-    // Instructions overlay
-    if !hasSeenInstructions || showInstructionsOverlay {
-        InstructionsOverlay(
-            currentStep: $currentInstructionStep,
-            isShowing: $showInstructionsOverlay,
-            hasSeenInstructions: $hasSeenInstructions
-        )
-    }
+            
+            // Info button at top right
+            VStack {
+                HStack {
+                    Spacer()
+                    Button {
+                        currentInstructionStep = 1
+                        showInstructionsOverlay = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                    }
+                    .padding()
+                }
+                .padding(.top, 50)
+                Spacer()
+            }
+            
+            // Instructions overlay
+            if !hasSeenInstructions || showInstructionsOverlay {
+                InstructionsOverlay(
+                    currentStep: $currentInstructionStep,
+                    isShowing: $showInstructionsOverlay,
+                    hasSeenInstructions: $hasSeenInstructions
+                )
+            }
             
             // Countdown overlay while waiting to record
             if isCountingDown {
@@ -112,44 +119,42 @@ struct CameraVisionView: View {
                 }
             }
             
-            // Start recording button
-         // Replace or modify your Start Recording button code with this:
-if !isRecording && !isCountingDown && !showInstructionsOverlay && hasSeenInstructions {
-    Button(action: {
-        print("DEBUG: Start Recording button tapped.")
-        startManualRecording()
-    }) {
-        Text("Start Recording")
-            .font(.title)
-            .foregroundColor(.white)
-            .padding()
-            .background(Color.green)
-            .cornerRadius(12)
-    }
-    .position(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
-}
-        }
-        // Present ResultsView as a sheet when recordedVideoURL is set.
-       // Replace the sheet modifier (lines 85-111) with this:
-        .sheet(isPresented: $navigateToPreview) {
-            if let url = cameraManager.recordedVideoURL {
-                ResultsView(videoURL: url)
-                    .environmentObject(UserManager.shared)
-                    .onAppear {
-                        print("DEBUG: ResultsView appearing with URL: \(url)")
-                        print("DEBUG: File exists at URL: \(FileManager.default.fileExists(atPath: url.path))")
-                        cameraManager.stopSession()
-                    }
-                    .onDisappear {
-                        print("DEBUG: ResultsView disappeared, resetting state")
-                        resetRecordingState()
-                    }
-            } else {
-                Text("No video URL available")
-                    .onAppear {
-                        print("DEBUG: No video URL in sheet presentation")
-                    }
+            // Start recording button (only when no recording/countdown/instructions)
+            if !isRecording && !isCountingDown && !showInstructionsOverlay && hasSeenInstructions {
+                Button(action: {
+                    print("DEBUG: Start Recording button tapped.")
+                    startManualRecording()
+                }) {
+                    Text("Start Recording")
+                        .font(.title)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.green)
+                        .cornerRadius(12)
+                }
+                .position(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
             }
+        }
+        // Present ResultsView as a sheet only if there’s a valid video URL.
+        .sheet(isPresented: Binding<Bool>(
+            get: { navigateToPreview && cameraManager.recordedVideoURL != nil },
+            set: { newValue in
+                if !newValue { navigateToPreview = false }
+            }
+        )) {
+            // Force unwrap is safe here because we only show when URL is non-nil.
+            ResultsView(videoURL: cameraManager.recordedVideoURL!)
+                .environmentObject(UserManager.shared)
+                .onAppear {
+                    let url = cameraManager.recordedVideoURL!
+                    print("DEBUG: ResultsView appearing with URL: \(url)")
+                    print("DEBUG: File exists at URL: \(FileManager.default.fileExists(atPath: url.path))")
+                    cameraManager.stopSession()
+                }
+                .onDisappear {
+                    print("DEBUG: ResultsView disappeared, resetting state")
+                    resetRecordingState()
+                }
         }
         .ignoresSafeArea(edges: [.top, .leading, .trailing])
         .onAppear {
@@ -162,17 +167,39 @@ if !isRecording && !isCountingDown && !showInstructionsOverlay && hasSeenInstruc
         }
         .onDisappear {
             print("DEBUG: CameraVisionView onDisappear.")
+            cancelTimers() // Cancel any running timers and reset state.
             cameraManager.stopSession()
+            resetRecordingState()
         }
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
-        // Listen for changes to recordedVideoURL via Combine.
+        // Listen for changes to recordedVideoURL.
         .onReceive(cameraManager.$recordedVideoURL) { url in
-            if let url = url {
-                print("DEBUG: onReceive - cameraManager recordedVideoURL updated: \(url)")
+            if let url = url, FileManager.default.fileExists(atPath: url.path) {
                 recordedVideoURL = url
                 navigateToPreview = true
-                print("DEBUG: navigateToPreview set to true.")
+                print("DEBUG: onReceive - valid recordedVideoURL: \(url)")
+            } else {
+                print("DEBUG: onReceive - recordedVideoURL is nil or file not found")
+            }
+        }
+        // Handle background/foreground changes.
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .background {
+                print("DEBUG: App moved to background. Cancelling any pending timers and recording.")
+                cancelTimers()
+                if isRecording {
+                    cameraManager.stopRecording()
+                    resetRecordingState()
+                }
+                if cameraManager.recordedVideoURL == nil {
+                    navigateToPreview = false
+                }
+            } else if newPhase == .active {
+                print("DEBUG: App moved to active.")
+                if !cameraManager.isActive {
+                    cameraManager.startSession()
+                }
             }
         }
     }
@@ -207,13 +234,16 @@ if !isRecording && !isCountingDown && !showInstructionsOverlay && hasSeenInstruc
         print("DEBUG: startManualRecording() called.")
         countdownValue = 10
         isCountingDown = true
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+        
+        // Store the countdown timer.
+        countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             print("DEBUG: Countdown timer tick. Current value: \(self.countdownValue)")
             if self.countdownValue > 1 {
                 self.countdownValue -= 1
                 self.countdownPlayer?.play()
             } else {
                 timer.invalidate()
+                self.countdownTimer = nil
                 self.isCountingDown = false
                 self.startPlayer?.play()
                 print("DEBUG: Countdown finished. Initiating simulateRecording().")
@@ -232,53 +262,72 @@ if !isRecording && !isCountingDown && !showInstructionsOverlay && hasSeenInstruc
         cameraManager.startRecording()
         print("DEBUG: CameraManager.startRecording() called.")
 
-        let progressTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+        // Store the recording timer.
+        recordingTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
             withAnimation {
                 self.recordingProgress += 0.05
             }
             print("DEBUG: Recording progress: \(self.recordingProgress)")
-          if self.recordingProgress >= 1.0 {
-    timer.invalidate()
-    self.recordingMessage = "Recording finished"
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-        print("DEBUG: Stopping recording")
-        self.cameraManager.stopRecording()
+            if self.recordingProgress >= 1.0 {
+                timer.invalidate()
+                self.recordingTimer = nil
+                self.recordingMessage = "Recording finished"
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    print("DEBUG: Stopping recording")
+                    self.cameraManager.stopRecording()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        print("DEBUG: Setting navigateToPreview")
+                        if let url = self.cameraManager.recordedVideoURL,
+                           FileManager.default.fileExists(atPath: url.path) {
+                            self.navigateToPreview = true
+                        }
+                    }
+                }
+                self.isRecording = false
+            }
+        }
+    }
+    
+    /// Cancel any active timers and reset UI state.
+    func cancelTimers() {
+        countdownTimer?.invalidate()
+        countdownTimer = nil
+        recordingTimer?.invalidate()
+        recordingTimer = nil
+        
+        // Reset countdown UI state.
+        isCountingDown = false
+        countdownValue = 10
+        recordingProgress = 0.0
+    }
+    
+    func resetRecordingState() {
+        print("DEBUG: resetRecordingState() called. Resetting all recording state.")
+        isRecording = false
+        isCountingDown = false
+        countdownValue = 10
+        recordingProgress = 0.0
+        recordingMessage = ""
+        recordedVideoURL = nil
+        navigateToPreview = false
+        
+        // Cancel any running timers.
+        cancelTimers()
+        
+        // Stop recording if in progress.
+        if cameraManager.movieOutput.isRecording {
+            cameraManager.stopRecording()
+        }
+        
+        // Restart the camera session.
+        cameraManager.stopSession()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            print("DEBUG: Setting navigate to preview")
-            self.navigateToPreview = true
+            print("DEBUG: Restarting camera session after reset")
+            self.cameraManager.startSession()
         }
+        
+        print("DEBUG: Recording state has been cleared.")
     }
-    self.isRecording = false
-}
-        }
-    }
-    
-func resetRecordingState() {
-    print("DEBUG: resetRecordingState() called. Resetting all recording state.")
-    isRecording = false
-    isCountingDown = false
-    countdownValue = 10
-    recordingProgress = 0.0
-    recordingMessage = ""
-    recordedVideoURL = nil
-    navigateToPreview = false  // Add this line
-    
-    // Stop recording if in progress
-    if cameraManager.movieOutput.isRecording {
-        cameraManager.stopRecording()
-    }
-    
-    // Force restart the camera session
-    cameraManager.stopSession()
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-        print("DEBUG: Restarting camera session after reset")
-        self.cameraManager.startSession()
-    }
-    
-    print("DEBUG: Recording state has been cleared.")
-}
-
-
 }
 
 struct CameraPreviewView: UIViewControllerRepresentable {
@@ -306,8 +355,7 @@ struct CameraPreviewView: UIViewControllerRepresentable {
     }
 }
 
-
-// Create a separate InstructionsOverlay view
+// Create a separate InstructionsOverlay view.
 struct InstructionsOverlay: View {
     @Binding var currentStep: Int
     @Binding var isShowing: Bool
@@ -315,7 +363,7 @@ struct InstructionsOverlay: View {
     
     let instructions = [
         Instruction(number: 1, text: "Turn on audio on 🔊", icon: "speaker.wave.2.fill"),
-        Instruction(number: 2, text: "only one person in camera", icon: "person.fill"),
+        Instruction(number: 2, text: "Only one person in camera", icon: "person.fill"),
         Instruction(number: 3, text: "Record in a well lit room", icon: "light.min"),
         Instruction(number: 4, text: "Stand 6-8 feet from camera", icon: "person.and.arrow.left.and.arrow.right"),
         Instruction(number: 5, text: "Show your full body in frame", icon: "figure.stand"),
@@ -330,10 +378,9 @@ struct InstructionsOverlay: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 20) {
-                // Add some top spacing
-                Spacer().frame(height: 100)  // Adjust this value to move the title lower
+                Spacer().frame(height: 100)
                 
-                // Header with close button
+                // Header with close button.
                 HStack {
                     Text("How to Record Your Form")
                         .font(.title2.bold())
@@ -356,7 +403,7 @@ struct InstructionsOverlay: View {
                 
                 Spacer()
                 
-                // Current instruction
+                // Current instruction.
                 if let instruction = instructions[safe: currentStep - 1] {
                     VStack(spacing: 30) {
                         Image(systemName: instruction.icon)
@@ -374,7 +421,7 @@ struct InstructionsOverlay: View {
                 
                 Spacer()
                 
-                // Progress indicators
+                // Progress indicators.
                 HStack(spacing: 8) {
                     ForEach(1...instructions.count, id: \.self) { step in
                         Circle()
@@ -383,7 +430,7 @@ struct InstructionsOverlay: View {
                     }
                 }
                 
-                // Navigation buttons
+                // Navigation buttons.
                 HStack(spacing: 20) {
                     Button("Skip") {
                         withAnimation {
@@ -418,14 +465,14 @@ struct InstructionsOverlay: View {
     }
 }
 
-// Also add the Instruction model
+// Instruction model.
 struct Instruction {
     let number: Int
     let text: String
     let icon: String
 }
 
-// And add the safe array extension if you don't have it elsewhere
+// Safe array subscript extension.
 extension Array {
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
