@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		40DF35832D6BC76600D89456 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40DF35822D6BC76600D89456 /* GoogleService-Info.plist */; };
 		811A37892B6EBA3B00C9E8B6 /* ChatGPTView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811A37882B6EBA3B00C9E8B6 /* ChatGPTView.swift */; };
 		811A378B2B6EBA3C00C9E8B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 811A378A2B6EBA3C00C9E8B6 /* Assets.xcassets */; };
 		811A378E2B6EBA3C00C9E8B6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 811A378D2B6EBA3C00C9E8B6 /* Preview Assets.xcassets */; };
@@ -193,6 +192,7 @@
 		B2B9F0B82CB0A89100D7CFC8 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */; };
 		B2B9F0BA2CB0A8EF00D7CFC8 /* ProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0B92CB0A8EF00D7CFC8 /* ProfileVM.swift */; };
 		B2B9F0BC2CB0BA8000D7CFC8 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B9F0BB2CB0BA8000D7CFC8 /* CameraView.swift */; };
+		B2C9DEED2C6AA65500508A59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */; };
 		B2D92D262D36E67700032377 /* SpeedComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D92D252D36E67700032377 /* SpeedComparisonView.swift */; };
 		B2D92D282D38EED900032377 /* DrawerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D92D272D38EED800032377 /* DrawerSection.swift */; };
 		B2D92D2A2D3A466C00032377 /* KeyTakeawaysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D92D292D3A466C00032377 /* KeyTakeawaysView.swift */; };
@@ -217,7 +217,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		40DF35822D6BC76600D89456 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		811A37832B6EBA3B00C9E8B6 /* FormFighter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FormFighter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		811A37862B6EBA3B00C9E8B6 /* FormFighterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormFighterApp.swift; sourceTree = "<group>"; };
 		811A37882B6EBA3B00C9E8B6 /* ChatGPTView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGPTView.swift; sourceTree = "<group>"; };
@@ -392,6 +391,7 @@
 		B2B9F0B72CB0A89100D7CFC8 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		B2B9F0B92CB0A8EF00D7CFC8 /* ProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVM.swift; sourceTree = "<group>"; };
 		B2B9F0BB2CB0BA8000D7CFC8 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B2D92D252D36E67700032377 /* SpeedComparisonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeedComparisonView.swift; sourceTree = "<group>"; };
 		B2D92D272D38EED800032377 /* DrawerSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerSection.swift; sourceTree = "<group>"; };
 		B2D92D292D3A466C00032377 /* KeyTakeawaysView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyTakeawaysView.swift; sourceTree = "<group>"; };
@@ -475,7 +475,7 @@
 				B214115A2CCF128600699B15 /* FeedbackPage */,
 				B2B9F0B62CB0A77F00D7CFC8 /* Profile */,
 				B2B9F0B32CB0768200D7CFC8 /* FormFighterDebug.entitlements */,
-				40DF35822D6BC76600D89456 /* GoogleService-Info.plist */,
+				B2C9DEEC2C6AA65400508A59 /* GoogleService-Info.plist */,
 				811A37862B6EBA3B00C9E8B6 /* FormFighterApp.swift */,
 				818D3FCD2B7010BA00DF7299 /* Onboarding */,
 				818D3FCE2B70117000DF7299 /* Authentication */,
@@ -1033,7 +1033,7 @@
 				81D531D92B7E2B660044D990 /* message.json in Resources */,
 				81D531D82B7E2B660044D990 /* bookmark.json in Resources */,
 				B21411E82CE7063E00699B15 /* splashscreen.gif in Resources */,
-				40DF35832D6BC76600D89456 /* GoogleService-Info.plist in Resources */,
+				B2C9DEED2C6AA65500508A59 /* GoogleService-Info.plist in Resources */,
 				81D531D72B7E2B660044D990 /* success.json in Resources */,
 				81D531D12B7E2B660044D990 /* cat-loading.json in Resources */,
 				818D3FA22B7009E100DF7299 /* ClashDisplay-Bold.otf in Resources */,
